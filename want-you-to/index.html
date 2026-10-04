@@ -1144,7 +1144,7 @@ p { margin: 0; }
           a.src = 'audio/' + fnv(text) + '.mp3';
           a.playbackRate = state.set.slow ? 0.82 : 1;
           const p = a.play();
-          if (p && p.catch) p.catch(() => this.tts(text));
+          if (p && p.catch) p.catch((err) => { if (!err || err.name !== 'AbortError') this.tts(text); });  // AbortError — прервали следующей фразой
           return;
         } catch (e) { /* падаем на голос устройства */ }
       }
