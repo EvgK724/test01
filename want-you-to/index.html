@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0b0d12">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Want you to">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -53,13 +53,15 @@
 html {
   height: 100%;
   background: var(--bg);
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
   -webkit-text-size-adjust: 100%;
 }
+/* Окно — во весь экран до самого низа (position: fixed не зависит от высоты html, которая в приложении
+   на экране «Домой» до низа не доходит); отступ под полоску «Домой» — только у панели вкладок. */
 body {
   margin: 0;
-  height: 100%;
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+  padding-top: env(safe-area-inset-top, 0px);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -505,7 +507,7 @@ p { margin: 0; }
 /* ---------- tab bar ---------- */
 .tabs-wrap {
   flex: none;
-  padding-block: 4px 8px;
+  padding-block: 4px max(8px, calc(env(safe-area-inset-bottom, 0px) - 8px));
   padding-inline: max(12px, env(safe-area-inset-left, 0px)) max(12px, env(safe-area-inset-right, 0px));
 }
 .tabs {
