@@ -53,8 +53,9 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
+  // Свои файлы — всегда сверяясь с сервером (no-cache): иначе iPad до 10 минут показывает прежнюю версию страницы.
   e.respondWith(
-    fetch(req).then((res) => {
+    fetch(req, { cache: 'no-cache' }).then((res) => {
       if (res.ok) {
         const copy = res.clone();
         caches.open(CACHE).then((c) => c.put(req, copy));
