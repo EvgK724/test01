@@ -534,7 +534,7 @@ p { margin: 0; }
   font: 560 12px/1 var(--f-body);
   transition: background 0.15s, color 0.15s;
 }
-.tab svg { width: 23px; height: 23px; }
+.tab svg { width: 23px; height: 23px; flex: none; }
 .tab[aria-selected="true"] { color: var(--fg); background: rgba(var(--o-rgb), 0.12); }
 .tab[aria-selected="true"] svg { color: var(--o); filter: drop-shadow(0 0 8px rgba(var(--o-rgb), 0.55)); }
 
@@ -542,10 +542,30 @@ p { margin: 0; }
   .view { padding-block: 24px 44px; }
   .tab { flex-direction: row; gap: 8px; font-size: 14px; }
 }
+/* iPad: на всю ширину экрана, без полей по сторонам; всё приложение крупнее — масштаб задаёт fit() ниже */
+html.wide .view, html.wide .tabs { max-width: none; }
+html.wide .lede, html.wide .rule-text, html.wide .mnemo p { max-width: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
 </style>
+<script>
+/* iPad: приложение крупнее и на всю ширину (zoom на <html>), телефон — как есть.
+   Портрет: под ширину экрана; альбом: под высоту, чтобы карточка и кнопки помещались. */
+(function () {
+  function fit() {
+    var w = window.innerWidth || 390, h = window.innerHeight || 760, k = 1;
+    if (w >= 700) k = (w >= 900 && w / h > 1.15) ? h / 600 : Math.min(w / 500, h / 760);
+    k = Math.max(1, Math.min(k, 1.6));
+    document.documentElement.style.zoom = k === 1 ? '' : k.toFixed(3);
+    document.documentElement.classList.toggle('wide', w >= 700);
+    window.__zoom = k;
+  }
+  fit();
+  window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', function () { setTimeout(fit, 150); });
+})();
+</script>
 <!--/APP-HEAD-->
 </head>
 <body>
@@ -1341,7 +1361,8 @@ p { margin: 0; }
       }
       if (drag) {
         dx = mx;
-        el.style.transform = 'translateX(' + dx + 'px) rotate(' + (dx / 26) + 'deg)';
+        const sx = dx / (window.__zoom || 1);      // при масштабе на iPad карточка идёт ровно за пальцем
+        el.style.transform = 'translateX(' + sx + 'px) rotate(' + (sx / 26) + 'deg)';
         el.classList.toggle('lean-know', dx > 40);
         el.classList.toggle('lean-again', dx < -40);
       }
