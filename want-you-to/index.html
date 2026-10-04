@@ -301,12 +301,14 @@ p { margin: 0; }
 }
 .btn:active { transform: scale(0.98); }
 .btn:disabled { opacity: 0.45; cursor: default; }
+/* Главная кнопка — тёмная, с янтарным оттенком: заметная, но не слепит в тёмной теме */
 .btn-primary {
-  border-color: transparent;
-  background: linear-gradient(180deg, #f6f0e6, #dcd3c3);
-  color: #14161c;
-  box-shadow: 0 12px 30px -14px rgba(var(--v-rgb), 0.55);
+  border-color: rgba(var(--v-rgb), 0.55);
+  background: linear-gradient(180deg, rgba(var(--v-rgb), 0.22), rgba(var(--v-rgb), 0.1));
+  color: #f8dfb4;
+  box-shadow: 0 10px 26px -16px rgba(var(--v-rgb), 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
+.btn-primary:active { background: rgba(var(--v-rgb), 0.28); }
 .btn-warn { color: var(--bad); border-color: rgba(var(--bad-rgb), 0.35); background: rgba(var(--bad-rgb), 0.07); }
 .chip {
   min-height: 44px;
