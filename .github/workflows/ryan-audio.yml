@@ -1,0 +1,49 @@
+# Делает записи голосом Microsoft Ryan для приложения want-you-to
+# и коммитит их в ту же ветку. Запускается при изменении фраз или вручную.
+name: Ryan voice audio
+
+on:
+  push:
+    paths:
+      - 'want-you-to/index.html'
+      - 'want-you-to/tools/**'
+      - '.github/workflows/ryan-audio.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ryan-audio-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  audio:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install edge-tts
+        run: pip install edge-tts==7.2.8
+
+      - name: Collect phrases
+        run: node want-you-to/tools/extract_phrases.mjs
+
+      - name: Generate audio (en-GB-RyanNeural)
+        run: python want-you-to/tools/make_audio.py
+
+      - name: Commit audio
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
+          git add want-you-to/audio want-you-to/phrases.json
+          if git diff --cached --quiet; then
+            echo "Audio is up to date"
+            exit 0
+          fi
+          git commit -m "Generate Microsoft Ryan audio"
+          git push

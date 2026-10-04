@@ -1,14 +1,14 @@
 {
   "name": "Want you to — сложное дополнение",
   "short_name": "Want you to",
-  "description": "Правило want sb to do: правило, карточки с интервальным повторением, тест.",
+  "description": "Правило want sb to do: правило, карточки с интервальным повторением, тренировка, тест.",
   "lang": "ru",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#111316",
-  "theme_color": "#111316",
+  "background_color": "#0b0d12",
+  "theme_color": "#0b0d12",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },

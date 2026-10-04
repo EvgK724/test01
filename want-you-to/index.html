@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Тренажёр правила want sb to do (сложное дополнение): правило, карточки с интервальным повторением, тест.">
-<meta name="theme-color" content="#111316">
+<meta name="description" content="Тренажёр правила want sb to do (сложное дополнение): правило, карточки с интервальным повторением, тренировка, тест.">
+<meta name="theme-color" content="#0b0d12">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -18,24 +18,34 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Golos+Text:wght@400..700&family=Gentium+Book+Plus&display=swap">
 <style>
-/* Layout: one-screen app. Header on top, scrolling view in the middle, thumb-zone tab bar at the bottom.
-   Colour = sentence slots: verb (amber) + object (teal) + to-infinitive (periwinkle). Single dark look by design. */
+/* Layout: one-screen app. Header, scrolling view, floating pill tab bar in the thumb zone.
+   Colour = sentence slots: verb (amber) + object (teal) + to-infinitive (periwinkle), glowing on a midnight ground.
+   Single dark look by design. */
 :root {
-  --bg: #111316;
-  --surface: #1a1d22;
-  --surface-2: #23272e;
-  --line: #2e333b;
-  --fg: #e8e6e1;
-  --muted: #9ca1a9;
-  --faint: #6f747d;
-  --v: #f0b65c;
-  --o: #5ccab8;
-  --i: #a7b0ff;
-  --bad: #ef7064;
-  --good: #79cc8f;
+  --bg: #0b0d12;
+  --panel: #151821;
+  --panel-2: #1c202b;
+  --panel-3: #242938;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-2: rgba(255, 255, 255, 0.14);
+  --fg: #ece8e1;
+  --muted: #a3a8b5;
+  --faint: #6e7486;
+  --v: #f2b766;
+  --o: #5fd0bf;
+  --i: #a9b2ff;
+  --bad: #f07468;
+  --good: #7dd197;
+  --v-rgb: 242, 183, 102;
+  --o-rgb: 95, 208, 191;
+  --i-rgb: 169, 178, 255;
+  --bad-rgb: 240, 116, 104;
+  --good-rgb: 125, 209, 151;
+  --cream: #f1ebe0;
   --f-display: "Bricolage Grotesque", "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
   --f-body: "Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --f-ipa: "Gentium Book Plus", "Charis SIL", "Doulos SIL", "Times New Roman", serif;
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 28px 56px -28px rgba(0, 0, 0, 0.85);
   color-scheme: dark;
 }
 *, *::before, *::after { box-sizing: border-box; }
@@ -53,12 +63,17 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--bg);
   color: var(--fg);
   font: 400 17px/1.5 var(--f-body);
   -webkit-tap-highlight-color: transparent;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(900px 520px at -12% -8%, rgba(var(--v-rgb), 0.11), transparent 62%),
+    radial-gradient(760px 520px at 112% 4%, rgba(var(--i-rgb), 0.09), transparent 60%),
+    radial-gradient(900px 640px at 100% 112%, rgba(var(--o-rgb), 0.09), transparent 62%);
 }
-button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
+button, select { font: inherit; color: inherit; }
+button { cursor: pointer; touch-action: manipulation; }
 :focus-visible { outline: 2px solid var(--o); outline-offset: 2px; }
 
 /* ---------- header ---------- */
@@ -68,26 +83,25 @@ button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulat
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding-block: 10px;
+  padding-block: 10px 8px;
   padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px));
-  border-bottom: 1px solid var(--line);
 }
-.brand { margin: 0; font: 750 21px/1 var(--f-display); letter-spacing: -0.01em; white-space: nowrap; }
-.brand .w { color: var(--v); }
-.brand .y { color: var(--o); }
-.brand .t { color: var(--i); }
+.brand { margin: 0; font: 780 22px/1 var(--f-display); letter-spacing: -0.015em; white-space: nowrap; }
+.brand .w { color: var(--v); text-shadow: 0 0 22px rgba(var(--v-rgb), 0.45); }
+.brand .y { color: var(--o); text-shadow: 0 0 22px rgba(var(--o-rgb), 0.45); }
+.brand .t { color: var(--i); text-shadow: 0 0 22px rgba(var(--i-rgb), 0.45); }
 .due-chip {
   min-height: 44px;
-  padding: 0 14px;
+  padding: 0 16px;
   border-radius: 22px;
   border: 1px solid var(--line);
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.04);
   color: var(--muted);
   font-size: 14px;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-.due-chip b { color: var(--fg); font-weight: 600; }
+.due-chip b { color: var(--fg); font-weight: 650; }
 
 /* ---------- views ---------- */
 main {
@@ -98,77 +112,111 @@ main {
   -webkit-overflow-scrolling: touch;
 }
 .view {
-  max-width: 620px;
+  max-width: 640px;
   margin: 0 auto;
-  padding-block: 20px 36px;
+  padding-block: 12px 32px;
   padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px));
 }
 h2 {
-  margin: 34px 0 12px;
-  font: 650 13px/1.2 var(--f-body);
-  letter-spacing: 0.09em;
+  margin: 36px 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 650 12.5px/1.2 var(--f-body);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted);
 }
-.view > h2:first-child { margin-top: 0; }
+h2::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--line-2), transparent); }
 p { margin: 0; }
 .lede { color: var(--muted); max-width: 62ch; }
 
-/* ---------- formula (shared by hero and cards) ---------- */
-.formula { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 16px; }
-.slot { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+/* ---------- formula (hero and cards) ---------- */
+.formula { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px 18px; }
+.slot { display: flex; flex-direction: column; gap: 9px; min-width: 0; }
 .slot b {
-  font: 760 clamp(32px, 9vw, 44px)/1.05 var(--f-display);
-  letter-spacing: -0.015em;
+  font: 780 clamp(32px, 9.4vw, 46px)/1.04 var(--f-display);
+  letter-spacing: -0.02em;
   overflow-wrap: anywhere;
 }
 .slot small {
-  padding-top: 7px;
-  border-top: 3px solid currentColor;
+  position: relative;
+  padding-top: 9px;
   font: 600 13px/1.2 var(--f-body);
   letter-spacing: 0.02em;
   color: var(--faint);
   white-space: nowrap;
 }
-.s-v b { color: var(--v); } .s-v small { border-color: var(--v); }
-.s-o b { color: var(--o); } .s-o small { border-color: var(--o); }
-.s-i b { color: var(--i); } .s-i small { border-color: var(--i); }
-.s-t b { color: var(--muted); font-weight: 560; } .s-t small { border-color: var(--faint); }
+.slot small::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 4px;
+  border-radius: 4px;
+  background: currentColor;
+}
+.s-v b { color: var(--v); text-shadow: 0 0 28px rgba(var(--v-rgb), 0.4); }
+.s-o b { color: var(--o); text-shadow: 0 0 28px rgba(var(--o-rgb), 0.4); }
+.s-i b { color: var(--i); text-shadow: 0 0 28px rgba(var(--i-rgb), 0.4); }
+.s-t b { color: var(--muted); font-weight: 560; }
+.s-v small::before { background: var(--v); box-shadow: 0 0 14px rgba(var(--v-rgb), 0.6); }
+.s-o small::before { background: var(--o); box-shadow: 0 0 14px rgba(var(--o-rgb), 0.6); }
+.s-i small::before { background: var(--i); box-shadow: 0 0 14px rgba(var(--i-rgb), 0.6); }
+.s-t small::before { background: var(--faint); }
 
-.hl { font-weight: 600; }
+.hl { font-weight: 620; }
 .hl-v { color: var(--v); }
 .hl-o { color: var(--o); }
 .hl-i { color: var(--i); }
 .hl-t { color: var(--muted); }
 .hl-x { color: var(--bad); text-decoration: line-through; text-decoration-thickness: 2px; }
 
+/* ---------- surfaces ---------- */
+.panel {
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  background: linear-gradient(165deg, rgba(36, 41, 56, 0.9), rgba(20, 23, 31, 0.92));
+  box-shadow: var(--shadow);
+}
+
 /* ---------- rule view ---------- */
-.hero { display: grid; gap: 16px; }
+.hero {
+  display: grid;
+  gap: 18px;
+  padding: 22px 20px 20px;
+  border-radius: 26px;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(165deg, #1d2130, #12151d) padding-box,
+    linear-gradient(125deg, rgba(var(--v-rgb), 0.75), rgba(var(--o-rgb), 0.45) 50%, rgba(var(--i-rgb), 0.75)) border-box;
+  box-shadow: 0 30px 70px -36px rgba(var(--o-rgb), 0.35), 0 20px 50px -30px rgba(0, 0, 0, 0.9);
+}
 .hero-ru { font-size: 19px; color: var(--muted); }
 .hero-ru b { color: var(--fg); font-weight: 600; }
-.hero-never { font-size: 16px; color: var(--muted); }
+.hero-never { font-size: 15px; color: var(--muted); }
 .rule-text { display: grid; gap: 12px; max-width: 62ch; }
 .rule-text strong { font-weight: 650; }
 
 .pron { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
 .pron div {
-  display: grid; gap: 2px; justify-items: center;
-  padding: 10px 2px;
-  border-radius: 12px;
-  background: var(--surface);
+  display: grid; gap: 3px; justify-items: center;
+  padding: 11px 2px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
 }
 .pron span { font-size: 13px; color: var(--faint); }
-.pron b { font: 700 20px/1.1 var(--f-display); color: var(--o); }
+.pron b { font: 760 20px/1.1 var(--f-display); color: var(--o); }
 
-.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: step; }
-.steps li { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; counter-increment: step; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; counter-reset: step; }
+.steps li { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; counter-increment: step; }
 .steps li::before {
   content: counter(step);
-  width: 32px; height: 32px; border-radius: 50%;
+  width: 34px; height: 34px; border-radius: 50%;
   display: grid; place-items: center;
-  background: var(--surface-2);
-  font: 700 15px/1 var(--f-display);
-  color: var(--fg);
+  border: 1px solid var(--line-2);
+  background: var(--panel-2);
+  font: 760 15px/1 var(--f-display);
 }
 .steps p { margin: 0 0 2px; }
 .steps .q { font-weight: 600; }
@@ -178,43 +226,62 @@ p { margin: 0; }
 .vchip {
   min-height: 44px;
   display: inline-flex; align-items: center; gap: 10px;
-  padding: 6px 12px;
-  border-radius: 12px;
+  padding: 6px 13px;
+  border-radius: 14px;
   border: 1px solid var(--line);
-  background: var(--surface);
-  font: 650 17px/1.1 var(--f-display);
+  background: rgba(255, 255, 255, 0.035);
+  font: 680 17px/1.1 var(--f-display);
 }
-.vchip.trap { border-style: dashed; border-color: #5a3a37; }
+.vchip.trap { border-style: dashed; border-color: rgba(var(--bad-rgb), 0.4); }
 .lv { display: inline-flex; gap: 2px; }
-.lv i { width: 4px; height: 14px; border-radius: 2px; background: var(--line); }
-.lv i.on { background: var(--good); }
-.verbs-note { margin-top: 10px; font-size: 15px; color: var(--muted); }
+.lv i { width: 4px; height: 14px; border-radius: 2px; background: rgba(255, 255, 255, 0.12); }
+.lv i.on { background: var(--good); box-shadow: 0 0 8px rgba(var(--good-rgb), 0.6); }
+.verbs-note { margin-top: 12px; font-size: 15px; color: var(--muted); }
 
 .exg { display: grid; gap: 6px; padding-block: 14px; border-top: 1px solid var(--line); }
 .exg:last-child { border-bottom: 1px solid var(--line); }
-.exl { font-size: 18px; line-height: 1.45; }
-.exl.bad { color: var(--muted); }
+.exrow { display: flex; align-items: flex-start; gap: 10px; }
+.exrow .exl { flex: 1; min-width: 0; }
+.exl { font-size: 18px; line-height: 1.45; padding-top: 8px; }
+.exl.bad { color: var(--muted); padding-top: 0; }
 .exl.bad::before { content: "✗ "; color: var(--bad); font-weight: 700; }
 .exr { font-size: 15px; color: var(--muted); margin-top: -4px; }
 .why { font-size: 15px; color: var(--fg); opacity: 0.86; }
 .why::before { content: "→ "; color: var(--faint); }
 
-.mnemo {
-  display: grid; gap: 10px;
-  padding: 18px;
-  border-radius: 18px;
-  background: var(--surface-2);
-}
-.mnemo-big { font: 760 30px/1.15 var(--f-display); letter-spacing: -0.01em; }
+.mnemo { display: grid; gap: 12px; padding: 20px; }
+.mnemo-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.mnemo-big { font: 780 30px/1.15 var(--f-display); letter-spacing: -0.01em; }
 .mnemo-big .arrow { color: var(--faint); font-weight: 500; }
-.mnemo-big .chu { color: var(--o); }
+.mnemo-big .chu { color: var(--o); text-shadow: 0 0 26px rgba(var(--o-rgb), 0.45); }
 .mnemo p { max-width: 58ch; }
 .mnemo .ipa { font-family: var(--f-ipa); }
-.mnemo-row { display: flex; align-items: center; gap: 12px; }
+
+.settings { display: grid; gap: 14px; padding: 18px; }
+.field { display: grid; gap: 8px; }
+.field > span { font-size: 14px; color: var(--muted); }
+.select {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 40px 0 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line-2);
+  background: var(--panel-2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23a3a8b5' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center;
+  color: var(--fg);
+  font-size: 17px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.voice-status { font-size: 15px; color: var(--muted); }
+.voice-status b { color: var(--fg); font-weight: 600; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; }
 
 .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.stats div { padding: 12px; border-radius: 14px; background: var(--surface); display: grid; gap: 2px; }
-.stats b { font: 750 28px/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.stats div { padding: 14px 12px; border-radius: 16px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.035); display: grid; gap: 4px; }
+.stats b { font: 780 30px/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.stats div:nth-child(1) b { color: var(--i); }
+.stats div:nth-child(2) b { color: var(--v); }
+.stats div:nth-child(3) b { color: var(--good); }
 .stats span { font-size: 13px; color: var(--muted); }
 .sync-note { margin-top: 12px; font-size: 15px; color: var(--muted); }
 .reset { margin-top: 14px; }
@@ -222,104 +289,163 @@ p { margin: 0; }
 /* ---------- buttons ---------- */
 .btn {
   min-height: 56px;
-  padding: 0 16px;
-  border-radius: 16px;
-  border: 1px solid var(--line);
-  background: var(--surface-2);
+  padding: 0 18px;
+  border-radius: 18px;
+  border: 1px solid var(--line-2);
+  background: var(--panel-2);
   color: var(--fg);
-  font: 600 17px/1.15 var(--f-body);
+  font: 620 17px/1.15 var(--f-body);
+  transition: transform 0.12s, background 0.15s;
 }
-.btn-primary { background: var(--fg); border-color: var(--fg); color: var(--bg); }
-.btn-ghost { background: transparent; color: var(--muted); min-height: 48px; }
-.btn-warn { color: var(--bad); border-color: #5a3a37; }
+.btn:active { transform: scale(0.98); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+.btn-primary {
+  border-color: transparent;
+  background: linear-gradient(180deg, #f6f0e6, #dcd3c3);
+  color: #14161c;
+  box-shadow: 0 12px 30px -14px rgba(var(--v-rgb), 0.55);
+}
+.btn-warn { color: var(--bad); border-color: rgba(var(--bad-rgb), 0.35); background: rgba(var(--bad-rgb), 0.07); }
 .chip {
   min-height: 44px;
-  padding: 0 14px;
+  padding: 0 15px;
   border-radius: 22px;
   border: 1px solid var(--line);
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.04);
   color: var(--muted);
   font-size: 15px;
-  font-weight: 550;
+  font-weight: 560;
 }
-.chip[aria-pressed="true"] { color: var(--fg); border-color: var(--o); }
+.chip[aria-pressed="true"] { color: var(--fg); border-color: rgba(var(--o-rgb), 0.7); background: rgba(var(--o-rgb), 0.1); }
 .speak {
   flex: none;
   width: 52px; height: 52px;
   border-radius: 50%;
-  border: 1px solid var(--line);
-  background: var(--surface-2);
+  border: 1px solid var(--line-2);
+  background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
   color: var(--fg);
   display: grid; place-items: center;
 }
 .speak.sm { width: 44px; height: 44px; }
-.speak svg { width: 24px; height: 24px; }
-.no-speech .speak, .no-speech #autoBtn, .no-speech #accBtn { display: none; }
+.speak svg { width: 22px; height: 22px; }
+.speak.playing { color: var(--o); border-color: rgba(var(--o-rgb), 0.6); }
+.no-speech .speak, .no-speech .speech-only { display: none; }
 
 /* ---------- cards view ---------- */
-#v-cards { min-height: 100%; display: flex; flex-direction: column; padding-bottom: 0; }
+#v-cards, #v-train { min-height: 100%; display: flex; flex-direction: column; padding-bottom: 0; }
 .cards-bar { display: flex; align-items: center; gap: 8px; }
-.cards-bar .left { flex: 1; color: var(--muted); font-size: 15px; font-variant-numeric: tabular-nums; }
-.stage { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-block: 14px 8px; }
+.cards-bar .left { flex: 1; min-width: 0; color: var(--muted); font-size: 15px; font-variant-numeric: tabular-nums; }
+.cards-bar .left b { color: var(--fg); font-weight: 600; }
+.stage { position: relative; flex: 1; display: flex; flex-direction: column; justify-content: center; padding-block: 14px 8px; }
 .card {
   position: relative;
-  padding: 18px 18px 16px;
-  border-radius: 22px;
+  padding: 20px 20px 18px;
+  border-radius: 26px;
   border: 1px solid var(--line);
-  background: var(--surface);
+  background: linear-gradient(165deg, rgba(38, 43, 59, 0.95), rgba(19, 22, 30, 0.96));
+  box-shadow: var(--shadow);
   touch-action: pan-y;
   -webkit-user-select: none;
   user-select: none;
   cursor: pointer;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
-.card.trap { border-color: #4a3431; }
+.card.trap {
+  border-color: rgba(var(--bad-rgb), 0.3);
+  background:
+    radial-gradient(420px 220px at 0% 0%, rgba(var(--bad-rgb), 0.12), transparent 70%),
+    linear-gradient(165deg, rgba(38, 43, 59, 0.95), rgba(19, 22, 30, 0.96));
+}
 .card.dragging { transition: none; }
-.card.lean-know { border-color: var(--good); }
-.card.lean-again { border-color: var(--bad); }
-.card.leaving { transition: transform 0.22s ease-in, opacity 0.22s ease-in; }
-.card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
-.kind { font: 650 12px/1 var(--f-body); letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
+.card.lean-know { border-color: var(--good); box-shadow: 0 0 0 1px rgba(var(--good-rgb), 0.4), 0 20px 50px -20px rgba(var(--good-rgb), 0.45); }
+.card.lean-again { border-color: var(--bad); box-shadow: 0 0 0 1px rgba(var(--bad-rgb), 0.4), 0 20px 50px -20px rgba(var(--bad-rgb), 0.45); }
+.ghost { position: absolute; z-index: 2; pointer-events: none; transition: transform 0.24s ease-in, opacity 0.24s ease-in; }
+.card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.kind { font: 650 12px/1 var(--f-body); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
 .trap .kind { color: var(--bad); }
 .flag {
   display: inline-block;
-  margin-top: 16px;
-  padding: 6px 10px;
-  border-radius: 8px;
-  background: #2e2120;
+  margin-top: 18px;
+  padding: 7px 11px;
+  border-radius: 10px;
+  border: 1px solid rgba(var(--bad-rgb), 0.35);
+  background: rgba(var(--bad-rgb), 0.1);
   color: var(--bad);
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 620;
 }
-.back { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); display: grid; gap: 12px; }
-.ru { font-size: 22px; line-height: 1.3; font-weight: 600; }
+.back { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); display: grid; gap: 12px; }
+.ru { font-size: 22px; line-height: 1.3; font-weight: 620; }
 .meta { font-size: 15px; color: var(--muted); }
 .meta .ipa { font-family: var(--f-ipa); font-size: 20px; color: var(--fg); }
 .ex { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: start; }
 .ex-en { font-size: 19px; line-height: 1.45; }
 .ex .speak { grid-column: 2; grid-row: 1 / span 2; }
 .ex-ru { grid-column: 1; font-size: 16px; color: var(--muted); }
-.note { font-size: 15px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); }
+.note { font-size: 15px; padding: 11px 13px; border-radius: 12px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.035); }
 .hint { margin-top: 16px; font-size: 13px; color: var(--faint); }
 
 .controls {
   position: sticky;
   bottom: 0;
+  z-index: 3;
   display: grid;
   gap: 10px;
-  padding-block: 10px 14px;
-  background: linear-gradient(to top, var(--bg) 78%, rgba(17, 19, 22, 0));
+  padding-block: 12px 12px;
+  background: linear-gradient(to top, var(--bg) 72%, rgba(11, 13, 18, 0));
 }
 .rate { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.rate .btn { min-height: 66px; padding: 0 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+.rate .btn { min-height: 68px; padding: 0 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
 .rate small { font: 500 12px/1 var(--f-body); color: var(--muted); }
-.r-again { color: var(--bad); border-color: #5a3a37; }
-.r-know { color: var(--good); border-color: #2f4a37; }
+.r-again { color: var(--bad); border-color: rgba(var(--bad-rgb), 0.4); background: rgba(var(--bad-rgb), 0.09); }
+.r-almost { color: var(--v); border-color: rgba(var(--v-rgb), 0.3); background: rgba(var(--v-rgb), 0.07); }
+.r-know { color: var(--good); border-color: rgba(var(--good-rgb), 0.4); background: rgba(var(--good-rgb), 0.09); }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 8px; }
 
-.done { display: grid; gap: 14px; }
-.done-kicker { font: 650 12px/1 var(--f-body); letter-spacing: 0.09em; text-transform: uppercase; color: var(--good); }
-.done-title { margin: 0; font: 750 30px/1.15 var(--f-display); letter-spacing: -0.01em; text-wrap: balance; }
+.done { display: grid; gap: 16px; }
+.done-kicker { font: 650 12px/1 var(--f-body); letter-spacing: 0.1em; text-transform: uppercase; color: var(--good); }
+.done-title { margin: 0; font: 780 30px/1.15 var(--f-display); letter-spacing: -0.015em; text-wrap: balance; }
 .done-next { color: var(--muted); }
+
+/* ---------- training view ---------- */
+.train-stats { display: flex; gap: 16px; color: var(--muted); font-size: 15px; font-variant-numeric: tabular-nums; flex-wrap: wrap; }
+.train-stats b { color: var(--fg); font-weight: 650; }
+.train-stats .streak b { color: var(--v); }
+.drill { padding: 20px; display: grid; gap: 16px; }
+.dr-ru { font-size: 21px; line-height: 1.35; font-weight: 600; }
+.dr-q { font-size: 20px; line-height: 1.5; }
+.dr-q .blank { display: inline-block; min-width: 3.2em; border-bottom: 2px solid var(--i); color: var(--i); font-weight: 650; text-align: center; }
+.answer {
+  min-height: 64px;
+  display: flex; flex-wrap: wrap; align-content: flex-start; gap: 8px;
+  padding: 10px;
+  border-radius: 16px;
+  border: 1px dashed var(--line-2);
+  background: rgba(0, 0, 0, 0.18);
+}
+.answer:empty::before { content: attr(data-empty); color: var(--faint); font-size: 15px; padding: 10px 6px; }
+.answer.ok { border-style: solid; border-color: rgba(var(--good-rgb), 0.6); }
+.answer.no { border-style: solid; border-color: rgba(var(--bad-rgb), 0.6); }
+.pool { display: flex; flex-wrap: wrap; gap: 8px; }
+.tile {
+  min-height: 46px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid var(--line-2);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  color: var(--fg);
+  font: 600 18px/1 var(--f-body);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+.tile:disabled { cursor: default; }
+.feedback { display: grid; gap: 8px; padding: 14px; border-radius: 16px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.035); }
+.feedback.ok { border-color: rgba(var(--good-rgb), 0.45); background: rgba(var(--good-rgb), 0.07); }
+.feedback.no { border-color: rgba(var(--bad-rgb), 0.45); background: rgba(var(--bad-rgb), 0.07); }
+.fb-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.fb-title { font-weight: 700; }
+.feedback.ok .fb-title { color: var(--good); }
+.feedback.no .fb-title { color: var(--bad); }
+.fb-en { font-size: 19px; line-height: 1.45; }
 
 /* ---------- test view ---------- */
 .task { padding-block: 18px; border-top: 1px solid var(--line); }
@@ -327,8 +453,9 @@ p { margin: 0; }
 .num {
   width: 30px; height: 30px; border-radius: 50%;
   display: grid; place-items: center;
-  background: var(--surface-2);
-  font: 700 15px/1 var(--f-display);
+  border: 1px solid var(--line-2);
+  background: var(--panel-2);
+  font: 760 15px/1 var(--f-display);
   font-variant-numeric: tabular-nums;
 }
 .ttype { font: 650 12px/1 var(--f-body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
@@ -339,65 +466,77 @@ p { margin: 0; }
 .tq-ru { font-size: 19px; margin-bottom: 12px; }
 .opts { display: grid; gap: 8px; }
 .opt, .seg {
-  min-height: 48px;
-  padding: 10px 14px;
-  border-radius: 12px;
+  min-height: 50px;
+  padding: 10px 15px;
+  border-radius: 14px;
   border: 1px solid var(--line);
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.04);
   color: var(--fg);
-  font: 500 17px/1.3 var(--f-body);
+  font: 520 17px/1.3 var(--f-body);
   text-align: left;
 }
-.opt[aria-pressed="true"], .seg[aria-pressed="true"] { border-color: var(--o); background: #1b2c2b; }
-.task.checked .opt.correct, .task.checked .seg.correct { border-color: var(--good); }
-.task.checked .opt[aria-pressed="true"]:not(.correct), .task.checked .seg[aria-pressed="true"]:not(.correct) { border-color: var(--bad); background: #2e2120; }
+.opt[aria-pressed="true"], .seg[aria-pressed="true"] { border-color: rgba(var(--o-rgb), 0.8); background: rgba(var(--o-rgb), 0.12); }
+.checked .opt.correct, .checked .seg.correct { border-color: rgba(var(--good-rgb), 0.8); background: rgba(var(--good-rgb), 0.1); }
+.checked .opt[aria-pressed="true"]:not(.correct), .checked .seg[aria-pressed="true"]:not(.correct) { border-color: rgba(var(--bad-rgb), 0.8); background: rgba(var(--bad-rgb), 0.1); }
 .segs { display: flex; flex-wrap: wrap; gap: 8px; }
 .gap-in, .tr-in {
-  font: 500 17px/1.3 var(--f-body);
+  font: 520 17px/1.3 var(--f-body);
   color: var(--fg);
-  background: var(--surface);
-  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line-2);
   border-radius: 10px;
 }
-.gap-in { width: 8.5em; max-width: 100%; padding: 6px 10px; border-bottom: 2px solid var(--i); color: var(--i); font-weight: 600; }
-.tr-in { width: 100%; min-height: 76px; padding: 10px 12px; resize: vertical; display: block; }
+.gap-in { width: 8.5em; max-width: 100%; padding: 6px 10px; border-bottom: 2px solid var(--i); color: var(--i); font-weight: 620; }
+.tr-in { width: 100%; min-height: 78px; padding: 11px 13px; resize: vertical; display: block; border-radius: 14px; }
 .gap-in:disabled, .tr-in:disabled { opacity: 0.85; }
-.check-row { position: sticky; bottom: 0; padding-block: 12px; display: grid; background: linear-gradient(to top, var(--bg) 78%, rgba(17, 19, 22, 0)); }
+.check-row { position: sticky; bottom: 0; padding-block: 12px; display: grid; background: linear-gradient(to top, var(--bg) 72%, rgba(11, 13, 18, 0)); }
 .key { margin-top: 24px; }
-.score { font: 760 44px/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.score { font: 780 46px/1 var(--f-display); font-variant-numeric: tabular-nums; }
 .score span { font: 500 17px/1 var(--f-body); color: var(--muted); }
 .key-list { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 14px; }
 .key-list li { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; }
 .key-list .km { font-weight: 700; font-variant-numeric: tabular-nums; }
 .key-list .km.ok { color: var(--good); }
 .key-list .km.no { color: var(--bad); }
-.key-list .ans { font-weight: 600; }
+.key-list .ans { font-weight: 620; }
 .key-list .yours { font-size: 15px; color: var(--muted); }
 .key-list .why { margin-top: 2px; }
 
 /* ---------- tab bar ---------- */
-.tabs-wrap { flex: none; border-top: 1px solid var(--line); background: var(--bg); }
+.tabs-wrap {
+  flex: none;
+  padding-block: 4px 8px;
+  padding-inline: max(12px, env(safe-area-inset-left, 0px)) max(12px, env(safe-area-inset-right, 0px));
+}
 .tabs {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  max-width: 620px;
+  max-width: 640px;
   margin: 0 auto;
-  padding-inline: max(8px, env(safe-area-inset-left, 0px)) max(8px, env(safe-area-inset-right, 0px));
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  padding: 5px;
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  background: rgba(24, 27, 37, 0.92);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 18px 40px -18px rgba(0, 0, 0, 0.9);
 }
 .tab {
-  min-height: 58px;
+  min-height: 56px;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
   border: 0;
+  border-radius: 19px;
   background: none;
   color: var(--faint);
-  font: 550 13px/1 var(--f-body);
+  font: 560 12px/1 var(--f-body);
+  transition: background 0.15s, color 0.15s;
 }
-.tab svg { width: 24px; height: 24px; }
-.tab[aria-selected="true"] { color: var(--fg); }
-.tab[aria-selected="true"] svg { color: var(--o); }
+.tab svg { width: 23px; height: 23px; }
+.tab[aria-selected="true"] { color: var(--fg); background: rgba(var(--o-rgb), 0.12); }
+.tab[aria-selected="true"] svg { color: var(--o); filter: drop-shadow(0 0 8px rgba(var(--o-rgb), 0.55)); }
 
 @media (min-width: 700px) {
-  .view { padding-block: 32px 48px; }
+  .view { padding-block: 24px 44px; }
+  .tab { flex-direction: row; gap: 8px; font-size: 14px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
@@ -453,12 +592,25 @@ p { margin: 0; }
     <div id="examples"></div>
 
     <h2>Мнемоника</h2>
-    <div class="mnemo">
+    <div class="panel mnemo">
       <div class="mnemo-row">
         <p class="mnemo-big">«чтобы» <span class="arrow">→</span> <span class="chu">«чу-ту»</span></p>
         <button type="button" class="speak" id="mnemoSpeak" aria-label="Озвучить: I want you to stay"></button>
       </div>
       <p>В живой речи want you to сливается в <span class="ipa">/ˈwɒntʃu tə/</span> — «уон-чу-ту». Где по-русски «чтобы», там по-английски «чу-ту». Слова that в этой фразе нет.</p>
+    </div>
+
+    <h2>Озвучка</h2>
+    <div class="panel settings">
+      <label class="field" for="voiceSel"><span>Голос</span>
+        <select class="select" id="voiceSel"></select>
+      </label>
+      <p class="voice-status" id="voiceStatus"></p>
+      <div class="row">
+        <button type="button" class="chip" id="autoBtnSet" aria-pressed="true">Автоозвучка</button>
+        <button type="button" class="chip" id="slowBtn" aria-pressed="false">Медленнее</button>
+        <button type="button" class="chip" id="voiceTest">Прослушать</button>
+      </div>
     </div>
 
     <h2>Прогресс</h2>
@@ -471,11 +623,17 @@ p { margin: 0; }
   <section class="view" id="v-cards" aria-label="Карточки" hidden>
     <div class="cards-bar">
       <span class="left" id="sessCount"></span>
-      <button type="button" class="chip" id="autoBtn" aria-pressed="true">Автоозвучка</button>
-      <button type="button" class="chip" id="accBtn" aria-label="Акцент озвучки">GB</button>
+      <button type="button" class="chip speech-only" id="autoBtn" aria-pressed="true">Автоозвучка</button>
     </div>
     <div class="stage" id="stage"></div>
     <div class="controls" id="controls"></div>
+  </section>
+
+  <!-- ======== Тренировка ======== -->
+  <section class="view" id="v-train" aria-label="Тренировка" hidden>
+    <div class="train-stats" id="trainStats"></div>
+    <div class="stage" id="trainStage"></div>
+    <div class="controls" id="trainControls"></div>
   </section>
 
   <!-- ======== Тест ======== -->
@@ -498,6 +656,10 @@ p { margin: 0; }
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7.5" width="14" height="13" rx="2.5"/><path d="M7 4h11.5A2.5 2.5 0 0 1 21 6.5V17"/></svg>
     Карточки
   </button>
+  <button type="button" class="tab" role="tab" data-tab="train" aria-selected="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="13" width="6" height="6" rx="1.5"/><rect x="9" y="13" width="6" height="6" rx="1.5"/><rect x="15.5" y="5" width="6" height="6" rx="1.5"/><path d="M18.5 13v6"/><path d="M5.5 9.5c0-3 2.5-5 6-5h1"/><path d="m11 2.5 2 2-2 2"/></svg>
+    Тренировка
+  </button>
   <button type="button" class="tab" role="tab" data-tab="test" aria-selected="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>
     Тест
@@ -509,10 +671,15 @@ p { margin: 0; }
 (function () {
   'use strict';
 
+  /*DATA-START*/
   /* ================= ДАННЫЕ =================
      Разметка: {v|глагол} {o|кого} {i|to + действие} {t|союз} {x|ошибка}.
      В pattern третья часть — подпись под слотом: {i|do|без to}.
-     Чтобы добавить карточку — допишите объект в CARDS и её id в ORDER. */
+     Добавили или изменили фразу — запустите tools/extract_phrases.mjs и tools/make_audio.py
+     (или дождитесь GitHub Actions), чтобы появилась запись голосом Ryan. */
+  const MARK = /\{(v|o|i|t|x)\|([^|}]*)(?:\|([^}]*))?\}/g;
+  const plain = s => s.replace(MARK, '$2');
+
   const CARDS = [
     { id: 'want', pattern: '{v|want} {o|sb} {i|to do}', say: 'want somebody to do something',
       ru: 'хотеть, чтобы кто-то сделал', ipa: '/wɒnt/', pos: 'глагол',
@@ -667,6 +834,76 @@ p { margin: 0; }
     { type: 'tap', segs: ['I want', 'that the team reviews', 'every adverse event', 'this week.'], wrong: [1],
       ans: 'I want the team to review every adverse event this week.', why: 'want + кого (the team) + to review. Как и с «хочу, чтобы», that не нужен.' }
   ];
+
+  // Тренировка: build — собрать фразу из слов (dis — лишние слова-ловушки), choice — быстрый выбор.
+  const DRILLS = [
+    { type: 'build', ru: 'Я хочу, чтобы ты остался.', en: 'I {v|want} {o|you} {i|to stay}.', dis: ['that'],
+      why: '«Чтобы» не переводится: want + you + to stay.' },
+    { type: 'build', ru: 'Она хочет, чтобы он позвонил врачу.', en: 'She {v|wants} {o|him} {i|to call} the doctor.', dis: ['he', 'that'],
+      why: 'Объектная форма him, а не he.' },
+    { type: 'build', ru: 'Я бы хотел, чтобы вы посмотрели снимок.', en: 'I {v|would like} {o|you} {i|to look} at the scan.', dis: ['that'],
+      why: 'would like sb to do — вежливое want.' },
+    { type: 'build', ru: 'Мне нужно, чтобы вы подписали форму.', en: 'I {v|need} {o|you} {i|to sign} the form.', dis: ['that'],
+      why: 'need sb to do — та же схема.' },
+    { type: 'build', ru: 'Мы ожидаем, что лечение поможет.', en: 'We {v|expect} {o|the treatment} {i|to help}.', dis: ['will'],
+      why: 'expect sth to do: объектом может быть не человек.' },
+    { type: 'build', ru: 'Он попросил нас подождать.', en: 'He {v|asked} {o|us} {i|to wait}.', dis: ['we'],
+      why: 'ask sb to do; объектная форма us.' },
+    { type: 'build', ru: 'Она попросила их не шуметь.', en: 'She {v|asked} {o|them} {i|not to make} noise.', dis: ['they', 'don’t'],
+      why: 'Отрицание — перед to: not to make.' },
+    { type: 'build', ru: 'Врач велел ему отдыхать.', en: 'The doctor {v|told} {o|him} {i|to rest}.', dis: ['said'],
+      why: 'tell sb to do. say так не работает.' },
+    { type: 'build', ru: 'Я советую вам сдать анализ.', en: 'I {v|advise} {o|you} {i|to take} the test.', dis: ['advice'],
+      why: 'advise — глагол, advice — существительное.' },
+    { type: 'build', ru: 'Протокол позволяет нам начать раньше.', en: 'The protocol {v|allows} {o|us} {i|to start} earlier.', dis: ['let'],
+      why: 'allow sb to do — с to.' },
+    { type: 'build', ru: 'Мы поощряем студентов задавать вопросы.', en: 'We {v|encourage} {o|students} {i|to ask} questions.', dis: ['that'],
+      why: 'encourage sb to do.' },
+    { type: 'build', ru: 'Напомни мне проверить давление.', en: '{v|Remind} {o|me} {i|to check} the blood pressure.', dis: ['that'],
+      why: 'remind sb to do.' },
+    { type: 'build', ru: 'Мы убедили её остаться.', en: 'We {v|persuaded} {o|her} {i|to stay}.', dis: ['she'],
+      why: 'persuade sb to do; объектная форма her.' },
+    { type: 'build', ru: 'Правила требуют, чтобы мы носили маски.', en: 'The rules {v|require} {o|us} {i|to wear} masks.', dis: ['that', 'we'],
+      why: 'require sb to do — без that.' },
+    { type: 'build', ru: 'Он заставил меня ждать.', en: 'He {v|made} {o|me} {i|wait}.', dis: ['to'],
+      why: 'make sb do — без to.' },
+    { type: 'build', ru: 'Позвольте мне объяснить.', en: '{v|Let} {o|me} {i|explain}.', dis: ['to'],
+      why: 'let sb do — без to.' },
+    { type: 'build', ru: 'Она предложила, чтобы мы начали заново.', en: 'She {v|suggested} {t|that} {o|we} {i|start} again.', dis: ['us', 'to'],
+      why: 'suggest that sb do — схемы «кого + to» нет.' },
+    { type: 'build', ru: 'Надеюсь, вы скоро поправитесь.', en: 'I {v|hope} {o|you} {i|get} better soon.', dis: ['to'],
+      why: 'hope (that) sb does — без «кого + to».' },
+    { type: 'build', ru: 'Он сказал мне подождать снаружи.', en: 'He {v|told} {o|me} {i|to wait} outside.', dis: ['said'],
+      why: 'По схеме — tell, не say.' },
+    { type: 'build', ru: 'Комитет настоял, чтобы мы всё переделали.', en: 'The committee {v|insisted} {t|that} {o|we} {i|redo} everything.', dis: ['us', 'to'],
+      why: 'insist that sb do.' },
+    { type: 'choice', q: 'Let me ___ the results.', opts: ['check', 'to check', 'checking'], a: 0, why: 'let sb do — без to.' },
+    { type: 'choice', q: 'They want ___ the form today.', opts: ['us to sign', 'that we sign', 'we to sign'], a: 0, why: 'want + us + to sign.' },
+    { type: 'choice', q: 'She told me ___ worry.', opts: ['not to', 'don’t', 'no'], a: 0, why: 'tell sb not to do: not перед to.' },
+    { type: 'choice', q: 'The reviewer suggested ___ more data.', opts: ['that we add', 'us to add', 'we to add'], a: 0, why: 'suggest that sb do.' },
+    { type: 'choice', q: 'The smell made him ___ sick.', opts: ['feel', 'to feel', 'feeling'], a: 0, why: 'make sb do — без to.' },
+    { type: 'choice', q: 'I’d like ___ meet our new registrar.', opts: ['you to', 'that you', 'you'], a: 0, why: 'would like sb to do.' },
+    { type: 'choice', q: 'He ___ me to call him back.', opts: ['asked', 'said', 'suggested'], a: 0, why: 'ask sb to do. say и suggest так не работают.' },
+    { type: 'choice', q: 'The software ___ us to share scans securely.', opts: ['allows', 'lets', 'makes'], a: 0, why: 'allow — с to; let и make — без to.' },
+    { type: 'choice', q: 'I hope ___ join the meeting.', opts: ['you will', 'you to', 'that you to'], a: 0, why: 'hope (that) sb will do.' },
+    { type: 'choice', q: 'The nurse reminded him ___ his medication.', opts: ['to take', 'take', 'that take'], a: 0, why: 'remind sb to do.' },
+    { type: 'choice', q: 'We expect ___ by Friday.', opts: ['the results to arrive', 'the results arrive', 'to arrive the results'], a: 0, why: 'expect sth to do.' },
+    { type: 'choice', q: 'Our policy requires staff ___ gloves.', opts: ['to wear', 'wear', 'wearing'], a: 0, why: 'require sb to do.' }
+  ];
+
+  const MNEMO_PHRASE = 'I want you to stay.';
+  const drillSentence = d => d.type === 'build' ? plain(d.en) : d.q.replace('___', d.opts[d.a]);
+
+  // Все английские фразы, которые приложение озвучивает (для записей голосом Ryan).
+  function allPhrases() {
+    const out = new Set([MNEMO_PHRASE]);
+    CARDS.forEach(c => { out.add(c.say); out.add(plain(c.ex)); });
+    EXAMPLES.forEach(g => g.lines.forEach(l => { if (!l.bad) out.add(plain(l.en)); }));
+    DRILLS.forEach(d => out.add(drillSentence(d)));
+    return Array.from(out);
+  }
+  /*DATA-END*/
+
   const TASK_TYPE = { choice: 'Выбери вариант', gap: 'Вставь глагол', tap: 'Найди ошибку', tr: 'Переведи' };
 
   /* ================= УТИЛИТЫ ================= */
@@ -674,6 +911,7 @@ p { margin: 0; }
   const SESSION_MAX = 12;
   const LS_KEY = 'want-you-to.progress.v1';
   const TAB_KEY = 'want-you-to.tab';
+  const RYAN = 'ryan';
   const SLOT_LABEL = { v: 'глагол', o: 'кого', i: 'to + действие', t: 'союз' };
   const ICON_SPEAK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
 
@@ -681,10 +919,10 @@ p { margin: 0; }
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const MARK = /\{(v|o|i|t|x)\|([^|}]*)(?:\|([^}]*))?\}/g;
   const mark = s => esc(s).replace(MARK, (m, k, t) => '<span class="hl hl-' + k + '">' + t + '</span>');
-  const plain = s => s.replace(MARK, '$2');
   const reduced = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const speakBtn = (text, cls, label) => '<button type="button" class="speak' + (cls ? ' ' + cls : '') + '" data-say="' + esc(text) +
+    '" aria-label="' + esc(label || 'Озвучить') + '">' + ICON_SPEAK + '</button>';
 
   function plural(n, one, few, many) {
     const a = Math.abs(n) % 100, b = a % 10;
@@ -705,6 +943,13 @@ p { margin: 0; }
     for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; }
     return r;
   }
+  // FNV-1a по UTF-8: имя файла записи = хэш фразы (тот же алгоритм в tools/make_audio.py).
+  function fnv(s) {
+    const bytes = new TextEncoder().encode(s);
+    let h = 0x811c9dc5;
+    for (let k = 0; k < bytes.length; k++) { h ^= bytes[k]; h = Math.imul(h, 0x01000193) >>> 0; }
+    return ('0000000' + h.toString(16)).slice(-8);
+  }
   function formula(p) {
     const out = [];
     p.replace(MARK, (m, k, t, l) => {
@@ -716,7 +961,9 @@ p { margin: 0; }
 
   /* ================= ПРОГРЕСС ================= */
   function blank() {
-    return { v: 1, t: 0, resetAt: 0, cards: {}, set: { auto: true, acc: 'en-GB', t: 0 }, test: { best: null, last: null, at: 0 } };
+    return { v: 1, t: 0, resetAt: 0, cards: {},
+      set: { auto: true, voice: RYAN, slow: false, t: 0 },
+      test: { best: null, last: null, at: 0 } };
   }
   function normalize(s) {
     const b = blank();
@@ -733,7 +980,8 @@ p { margin: 0; }
     }
     if (s.set && typeof s.set === 'object') {
       b.set.auto = s.set.auto !== false;
-      b.set.acc = s.set.acc === 'en-US' ? 'en-US' : 'en-GB';
+      b.set.voice = typeof s.set.voice === 'string' && s.set.voice.length < 300 ? s.set.voice : RYAN;
+      b.set.slow = s.set.slow === true;
       b.set.t = +s.set.t || 0;
     }
     if (s.test && typeof s.test === 'object') {
@@ -847,33 +1095,101 @@ p { margin: 0; }
     return min === Infinity ? 0 : min - t;
   }
 
-  /* ================= ОЗВУЧКА ================= */
+  /* ================= ОЗВУЧКА =================
+     1) записи голосом Microsoft Ryan (audio/<хэш>.mp3, список в audio/index.json);
+     2) иначе голос устройства: Microsoft Ryan, если он есть (Edge), затем лучший британский. */
   const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
   let voices = [];
-  function loadVoices() { try { voices = synth ? synth.getVoices() : []; } catch (e) { voices = []; } }
+  function loadVoices() {
+    try { voices = synth ? synth.getVoices().filter(v => /^en([-_]|$)/i.test(v.lang || '')) : []; } catch (e) { voices = []; }
+    if (typeof renderVoiceUI === 'function') renderVoiceUI();
+  }
+  const voice = {
+    files: null,
+    audio: null,
+    async init() {
+      try {
+        const r = await fetch('audio/index.json', { cache: 'no-cache' });
+        if (r.ok) {
+          const j = await r.json();
+          if (j && Array.isArray(j.files) && j.files.length) {
+            this.files = new Set(j.files);
+            document.body.classList.remove('no-speech');
+          }
+        }
+      } catch (e) { /* записей нет — работаем на голосе устройства */ }
+      renderVoiceUI();
+    },
+    hasFile(text) { return !!(this.files && this.files.has(fnv(text))); },
+    deviceVoice() {
+      if (state.set.voice !== RYAN) {
+        const chosen = voices.find(v => v.voiceURI === state.set.voice);
+        if (chosen) return chosen;
+      }
+      const gb = voices.filter(v => /en[-_]gb/i.test(v.lang));
+      return voices.find(v => /ryan/i.test(v.name)) ||
+        gb.find(v => /natural|online|neural/i.test(v.name)) ||
+        gb.find(v => /enhanced|premium|улучш/i.test(v.name)) ||
+        gb.find(v => /daniel|arthur/i.test(v.name)) ||
+        gb[0] || voices.find(v => /en[-_]us/i.test(v.lang)) || voices[0] || null;
+    },
+    speak(text) {
+      this.stop();
+      if (state.set.voice === RYAN && this.hasFile(text)) {
+        try {
+          if (!this.audio) this.audio = new Audio();
+          const a = this.audio;
+          a.src = 'audio/' + fnv(text) + '.mp3';
+          a.playbackRate = state.set.slow ? 0.82 : 1;
+          const p = a.play();
+          if (p && p.catch) p.catch(() => this.tts(text));
+          return;
+        } catch (e) { /* падаем на голос устройства */ }
+      }
+      this.tts(text);
+    },
+    tts(text) {
+      if (!synth) return;
+      try {
+        const u = new SpeechSynthesisUtterance(text);
+        const v = this.deviceVoice();
+        if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = 'en-GB'; }
+        u.rate = state.set.slow ? 0.75 : 0.92;
+        synth.speak(u);
+      } catch (e) { /* озвучка недоступна */ }
+    },
+    stop() {
+      try { if (this.audio) this.audio.pause(); } catch (e) { /* ничего */ }
+      try { if (synth) synth.cancel(); } catch (e) { /* ничего */ }
+    }
+  };
+  const speak = text => voice.speak(text);
   if (synth) {
     loadVoices();
     try { synth.addEventListener('voiceschanged', loadVoices); } catch (e) { /* старый Safari */ }
   } else {
     document.body.classList.add('no-speech');
   }
-  function pickVoice(lang) {
-    const L = lang.toLowerCase();
-    const n = v => (v.lang || '').replace('_', '-').toLowerCase();
-    return voices.find(v => n(v) === L && v.localService) || voices.find(v => n(v) === L) ||
-      voices.find(v => n(v).indexOf('en') === 0) || null;
-  }
-  function speak(text) {
-    if (!synth) return;
-    try {
-      synth.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = state.set.acc;
-      const v = pickVoice(state.set.acc);
-      if (v) u.voice = v;
-      u.rate = 0.9;
-      synth.speak(u);
-    } catch (e) { /* озвучка недоступна */ }
+
+  function renderVoiceUI() {
+    const sel = $('#voiceSel');
+    if (!sel) return;
+    const opts = ['<option value="' + RYAN + '">Microsoft Ryan</option>'].concat(
+      voices.slice().sort((a, b) => (/gb/i.test(b.lang) - /gb/i.test(a.lang)) || a.name.localeCompare(b.name))
+        .map(v => '<option value="' + esc(v.voiceURI) + '">' + esc(v.name) + ' · ' + esc(v.lang) + '</option>'));
+    sel.innerHTML = opts.join('');
+    sel.value = voices.some(v => v.voiceURI === state.set.voice) ? state.set.voice : RYAN;
+    const st = $('#voiceStatus');
+    const dv = voice.deviceVoice();
+    if (sel.value === RYAN && voice.files) {
+      st.innerHTML = 'Звучат записи голоса <b>Microsoft Ryan</b> (' + voice.files.size + ' ' + plural(voice.files.size, 'фраза', 'фразы', 'фраз') + ').';
+    } else if (sel.value === RYAN && dv && /ryan/i.test(dv.name)) {
+      st.innerHTML = 'Звучит голос устройства <b>' + esc(dv.name) + '</b>.';
+    } else if (sel.value === RYAN) {
+      st.innerHTML = 'Записи Ryan пока не найдены, поэтому звучит голос устройства' + (dv ? ' <b>' + esc(dv.name) + '</b>' : '') + '.';
+    } else {
+      st.innerHTML = 'Звучит голос устройства <b>' + esc(dv ? dv.name : '') + '</b>.';
+    }
   }
 
   /* ================= ПРАВИЛО ================= */
@@ -881,11 +1197,14 @@ p { margin: 0; }
     $('#pron').innerHTML = PRONOUNS.map(p => '<div><span>' + p[0] + '</span><b>' + p[1] + '</b></div>').join('');
     $('#examples').innerHTML = EXAMPLES.map(g =>
       '<div class="exg">' + g.lines.map(l =>
-        '<p class="exl' + (l.bad ? ' bad' : '') + '">' + mark(l.en) + '</p>' + (l.ru ? '<p class="exr">' + esc(l.ru) + '</p>' : '')
+        (l.bad
+          ? '<p class="exl bad">' + mark(l.en) + '</p>'
+          : '<div class="exrow"><p class="exl">' + mark(l.en) + '</p>' + speakBtn(plain(l.en), 'sm', 'Озвучить пример') + '</div>') +
+        (l.ru ? '<p class="exr">' + esc(l.ru) + '</p>' : '')
       ).join('') + '<p class="why">' + esc(g.why) + '</p></div>'
     ).join('');
     $('#mnemoSpeak').innerHTML = ICON_SPEAK;
-    $('#mnemoSpeak').addEventListener('click', () => speak('I want you to stay.'));
+    $('#mnemoSpeak').dataset.say = MNEMO_PHRASE;
     renderVerbChips();
     renderStats();
   }
@@ -897,19 +1216,19 @@ p { margin: 0; }
     return s + '</span>';
   }
   function renderVerbChips() {
-    const chip = c => '<button type="button" class="vchip' + (c.trap ? ' trap' : '') + '" data-id="' + c.id +
+    const chip = c => '<button type="button" class="vchip' + (c.trap ? ' trap' : '') + '" data-say="' + esc(c.say) +
       '" aria-label="' + esc(plain(c.pattern)) + '">' + esc(c.pattern.match(/\{v\|([^|}]*)/)[1]) +
       levelBars(c.id) + '</button>';
     $('#verbsCore').innerHTML = CARDS.filter(c => !c.trap).map(chip).join('');
     $('#verbsTrap').innerHTML = CARDS.filter(c => c.trap).map(chip).join('');
   }
-  function renderStats() {
+  function statsHTML() {
     const k = counts();
-    $('#stats').innerHTML =
-      '<div><b>' + k.fresh + '</b><span>новых</span></div>' +
+    return '<div><b>' + k.fresh + '</b><span>новых</span></div>' +
       '<div><b>' + k.learning + '</b><span>учу</span></div>' +
       '<div><b>' + k.solid + '</b><span>закреплено</span></div>';
   }
+  function renderStats() { $('#stats').innerHTML = statsHTML(); }
   function renderSyncNote() {
     $('#syncNote').textContent = sync.on
       ? 'Прогресс синхронизируется между вашими устройствами.'
@@ -917,18 +1236,17 @@ p { margin: 0; }
   }
   function renderDueChip() {
     const k = counts();
-    $('#dueChip').innerHTML = k.pending
-      ? 'Сегодня: <b>' + k.pending + '</b>'
-      : 'Всё повторено';
+    $('#dueChip').innerHTML = k.pending ? 'Сегодня: <b>' + k.pending + '</b>' : 'Всё повторено';
   }
 
   /* ================= КАРТОЧКИ ================= */
-  let session = { queue: [], total: 0, flipped: false, touched: false, busy: false };
+  let session = { queue: [], total: 0, flipped: false, touched: false, cram: false };
 
-  function buildSession(all) {
+  // cram = тренировка: все карточки подряд, расписание повторений не меняется.
+  function buildSession(cram) {
     const t = today();
     let q;
-    if (all) {
+    if (cram) {
       q = shuffle(ORDER);
     } else {
       const due = ORDER.filter(id => state.cards[id] && state.cards[id].d <= t)
@@ -936,40 +1254,39 @@ p { margin: 0; }
       const fresh = ORDER.filter(id => !state.cards[id]);
       q = due.concat(fresh).slice(0, SESSION_MAX);
     }
-    session = { queue: q, total: q.length, flipped: false, touched: false, busy: false };
+    session = { queue: q, total: q.length, flipped: false, touched: false, cram: !!cram };
     renderCard();
   }
 
   function renderCount() {
-    $('#sessCount').textContent = session.queue.length
-      ? 'Осталось: ' + session.queue.length
+    $('#sessCount').innerHTML = session.queue.length
+      ? (session.cram ? '<b>Тренировка</b> · ' : '') + 'осталось ' + session.queue.length
       : '';
   }
 
   function renderCard() {
     renderCount();
-    const stage = $('#stage');
     if (!session.queue.length) { renderDone(); return; }
     const c = byId[session.queue[0]];
     const st = state.cards[c.id];
     session.flipped = false;
-    stage.innerHTML =
+    $('#stage').innerHTML =
       '<article class="card' + (c.trap ? ' trap' : '') + '" id="card" tabindex="0" aria-label="Карточка: ' + esc(plain(c.pattern)) + '">' +
         '<div class="card-top"><span class="kind">' + (c.trap ? 'Ловушка' : 'Схема') + (st ? '' : ' · новая') + '</span>' +
-        '<button type="button" class="speak" data-say="front" aria-label="Озвучить схему">' + ICON_SPEAK + '</button></div>' +
+        speakBtn(c.say, '', 'Озвучить схему') + '</div>' +
         formula(c.pattern) +
         (c.flag ? '<p class="flag">' + esc(c.flag) + '</p>' : '') +
         '<div class="back" hidden>' +
           '<p class="ru">' + esc(c.ru) + '</p>' +
           '<p class="meta"><span class="ipa">' + esc(c.ipa) + '</span> · ' + esc(c.pos) + '</p>' +
           '<div class="ex"><p class="ex-en">' + mark(c.ex) + '</p>' +
-          '<button type="button" class="speak sm" data-say="ex" aria-label="Озвучить пример">' + ICON_SPEAK + '</button>' +
+          speakBtn(plain(c.ex), 'sm', 'Озвучить пример') +
           '<p class="ex-ru">' + esc(c.exRu) + '</p></div>' +
           (c.note ? '<p class="note">' + mark(c.note) + '</p>' : '') +
         '</div>' +
         '<p class="hint">Коснитесь карточки, чтобы открыть ответ. Свайп вправо — знаю, влево — не знаю.</p>' +
       '</article>';
-    bindCard($('#card'), c);
+    bindCard($('#card'));
     renderControls();
   }
 
@@ -983,11 +1300,12 @@ p { margin: 0; }
     }
     const st = state.cards[session.queue[0]];
     const iv = INTERVALS[Math.min(st ? st.l : 0, 3)];
+    const sub = session.cram ? ['ещё раз', 'дальше', 'дальше'] : ['ещё раз сейчас', 'завтра', inDays(iv)];
     ctr.innerHTML =
       '<div class="rate">' +
-        '<button type="button" class="btn r-again" data-r="again">Не знаю<small>ещё раз сейчас</small></button>' +
-        '<button type="button" class="btn r-almost" data-r="almost">Почти<small>завтра</small></button>' +
-        '<button type="button" class="btn r-know" data-r="know">Знаю<small>' + inDays(iv) + '</small></button>' +
+        '<button type="button" class="btn r-again" data-r="again">Не знаю<small>' + sub[0] + '</small></button>' +
+        '<button type="button" class="btn r-almost" data-r="almost">Почти<small>' + sub[1] + '</small></button>' +
+        '<button type="button" class="btn r-know" data-r="know">Знаю<small>' + sub[2] + '</small></button>' +
       '</div>';
     $$('[data-r]', ctr).forEach(b => b.addEventListener('click', () => rateAnim(b.dataset.r)));
   }
@@ -1001,7 +1319,7 @@ p { margin: 0; }
     renderControls();
   }
 
-  function bindCard(el, c) {
+  function bindCard(el) {
     let x0 = 0, y0 = 0, dx = 0, down = false, drag = false, pid = null;
     el.addEventListener('pointerdown', e => {
       if (e.target.closest('button')) return;
@@ -1039,48 +1357,58 @@ p { margin: 0; }
     };
     el.addEventListener('pointerup', end);
     el.addEventListener('pointercancel', end);
-    el.addEventListener('click', e => {
-      const b = e.target.closest('[data-say]');
-      if (b) speak(b.dataset.say === 'ex' ? plain(c.ex) : c.say);
-    });
   }
 
+  // Оценка применяется сразу (звук стартует в том же касании — так требует iOS),
+  // а уходящая карточка улетает копией поверх новой.
   function rateAnim(r) {
-    if (session.busy || !session.queue.length) return;
+    if (!session.queue.length) return;
     const el = $('#card');
-    if (!el || reduced()) { rate(r); return; }
-    session.busy = true;
-    el.classList.remove('dragging');
-    el.classList.add('leaving');
-    const x = r === 'know' ? 'translateX(120%) rotate(8deg)' : r === 'again' ? 'translateX(-120%) rotate(-8deg)' : 'translateY(-24px)';
-    el.style.transform = x;
-    el.style.opacity = '0';
-    setTimeout(() => { session.busy = false; rate(r); }, 210);
+    let ghost = null;
+    if (el && !reduced()) {
+      ghost = el.cloneNode(true);
+      ghost.removeAttribute('id');
+      ghost.classList.add('ghost');
+      ghost.classList.remove('dragging');
+      ghost.style.top = el.offsetTop + 'px';
+      ghost.style.left = el.offsetLeft + 'px';
+      ghost.style.width = el.offsetWidth + 'px';
+    }
+    rate(r);
+    if (!ghost) return;
+    $('#stage').appendChild(ghost);
+    requestAnimationFrame(() => {
+      ghost.style.transform = r === 'know' ? 'translateX(120%) rotate(8deg)' : r === 'again' ? 'translateX(-120%) rotate(-8deg)' : 'translateY(-28px) scale(0.97)';
+      ghost.style.opacity = '0';
+    });
+    setTimeout(() => ghost.remove(), 280);
   }
 
   function rate(r) {
     const id = session.queue[0];
     if (!id) return;
-    const t = today();
-    const c = state.cards[id] ? Object.assign({}, state.cards[id]) : { l: 0, d: t, t: 0, n: 0 };
-    if (r === 'know') {
-      const iv = INTERVALS[Math.min(c.l, 3)];
-      c.l = Math.min(c.l + 1, 4);
-      c.d = t + iv;
-    } else if (r === 'almost') {
-      c.d = t + 1;
-    } else {
-      c.l = 0;
-      c.d = t;
+    if (!session.cram) {
+      const t = today();
+      const c = state.cards[id] ? Object.assign({}, state.cards[id]) : { l: 0, d: t, t: 0, n: 0 };
+      if (r === 'know') {
+        const iv = INTERVALS[Math.min(c.l, 3)];
+        c.l = Math.min(c.l + 1, 4);
+        c.d = t + iv;
+      } else if (r === 'almost') {
+        c.d = t + 1;
+      } else {
+        c.l = 0;
+        c.d = t;
+      }
+      c.t = Date.now();
+      c.n = (c.n || 0) + 1;
+      state.cards[id] = c;
+      state.t = Date.now();
+      save();
     }
-    c.t = Date.now();
-    c.n = (c.n || 0) + 1;
-    state.cards[id] = c;
-    state.t = Date.now();
     session.queue.shift();
     session.touched = true;
     if (r === 'again') session.queue.splice(Math.min(3, session.queue.length), 0, id);
-    save();
     renderCard();
     renderDueChip();
     renderVerbChips();
@@ -1091,26 +1419,24 @@ p { margin: 0; }
   function renderDone() {
     const k = counts();
     const next = nextDueIn();
-    const title = session.total
-      ? 'Пройдено: ' + session.total + ' ' + plural(session.total, 'карточка', 'карточки', 'карточек')
-      : 'На сегодня всё повторено';
+    const title = session.cram
+      ? 'Все ' + CARDS.length + ' карточек пройдены'
+      : session.total
+        ? 'Пройдено: ' + session.total + ' ' + plural(session.total, 'карточка', 'карточки', 'карточек')
+        : 'На сегодня всё повторено';
     const nextLine = k.pending
       ? 'Сегодня ждут ещё ' + k.pending + ' ' + plural(k.pending, 'карточка', 'карточки', 'карточек') + '.'
       : next ? 'Следующее повторение — ' + inDays(next) + '.' : '';
     $('#stage').innerHTML =
       '<div class="done">' +
-        '<p class="done-kicker">' + (session.total ? 'Сессия завершена' : 'Готово') + '</p>' +
+        '<p class="done-kicker">' + (session.cram ? 'Тренировка завершена' : session.total ? 'Сессия завершена' : 'Готово') + '</p>' +
         '<h3 class="done-title">' + title + '</h3>' +
-        '<div class="stats">' +
-          '<div><b>' + k.fresh + '</b><span>новых</span></div>' +
-          '<div><b>' + k.learning + '</b><span>учу</span></div>' +
-          '<div><b>' + k.solid + '</b><span>закреплено</span></div>' +
-        '</div>' +
+        '<div class="stats">' + statsHTML() + '</div>' +
         (nextLine ? '<p class="done-next">' + nextLine + '</p>' : '') +
       '</div>';
     $('#controls').innerHTML =
       (k.pending ? '<button type="button" class="btn btn-primary" id="moreBtn">Продолжить: ещё ' + Math.min(k.pending, SESSION_MAX) + '</button>' : '') +
-      '<button type="button" class="btn" id="allBtn">Пройти все ' + CARDS.length + ' карточек</button>';
+      '<button type="button" class="btn" id="allBtn">Тренировка: все ' + CARDS.length + ' карточек без расписания</button>';
     if (k.pending) $('#moreBtn').addEventListener('click', () => { buildSession(false); speakFront(); });
     $('#allBtn').addEventListener('click', () => { buildSession(true); speakFront(); });
   }
@@ -1119,25 +1445,137 @@ p { margin: 0; }
     if (state.set.auto && session.queue.length && !session.flipped) speak(byId[session.queue[0]].say);
   }
 
-  function renderSettings() {
-    $('#autoBtn').setAttribute('aria-pressed', String(state.set.auto));
-    $('#autoBtn').textContent = state.set.auto ? 'Автоозвучка: вкл' : 'Автоозвучка: выкл';
-    $('#accBtn').textContent = state.set.acc === 'en-GB' ? 'GB' : 'US';
+  /* ================= ТРЕНИРОВКА ================= */
+  let tr = null;
+
+  function startTraining() {
+    tr = { queue: shuffle(DRILLS.map((_, k) => k)), total: DRILLS.length, right: 0, answered: 0, streak: 0, best: 0,
+      cur: -1, checked: false, ok: false, tiles: [], picked: [] };
+    nextDrill();
+  }
+  const tokens = d => plain(d.en).replace(/[.?!]$/, '').split(' ');
+
+  function nextDrill() {
+    if (!tr.queue.length) { renderTrainDone(); return; }
+    tr.cur = tr.queue[0];
+    tr.checked = false;
+    tr.ok = false;
+    tr.picked = [];
+    tr.pick = null;
+    const d = DRILLS[tr.cur];
+    if (d.type === 'build') tr.tiles = shuffle(tokens(d).concat(d.dis || [])).map((w, k) => ({ w: w, k: k }));
+    else tr.order = shuffle(d.opts.map((_, j) => j));
+    renderDrill();
   }
 
+  function renderTrainStats() {
+    const acc = tr && tr.answered ? Math.round(tr.right / tr.answered * 100) + '%' : '—';
+    $('#trainStats').innerHTML = tr && tr.queue.length
+      ? '<span>осталось <b>' + tr.queue.length + '</b></span><span class="streak">серия <b>' + tr.streak + '</b></span><span>точность <b>' + acc + '</b></span>'
+      : '';
+  }
+
+  function renderDrill() {
+    renderTrainStats();
+    const d = DRILLS[tr.cur];
+    let body;
+    if (d.type === 'build') {
+      body = '<p class="kind">Соберите фразу</p><p class="dr-ru">' + esc(d.ru) + '</p>' +
+        '<div class="answer' + (tr.checked ? (tr.ok ? ' ok' : ' no') : '') + '" id="answer" data-empty="Нажимайте на слова по порядку">' +
+          tr.picked.map(k => '<button type="button" class="tile" data-k="' + k + '"' + (tr.checked ? ' disabled' : '') + '>' + esc(tr.tiles[k].w) + '</button>').join('') +
+        '</div>' +
+        (tr.checked ? '' : '<div class="pool">' + tr.tiles.filter(t => tr.picked.indexOf(t.k) < 0)
+          .map(t => '<button type="button" class="tile" data-k="' + t.k + '">' + esc(t.w) + '</button>').join('') + '</div>');
+    } else {
+      const [pre, post] = d.q.split('___');
+      body = '<p class="kind">Выберите вариант</p><p class="dr-q">' + esc(pre) + '<span class="blank">' +
+        (tr.checked ? esc(d.opts[d.a]) : '&nbsp;') + '</span>' + esc(post) + '</p>' +
+        '<div class="opts' + (tr.checked ? ' checked' : '') + '">' + tr.order.map(j =>
+          '<button type="button" class="opt' + (j === d.a ? ' correct' : '') + '" data-j="' + j + '" aria-pressed="' + (tr.pick === j && tr.checked) + '">' + esc(d.opts[j]) + '</button>').join('') +
+        '</div>';
+    }
+    if (tr.checked) {
+      const sentence = drillSentence(d);
+      const shown = d.type === 'build' ? mark(d.en) : esc(sentence);
+      body += '<div class="feedback ' + (tr.ok ? 'ok' : 'no') + '">' +
+        '<div class="fb-head"><span class="fb-title">' + (tr.ok ? '✓ Верно' : '✗ Правильно так:') + '</span>' + speakBtn(sentence, 'sm', 'Озвучить фразу') + '</div>' +
+        '<p class="fb-en">' + shown + '</p><p class="why">' + esc(d.why) + '</p></div>';
+    }
+    $('#trainStage').innerHTML = '<div class="panel drill">' + body + '</div>';
+
+    const ctr = $('#trainControls');
+    if (tr.checked) {
+      ctr.innerHTML = '<button type="button" class="btn btn-primary" id="trNext">Дальше</button>';
+      $('#trNext').addEventListener('click', advanceDrill);
+    } else if (d.type === 'build') {
+      ctr.innerHTML = '<div class="two"><button type="button" class="btn" id="trClear"' + (tr.picked.length ? '' : ' disabled') + '>Сбросить</button>' +
+        '<button type="button" class="btn btn-primary" id="trCheck"' + (tr.picked.length ? '' : ' disabled') + '>Проверить</button></div>';
+      $('#trClear').addEventListener('click', () => { tr.picked = []; renderDrill(); });
+      $('#trCheck').addEventListener('click', checkDrill);
+    } else {
+      ctr.innerHTML = '';
+    }
+  }
+
+  function checkDrill() {
+    const d = DRILLS[tr.cur];
+    const ok = d.type === 'build'
+      ? tr.picked.map(k => tr.tiles[k].w).join(' ') === tokens(d).join(' ')
+      : tr.pick === d.a;
+    tr.checked = true;
+    tr.ok = ok;
+    tr.answered++;
+    if (ok) { tr.right++; tr.streak++; tr.best = Math.max(tr.best, tr.streak); } else { tr.streak = 0; }
+    renderDrill();
+    if (state.set.auto) speak(drillSentence(d));
+  }
+
+  function advanceDrill() {
+    const cur = tr.queue.shift();
+    if (!tr.ok) tr.queue.splice(Math.min(4, tr.queue.length), 0, cur);
+    nextDrill();
+    $('#main').scrollTop = 0;
+  }
+
+  function renderTrainDone() {
+    renderTrainStats();
+    const acc = tr.answered ? Math.round(tr.right / tr.answered * 100) : 0;
+    $('#trainStage').innerHTML =
+      '<div class="done"><p class="done-kicker">Тренировка завершена</p>' +
+      '<h3 class="done-title">Все ' + tr.total + ' фраз собраны</h3>' +
+      '<div class="stats"><div><b>' + acc + '%</b><span>с первого раза</span></div>' +
+      '<div><b>' + tr.best + '</b><span>лучшая серия</span></div>' +
+      '<div><b>' + tr.answered + '</b><span>ответов</span></div></div>' +
+      '<p class="done-next">Ошибки возвращались, пока вы не ответили верно. На расписание карточек тренировка не влияет.</p></div>';
+    $('#trainControls').innerHTML = '<button type="button" class="btn btn-primary" id="trAgain">Ещё раз</button>';
+    $('#trAgain').addEventListener('click', startTraining);
+  }
+
+  $('#trainStage').addEventListener('click', e => {
+    if (!tr || tr.checked) return;
+    const tile = e.target.closest('.tile');
+    if (tile) {
+      const k = +tile.dataset.k;
+      const at = tr.picked.indexOf(k);
+      if (at >= 0) tr.picked.splice(at, 1); else tr.picked.push(k);
+      renderDrill();
+      return;
+    }
+    const opt = e.target.closest('.opt');
+    if (opt) { tr.pick = +opt.dataset.j; checkDrill(); }
+  });
+
   /* ================= ТЕСТ ================= */
-  let test = { picks: {}, orders: {}, checked: false };
+  let test = { picks: {}, checked: false };
   const norm = s => String(s || '').toLowerCase().replace(/[’‘`]/g, "'").replace(/[.!?,;:«»"]+/g, ' ').replace(/\s+/g, ' ').trim();
 
   function renderTest() {
-    test = { picks: {}, orders: {}, checked: false };
+    test = { picks: {}, checked: false };
     $('#tasks').innerHTML = TASKS.map((t, i) => {
       let body = '';
       if (t.type === 'choice') {
-        const order = shuffle(t.opts.map((_, j) => j));
-        test.orders[i] = order;
         body = '<p class="tq">' + esc(t.q) + '</p><div class="opts">' +
-          order.map(j => '<button type="button" class="opt' + (j === t.a ? ' correct' : '') + '" data-i="' + i + '" data-j="' + j + '" aria-pressed="false">' + esc(t.opts[j]) + '</button>').join('') +
+          shuffle(t.opts.map((_, j) => j)).map(j => '<button type="button" class="opt' + (j === t.a ? ' correct' : '') + '" data-i="' + i + '" data-j="' + j + '" aria-pressed="false">' + esc(t.opts[j]) + '</button>').join('') +
           '</div>';
       } else if (t.type === 'gap') {
         const parts = t.q.split('___');
@@ -1224,7 +1662,16 @@ p { margin: 0; }
     k.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' });
   }
 
-  /* ================= НАВИГАЦИЯ ================= */
+  /* ================= НАСТРОЙКИ И НАВИГАЦИЯ ================= */
+  function renderSettings() {
+    ['#autoBtn', '#autoBtnSet'].forEach(s => {
+      $(s).setAttribute('aria-pressed', String(state.set.auto));
+      $(s).textContent = state.set.auto ? 'Автоозвучка: вкл' : 'Автоозвучка: выкл';
+    });
+    $('#slowBtn').setAttribute('aria-pressed', String(state.set.slow));
+    renderVoiceUI();
+  }
+
   function showTab(name) {
     $$('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
     $$('.view').forEach(v => { v.hidden = v.id !== 'v-' + name; });
@@ -1252,16 +1699,20 @@ p { margin: 0; }
       if (!session.queue.length && counts().pending) buildSession(false);
       speakFront();
     });
-    $('#autoBtn').addEventListener('click', () => {
-      state.set.auto = !state.set.auto; state.set.t = Date.now(); save(); renderSettings();
+    // Любая кнопка с data-say озвучивает свою фразу.
+    document.addEventListener('click', e => {
+      const b = e.target.closest('[data-say]');
+      if (b) speak(b.dataset.say);
     });
-    $('#accBtn').addEventListener('click', () => {
-      state.set.acc = state.set.acc === 'en-GB' ? 'en-US' : 'en-GB'; state.set.t = Date.now(); save(); renderSettings();
-      speak('I want you to stay.');
+    const toggleAuto = () => { state.set.auto = !state.set.auto; state.set.t = Date.now(); save(); renderSettings(); };
+    $('#autoBtn').addEventListener('click', toggleAuto);
+    $('#autoBtnSet').addEventListener('click', toggleAuto);
+    $('#slowBtn').addEventListener('click', () => {
+      state.set.slow = !state.set.slow; state.set.t = Date.now(); save(); renderSettings(); speak(MNEMO_PHRASE);
     });
-    $('#v-rule').addEventListener('click', e => {
-      const b = e.target.closest('.vchip');
-      if (b) speak(byId[b.dataset.id].say);
+    $('#voiceTest').addEventListener('click', () => speak(MNEMO_PHRASE));
+    $('#voiceSel').addEventListener('change', e => {
+      state.set.voice = e.target.value; state.set.t = Date.now(); save(); renderVoiceUI(); speak(MNEMO_PHRASE);
     });
     $('#resetBtn').addEventListener('click', () => {
       const btn = $('#resetBtn');
@@ -1282,7 +1733,7 @@ p { margin: 0; }
       renderDueChip(); renderVerbChips(); renderStats();
     });
     document.addEventListener('keydown', e => {
-      if ($('#v-cards').hidden || e.target.closest('input, textarea') || e.metaKey || e.ctrlKey || e.altKey) return;
+      if ($('#v-cards').hidden || e.target.closest('input, textarea, select') || e.metaKey || e.ctrlKey || e.altKey) return;
       if (!session.queue.length) return;
       if ((e.key === ' ' || e.key === 'Enter') && !e.target.closest('button')) { e.preventDefault(); flip(); }
       else if (e.key === '1' || e.key === 'ArrowLeft') rateAnim('again');
@@ -1297,11 +1748,13 @@ p { margin: 0; }
   renderSyncNote();
   renderDueChip();
   buildSession(false);
+  startTraining();
   renderTest();
   bindChrome();
   let startTab = 'rule';
   try { startTab = localStorage.getItem(TAB_KEY) || 'rule'; } catch (e) { /* по умолчанию правило */ }
-  showTab(['rule', 'cards', 'test'].indexOf(startTab) >= 0 ? startTab : 'rule');
+  showTab(['rule', 'cards', 'train', 'test'].indexOf(startTab) >= 0 ? startTab : 'rule');
+  voice.init();
   sync.init();
 
   // Офлайн-режим для версии на GitHub Pages (внутри Claude не нужен).
