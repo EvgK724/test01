@@ -1,0 +1,984 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<title>Три тройки</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Три тройки">
+<meta name="application-name" content="Три тройки">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAF9klEQVR42u2dPWsUQRjH7ytcI5LDBOQEi2iRgCFVEFSMKIImQZSAL6hdVBQEBV8QQQtBSyWFTfClsRKsbAQLP4SFtYUfwT+sHEvi7t7uzuzMM/f78zR3t7uzm/yYeV5mZ3p9hArU40+AgAMBBwIOBBwIOBBwIOBAwIGAAwEHQsCBgAMBBwIOBBwIOBBwIOBAwIGAAyHgQMCBgAMBBwIOBBwIOBBwIOBAwIHQhMIxGMwsLhy/uP7wwb33z5583nr789OH3yPTR32pn3SADtPBwJG+9g1n11ZuvXrxLY/COKZTdKJOB44EpQ5APUFdJnaaLqJLAUc6WGiMaI9F3nTBSUAkZTg0CjjpLUp6kbQHmmThOHniyjY304epCTUEHJZ05+Yb31jkTc0Bh40YtUEw0t7UaHoRbw8y4CN9OMKSkSQf6cARnIwRH8Ax0R7ohPinKcChYDIeMjJLI741D8e+4WwH+YwG+Y8E8mPm4fCaA22ZPwWOkFpcOB4nGZlZr7/YhsN5Rc15fQ446DbS7DwMwxGtt5GM52EVDsUC8ZORmd2wxSocayu3rMChWwWOThVJsjzthLpJOAaDGStkZGa0GmcSDhNxSgIxi0k4Lq4/tAWHbhg4CGKTCmhNwhF5YjSZVKlJOCIsw1YWaYGjI9kiIzPgAA7gAA7gAA7gwCHFISWUJZQlCUYSjPQ56XPg+J8ovAFHoSjZA0eZmOwDHIVimiBwFIoJxsBhPqDl1QRiFl5qIlXK65B0HnQbKcDRZwkG4CgPW1i8BTgKxbJPwFEmFowDjjKx1CRwFIpFaoEjXj5Y3ho+WBgf/5QtNdiMh814JhGOPtt4AUel2AAQOKoRYetQ83Ds2jM1XDq0sHHh6Mu7JzYfnfu6uf5ja2T6qC/1kw7QYTq47kDT5abDM1O7l+dnH68e+3jj/Je7l369uvPn9f2R6aO+1E86QIfpYOAoCEH3D+cunzn97nkehXFMp+hEnV434vW3XfmBvdO3Ty19f3Q9j8I4plN0ok4Hjn9SB6CeoC4TO00X0aXCPos6APUEdZnYabqILjXRcOh/qTGiPRZ50wWDIKL/pcaI9ljkTRcMi0gYODQKOOktSnqRugNNY2kUcNJblPQioQaaAHAcXFve5mb6MDWhhnw/y9Uji9vcTB+mJtRQ+nAcfrrhG4u8qTl/z7J57axvLPKm5pKFQ2Fng2CkvanRuhHvODFqg2CkvanRLiPeXtpk+OAjFBnd89FLngy3fIQlo2M+uoAjOBkjPto/S3AyRnykAEfHHqhX/7RjDzS4f+oXDgWT8ZCRWeP4VsFkPGRk5ju+9QjHYP+wg3xGg/xHg/zYgb3THeQzGuQ/vObHPMLhNQfaMn9a91m85kBb5k/twTFcOhQnGZnVqr8sz8/GSUZm/uovvuBwXlFzXp8b/1mcV9Sc1+cswRF5t1Gr84i82/DaefQmytto4HlE62104Hm4h0OxQPxkZFYZtigWiJ+MzHyELe7hmLt8xgocutXyZ7l9askKHLpVA3BEkix3klCPJFkeKqHuGI5de6askJFZSTVuZmq3FTIyc16NcwyHiThlzJjFRJziNWZxDMfCxgVbcOiGi57l8eoxW3DohqOGw0QQO2ZAayKI9RrQOoYj8sRorVRp5InRDlKljuGIsAxbWaQtepYIy7CVRdqo4bBFRmZFz2KLjMyAAziAAziAAzgmBQ4cUhxSQllCWZJgJMFIn5M+p/BG4Y2SPSV7Jvsw2cfYZB+mCTJNkAnGTDBOOqDl1YQwcPBSEy81GU6V8jpkSDh4kZoXqU16HizBEB4OFm9h8ZYysewTyz6ViQXjWDDOQEKdpSZjhINFalmkNl4+WN46ajj6LIzPwvix+adsqWEJjj6b8bAZT2V+jG282Marov7CBoBsAFiBCFuHsnVoxUDT5abDvgcaNh32FfH62668Y7FdOUpWwIGAAwEHAg4EHAg4EHAg4EDAgYADAQdCwIGAAwEHAg4EHAg4EHAg4EDAgYADIeBAwIGAAwEHAg4EHAg4EHCg5PQXXq/FuCt2aQoAAAAASUVORK5CYII=">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<style>
+/* Раскладка: шапка, прокручиваемый экран, нижняя панель под большой палец. Тёмная тема — основная. */
+:root, :root[data-theme="dark"] {
+  --bg: #111111; --surface: #1C1C1E; --border: #2E2E30;
+  --text: #E8E8E8; --text-2: #A9A9A9;
+  --moirai-fill: #3C3489;   --moirai-accent: #AFA9EC;   --moirai-text: #CECBF6;
+  --gorgons-fill: #085041;  --gorgons-accent: #5DCAA5;  --gorgons-text: #9FE1CB;
+  --cyclopes-fill: #712B13; --cyclopes-accent: #F0997B; --cyclopes-text: #F5C4B3;
+  --neutral-fill: #444441;  --neutral-accent: #B4B2A9;  --neutral-text: #D3D1C7;
+  --ok: #8FD19A; --ok-fill: #17331D; --bad: #F09A90; --bad-fill: #451C1A;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --serif: Georgia, "Times New Roman", serif;
+  --k: 1;
+  color-scheme: dark;
+}
+:root[data-theme="light"] {
+  --bg: #F6F5F1; --surface: #FFFFFF; --border: #E2E0D8;
+  --text: #1E1E1C; --text-2: #5F5E5A;
+  --moirai-fill: #EEEDFE;   --moirai-accent: #534AB7;   --moirai-text: #3C3489;
+  --gorgons-fill: #E1F5EE;  --gorgons-accent: #0F6E56;  --gorgons-text: #085041;
+  --cyclopes-fill: #FAECE7; --cyclopes-accent: #993C1D; --cyclopes-text: #712B13;
+  --neutral-fill: #F1EFE8;  --neutral-accent: #5F5E5A;  --neutral-text: #444441;
+  --ok: #2B7A3B; --ok-fill: #E3F2E5; --bad: #B3261E; --bad-fill: #FBE7E4;
+  color-scheme: light;
+}
+.g-moirai   { --f: var(--moirai-fill);   --a: var(--moirai-accent);   --t: var(--moirai-text); }
+.g-gorgons  { --f: var(--gorgons-fill);  --a: var(--gorgons-accent);  --t: var(--gorgons-text); }
+.g-cyclopes { --f: var(--cyclopes-fill); --a: var(--cyclopes-accent); --t: var(--cyclopes-text); }
+.g-neutral  { --f: var(--neutral-fill);  --a: var(--neutral-accent);  --t: var(--neutral-text); }
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html {
+  font-size: calc(100% * var(--k));
+  height: 100%;
+  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  margin: 0; height: 100%;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  background: var(--bg); color: var(--text);
+  font: 400 1.125rem/1.45 var(--sans);
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, [tabindex]:focus-visible, summary:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3 { text-wrap: balance; }
+i { font-style: italic; }
+.wrap { width: 100%; max-width: 560px; margin-inline: auto; }
+
+/* Шапка */
+.top {
+  flex: none; height: 3.5rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(8px, env(safe-area-inset-right, 0px));
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+.top h1 { font: 700 1.375rem/1 var(--serif); letter-spacing: .01em; }
+.icon-btn {
+  min-width: 48px; min-height: 48px; border: 0; background: none; border-radius: 12px;
+  font-size: 1.5rem; display: inline-flex; align-items: center; justify-content: center;
+}
+
+/* Экран */
+main {
+  flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 16px max(16px, env(safe-area-inset-right, 0px)) 24px max(16px, env(safe-area-inset-left, 0px));
+}
+.stack { display: flex; flex-direction: column; gap: 16px; }
+.lead { color: var(--text-2); }
+.eyebrow {
+  font-size: .8125rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--text-2);
+}
+
+/* Нижняя панель */
+.tabs {
+  flex: none; display: grid; grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--border); background: var(--surface);
+  padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
+}
+.tab {
+  min-height: 64px; border: 0; background: none; padding: 6px 2px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  color: var(--text-2); font-size: .8125rem; font-weight: 600;
+}
+.tab .ti { font-size: 1.375rem; line-height: 1; padding: 4px 14px; border-radius: 999px; }
+.tab[aria-current="page"] { color: var(--text); }
+.tab[aria-current="page"] .ti { background: var(--border); }
+
+/* Шпаргалка и плитки */
+.cheat { display: flex; flex-direction: column; gap: 8px; }
+.cheat-row {
+  background: var(--f); color: var(--t); border: 1px solid var(--a);
+  border-radius: 14px; padding: 10px 14px;
+  display: flex; flex-wrap: wrap; column-gap: 12px; row-gap: 2px;
+}
+.cheat-row span { white-space: nowrap; }
+.tiles { display: flex; flex-direction: column; gap: 12px; }
+.tile {
+  width: 100%; text-align: left; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 16px; padding: 14px;
+  display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center;
+}
+.tile > div { min-width: 0; }
+.tile h3 { color: var(--t); font-size: 1.375rem; line-height: 1.2; }
+.tile .sub { color: var(--text-2); font-size: 1rem; }
+.tile .chev { color: var(--text-2); font-size: 1.5rem; }
+.dot {
+  width: 3.25rem; height: 3.25rem; flex: none; border-radius: 50%;
+  background: var(--f); border: 1px solid var(--a);
+  display: inline-flex; align-items: center; justify-content: center; font-size: 1.625rem; line-height: 1;
+}
+.prog { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: .9375rem; color: var(--text-2); }
+.pips { display: flex; gap: 4px; }
+.pips b { width: 18px; height: 6px; border-radius: 3px; background: var(--border); }
+.pips b.on { background: var(--a); }
+
+/* Экран тройки */
+.back {
+  align-self: flex-start; min-height: 48px; padding: 0 12px 0 4px; margin-left: -4px;
+  border: 0; background: none; color: var(--text-2); font-size: 1.0625rem;
+}
+.g-head { display: flex; gap: 14px; align-items: center; }
+.g-head h2 { color: var(--t); font: 700 1.75rem/1.15 var(--serif); }
+.g-head p { color: var(--text-2); }
+.switch-row {
+  width: 100%; min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 8px 14px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface);
+  text-align: left;
+}
+.sw { width: 52px; height: 32px; flex: none; border-radius: 16px; background: var(--border); position: relative; transition: background .2s; }
+.sw::after { content: ""; position: absolute; top: 4px; left: 4px; width: 24px; height: 24px; border-radius: 50%; background: var(--text-2); transition: transform .2s, background .2s; }
+[aria-checked="true"] .sw { background: var(--a, var(--text)); }
+[aria-checked="true"] .sw::after { transform: translateX(20px); background: var(--bg); }
+.rhyme {
+  background: var(--f); color: var(--t); border: 1px solid var(--a); border-radius: 16px;
+  padding: 16px; display: flex; flex-direction: column; gap: 10px;
+}
+.rhyme .lines { font: 400 1.25rem/1.5 var(--serif); }
+.rhyme .code { font-size: 1rem; font-weight: 600; letter-spacing: .04em; }
+.mcards { display: flex; flex-direction: column; gap: 12px; }
+.mcard {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.mc-top { display: flex; gap: 12px; align-items: center; }
+.mc-top > div { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.mc-name { display: flex; align-items: center; gap: 4px; }
+.mc-name h3 { font-size: 1.5rem; line-height: 1.2; }
+.plate {
+  display: inline-block; background: var(--f); color: var(--t); border: 1px solid var(--a);
+  border-radius: 999px; padding: 2px 12px; font-size: 1rem; font-weight: 600;
+}
+.mcard hr { border: 0; border-top: 1px solid var(--border); margin: 2px 0; width: 100%; }
+.hook { color: var(--text-2); }
+.extra { border: 1px dashed var(--a); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.speak {
+  display: none; min-width: 48px; min-height: 48px; border: 0; background: none; border-radius: 12px;
+  font-size: 1.25rem; align-items: center; justify-content: center;
+}
+.has-voice .speak { display: inline-flex; }
+
+/* «Проверить себя» */
+.quiz-hint { color: var(--text-2); font-size: 1rem; }
+.quiz .closable { cursor: pointer; }
+.quiz .closable:not(.open) .cov {
+  color: transparent !important; background: var(--border); border-radius: 6px;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  user-select: none; -webkit-user-select: none;
+}
+.quiz .rhyme:not(.open) .cov { background: var(--a); opacity: .45; }
+.quiz .closable:not(.open) .speak { visibility: hidden; }
+
+/* Карточки */
+.cards { display: flex; flex-direction: column; gap: 12px; min-height: 100%; }
+.chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin-inline: -4px; padding: 2px 4px; }
+.chips::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none; min-height: 44px; padding: 0 14px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text-2); font-size: 1rem; font-weight: 600;
+}
+.chip[aria-pressed="true"] { background: var(--f, var(--text)); color: var(--t, var(--bg)); border-color: var(--a, var(--text)); }
+.chip.all[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+.chip-wrap { display: flex; flex-direction: column; gap: 6px; }
+.chip-wrap .meta { font-size: .9375rem; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.flip { position: relative; flex: 1; min-height: 340px; perspective: 1200px; touch-action: pan-y; cursor: pointer; user-select: none; -webkit-user-select: none; }
+.flip-move { position: absolute; inset: 0; }
+.flip-in { position: absolute; inset: 0; transition: transform .25s ease; transform-style: preserve-3d; }
+.flip-in.flipped { transform: rotateY(180deg); }
+.face {
+  position: absolute; inset: 0; border-radius: 16px; border: 1px solid var(--a);
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  text-align: center; padding: 20px 18px; overflow-y: auto;
+}
+.f-front { background: var(--f); color: var(--t); }
+.f-front .em { font-size: 3.5rem; line-height: 1; }
+.f-front .meaning { font: 700 1.875rem/1.2 var(--serif); }
+.f-front .clue { font-size: 1.125rem; max-width: 30ch; }
+.f-front .who { font-size: 1rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; opacity: .8; }
+.f-back { background: var(--surface); transform: rotateY(180deg); }
+.f-back .nm { display: flex; align-items: center; gap: 4px; }
+.f-back .nm h2 { font: 700 2.5rem/1.1 var(--serif); color: var(--t); }
+.f-back .hook { max-width: 32ch; }
+.f-back hr { width: 40%; border: 0; border-top: 1px solid var(--border); margin: 0; }
+.swipe-tag {
+  position: absolute; top: 14px; z-index: 2; padding: 4px 12px; border-radius: 999px;
+  font-size: 1rem; font-weight: 700; opacity: 0; pointer-events: none; border: 1px solid;
+}
+.swipe-tag.yes { right: 14px; color: var(--ok); background: var(--ok-fill); }
+.swipe-tag.no { left: 14px; color: var(--bad); background: var(--bad-fill); }
+.tap-hint { text-align: center; color: var(--text-2); font-size: .9375rem; }
+.rate { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.rate button {
+  min-height: 60px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface);
+  font-weight: 700; font-size: 1.0625rem; padding: 4px;
+}
+.rate .no { color: var(--bad); border-color: var(--bad); background: var(--bad-fill); }
+.rate .yes { color: var(--ok); border-color: var(--ok); background: var(--ok-fill); }
+.done {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center;
+  border: 1px solid var(--border); border-radius: 16px; background: var(--surface); padding: 24px 18px;
+}
+.done .big { font-size: 3rem; line-height: 1; }
+.done h2 { font: 700 1.75rem/1.2 var(--serif); }
+.done p { color: var(--text-2); }
+
+.btn {
+  min-height: 56px; width: 100%; border-radius: 14px; border: 1px solid var(--text);
+  background: var(--text); color: var(--bg); font-weight: 700; font-size: 1.125rem; padding: 8px 16px;
+}
+.btn.ghost { background: none; color: var(--text); border-color: var(--border); }
+
+/* Тест */
+.qhead { display: flex; justify-content: space-between; align-items: center; color: var(--text-2); font-size: 1rem; font-variant-numeric: tabular-nums; }
+.bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.bar b { display: block; height: 100%; background: var(--text-2); }
+.qtext { font: 700 1.375rem/1.35 var(--serif); }
+.qnote { color: var(--text-2); font-size: 1rem; }
+.opts { display: flex; flex-direction: column; gap: 8px; }
+.opt {
+  min-height: 56px; width: 100%; text-align: left; padding: 10px 16px; border-radius: 14px;
+  border: 1px solid var(--border); background: var(--surface);
+  display: flex; align-items: center; gap: 12px;
+}
+.opt .n { flex: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center; font-size: .9375rem; font-weight: 700; color: var(--text-2); }
+.opt.sel .n { background: var(--text); color: var(--bg); border-color: var(--text); }
+.opt.ok { border-color: var(--ok); background: var(--ok-fill); color: var(--ok); }
+.opt.bad { border-color: var(--bad); background: var(--bad-fill); color: var(--bad); }
+.opt.ok .n, .opt.bad .n { border-color: currentColor; color: currentColor; background: none; }
+.opt:disabled { cursor: default; }
+.opt:disabled:not(.ok):not(.bad) { opacity: .6; }
+.fb { font-weight: 700; }
+.fb.ok { color: var(--ok); }
+.fb.bad { color: var(--bad); }
+.fb span { font-weight: 400; color: var(--text); }
+.score { text-align: center; display: flex; flex-direction: column; gap: 4px; padding: 8px 0; }
+.score .num { font: 700 3.5rem/1 var(--serif); font-variant-numeric: tabular-nums; }
+.score p { color: var(--text-2); }
+.mist { display: flex; flex-direction: column; gap: 10px; }
+.mist li { list-style: none; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+.mist ul { margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.mist .q { font-weight: 600; }
+.mist .y { color: var(--bad); font-size: 1rem; }
+.mist .r { color: var(--ok); font-size: 1rem; }
+
+/* История */
+.st-head { display: flex; flex-direction: column; gap: 6px; }
+.st-head h2 { font: 700 1.75rem/1.2 var(--serif); }
+.timeline { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.step { display: grid; grid-template-columns: 3.25rem 1fr; column-gap: 14px; position: relative; padding-bottom: 20px; }
+.step:not(:last-child)::before {
+  content: ""; position: absolute; left: calc(1.625rem - 1px); top: 3.25rem; bottom: 0; width: 2px; background: var(--border);
+}
+.step > div { min-width: 0; padding-top: 4px; display: flex; flex-direction: column; gap: 4px; }
+.step h3 { color: var(--t); font-size: 1.25rem; line-height: 1.25; }
+.step .num { font-size: .8125rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-2); }
+.footer-note { border: 1px solid var(--border); background: var(--surface); border-radius: 16px; padding: 14px 16px; display: flex; gap: 12px; align-items: center; }
+.footer-note .em { font-size: 1.75rem; }
+details.src { border: 1px solid var(--border); border-radius: 16px; background: var(--surface); }
+details.src summary { min-height: 56px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-weight: 600; list-style: none; }
+details.src summary::-webkit-details-marker { display: none; }
+details.src summary::after { content: "▾"; color: var(--text-2); transition: transform .2s; }
+details.src[open] summary::after { transform: rotate(180deg); }
+details.src ol { margin: 0; padding: 0 16px 16px 2.25rem; display: flex; flex-direction: column; gap: 8px; color: var(--text-2); font-size: 1rem; }
+
+/* Настройки */
+.sheet { position: fixed; inset: 0; z-index: 10; display: flex; flex-direction: column; justify-content: flex-end; }
+.sheet-bg { position: absolute; inset: 0; background: #000; opacity: .55; border: 0; }
+.sheet-panel {
+  position: relative; background: var(--bg); border-top: 1px solid var(--border); border-radius: 16px 16px 0 0;
+  max-height: 90%; overflow-y: auto; width: 100%; max-width: 560px; margin-inline: auto;
+  padding: 8px max(16px, env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  display: flex; flex-direction: column; gap: 18px;
+}
+.sheet-top { display: flex; align-items: center; justify-content: space-between; }
+.sheet-top h2 { font: 700 1.375rem/1.2 var(--serif); }
+.field { display: flex; flex-direction: column; gap: 8px; }
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--surface); }
+.seg button { min-height: 48px; border: 0; background: none; color: var(--text-2); font-size: 1rem; font-weight: 600; padding: 4px; }
+.seg button + button { border-left: 1px solid var(--border); }
+.seg button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
+.note { color: var(--text-2); font-size: 1rem; }
+.danger { color: var(--bad); border-color: var(--bad); background: none; }
+.danger.fill { background: var(--bad); color: var(--bg); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Три тройки</h1>
+  <button class="icon-btn" type="button" data-act="settings" aria-label="Настройки">⚙️</button>
+</header>
+<main id="main"></main>
+<nav class="tabs" aria-label="Разделы">
+  <button class="tab" type="button" data-act="tab" data-tab="groups"><span class="ti">🏛️</span>Тройки</button>
+  <button class="tab" type="button" data-act="tab" data-tab="cards"><span class="ti">🃏</span>Карточки</button>
+  <button class="tab" type="button" data-act="tab" data-tab="test"><span class="ti">❓</span>Тест</button>
+  <button class="tab" type="button" data-act="tab" data-tab="story"><span class="ti">📜</span>История</button>
+</nav>
+<div class="sheet" id="sheet" hidden></div>
+
+<script>
+const DATA = {
+  "title": "Три тройки",
+  "subtitle": "Сёстры судьбы, сёстры-чудовища и братья-кузнецы",
+  "groups": [
+    {
+      "id": "moirai",
+      "name": "Мойры",
+      "subtitle": "богини судьбы, дочери Ночи",
+      "emoji": "🧵",
+      "about": "Плетут нить жизни каждого смертного. Спорить с ними не решается даже Зевс.",
+      "rhyme": ["Клото прядёт, Лахесис отмеряет,", "Атропос — клац! — и нить обрывает."],
+      "code": "К · Л · А — «клац» ножниц",
+      "extra": "У римлян Мойры — Парки. «Парки бабье лепетанье» у Пушкина — о них.",
+      "members": [
+        {
+          "id": "clotho",
+          "name": "Клото",
+          "meaning": "прядущая",
+          "emoji": "🧵",
+          "fact": "Прядёт нить жизни — рождение.",
+          "hook": "Белок _Klotho_ назван в её честь: мыши без него стареют на глазах.",
+          "clue": "В её честь назван белок, без которого мыши быстро стареют."
+        },
+        {
+          "id": "lachesis",
+          "name": "Лахесис",
+          "meaning": "дающая жребий",
+          "emoji": "📏",
+          "fact": "Отмеряет длину нити — срок и долю.",
+          "hook": "Её имя носят бушмейстеры (_Lachesis_) — самые длинные ядовитые змеи Америки.",
+          "clue": "Её имя носят самые длинные ядовитые змеи Америки."
+        },
+        {
+          "id": "atropos",
+          "name": "Атропос",
+          "meaning": "неотвратимая",
+          "emoji": "✂️",
+          "fact": "Перерезает нить — смерть. Упросить нельзя.",
+          "hook": "В её честь — _Atropa belladonna_, а значит, и атропин.",
+          "clue": "В её честь назван род красавки — _Atropa_, а через него и атропин."
+        }
+      ]
+    },
+    {
+      "id": "gorgons",
+      "name": "Горгоны",
+      "subtitle": "крылатые сёстры со змеями",
+      "emoji": "🐍",
+      "about": "Дочери морских божеств Форкия и Кето. Живут на краю света, за Океаном. Вместо волос — змеи, за спиной — золотые крылья; кто на них взглянет — каменеет.",
+      "rhyme": ["Сфено — сила, Эвриала — прыжок,", "Медузе-царице — Персеев клинок."],
+      "code": "С · Э · М — смертна только М",
+      "extra": "Голову Медузы Афина поместила на эгиду — тот самый щит из выражения «под эгидой».",
+      "members": [
+        {
+          "id": "stheno",
+          "name": "Сфено",
+          "meaning": "могучая",
+          "emoji": "💪",
+          "fact": "Бессмертна и не стареет.",
+          "hook": "Греч. _sthenos_ — «сила»: отсюда астения, миастения — «без силы».",
+          "clue": "Её имя — от греческого слова «сила», того же, что спрятано в «астении»."
+        },
+        {
+          "id": "euryale",
+          "name": "Эвриала",
+          "meaning": "далеко прыгающая",
+          "emoji": "🦘",
+          "fact": "Тоже бессмертна. Её плач по Медузе Афина переложила на флейту.",
+          "hook": "«Эври-» — «широко», как в имени Эвридика.",
+          "clue": "Её плач по убитой сестре Афина переложила на флейту."
+        },
+        {
+          "id": "medusa",
+          "name": "Медуза",
+          "meaning": "повелительница",
+          "emoji": "👑",
+          "fact": "Единственная смертная. Персей отрубил ей голову, глядя в отражение на щите; из шеи вылетел Пегас.",
+          "hook": "_Caput medusae_; морские медузы — за щупальца-«змеи».",
+          "clue": "Единственная смертная из трёх сестёр; из её шеи вылетел Пегас."
+        }
+      ]
+    },
+    {
+      "id": "cyclopes",
+      "name": "Циклопы",
+      "subtitle": "братья-кузнецы с одним глазом",
+      "emoji": "👁️",
+      "about": "Сыновья Урана (Неба) и Геи (Земли). Один круглый глаз во лбу — «киклоп» и значит «круглоглазый». Отец запер их в Тартаре, Зевс освободил — и получил в подарок гром и молнию. Посейдону братья выковали трезубец, Аиду — шлем-невидимку.",
+      "rhyme": ["Бронт гремит, Стероп сверкает,", "Арг сияет — Зевс перун метает."],
+      "code": "Б · С · А — «Бах! Сверк! Ах!»",
+      "extra": "Полифем из «Одиссеи» — другой циклоп: он сын Посейдона.",
+      "members": [
+        {
+          "id": "brontes",
+          "name": "Бронт",
+          "meaning": "гром",
+          "emoji": "💥",
+          "fact": "Малышка Артемида выдрала ему клок шерсти на груди — плешь так и не заросла.",
+          "hook": "_Brontē_ — «гром», как в «бронтозавр» — «громовой ящер».",
+          "clue": "Маленькая Артемида выдрала ему клок шерсти на груди."
+        },
+        {
+          "id": "steropes",
+          "name": "Стероп",
+          "meaning": "молния",
+          "emoji": "⚡",
+          "fact": "Им и Аргом богини пугали непослушных дочек — как бабайкой.",
+          "hook": "Созвучно «стреле» — молния-стрела.",
+          "clue": "Его имя созвучно «стреле»: молния-стрела."
+        },
+        {
+          "id": "arges",
+          "name": "Арг",
+          "meaning": "сияющий",
+          "emoji": "✨",
+          "fact": "Ослепительная вспышка удара.",
+          "hook": "Родня латинскому _argentum_ — серебро: общий «сияющий» корень.",
+          "clue": "Его имя — родня латинскому _argentum_, «серебро»."
+        }
+      ]
+    }
+  ],
+  "story": {
+    "title": "Одна история на всех девятерых",
+    "subtitle": "в центре — Асклепий, бог врачевания",
+    "emoji": "⚕️",
+    "steps": [
+      {
+        "title": "Кровь Медузы",
+        "group": "gorgons",
+        "emoji": "🩸",
+        "text": "Афина дала Асклепию кровь Медузы. Кровь из левых вен была ядом, из правых — лекарством, и ею он воскрешал мёртвых."
+      },
+      {
+        "title": "Молния циклопов",
+        "group": "cyclopes",
+        "emoji": "⚡",
+        "text": "Зевс испугался, что люди перестанут умирать, и убил Асклепия молнией. Эту молнию выковали Бронт, Стероп и Арг."
+      },
+      {
+        "title": "Месть Аполлона",
+        "group": null,
+        "emoji": "🏹",
+        "text": "Аполлон, отец Асклепия, в отместку перебил циклопов. В наказание он год пас стада у смертного царя Адмета."
+      },
+      {
+        "title": "Пьяные Мойры",
+        "group": "moirai",
+        "emoji": "🍷",
+        "text": "Там Аполлон напоил Мойр вином и выпросил Адмету отсрочку смерти при условии, что кто-то умрёт вместо него. Решилась на это только жена Адмета, Алкестида."
+      }
+    ],
+    "footer": "Тот самый Асклепий, чей посох со змеёй — эмблема медицины."
+  },
+  "sources": [
+    "Гесиод, «Теогония» — имена и происхождение всех трёх троек.",
+    "Аполлодор, «Мифологическая библиотека» — дары циклопов, Персей и Медуза, кровь Медузы и Асклепий, месть Аполлона, Адмет и Мойры.",
+    "Пиндар, XII Пифийская ода — плач Эвриалы и мелодия для флейты.",
+    "Каллимах, «Гимн Артемиде» — Артемида и Бронт, циклопы-«бабайки».",
+    "Еврипид, «Алкестида»; Эсхил, «Эвмениды» — Аполлон обманывает Мойр (у Эсхила — вином).",
+    "Овидий, «Метаморфозы», книга IV — Персей смотрит на Медузу через отражение в щите.",
+    "А. С. Пушкин, «Стихи, сочинённые ночью во время бессонницы» (1830) — «Парки бабье лепетанье».",
+    "Kuro-o M. et al., Nature, 1997 — открытие гена _klotho_."
+  ]
+};
+
+/* ---------- Хранилище ---------- */
+const STORE_KEY = 'tri-troyki-v1';
+const DEFAULTS = { theme: 'dark', font: 100, speak: true };
+function loadStore() {
+  try { const s = localStorage.getItem(STORE_KEY); return s ? JSON.parse(s) : {}; } catch (e) { return {}; }
+}
+function saveStore() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify({ settings: state.settings, srs: state.srs, tab: state.tab })); } catch (e) {}
+}
+const stored = loadStore() || {};
+const state = {
+  settings: Object.assign({}, DEFAULTS, stored.settings && typeof stored.settings === 'object' ? stored.settings : {}),
+  srs: stored.srs && typeof stored.srs === 'object' ? stored.srs : {},
+  tab: ['groups', 'cards', 'test', 'story'].includes(stored.tab) ? stored.tab : 'groups'
+};
+if (!['dark', 'light', 'system'].includes(state.settings.theme)) state.settings.theme = 'dark';
+if (![100, 115, 130].includes(state.settings.font)) state.settings.font = 100;
+
+/* ---------- Данные ---------- */
+const GROUPS = DATA.groups;
+const GROUP = {};
+const ALL = [];
+GROUPS.forEach(g => { GROUP[g.id] = g; g.members.forEach(m => ALL.push(Object.assign({ g }, m))); });
+const BY_ID = {};
+ALL.forEach(m => { BY_ID[m.id] = m; });
+
+/* ---------- Утилиты ---------- */
+const $ = s => document.querySelector(s);
+const main = $('#main');
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+// _латынь_ → курсив
+function fmt(s) { return esc(s).replace(/_([^_]+)_/g, '<i>$1</i>'); }
+function shuffle(a) {
+  a = a.slice();
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+function pick(arr, n, except) { return shuffle(arr.filter(x => !except.includes(x))).slice(0, n); }
+const reduceMotion = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- Тема и шрифт ---------- */
+const darkMQ = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : null;
+function applyTheme() {
+  const t = state.settings.theme === 'system' ? (darkMQ && !darkMQ.matches ? 'light' : 'dark') : state.settings.theme;
+  document.documentElement.setAttribute('data-theme', t);
+  const m = document.querySelector('meta[name="theme-color"]');
+  if (m) m.setAttribute('content', t === 'light' ? '#F6F5F1' : '#111111');
+  document.documentElement.style.setProperty('--k', String(state.settings.font / 100));
+}
+if (darkMQ) {
+  const onChange = () => { if (state.settings.theme === 'system') applyTheme(); };
+  if (darkMQ.addEventListener) darkMQ.addEventListener('change', onChange); else if (darkMQ.addListener) darkMQ.addListener(onChange);
+}
+
+/* ---------- Озвучка ---------- */
+let ruVoice = null;
+function initVoices() {
+  try {
+    if (!('speechSynthesis' in window)) return;
+    const v = speechSynthesis.getVoices().find(v => /^ru/i.test(v.lang));
+    ruVoice = v || null;
+    document.body.classList.toggle('has-voice', !!ruVoice);
+    if (!$('#sheet').hidden) renderSettings();
+  } catch (e) {}
+}
+function speak(text) {
+  if (!ruVoice) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'ru-RU'; u.voice = ruVoice;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+const speakBtn = name => `<button class="speak" type="button" data-act="speak" data-say="${esc(name)}" aria-label="Произнести: ${esc(name)}">🔊</button>`;
+
+/* ---------- Интервальное повторение ---------- */
+const IV = [1, 3, 7, 16];
+const DAY = 864e5;
+function today0() { const d = new Date(); d.setHours(0, 0, 0, 0); return d.getTime(); }
+function rec(id) { const r = state.srs[id]; return r && typeof r.step === 'number' && IV[r.step] ? r : null; }
+function isDue(id) { const r = rec(id); return !r || r.due <= Date.now(); }
+function isLearned(id) { const r = rec(id); return !!r && IV[r.step] >= 7; }
+function rate(id, grade) { // 0 — не знаю, 1 — почти, 2 — знаю
+  const r = rec(id);
+  let step;
+  if (grade === 2) step = r ? Math.min(r.step + 1, IV.length - 1) : 1;
+  else if (grade === 1) step = r ? r.step : 0;
+  else step = 0;
+  state.srs[id] = { step, due: today0() + IV[step] * DAY };
+  saveStore();
+}
+
+/* ---------- Состояние экранов ---------- */
+const view = { group: null, quiz: false, open: {} };
+let cards = null;   // { deck, queue, all, flipped, total }
+let test = null;    // { qs, i, answered, picks, mistakes, score }
+let settingsUI = { confirmReset: false };
+
+/* ---------- Тройки ---------- */
+function renderGroups() {
+  const cheat = GROUPS.map(g =>
+    `<div class="cheat-row g-${g.id}">${g.members.map(m => `<span>${m.emoji} ${esc(m.name)}</span>`).join('')}</div>`).join('');
+  const tiles = GROUPS.map(g => {
+    const n = g.members.filter(m => isLearned(m.id)).length;
+    return `<button class="tile g-${g.id}" type="button" data-act="group" data-id="${g.id}">
+      <span class="dot">${g.emoji}</span>
+      <div><h3>${esc(g.name)}</h3><p class="sub">${esc(g.subtitle)}</p>
+        <div class="prog"><span class="pips">${g.members.map(m => `<b class="${isLearned(m.id) ? 'on' : ''}"></b>`).join('')}</span>выучено ${n} из ${g.members.length}</div>
+      </div><span class="chev" aria-hidden="true">›</span></button>`;
+  }).join('');
+  main.innerHTML = `<div class="wrap stack">
+    <p class="lead">${esc(DATA.subtitle)}</p>
+    <section class="cheat" aria-label="Шпаргалка"><h2 class="eyebrow">Шпаргалка</h2>${cheat}</section>
+    <section class="tiles" aria-label="Тройки">${tiles}</section>
+  </div>`;
+}
+
+function renderGroup() {
+  const g = GROUP[view.group];
+  const q = view.quiz;
+  const isOpen = k => q && view.open[k] ? ' open' : '';
+  const members = g.members.map(m => `
+    <article class="mcard closable${isOpen(m.id)}" data-act="${q ? 'reveal' : ''}" data-key="${m.id}">
+      <div class="mc-top">
+        <span class="dot">${m.emoji}</span>
+        <div>
+          <div class="mc-name"><h3><span class="cov">${esc(m.name)}</span></h3>${speakBtn(m.name)}</div>
+          <span class="plate">${fmt(m.meaning)}</span>
+        </div>
+      </div>
+      <p>${fmt(m.fact)}</p>
+      <hr>
+      <p class="hook"><span class="cov">${fmt(m.hook)}</span></p>
+    </article>`).join('');
+  main.innerHTML = `<div class="wrap stack g-${g.id}${q ? ' quiz' : ''}">
+    <button class="back" type="button" data-act="back">‹ Все тройки</button>
+    <div class="g-head"><span class="dot">${g.emoji}</span><div><h2>${esc(g.name)}</h2><p>${esc(g.subtitle)}</p></div></div>
+    <p>${fmt(g.about)}</p>
+    <button class="switch-row" type="button" role="switch" aria-checked="${q}" data-act="quiz"><span>Проверить себя</span><span class="sw" aria-hidden="true"></span></button>
+    ${q ? '<p class="quiz-hint">Вспомни имя и зацепку, потом коснись карточки или рифмовки.</p>' : ''}
+    <div class="rhyme closable${isOpen('rhyme')}" data-act="${q ? 'reveal' : ''}" data-key="rhyme">
+      <p class="lines">${g.rhyme.map(l => `<span class="cov">${fmt(l)}</span>`).join('<br>')}</p>
+      <p class="code"><span class="cov">${fmt(g.code)}</span></p>
+    </div>
+    <section class="mcards" aria-label="Персонажи">${members}</section>
+    <div class="extra"><span class="eyebrow">Ещё зацепка</span><p>${fmt(g.extra)}</p></div>
+  </div>`;
+}
+
+/* ---------- Карточки ---------- */
+function deckIds(deck) { return deck === 'all' ? ALL.map(m => m.id) : GROUP[deck].members.map(m => m.id); }
+function startSession(deck, all) {
+  const ids = deckIds(deck);
+  const queue = shuffle(all ? ids : ids.filter(isDue));
+  cards = { deck, queue, flipped: false, total: queue.length, all: !!all };
+}
+function nextDueText(deck) {
+  const ts = deckIds(deck).map(id => rec(id)).filter(Boolean).map(r => r.due);
+  if (!ts.length) return '';
+  const days = Math.round((Math.min(...ts) - today0()) / DAY);
+  if (days <= 1) return 'Следующие карточки — завтра.';
+  const w = days % 10 === 1 && days % 100 !== 11 ? 'день' : (days % 10 >= 2 && days % 10 <= 4 && (days % 100 < 10 || days % 100 >= 20) ? 'дня' : 'дней');
+  return `Следующие карточки — через ${days} ${w}.`;
+}
+function renderCards() {
+  if (!cards) startSession('all', false);
+  const decks = [['all', 'Все 9'], ...GROUPS.map(g => [g.id, g.name])];
+  const chips = decks.map(([id, label]) =>
+    `<button class="chip ${id === 'all' ? 'all' : 'g-' + id}" type="button" data-act="deck" data-id="${id}" aria-pressed="${cards.deck === id}">${esc(label)}</button>`).join('');
+  let body;
+  if (!cards.queue.length) {
+    body = `<div class="done"><span class="big">🌙</span><h2>На сегодня всё</h2>
+      <p>${cards.total ? 'Сессия пройдена. ' : ''}${esc(nextDueText(cards.deck))}</p>
+      <button class="btn" type="button" data-act="again">Повторить всё сейчас</button></div>`;
+  } else {
+    const m = BY_ID[cards.queue[0]];
+    body = `<div class="flip g-${m.g.id}" id="flip" tabindex="0" role="button" aria-label="Карточка. Коснитесь, чтобы перевернуть">
+      <span class="swipe-tag no" id="tagNo">Не знаю</span><span class="swipe-tag yes" id="tagYes">Знаю</span>
+      <div class="flip-move" id="flipMove"><div class="flip-in${cards.flipped ? ' flipped' : ''}" id="flipIn">
+        <div class="face f-front" aria-hidden="${cards.flipped}">
+          <span class="em">${m.emoji}</span>
+          <p class="meaning">${fmt(m.meaning)}</p>
+          <p class="clue">${fmt(m.clue)}</p>
+          <p class="who">Кто это?</p>
+        </div>
+        <div class="face f-back" aria-hidden="${!cards.flipped}">
+          <div class="nm"><h2>${esc(m.name)}</h2>${speakBtn(m.name)}</div>
+          <p>${fmt(m.fact)}</p>
+          <hr>
+          <p class="hook">${fmt(m.hook)}</p>
+        </div>
+      </div></div>
+    </div>
+    <p class="tap-hint">Коснись — перевернуть · свайп вправо — «Знаю», влево — «Не знаю»</p>
+    <div class="rate">
+      <button class="no" type="button" data-act="rate" data-g="0">Не знаю</button>
+      <button type="button" data-act="rate" data-g="1">Почти</button>
+      <button class="yes" type="button" data-act="rate" data-g="2">Знаю</button>
+    </div>`;
+  }
+  const left = cards.queue.length;
+  main.innerHTML = `<div class="wrap cards">
+    <div class="chip-wrap"><div class="chips" role="group" aria-label="Колода">${chips}</div>
+    <p class="meta">${left ? `Осталось в сессии: ${left}` : '&nbsp;'}</p></div>
+    ${body}
+  </div>`;
+  bindSwipe();
+}
+function flipCard() {
+  if (!cards || !cards.queue.length) return;
+  cards.flipped = !cards.flipped;
+  const fi = $('#flipIn');
+  if (fi) {
+    fi.classList.toggle('flipped', cards.flipped);
+    fi.querySelector('.f-front').setAttribute('aria-hidden', String(cards.flipped));
+    fi.querySelector('.f-back').setAttribute('aria-hidden', String(!cards.flipped));
+  }
+  if (cards.flipped && state.settings.speak) speak(BY_ID[cards.queue[0]].name);
+}
+function answerCard(grade) {
+  if (!cards || !cards.queue.length) return;
+  const id = cards.queue.shift();
+  rate(id, grade);
+  if (grade === 0) cards.queue.splice(Math.min(cards.queue.length, 2 + (Math.random() < .5 ? 0 : 1)), 0, id);
+  cards.flipped = false;
+  renderCards();
+}
+function bindSwipe() {
+  const card = $('#flip'), mover = $('#flipMove');
+  if (!card) return;
+  let sx = 0, sy = 0, dx = 0, drag = false, down = false, pid = null;
+  const tagY = $('#tagYes'), tagN = $('#tagNo');
+  const setTags = x => { tagY.style.opacity = Math.max(0, Math.min(1, x / 90)); tagN.style.opacity = Math.max(0, Math.min(1, -x / 90)); };
+  card.addEventListener('pointerdown', e => {
+    if (e.target.closest('button')) return;
+    down = true; drag = false; sx = e.clientX; sy = e.clientY; dx = 0; pid = e.pointerId;
+  });
+  card.addEventListener('pointermove', e => {
+    if (!down || e.pointerId !== pid) return;
+    dx = e.clientX - sx; const dy = e.clientY - sy;
+    if (!drag && Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) {
+      drag = true; try { card.setPointerCapture(pid); } catch (err) {}
+      mover.style.transition = 'none';
+    }
+    if (drag) { mover.style.transform = `translateX(${dx}px) rotate(${dx / 25}deg)`; setTags(dx); }
+  });
+  const end = e => {
+    if (!down || e.pointerId !== pid) return;
+    down = false;
+    if (!drag) { if (e.type === 'pointerup' && !e.target.closest('button')) flipCard(); return; }
+    if (Math.abs(dx) > 90 && e.type === 'pointerup') {
+      const grade = dx > 0 ? 2 : 0;
+      if (reduceMotion()) { answerCard(grade); return; }
+      mover.style.transition = 'transform .18s ease-out';
+      mover.style.transform = `translateX(${(dx > 0 ? 1 : -1) * window.innerWidth}px) rotate(${dx > 0 ? 12 : -12}deg)`;
+      setTimeout(() => answerCard(grade), 180);
+    } else {
+      mover.style.transition = 'transform .2s ease';
+      mover.style.transform = '';
+      setTags(0);
+    }
+  };
+  card.addEventListener('pointerup', end);
+  card.addEventListener('pointercancel', end);
+  card.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flipCard(); }
+    else if (e.key === 'ArrowRight') answerCard(2);
+    else if (e.key === 'ArrowLeft') answerCard(0);
+  });
+}
+
+/* ---------- Тест ---------- */
+const N_QUESTIONS = 10;
+function makeQ(spec) {
+  const { t } = spec;
+  if (t === 5) {
+    const g = spec.g;
+    const right = g.members.map(m => m.name);
+    let opts;
+    do { opts = shuffle(right); } while (opts.join() === right.join());
+    return { kind: 'order', text: `Расставь по порядку: ${esc(g.name)}`, note: 'Нажимай имена по порядку.', opts, right, rightText: right.join(' → ') };
+  }
+  const m = spec.m;
+  const names = ALL.map(x => x.name), meanings = ALL.map(x => x.meaning);
+  if (t === 1) return choice(`Кто это — «${fmt(m.meaning)}»?`, m.name, pick(names, 3, [m.name]));
+  if (t === 2) return choice(`${esc(m.name)} — из какой тройки?`, m.g.name, GROUPS.map(g => g.name).filter(n => n !== m.g.name));
+  if (t === 3) return choice(`Что значит имя ${esc(m.name)}?`, m.meaning, pick(meanings, 3, [m.meaning]));
+  return choice(`О ком это: ${fmt(m.clue)}`, m.name, pick(names, 3, [m.name]));
+}
+function choice(text, right, wrong) {
+  const opts = shuffle([right, ...wrong.filter((w, i, a) => w !== right && a.indexOf(w) === i)]);
+  return { kind: 'choice', text, opts, right, rightText: right };
+}
+function buildTest() {
+  const pool = [];
+  ALL.forEach(m => [1, 2, 3, 4].forEach(t => pool.push({ t, m })));
+  GROUPS.forEach(g => pool.push({ t: 5, g }));
+  const oneOfEach = [1, 2, 3, 4, 5].map(t => shuffle(pool.filter(q => q.t === t))[0]);
+  const rest = shuffle(pool.filter(q => !oneOfEach.includes(q))).slice(0, N_QUESTIONS - oneOfEach.length);
+  test = { qs: shuffle([...oneOfEach, ...rest]).map(makeQ), i: 0, answered: false, picks: [], mistakes: [], score: 0 };
+}
+function renderTest() {
+  if (!test) buildTest();
+  if (test.i >= test.qs.length) return renderResult();
+  const q = test.qs[test.i];
+  const a = test.answered;
+  let opts;
+  if (q.kind === 'choice') {
+    opts = q.opts.map((o, k) => {
+      let cls = '';
+      if (a) { if (o === q.right) cls = 'ok'; else if (test.picks[0] === k) cls = 'bad'; }
+      return `<button class="opt ${cls}" type="button" data-act="ans" data-k="${k}"${a ? ' disabled' : ''}>${fmt(o)}</button>`;
+    }).join('');
+  } else {
+    opts = q.opts.map((o, k) => {
+      const pos = test.picks.indexOf(k);
+      let cls = pos >= 0 ? 'sel' : '';
+      if (a) cls = q.right[pos] === o ? 'ok' : 'bad';
+      return `<button class="opt ${cls}" type="button" data-act="ord" data-k="${k}"${a || pos >= 0 ? ' disabled' : ''}><span class="n">${pos >= 0 ? pos + 1 : ''}</span>${esc(o)}</button>`;
+    }).join('');
+  }
+  let fb = '';
+  if (a) {
+    const ok = isRight(q);
+    fb = ok ? `<p class="fb ok">✓ Верно</p>` : `<p class="fb bad">✗ Неверно. <span>Правильно: ${fmt(q.rightText)}</span></p>`;
+  }
+  const last = test.i === test.qs.length - 1;
+  main.innerHTML = `<div class="wrap stack">
+    <div class="qhead"><span>Вопрос ${test.i + 1} из ${test.qs.length}</span><span>Верно: ${test.score}</span></div>
+    <div class="bar" aria-hidden="true"><b style="width:${(test.i + (a ? 1 : 0)) / test.qs.length * 100}%"></b></div>
+    <p class="qtext">${q.text}</p>
+    ${q.note && !a ? `<p class="qnote">${q.note}</p>` : ''}
+    <div class="opts">${opts}</div>
+    ${fb}
+    ${a ? `<button class="btn" type="button" data-act="next">${last ? 'Результат' : 'Дальше'}</button>` : ''}
+  </div>`;
+}
+function isRight(q) {
+  if (q.kind === 'choice') return q.opts[test.picks[0]] === q.right;
+  return test.picks.map(k => q.opts[k]).join('|') === q.right.join('|');
+}
+function finishAnswer() {
+  const q = test.qs[test.i];
+  test.answered = true;
+  if (isRight(q)) test.score++;
+  else {
+    const yours = q.kind === 'choice' ? q.opts[test.picks[0]] : test.picks.map(k => q.opts[k]).join(' → ');
+    test.mistakes.push({ text: q.text, yours, right: q.rightText });
+  }
+  renderTest();
+}
+function renderResult() {
+  const n = test.qs.length;
+  const verdict = test.score === n ? 'Без единой ошибки.' : test.score >= 7 ? 'Хороший результат.' : 'Повтори карточки и попробуй ещё раз.';
+  const list = test.mistakes.length ? `<section class="mist"><h2 class="eyebrow">Ошибки</h2><ul>${test.mistakes.map(m =>
+    `<li><span class="q">${m.text}</span><span class="y">Твой ответ: ${fmt(m.yours)}</span><span class="r">Правильно: ${fmt(m.right)}</span></li>`).join('')}</ul></section>` : '';
+  main.innerHTML = `<div class="wrap stack">
+    <div class="score"><span class="num">${test.score} из ${n}</span><p>${verdict}</p></div>
+    ${list}
+    <button class="btn" type="button" data-act="retest">Ещё раз</button>
+  </div>`;
+}
+
+/* ---------- История ---------- */
+function renderStory() {
+  const s = DATA.story;
+  const steps = s.steps.map((st, i) => `
+    <li class="step g-${st.group || 'neutral'}">
+      <span class="dot">${st.emoji}</span>
+      <div><span class="num">Шаг ${i + 1}</span><h3>${fmt(st.title)}</h3><p>${fmt(st.text)}</p></div>
+    </li>`).join('');
+  main.innerHTML = `<div class="wrap stack">
+    <div class="st-head"><h2>${s.emoji} ${fmt(s.title)}</h2><p class="lead">${fmt(s.subtitle)}</p></div>
+    <ol class="timeline">${steps}</ol>
+    <div class="footer-note"><span class="em">${s.emoji}</span><p>${fmt(s.footer)}</p></div>
+    <details class="src"><summary>Источники</summary><ol>${DATA.sources.map(x => `<li>${fmt(x)}</li>`).join('')}</ol></details>
+  </div>`;
+}
+
+/* ---------- Настройки ---------- */
+function seg(name, cur, items) {
+  return `<div class="seg" role="group">${items.map(([v, l]) =>
+    `<button type="button" data-act="set" data-k="${name}" data-v="${v}" aria-pressed="${String(cur) === String(v)}">${l}</button>`).join('')}</div>`;
+}
+function renderSettings() {
+  const s = state.settings;
+  const sh = $('#sheet');
+  const voice = ruVoice
+    ? seg('speak', s.speak, [['true', 'Вкл'], ['false', 'Выкл']]) + '<p class="note">Имя звучит, когда карточка переворачивается.</p>'
+    : '<p class="note">На этом устройстве нет русского голоса, поэтому кнопок 🔊 нет.</p>';
+  const reset = settingsUI.confirmReset
+    ? `<p class="note">Все карточки станут новыми. Это нельзя отменить.</p>
+       <div class="row2"><button class="btn ghost" type="button" data-act="reset-cancel">Отмена</button>
+       <button class="btn danger fill" type="button" data-act="reset-yes">Сбросить</button></div>`
+    : `<button class="btn ghost danger" type="button" data-act="reset">Сбросить прогресс</button>`;
+  sh.innerHTML = `<button class="sheet-bg" type="button" data-act="close" aria-label="Закрыть настройки" tabindex="-1"></button>
+    <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="setTitle">
+      <div class="sheet-top"><h2 id="setTitle">Настройки</h2><button class="icon-btn" type="button" data-act="close" aria-label="Закрыть" id="setClose">✕</button></div>
+      <div class="field"><span class="eyebrow">Тема</span>${seg('theme', s.theme, [['dark', 'Тёмная'], ['light', 'Светлая'], ['system', 'Как в системе']])}</div>
+      <div class="field"><span class="eyebrow">Размер шрифта</span>${seg('font', s.font, [[100, '100 %'], [115, '115 %'], [130, '130 %']])}</div>
+      <div class="field"><span class="eyebrow">Автоозвучка</span>${voice}</div>
+      <div class="field"><span class="eyebrow">Прогресс</span>${reset}</div>
+    </div>`;
+}
+function openSettings() { settingsUI.confirmReset = false; renderSettings(); $('#sheet').hidden = false; const c = $('#setClose'); if (c) c.focus(); }
+function closeSettings() { $('#sheet').hidden = true; }
+
+/* ---------- Навигация ---------- */
+function render(resetScroll) {
+  document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-current', b.dataset.tab === state.tab ? 'page' : 'false'));
+  const top = main.scrollTop;
+  if (state.tab === 'groups') view.group ? renderGroup() : renderGroups();
+  else if (state.tab === 'cards') renderCards();
+  else if (state.tab === 'test') renderTest();
+  else renderStory();
+  main.scrollTop = resetScroll ? 0 : top;
+}
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]');
+  if (!el || !el.dataset.act) return;
+  const act = el.dataset.act, d = el.dataset;
+  switch (act) {
+    case 'tab':
+      if (state.tab === d.tab && d.tab === 'groups') view.group = null;
+      state.tab = d.tab; saveStore(); render(true); break;
+    case 'group': view.group = d.id; view.quiz = false; view.open = {}; render(true); break;
+    case 'back': view.group = null; render(true); break;
+    case 'quiz': view.quiz = !view.quiz; view.open = {}; render(); break;
+    case 'reveal': view.open[d.key] = !view.open[d.key]; render(); break;
+    case 'speak': e.stopPropagation(); speak(d.say); break;
+    case 'deck': startSession(d.id, false); render(); break;
+    case 'again': startSession(cards.deck, true); render(); break;
+    case 'rate': answerCard(Number(d.g)); break;
+    case 'ans': if (!test.answered) { test.picks = [Number(d.k)]; finishAnswer(); } break;
+    case 'ord':
+      if (!test.answered && !test.picks.includes(Number(d.k))) {
+        test.picks.push(Number(d.k));
+        if (test.picks.length === test.qs[test.i].opts.length) finishAnswer(); else renderTest();
+      }
+      break;
+    case 'next': test.i++; test.answered = false; test.picks = []; render(true); break;
+    case 'retest': buildTest(); render(true); break;
+    case 'settings': openSettings(); break;
+    case 'close': closeSettings(); break;
+    case 'set': {
+      let v = d.v;
+      if (d.k === 'font') v = Number(v);
+      if (d.k === 'speak') v = v === 'true';
+      state.settings[d.k] = v; saveStore(); applyTheme(); renderSettings(); break;
+    }
+    case 'reset': settingsUI.confirmReset = true; renderSettings(); break;
+    case 'reset-cancel': settingsUI.confirmReset = false; renderSettings(); break;
+    case 'reset-yes':
+      state.srs = {}; saveStore(); cards = null; settingsUI.confirmReset = false;
+      renderSettings(); render(); break;
+  }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#sheet').hidden) closeSettings(); });
+
+applyTheme();
+render(true);
+initVoices();
+try { if ('speechSynthesis' in window && speechSynthesis.addEventListener) speechSynthesis.addEventListener('voiceschanged', initVoices); } catch (e) {}
+</script>
+</body>
+</html>
