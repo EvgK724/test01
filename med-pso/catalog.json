@@ -1,0 +1,349 @@
+{
+ "groups": {
+  "reperf": "Реперфузия и визуализация",
+  "prev": "Ранняя вторичная профилактика"
+ },
+ "apps": [
+  {
+   "key": "arterii",
+   "title": "Артерии мозга",
+   "label": "Артерии",
+   "desc": "сегменты, бассейны, синдромы, мишени для ВСТЭ; схемы сосудов",
+   "group": "reperf",
+   "about": "анатомия артерий мозга для ПСО: сегменты, бассейны, синдромы, коллатерали, ASPECTS; какая окклюзия — мишень для ВСТЭ (КР по ИИ 2024, AHA/ASA 2026); интерактивные схемы",
+   "artifact": "https://claude.ai/artifact/5Y6jQzXLSM6ySTFys6KLXH",
+   "page": "site/apps/arterii.html",
+   "generator": "sources/art/",
+   "topics": [
+    "Виллизиев круг",
+    "Внутренняя сонная артерия",
+    "Средняя мозговая артерия",
+    "ПМА и ЗМА",
+    "Вертебробазилярная система",
+    "Бассейны и синдромы",
+    "КТА: где окклюзия",
+    "Решение о ВСТЭ",
+    "Итог — всё вместе"
+   ],
+   "cards": 100,
+   "sources": 0,
+   "data_blocks": [
+    "AHA_ACA",
+    "AHA_BA",
+    "AHA_ICAM1",
+    "AHA_MCA_DIST",
+    "AHA_PCA",
+    "AHA_TANDEM",
+    "AHA_VA",
+    "CAR",
+    "CRIT",
+    "ERRORS",
+    "EVT_LABEL",
+    "EVT_LEGEND",
+    "KR_CAR",
+    "KR_NONE",
+    "KR_PCA",
+    "KR_TANDEM",
+    "KR_VB",
+    "MEVO_ACA",
+    "MEVO_MCA",
+    "PCA",
+    "PRACT_PROX",
+    "PROX",
+    "S",
+    "SEG",
+    "SEGTAB",
+    "SHOWN",
+    "VEXT",
+    "VIEWS",
+    "V_EXTRA"
+   ],
+   "localStorage": {
+    "LS_STATE": "art:state",
+    "LS_TAB": "art:tab",
+    "LS_OPEN": "art:open",
+    "LS_VIEW": "art:view"
+   },
+   "cloud_doc": "data/users/<uid>/progress",
+   "tile": {
+    "profile": "tiles/arterii.mobileconfig",
+    "icon": "tiles/arterii-icon.png"
+   }
+  },
+  {
+   "key": "perfuziya",
+   "title": "КТ-перфузия",
+   "label": "Перфузия",
+   "desc": "карты, ядро и пенумбра, коллатерали, отбор на ТЭ и ТЛТ",
+   "group": "reperf",
+   "about": "метод, карты CBF/CBV/MTT/Tmax, ядро и пенумбра, коллатерали (HIR), отбор на ТЭ и ТЛТ, ловушки, чтение отчёта",
+   "artifact": "https://claude.ai/artifact/Vu5z1S4axjbS697ii75D54",
+   "page": "site/apps/perfuziya.html",
+   "generator": "sources/ctp/",
+   "topics": [
+    "Как это работает",
+    "Карты",
+    "Ядро и пенумбра",
+    "Коллатерали",
+    "Отбор на тромбэктомию",
+    "Тромболизис в позднем окне",
+    "Ловушки",
+    "Как читать отчёт",
+    "Итог — всё вместе"
+   ],
+   "cards": 60,
+   "sources": 0,
+   "data_blocks": [
+    "CONTRAST",
+    "ERRORS",
+    "MAPS",
+    "TISSUE"
+   ],
+   "localStorage": {
+    "LS_STATE": "ctp:state",
+    "LS_SPEAK": "ctp:autospeak",
+    "LS_TAB": "ctp:tab",
+    "LS_OPEN": "ctp:open"
+   },
+   "cloud_doc": "data/users/<uid>/progress",
+   "tile": {
+    "profile": "tiles/perfuziya.mobileconfig",
+    "icon": "tiles/perfuziya-icon.png"
+   }
+  },
+  {
+   "key": "poak",
+   "title": "Ранняя антикоагуляция",
+   "label": "ПОАК",
+   "desc": "ПОАК при ФП: сроки по ELAN и CATALYST, дозы, переходы, антидоты",
+   "group": "prev",
+   "about": "ПОАК и варфарин после ИИ при ФП: сроки старта по ELAN и CATALYST (протокол ранней антикоагуляции ПСО), дозы, переходы, антидоты, ТЛТ на фоне ПОАК; калькулятор дат",
+   "artifact": "https://claude.ai/artifact/RuHvygfjYgWatXnSjK1Mho",
+   "page": "site/apps/poak.html",
+   "generator": "sources/oac/",
+   "topics": [
+    "Доказательства",
+    "Размер инфаркта",
+    "Сроки старта",
+    "Особые ситуации",
+    "Дозы ПОАК",
+    "Зонд и взаимодействия",
+    "Варфарин",
+    "Переходы",
+    "Антидоты",
+    "Тромболизис на антикоагулянте",
+    "Итог — всё вместе"
+   ],
+   "cards": 93,
+   "sources": 19,
+   "data_blocks": [
+    "ANTIDOTES",
+    "CONTRAST",
+    "DOSES",
+    "ERRORS",
+    "IVT",
+    "SOURCES",
+    "SWITCH",
+    "TIMING"
+   ],
+   "localStorage": {
+    "LS_STATE": "oac:state",
+    "LS_TAB": "oac:tab",
+    "LS_OPEN": "oac:open"
+   },
+   "cloud_doc": "data/users/<uid>/progress",
+   "tile": {
+    "profile": "tiles/poak.mobileconfig",
+    "icon": "tiles/poak-icon.png"
+   }
+  },
+  {
+   "key": "vits",
+   "title": "ВИТС после инсульта",
+   "label": "ВИТС",
+   "desc": "аторвастатин и розувастатин, цели ХС ЛНП, контроль, безопасность",
+   "group": "prev",
+   "about": "высокоинтенсивная терапия статинами: аторвастатин 40–80, розувастатин 20–40, цели ХС ЛНП, сроки контроля, безопасность, особые группы; калькулятор",
+   "artifact": "https://claude.ai/artifact/R9eEH6EDRV1iccRwmfZUPy",
+   "page": "site/apps/vits.html",
+   "generator": "sources/vits/",
+   "topics": [
+    "Кому ВИТС и цель",
+    "Препараты и дозы",
+    "Возраст",
+    "Особые пациенты",
+    "Когда начинать",
+    "Не прерывать",
+    "Сроки контроля",
+    "Эскалация",
+    "Снижение дозы",
+    "Мышцы и печень",
+    "Кровоизлияния и диабет",
+    "Итог — всё вместе"
+   ],
+   "cards": 98,
+   "sources": 27,
+   "data_blocks": [
+    "CONTRAST",
+    "DOSES",
+    "ERRORS",
+    "MONITOR",
+    "REDUCE",
+    "SAFETY",
+    "SOURCES",
+    "SPECIAL",
+    "TARGETS"
+   ],
+   "localStorage": {
+    "LS_STATE": "vits:state",
+    "LS_TAB": "vits:tab",
+    "LS_OPEN": "vits:open"
+   },
+   "cloud_doc": "data/users/<uid>/progress",
+   "tile": {
+    "profile": "tiles/vits.mobileconfig",
+    "icon": "tiles/vits-icon.png"
+   }
+  },
+  {
+   "key": "daat",
+   "title": "Антиагреганты при ИИ и ТИА",
+   "label": "ДААТ",
+   "desc": "ДААТ и монотерапия, нагрузка, сроки, перевод, с антикоагулянтами",
+   "group": "prev",
+   "about": "ранняя вторичная антиагрегантная терапия: ДААТ и монотерапия, нагрузочные дозы, сроки, перевод на монотерапию, сочетание с антикоагулянтами, лёгкие и тяжёлые пациенты; калькулятор схемы и дат",
+   "artifact": "https://claude.ai/artifact/LXG2TtifyaaiGTdhftJvkV",
+   "page": "site/apps/daat.html",
+   "generator": "sources/dapt/",
+   "topics": [
+    "Кому ДААТ, кому одна таблетка",
+    "Клопидогрел + АСК",
+    "Тикагрелор + АСК",
+    "Нагрузочные дозы",
+    "Сроки старта",
+    "Длительность и перевод",
+    "Тромболизис и тромбэктомия",
+    "Лёгкие и тяжёлые",
+    "С антикоагулянтами",
+    "Особые случаи",
+    "Частые ошибки",
+    "Итог — всё вместе"
+   ],
+   "cards": 92,
+   "sources": 39,
+   "data_blocks": [
+    "CONTRAST",
+    "DOSES",
+    "ERRORS",
+    "OAC",
+    "SCHEMES",
+    "SEVERITY",
+    "SOURCES",
+    "SPECIAL",
+    "SWITCH",
+    "TIMING"
+   ],
+   "localStorage": {
+    "LS_STATE": "dapt:state",
+    "LS_TAB": "dapt:tab",
+    "LS_OPEN": "dapt:open"
+   },
+   "cloud_doc": "data/users/<uid>/progress",
+   "tile": {
+    "profile": "tiles/daat.mobileconfig",
+    "icon": "tiles/daat-icon.png"
+   }
+  },
+  {
+   "key": "trombotsity",
+   "title": "Антитромботики при тромбоцитопении",
+   "label": "Тромбоциты",
+   "desc": "НМГ, ПОАК, АСК, клопидогрел при < 20, 20–50, > 50; ГИТ, ИТП",
+   "group": "prev",
+   "about": "НМГ, ПОАК, АСК, клопидогрел при тромбоцитах < 20, 20–50, > 50; ТЛТ и ТЭ, ГИТ (4Ts), ИТП, трансфузии; калькулятор тактики",
+   "artifact": "https://claude.ai/artifact/FT4xomwrZFQzZLJUsp7WvV",
+   "page": "site/apps/trombotsity.html",
+   "generator": "sources/thrombo/",
+   "topics": [
+    "Три уровня тромбоцитов",
+    "Что есть в КР по ИИ 2024",
+    "Сначала проверить",
+    "НМГ: профилактика ТГВ",
+    "НМГ: лечение ВТЭ",
+    "ПОАК и ФП",
+    "АСК",
+    "Клопидогрел и ДААТ",
+    "ТЛТ и тромбэктомия",
+    "ГИТ",
+    "ИТП, цирроз, трансфузии",
+    "Частые ошибки",
+    "Итог — всё вместе"
+   ],
+   "cards": 110,
+   "sources": 31,
+   "data_blocks": [
+    "CONTRAST",
+    "ERRORS",
+    "HIT",
+    "LEVELS",
+    "MATRIX",
+    "REPERF",
+    "SOURCES",
+    "SPECIAL",
+    "T4",
+    "THRESH"
+   ],
+   "localStorage": {
+    "LS_STATE": "thrombo:state",
+    "LS_TAB": "thrombo:tab",
+    "LS_OPEN": "thrombo:open"
+   },
+   "cloud_doc": "data/users/<uid>/progress",
+   "tile": {
+    "profile": "tiles/trombotsity.mobileconfig",
+    "icon": "tiles/trombotsity-icon.png"
+   }
+  },
+  {
+   "key": "att",
+   "title": "АТТ после инсульта",
+   "label": "АТТ",
+   "desc": "ДАТТ, ФП, комбинации, тромб в ЛП, АФС, стенты, ООО, ТГВ; случаи и тест",
+   "group": "prev",
+   "about": "антитромботическая терапия после ИИ: ДАТТ, ФП и сроки ОАК, комбинации, тромб в ЛП, АФС, стентирование, ООО, ТГВ голени; карточки, клинические случаи, тест, «трудные места»",
+   "artifact": "https://claude.ai/artifact/NipWjfQKEnk77FR5eMwxVz",
+   "page": "site/apps/att.html",
+   "generator": null,
+   "topics": [
+    "ДАТТ",
+    "ФП: ОАК и сроки",
+    "Комбинации",
+    "Тромб в ЛП",
+    "АФС",
+    "Стентирование",
+    "ООО",
+    "ТГВ голени"
+   ],
+   "cards": 55,
+   "cases": 40,
+   "test": 26,
+   "review": 8,
+   "sources": 49,
+   "data_blocks": [
+    "TOPICS",
+    "SOURCES",
+    "REVIEW",
+    "CARDS",
+    "CASES",
+    "TEST"
+   ],
+   "localStorage": {
+    "LS_KEY": "stroke-att.progress.v1",
+    "TAB_KEY": "stroke-att.tab"
+   },
+   "cloud_doc": "data/users/<uid>/progress",
+   "tile": null,
+   "note": "собрано в другом чате; генератора нет — данные в константах внутри страницы; факты в этом пакете не перепроверялись"
+  }
+ ]
+}

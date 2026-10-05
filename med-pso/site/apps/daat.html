@@ -1,0 +1,2821 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Антиагреганты при ИИ и ТИА</title>
+<style>
+  :root{
+    --k:1;
+    color-scheme:dark;
+    --bg:#0e1113;
+    --surface:#171c1f;
+    --raise:#1f262a;
+    --line:#252c30;
+    --line-2:#343d42;
+    --text:#e8e8e8;
+    --soft:#c3cbcf;
+    --muted:#939ea3;
+    --accent:#d97757;
+    --on-accent:#14181a;
+    --blue:#7cc0dd;
+    --blue-soft:rgba(124,192,221,.13);
+    --no:#b4544a;
+    --no-text:#e9a7a0;
+    --no-soft:rgba(180,84,74,.10);
+    --yes:#4e8767;
+    --yes-text:#9ad0b4;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  [hidden]{display:none!important}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);overflow-x:hidden}
+  body{font-family:var(--sans);font-size:calc(17px*var(--k));line-height:1.5;display:flex;justify-content:center}
+  button{font:inherit;color:inherit}
+  .app{width:100%;max-width:calc(440px*var(--k));height:100%;display:flex;flex-direction:column;gap:calc(10px*var(--k));padding:calc(10px*var(--k)) calc(16px*var(--k)) calc(14px*var(--k))}
+  .nw{white-space:nowrap}
+  .sr{position:absolute;width:calc(1px*var(--k));height:calc(1px*var(--k));overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+  .top{display:flex;align-items:center;gap:calc(10px*var(--k))}
+  .tabs{flex:1;display:flex;gap:calc(4px*var(--k));padding:calc(4px*var(--k));border:calc(1px*var(--k)) solid var(--line);border-radius:calc(14px*var(--k))}
+  .tab{flex:1;min-height:calc(44px*var(--k));border:0;border-radius:calc(10px*var(--k));background:transparent;color:var(--muted);font-size:calc(16px*var(--k));cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--raise);color:var(--text)}
+  .icon{width:calc(52px*var(--k));height:calc(52px*var(--k));flex:0 0 calc(52px*var(--k));display:grid;place-items:center;border:calc(1px*var(--k)) solid var(--line);border-radius:calc(14px*var(--k));background:transparent;color:var(--muted);cursor:pointer}
+  .icon[aria-pressed="true"]{color:var(--accent);border-color:var(--accent)}
+  .icon svg{width:calc(22px*var(--k));height:calc(22px*var(--k))}
+  .icon .sl{display:none}
+  .icon[aria-pressed="false"] .sl{display:inline}
+  .icon[aria-pressed="false"] .wv{display:none}
+
+  .meta{font-size:calc(15px*var(--k));color:var(--muted);font-variant-numeric:tabular-nums;line-height:1.3}
+  .bar{height:calc(3px*var(--k));border-radius:calc(2px*var(--k));background:var(--line);overflow:hidden;margin-top:-4px}
+  .bar-fill{display:block;height:100%;width:0;background:var(--accent);transition:width .25s ease}
+
+  .st{color:var(--blue)}
+  .pr{color:var(--accent)}
+  .good{color:var(--yes-text)}
+
+  .view{flex:1;min-height:0;display:flex;flex-direction:column;gap:calc(12px*var(--k))}
+  .card{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:calc(22px*var(--k)) calc(20px*var(--k));background:var(--surface);border:calc(1px*var(--k)) solid var(--line);border-radius:calc(20px*var(--k));display:flex;flex-direction:column;gap:calc(16px*var(--k))}
+  .kind{align-self:flex-start;font-size:calc(14px*var(--k));letter-spacing:.02em;color:var(--blue);padding:calc(5px*var(--k)) calc(11px*var(--k));border-radius:calc(999px*var(--k));border:calc(1px*var(--k)) solid currentColor;background:var(--blue-soft)}
+  .q{margin:0;font-family:var(--serif);font-size:calc(30px*var(--k));line-height:1.32;text-wrap:pretty}
+  .gap{display:inline-block;min-width:3em;height:.95em;border-bottom:calc(3px*var(--k)) solid var(--accent);margin:0 .08em;vertical-align:-.05em}
+  .hint{margin:0;font-size:calc(17px*var(--k));color:var(--muted)}
+  .back{display:flex;flex-direction:column;gap:calc(12px*var(--k));padding-top:calc(14px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .verdict{margin:0;font-size:calc(18px*var(--k));line-height:1.45}
+  .verdict.ok{color:var(--yes-text)}
+  .verdict.bad{color:var(--no-text)}
+  .verdict b{font-family:var(--serif);font-weight:400;font-size:calc(21px*var(--k))}
+  .why{margin:0;font-size:calc(18px*var(--k));line-height:1.5;color:var(--soft)}
+
+  .opts{display:grid;gap:calc(10px*var(--k))}
+  .opts.c1{grid-template-columns:minmax(0,1fr)}
+  .opts.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .opts.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .opt{min-height:calc(64px*var(--k));padding:calc(6px*var(--k)) calc(10px*var(--k));border-radius:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:var(--surface);font-family:var(--serif);font-size:calc(25px*var(--k));line-height:1.15;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(2px*var(--k))}
+  .opt.long{font-size:calc(22px*var(--k))}
+  .opt:active{background:var(--raise)}
+
+  .actions{display:flex;gap:calc(10px*var(--k))}
+  .big{flex:1;min-height:calc(58px*var(--k));border-radius:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:transparent;font-size:calc(19px*var(--k));cursor:pointer}
+  .primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+  .big:active,.opt:active{transform:scale(.985)}
+  .say{width:calc(58px*var(--k));height:calc(58px*var(--k));flex:0 0 calc(58px*var(--k));border-radius:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--accent);background:transparent;color:var(--accent);display:grid;place-items:center;cursor:pointer}
+  .say svg{width:calc(24px*var(--k));height:calc(24px*var(--k))}
+
+  /* ——— Правила */
+  .rule{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:calc(4px*var(--k)) calc(2px*var(--k)) calc(12px*var(--k))}
+  .r-title{margin:calc(8px*var(--k)) 0 calc(4px*var(--k));font-family:var(--serif);font-weight:400;font-size:calc(40px*var(--k));line-height:1.1;text-wrap:balance}
+  .r-sub{margin:0 0 calc(14px*var(--k));font-size:calc(17px*var(--k));line-height:1.45;color:var(--soft);text-wrap:pretty}
+  .r-sub b{color:var(--text)}
+  .r-sub i{font-family:var(--serif);font-style:normal;color:var(--text)}
+  .algo{background:var(--surface);border:calc(1px*var(--k)) solid var(--line);border-radius:calc(18px*var(--k));padding:calc(16px*var(--k)) calc(16px*var(--k)) calc(14px*var(--k))}
+  .algo-h{margin:0 0 calc(4px*var(--k));font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+  .steps{list-style:none;margin:0;padding:0}
+  .steps li{display:grid;grid-template-columns:calc(26px*var(--k)) minmax(0,1fr);gap:calc(8px*var(--k));padding:calc(10px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .steps li:first-child{border-top:0}
+  .sn{font-size:calc(15px*var(--k));line-height:1.45;color:var(--blue);font-variant-numeric:tabular-nums}
+  .s-t{margin:0;font-size:calc(17px*var(--k));line-height:1.4}
+  .s-f{margin:calc(3px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.3}
+  .s-f i{font-style:normal;color:var(--soft)}
+  .algo-m{margin:calc(4px*var(--k)) 0 0;padding-top:calc(12px*var(--k));border-top:calc(1px*var(--k)) solid var(--line);font-size:calc(18px*var(--k));color:var(--text)}
+  .algo-m b{font-family:var(--serif);font-weight:400;font-size:calc(26px*var(--k))}
+  .algo-note{margin:calc(8px*var(--k)) 0 0;font-size:calc(15px*var(--k));line-height:1.45;color:var(--muted)}
+  .algo-note i{font-family:var(--serif);font-style:normal;color:var(--soft)}
+  .go-wrap{display:flex;margin:calc(14px*var(--k)) 0 calc(4px*var(--k))}
+
+  .lbl{margin:calc(26px*var(--k)) 0 calc(8px*var(--k));font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+  .mx-wrap{overflow-x:auto;border:calc(1px*var(--k)) solid var(--line);border-radius:calc(16px*var(--k));background:var(--surface)}
+  .mx-note{margin:calc(10px*var(--k)) calc(2px*var(--k)) 0;font-size:calc(16px*var(--k));line-height:1.5;color:var(--soft)}
+  .mx-note i{font-family:var(--serif);font-style:normal;color:var(--text)}
+
+  .mm{margin-top:calc(10px*var(--k));padding:calc(12px*var(--k)) calc(14px*var(--k)) calc(12px*var(--k));background:var(--surface);border:calc(1px*var(--k)) solid var(--line);border-radius:calc(16px*var(--k))}
+  .mm:first-of-type{margin-top:0}
+  .mm-h{margin:0 0 calc(6px*var(--k));font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
+  .mm-n{display:inline-block;min-width:1.6em;color:var(--accent)}
+  .mm-grid{display:grid;grid-template-columns:1fr 1fr;gap:calc(2px*var(--k)) calc(12px*var(--k))}
+  .mm-w{margin:0;padding:calc(5px*var(--k)) 0}
+  .mm-w span{display:block;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2}
+  .mm-w small{display:block;font-size:calc(13px*var(--k));line-height:1.3;color:var(--muted)}
+  .mm-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) calc(44px*var(--k));column-gap:calc(10px*var(--k));align-items:center;padding:calc(6px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .mm-pair:first-of-type{border-top:0}
+  .mm-pair p{margin:0}
+  .mm-pair span{display:block;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2}
+  .mm-pair small{display:block;font-size:calc(13px*var(--k));line-height:1.3;color:var(--muted)}
+  .mm-play{width:calc(44px*var(--k));height:calc(44px*var(--k));border-radius:50%;border:calc(1px*var(--k)) solid var(--line-2);background:transparent;color:var(--accent);display:grid;place-items:center;cursor:pointer}
+  .mm-play svg{width:calc(18px*var(--k));height:calc(18px*var(--k))}
+  .mm-note{margin:calc(8px*var(--k)) 0 0;padding-top:calc(8px*var(--k));border-top:calc(1px*var(--k)) solid var(--line);font-size:calc(14px*var(--k));line-height:1.45;color:var(--soft)}
+  .legend{margin:0 calc(2px*var(--k)) calc(10px*var(--k));font-size:calc(15px*var(--k));line-height:1.45;color:var(--soft)}
+  .hl{color:var(--text);text-decoration:underline;text-decoration-thickness:calc(1.5px*var(--k));text-underline-offset:calc(3px*var(--k))}
+  .algo-m i{font-family:var(--serif);font-style:normal;font-size:calc(18px*var(--k))}
+  .md{display:grid;grid-template-columns:minmax(0,1fr) calc(48px*var(--k));column-gap:calc(10px*var(--k));align-items:center;padding:calc(8px*var(--k)) calc(10px*var(--k)) calc(8px*var(--k)) calc(14px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .md:first-child{border-top:0}
+  .s-f .sep{color:var(--muted)}
+  .pw{margin:0;line-height:1.35}
+  .pw + .pw{margin-top:calc(3px*var(--k))}
+  .pw-w{margin-right:calc(6px*var(--k));font-family:var(--serif);font-size:calc(22px*var(--k))}
+  .ipa{margin-right:calc(6px*var(--k));font-size:calc(14px*var(--k));color:var(--muted);white-space:nowrap}
+  .pw-ru{font-size:calc(15px*var(--k));color:var(--soft)}
+  .pw-tip{margin:calc(8px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.45;color:var(--muted)}
+  .snd-ex{margin:calc(4px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(18px*var(--k));line-height:1.35;color:var(--soft)}
+  .algo-m b.pr{color:var(--accent)}
+  .s-t b{margin-right:calc(4px*var(--k));font-family:var(--serif);font-weight:400;font-size:calc(21px*var(--k));color:var(--accent)}
+  .s-t .ipa{margin-right:calc(4px*var(--k))}
+  .algo-m b.st{color:var(--blue)}
+  .algo-m b.good{color:var(--yes-text)}
+  .mt{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(6px*var(--k))}
+  .mt col.rh{width:calc(92px*var(--k))}
+  .mt thead th{padding:calc(2px*var(--k)) calc(6px*var(--k)) calc(8px*var(--k));font-size:calc(12px*var(--k));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left}
+  .mt tbody th{padding:calc(12px*var(--k)) calc(6px*var(--k)) calc(12px*var(--k)) 0;text-align:left;vertical-align:top;font-family:var(--serif);font-weight:400;font-size:calc(24px*var(--k));line-height:1.15;border-top:calc(1px*var(--k)) solid var(--line)}
+  .mt td{padding:calc(12px*var(--k)) calc(6px*var(--k));vertical-align:top;font-size:calc(15px*var(--k));line-height:1.4;color:var(--soft);border-top:calc(1px*var(--k)) solid var(--line)}
+  .mt td .f{display:block;margin-bottom:calc(2px*var(--k));font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.2}
+  .mt td b{color:var(--text);font-weight:600}
+  .mt td b.h{display:block;margin-bottom:calc(2px*var(--k))}
+  .mt thead td{border-top:0}
+  .mt tbody th small{display:block;margin-top:calc(3px*var(--k));font-family:var(--sans);font-size:calc(12px*var(--k));line-height:1.2;color:var(--muted)}
+  .mt.wx col.rh{width:calc(78px*var(--k))}
+  .mt.wx td .f{font-size:calc(18px*var(--k))}
+  .mt td i{display:block;font-family:var(--serif);font-style:normal;font-size:calc(15px*var(--k));line-height:1.3;color:var(--soft)}
+  .mt td small{display:block;margin-top:calc(2px*var(--k));font-size:calc(13px*var(--k));line-height:1.3;color:var(--muted)}
+  .mt td small i{display:inline;font-size:calc(13px*var(--k));color:var(--soft)}
+  .cp-en + .cp-ru + .cp-en{margin-top:calc(8px*var(--k))}
+  .algo-2{margin-top:calc(12px*var(--k))}
+  .ct{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(4px*var(--k))}
+  .ct col.sit{width:46%}
+  .ct th{padding:calc(11px*var(--k)) calc(10px*var(--k)) calc(11px*var(--k)) 0;text-align:left;vertical-align:top;font-size:calc(15px*var(--k));font-weight:600;line-height:1.35;color:var(--text);border-top:calc(1px*var(--k)) solid var(--line)}
+  .ct td{padding:calc(11px*var(--k)) 0;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .ct tr:first-child th,.ct tr:first-child td{border-top:0}
+  .ct .f{display:block;font-family:var(--serif);font-size:calc(21px*var(--k));line-height:1.2}
+  .ct .e{display:block;margin-top:calc(2px*var(--k));font-family:var(--serif);font-size:calc(15px*var(--k));line-height:1.3;color:var(--soft)}
+  .vt{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(4px*var(--k))}
+  .vt col.v{width:46%}
+  .vt th{padding:calc(10px*var(--k)) calc(10px*var(--k)) calc(10px*var(--k)) 0;text-align:left;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .vt td{padding:calc(10px*var(--k)) 0;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .vt tr:first-child th,.vt tr:first-child td{border-top:0}
+  .vt .w{display:block;font-family:var(--serif);font-weight:400;font-size:calc(21px*var(--k));line-height:1.15;color:var(--accent)}
+  .vt .w.st{color:var(--blue)}
+  .vt .w.hl{color:var(--text)}
+  .vt tr.pb th,.vt tr.pb td{border-top:0;padding-top:0}
+  .vt .w.good{color:var(--yes-text)}
+  .wd-w{margin:0;line-height:1.3}
+  .wd-w .ph{margin-right:calc(6px*var(--k));font-family:var(--serif);font-size:calc(21px*var(--k))}
+  .wd-ru{font-size:calc(15px*var(--k));color:var(--muted)}
+  .wd-p{margin:calc(3px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(17px*var(--k));line-height:1.35;color:var(--soft)}
+  .vt .p{display:block;margin-top:calc(2px*var(--k));font-size:calc(13px*var(--k));font-weight:600;line-height:1.3;color:var(--blue)}
+  .vt .e{display:block;font-family:var(--serif);font-size:calc(16px*var(--k));line-height:1.3;color:var(--text)}
+  .vt .r{display:block;margin-top:calc(2px*var(--k));font-size:calc(13px*var(--k));line-height:1.35;color:var(--muted)}
+  .mt.af thead th{padding:calc(2px*var(--k)) calc(8px*var(--k)) calc(8px*var(--k)) 0}
+  .mt.af td{padding:calc(12px*var(--k)) calc(8px*var(--k)) calc(12px*var(--k)) 0}
+  .mt.af td .f{font-size:calc(20px*var(--k))}
+  .mt.af td small{margin-top:calc(4px*var(--k))}
+  .vt.sv col.v{width:40%}
+  .q{font-size:calc(26px*var(--k))}
+  .md{grid-template-columns:minmax(0,1fr)}
+  .ex{grid-template-columns:minmax(0,1fr)}
+  .mt.cp col.rh{width:calc(64px*var(--k))}
+  .mt.cp thead th{padding:calc(2px*var(--k)) calc(4px*var(--k)) calc(8px*var(--k));font-size:calc(13px*var(--k));letter-spacing:0;text-transform:none}
+  .mt.cp tbody th{font-size:calc(20px*var(--k))}
+  .mt.cp td{padding:calc(12px*var(--k)) calc(4px*var(--k))}
+  .mt.cp td .f{font-size:calc(20px*var(--k))}
+  .mt.cp .c-core{color:var(--accent)}
+  .mt.cp .c-pen{color:var(--yes-text)}
+  .mt.cp .c-olig{color:var(--blue)}
+  .algo-note b{color:var(--text);font-weight:600}
+  .mt.af .sep{color:var(--muted)}
+  .g4{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(6px*var(--k))}
+  .g4 col.rh{width:calc(76px*var(--k))}
+  .g4 thead th{padding:calc(4px*var(--k)) calc(4px*var(--k)) calc(8px*var(--k));font-size:calc(14px*var(--k));font-weight:600;color:var(--soft);text-align:center;vertical-align:bottom}
+  .g4 thead th small{display:block;font-weight:400;font-size:calc(12px*var(--k));color:var(--muted)}
+  .g4 tbody th{padding:calc(12px*var(--k)) 0;text-align:left;vertical-align:middle;font-size:calc(13px*var(--k));font-weight:600;line-height:1.3;color:var(--soft);border-top:calc(1px*var(--k)) solid var(--line)}
+  .g4 td{padding:calc(12px*var(--k)) calc(4px*var(--k)) calc(10px*var(--k));text-align:center;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .g4 thead td{border-top:0}
+  .g4 svg{display:block;width:calc(40px*var(--k));height:calc(40px*var(--k));margin:0 auto calc(4px*var(--k))}
+  .g4 .w{display:block;font-family:var(--serif);font-size:calc(28px*var(--k));line-height:1.1}
+  .g4 .e{display:block;margin-top:calc(4px*var(--k));font-family:var(--serif);font-size:calc(15px*var(--k));line-height:1.3;color:var(--soft)}
+  .cp-en{margin:0;font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.3}
+  .cp-ru{margin:calc(1px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.35;color:var(--muted)}
+  .cp-ru + .cp-en{margin-top:calc(8px*var(--k))}
+  .md .ex-play{grid-row:1}
+  .t-group{margin:calc(22px*var(--k)) 0 0;padding:0 calc(2px*var(--k)) calc(7px*var(--k));border-bottom:calc(1px*var(--k)) solid var(--line);font-size:calc(14px*var(--k));font-weight:600;color:var(--soft)}
+  .t-group:first-child{margin-top:calc(4px*var(--k))}
+  .wb{display:grid;grid-template-columns:minmax(0,1fr) calc(48px*var(--k));column-gap:calc(10px*var(--k));align-items:start}
+  .wb-h{margin:0;display:flex;align-items:baseline;flex-wrap:wrap;gap:calc(4px*var(--k)) calc(12px*var(--k))}
+  .wb-w{font-family:var(--serif);font-size:calc(38px*var(--k));line-height:1.05}
+  .wb-s{font-size:calc(15px*var(--k));color:var(--soft)}
+  .wb-ex{margin:calc(6px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.4}
+  .wb .ex-play{grid-column:2;grid-row:1 / span 2;align-self:center}
+  .zero{font-family:var(--sans);font-size:.55em;line-height:1;color:var(--yes-text);border:calc(1px*var(--k)) solid rgba(78,135,103,.65);border-radius:calc(999px*var(--k));padding:.12em .45em;margin:0 .35em 0 .05em;vertical-align:.25em}
+  .opt small{font-family:var(--sans);font-size:calc(13px*var(--k));color:var(--muted)}
+  .errs{list-style:none;margin:0;padding:0}
+  .err{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:baseline;gap:calc(10px*var(--k));padding:calc(11px*var(--k)) calc(14px*var(--k));border-top:calc(1px*var(--k)) solid var(--line);font-family:var(--serif);font-size:calc(17px*var(--k));line-height:1.35}
+  .err:first-child{border-top:0}
+  .err s{color:var(--no-text);text-decoration-thickness:calc(1.5px*var(--k))}
+  .err .arr{font-family:var(--sans);color:var(--muted)}
+  .err-note{grid-column:1 / -1;margin-top:-4px;font-family:var(--sans);font-size:calc(13px*var(--k));line-height:1.35;color:var(--muted)}
+
+  .topics{border-top:0}
+  .t-item{border-bottom:calc(1px*var(--k)) solid var(--line)}
+  .t-head{width:100%;min-height:calc(60px*var(--k));display:grid;grid-template-columns:calc(34px*var(--k)) minmax(0,1fr) auto calc(20px*var(--k));align-items:center;gap:calc(8px*var(--k));padding:calc(8px*var(--k)) calc(2px*var(--k));border:0;background:transparent;text-align:left;cursor:pointer}
+  .t-n{font-size:calc(15px*var(--k));color:var(--blue);font-variant-numeric:tabular-nums}
+  .t-txt{display:flex;flex-direction:column;min-width:0}
+  .t-title{font-size:calc(18px*var(--k));line-height:1.3}
+  .t-sub{font-size:calc(14px*var(--k));line-height:1.3;color:var(--muted)}
+  .t-count{font-size:calc(14px*var(--k));color:var(--muted);font-variant-numeric:tabular-nums}
+  .t-chev{color:var(--muted);transition:transform .2s ease}
+  .t-head[aria-expanded="true"] .t-chev{transform:rotate(90deg)}
+  .t-body{padding:calc(2px*var(--k)) calc(2px*var(--k)) calc(18px*var(--k)) calc(44px*var(--k));display:flex;flex-direction:column;gap:calc(12px*var(--k))}
+  .t-rule{margin:0;font-size:calc(17px*var(--k));line-height:1.5;color:var(--soft)}
+  .ex{display:grid;grid-template-columns:1fr calc(48px*var(--k));gap:calc(4px*var(--k)) calc(10px*var(--k));align-items:start}
+  .ex-en{margin:0;grid-column:1;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.4}
+  .ex-ru{margin:0;grid-column:1;font-size:calc(15px*var(--k));line-height:1.4;color:var(--muted)}
+  .ex-play{grid-column:2;grid-row:1 / span 2;width:calc(48px*var(--k));height:calc(48px*var(--k));border-radius:50%;border:calc(1px*var(--k)) solid var(--accent);background:transparent;color:var(--accent);display:grid;place-items:center;cursor:pointer}
+  .ex-play svg{width:calc(20px*var(--k));height:calc(20px*var(--k))}
+  .t-train{min-height:calc(50px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--accent);background:transparent;color:var(--accent);font-size:calc(17px*var(--k));cursor:pointer}
+
+  :focus-visible{outline:calc(2px*var(--k)) solid var(--accent);outline-offset:calc(2px*var(--k))}
+  @media (prefers-reduced-motion:reduce){.bar-fill,.t-chev{transition:none}.big:active,.opt:active{transform:none}}
+
+
+  /* ——— Справочник: разделы, таблицы, калькуляторы */
+  h2.algo-h{line-height:1.35}
+  .algo,.lbl{scroll-margin-top:calc(8px*var(--k))}
+  .jump{display:flex;flex-wrap:wrap;gap:calc(6px*var(--k));margin:0 0 calc(14px*var(--k))}
+  .jump button{min-height:calc(44px*var(--k));padding:0 calc(14px*var(--k));border-radius:calc(999px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:transparent;color:var(--soft);font-size:calc(15px*var(--k));cursor:pointer}
+  .jump button:active{background:var(--raise)}
+  .tt,.dz{margin-top:calc(2px*var(--k))}
+  .tr,.dr{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:calc(12px*var(--k));row-gap:calc(2px*var(--k));padding:calc(10px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .tr:first-child,.dr:first-child{border-top:0}
+  .tk,.dk{flex:0 1 auto;min-width:0;overflow-wrap:break-word;font-family:var(--serif);font-size:calc(21px*var(--k));line-height:1.2;color:var(--accent)}
+  .tv{flex:0 1 auto;margin-left:auto;min-width:0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2;color:var(--yes-text);text-align:right}
+  .dv{flex:0 1 auto;margin-left:auto;min-width:0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2;color:var(--text);text-align:right}
+  .td,.dd{flex:1 0 100%;margin-top:calc(1px*var(--k));font-size:calc(14px*var(--k));line-height:1.45;color:var(--soft)}
+  .algo-note + .algo-note{margin-top:calc(6px*var(--k))}
+
+  .calc{margin-top:calc(14px*var(--k));padding:calc(12px*var(--k)) calc(14px*var(--k)) calc(14px*var(--k));border-radius:calc(16px*var(--k));background:var(--bg);border:calc(1px*var(--k)) solid var(--line);display:flex;flex-direction:column;gap:calc(6px*var(--k))}
+  .calc-h{margin:0 0 calc(2px*var(--k));font-size:calc(15px*var(--k));font-weight:600;color:var(--text)}
+  .calc-h small{display:block;margin-top:calc(1px*var(--k));font-size:calc(13px*var(--k));font-weight:400;color:var(--muted)}
+  .fl{margin:calc(6px*var(--k)) 0 0;font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.03em;color:var(--muted)}
+  .fl small{margin-left:calc(5px*var(--k));font-size:calc(12px*var(--k));font-weight:400;letter-spacing:0}
+  .inp{display:block;width:100%;min-height:calc(48px*var(--k));padding:0 calc(12px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:var(--surface);color:var(--text);font:inherit;font-size:calc(17px*var(--k));font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none}
+  .inp::placeholder{color:var(--muted)}
+  .inp:focus{outline:calc(2px*var(--k)) solid var(--accent);outline-offset:calc(1px*var(--k))}
+  .inp-row{display:grid;grid-template-columns:minmax(0,1fr);gap:calc(6px*var(--k))}
+  .inp-row.has-x{grid-template-columns:minmax(0,1fr) calc(48px*var(--k))}
+  .x{min-height:calc(48px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:transparent;color:var(--muted);font-size:calc(20px*var(--k));line-height:1;cursor:pointer}
+  .seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:calc(6px*var(--k))}
+  .seg.s3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .seg.s4{grid-template-columns:repeat(auto-fit,minmax(calc(64px*var(--k)),1fr))}
+  .seg.s4 .chip{font-size:calc(14px*var(--k))}
+  .chip{overflow-wrap:break-word}
+  .err s,.err .good{min-width:0;overflow-wrap:break-word}
+  .seg.s2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chip{min-height:calc(44px*var(--k));padding:0 calc(2px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:transparent;color:var(--soft);font-size:calc(15px*var(--k));line-height:1.2;cursor:pointer}
+  .chip[aria-pressed="true"]{background:var(--raise);color:var(--text);border-color:var(--accent)}
+  .flags{display:flex;flex-wrap:wrap;gap:calc(6px*var(--k));margin-top:calc(6px*var(--k))}
+  .flags .chip{padding:calc(6px*var(--k)) calc(12px*var(--k));text-align:left}
+  .g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 calc(8px*var(--k))}
+  .res{margin-top:calc(8px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .rl{padding:calc(10px*var(--k)) 0;border-bottom:calc(1px*var(--k)) solid var(--line)}
+  .rl:last-child{border-bottom:0;padding-bottom:0}
+  .rk{margin:0;font-size:calc(12px*var(--k));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
+  .rv{margin:calc(2px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(22px*var(--k));line-height:1.25;color:var(--text);text-wrap:balance}
+  .rn{margin:calc(3px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.45;color:var(--muted)}
+  .rl.warn .rv{color:var(--no-text)}
+  .rl.ok .rv{color:var(--yes-text)}
+  .pill{display:inline-block;margin-left:calc(4px*var(--k));padding:0 calc(9px*var(--k));border-radius:calc(999px*var(--k));font-size:calc(12px*var(--k));font-weight:600;line-height:calc(20px*var(--k));border:calc(1px*var(--k)) solid currentColor;white-space:nowrap;vertical-align:calc(1px*var(--k))}
+  .p-now{color:var(--yes-text);background:rgba(78,135,103,.14)}
+  .p-wait{color:var(--blue);background:var(--blue-soft)}
+  .p-late{color:var(--muted)}
+  .crcl{margin:calc(10px*var(--k)) 0 0;font-size:calc(15px*var(--k));color:var(--soft)}
+  .crcl b{margin:0 calc(4px*var(--k));font-family:var(--serif);font-weight:400;font-size:calc(30px*var(--k));line-height:1;color:var(--text);font-variant-numeric:tabular-nums}
+  .dzr{list-style:none;margin:calc(6px*var(--k)) 0 0;padding:0}
+  .dzr li{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:calc(10px*var(--k));row-gap:calc(2px*var(--k));padding:calc(9px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .dzr .n{flex:0 1 auto;min-width:0;font-size:calc(15px*var(--k));font-weight:600;color:var(--soft)}
+  .dzr .d{flex:0 1 auto;margin-left:auto;min-width:0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2;color:var(--text);text-align:right}
+  .dzr .d.low{color:var(--accent)}
+  .dzr .d.no{color:var(--no-text)}
+  .dzr .w{flex:1 0 100%;margin-top:0;font-size:calc(13px*var(--k));line-height:1.4;color:var(--muted)}
+  .res-note{margin:calc(8px*var(--k)) 0 0;font-size:calc(13px*var(--k));line-height:1.45;color:var(--muted)}
+  .q{overflow-wrap:break-word}
+  .t-rule + .t-rule{margin-top:-4px}
+
+  .lst{list-style:none;margin:0;padding:0}
+  .lst li{padding:calc(11px*var(--k)) calc(14px*var(--k)) calc(12px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .lst li:first-child{border-top:0}
+  .sw-k{margin:0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.25;color:var(--accent)}
+  .sw-v{margin:calc(3px*var(--k)) 0 0;font-size:calc(16px*var(--k));line-height:1.45;color:var(--text)}
+  .sw-s{margin:calc(3px*var(--k)) 0 0;font-size:calc(12px*var(--k));font-weight:600;letter-spacing:.03em;color:var(--muted)}
+  .ad-k{margin:0;font-size:calc(14px*var(--k));font-weight:600;line-height:1.35;color:var(--soft)}
+  .ad-v{margin:calc(2px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(21px*var(--k));line-height:1.25;color:var(--accent)}
+  .ad-n{margin:calc(3px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.45;color:var(--muted)}
+  .iv-k{margin:0;font-size:calc(14px*var(--k));font-weight:600;line-height:1.35;color:var(--soft)}
+  .iv-k span{font-weight:400;color:var(--muted)}
+  .iv-v{margin:calc(3px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.3}
+  .iv-v::before{content:"";display:inline-block;width:calc(9px*var(--k));height:calc(9px*var(--k));margin-right:calc(8px*var(--k));border-radius:50%;background:currentColor;vertical-align:calc(2px*var(--k))}
+  .v-yes{color:var(--yes-text)}
+  .v-maybe{color:#e5c07b}
+  .v-no{color:var(--no-text)}
+  .src{margin:0;padding:0 0 0 calc(22px*var(--k));font-size:calc(13px*var(--k));line-height:1.45;color:var(--soft)}
+  .src li{margin:0 0 calc(7px*var(--k));padding-left:calc(2px*var(--k))}
+  .src a{color:var(--blue);text-decoration:underline;text-decoration-thickness:calc(1px*var(--k));text-underline-offset:calc(2px*var(--k));overflow-wrap:anywhere}
+  .foot{margin:calc(14px*var(--k)) 0 calc(6px*var(--k));font-size:calc(13px*var(--k));line-height:1.45;color:var(--muted)}
+  .r-title{font-size:min(calc(40px*var(--k)),10vw);overflow-wrap:break-word;hyphens:auto}
+  .t-title,.t-sub{overflow-wrap:break-word;hyphens:auto}
+  .opt{min-width:0;overflow-wrap:break-word;hyphens:auto}
+  label.fl{display:block}
+  .fl small{margin-left:0}
+  .abbr{margin:0 0 calc(14px*var(--k));padding:calc(12px*var(--k)) calc(14px*var(--k)) calc(10px*var(--k));border:calc(1px*var(--k)) solid var(--line);border-radius:calc(16px*var(--k))}
+  .abbr dl{margin:calc(4px*var(--k)) 0 0}
+  .abbr dl div{display:grid;grid-template-columns:minmax(0,7.5em) minmax(0,1fr);column-gap:calc(10px*var(--k));padding:calc(5px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .abbr dl div:first-child{border-top:0}
+  .abbr dt{font-size:calc(14px*var(--k));font-weight:600;line-height:1.4;color:var(--text);overflow-wrap:break-word}
+  .abbr dd{margin:0;font-size:calc(14px*var(--k));line-height:1.4;color:var(--soft);overflow-wrap:break-word}
+  .mx-note{font-size:calc(14px*var(--k));color:var(--muted)}
+
+  .mon{list-style:none;margin:calc(2px*var(--k)) 0 0;padding:0}
+  .mon li{padding:calc(10px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .mon li:first-child{border-top:0}
+  .mon .sw-k{font-size:calc(18px*var(--k))}
+  .mon .sw-v{font-size:calc(16px*var(--k))}
+  .dzr .d.ok{color:var(--yes-text)}
+  .rk + .dzr{margin-top:calc(2px*var(--k))}
+  .tv{text-wrap:balance}
+  .calc-top{margin-top:0}
+  .rl.lead .rv{font-size:calc(25px*var(--k))}
+  .q,.err s,.err .good,.err-note,.rv,.rn,.dv,.dk,.tv,.tk,.ad-v,.iv-v,.sw-k,.sw-v,.cp-en,.cp-ru,.t-rule,.ex-en,.ex-ru,.why,.dzr .n,.dzr .d,.abbr dd,.algo-note,.verdict,.back p{hyphens:auto;-webkit-hyphens:auto}
+
+  /* ——— Планшет */
+  body.tab .app{max-width:calc(600px*var(--k))}
+  body.wide .app{max-width:none;padding-left:calc(28px*var(--k));padding-right:calc(28px*var(--k))}
+  body.wide #drill{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;gap:calc(16px*var(--k))}
+  body.wide #drill .card{grid-column:1;grid-row:1 / span 2}
+  body.wide #drill .opts{grid-column:2;grid-row:1;align-content:end}
+  body.wide #drill .opts.c2,body.wide #drill .opts.c3{grid-template-columns:minmax(0,1fr)}
+  body.wide #drill .opt{min-height:calc(76px*var(--k))}
+  body.wide #drill .actions{grid-column:2;grid-row:2}
+  body.wide #rule{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:calc(36px*var(--k));align-items:start}
+  body.wide .r-left{position:static}
+  body.wide .r-right .lbl:first-child{margin-top:calc(14px*var(--k))}
+</style>
+<script>
+// Масштаб под размер экрана: телефон — как есть, планшет — крупнее, альбомная ориентация — две колонки
+(function(){
+  function fit(){
+    var w = window.innerWidth || 390, h = window.innerHeight || 760;
+    var wide = w >= 900 && w / h > 1.15;
+    var tab = !wide && w >= 600;
+    var k = wide ? h / 600 : Math.min(w / 440, h / 780);
+    if (w < 600) k = 1;
+    k = Math.max(1, Math.min(k, 1.9));
+    document.documentElement.style.setProperty("--k", k.toFixed(3));
+    document.body.classList.toggle("wide", wide);
+    document.body.classList.toggle("tab", tab);
+  }
+  fit();
+  window.addEventListener("resize", fit);
+  window.addEventListener("orientationchange", function(){ setTimeout(fit, 150); });
+})();
+</script>
+
+<div class="app" lang="ru" role="main">
+  <div class="top">
+    <div class="tabs" role="tablist" aria-label="Режим">
+      <button class="tab" id="tabDrill" role="tab" type="button" aria-selected="false" aria-controls="drill">Тренировка</button>
+      <button class="tab" id="tabRule" role="tab" type="button" aria-selected="true" aria-controls="rule">Справочник</button>
+    </div>
+  </div>
+  <div class="meta" id="meta" hidden><span id="status">Карточка 1 из 10</span></div>
+  <div class="bar" id="barWrap" hidden><span class="bar-fill" id="barFill"></span></div>
+
+  <section class="view" id="drill" role="tabpanel" aria-labelledby="tabDrill" hidden>
+    <article class="card" id="card">
+      <span class="kind" id="kind">Тема 1</span>
+      <p class="q" id="q"></p>
+      <p class="hint" id="hint">Выбери вариант</p>
+      <div class="back" id="back" aria-live="polite" hidden>
+        <p class="verdict" id="verdict"></p>
+        <p class="why" id="why"></p>
+      </div>
+    </article>
+    <div class="opts c2" id="opts"></div>
+    <div class="actions" id="actNext" hidden>
+      <button class="big primary" id="next" type="button">Дальше</button>
+    </div>
+    <div class="actions" id="actDone" hidden>
+      <button class="big primary" id="more" type="button">Ещё 10 новых</button>
+      <button class="big" id="toRule" type="button">Справочник</button>
+    </div>
+  </section>
+
+  <section class="rule" id="rule" role="tabpanel" aria-labelledby="tabRule">
+    <div class="r-left">
+      <h1 class="r-title">Антиагреганты при&nbsp;ИИ и&nbsp;ТИА</h1>
+      <p class="r-sub">Ранняя вторичная профилактика: кому двойная антиагрегантная терапия, кому одна таблетка, нагрузочные дозы, когда начать и&nbsp;когда перейти на&nbsp;монотерапию, что делать с&nbsp;антикоагулянтами. Основа&nbsp;— <b>КР&nbsp;по&nbsp;ИИ&nbsp;2024</b>; рядом&nbsp;— <b>AHA/ASA&nbsp;2026</b>, <b>ESO</b> и&nbsp;новые РКИ <b>INSPIRES</b>, <b>ATAMIS</b>, <b>EAST</b>, <b>TAPIS</b>.</p>
+      <section class="abbr" aria-labelledby="h-abbr">
+        <h2 class="algo-h" id="h-abbr">Сокращения</h2>
+        <dl>
+          <div><dt>ДААТ</dt><dd>двойная антиагрегантная терапия: АСК + клопидогрел или АСК + тикагрелор; в&nbsp;КР&nbsp;— ДАТТ</dd></div>
+          <div><dt>АСК</dt><dd>ацетилсалициловая кислота</dd></div>
+          <div><dt>NIHSS</dt><dd>шкала инсульта NIH: ≤&nbsp;3&nbsp;— малый ИИ для&nbsp;ДААТ с&nbsp;клопидогрелом, ≤&nbsp;5&nbsp;— с&nbsp;тикагрелором</dd></div>
+          <div><dt>ABCD2</dt><dd>риск инсульта после ТИА, 0–&#8288;7 баллов: 0–&#8288;3&nbsp;— низкий, 4–&#8288;5&nbsp;— умеренный, 6–&#8288;7&nbsp;— высокий; ≥&nbsp;4&nbsp;— показание к&nbsp;ДААТ</dd></div>
+          <div><dt>ТЛТ, ТЭ</dt><dd>тромболизис, тромбэктомия</dd></div>
+          <div><dt>ГТ</dt><dd>геморрагическая трансформация</dd></div>
+          <div><dt>сВЧК</dt><dd>симптомное внутричерепное кровоизлияние</dd></div>
+          <div><dt>CYP2C19 LoF</dt><dd>носители аллелей со&nbsp;сниженной функцией: клопидогрел хуже превращается в&nbsp;активный метаболит</dd></div>
+          <div><dt>КР&nbsp;по&nbsp;ИИ&nbsp;2024</dt><dd>клинические рекомендации «Ишемический инсульт и&nbsp;транзиторная ишемическая атака»</dd></div>
+          <div><dt>КР&nbsp;по&nbsp;ФП&nbsp;2025</dt><dd>клинические рекомендации «Фибрилляция и&nbsp;трепетание предсердий»</dd></div>
+        </dl>
+      </section>
+      <nav class="jump" aria-label="Разделы справочника">
+        <button type="button" data-to="s-calc">Подобрать</button>
+        <button type="button" data-to="s-scheme">Схемы</button>
+        <button type="button" data-to="s-dose">Дозы</button>
+        <button type="button" data-to="s-time">Сроки</button>
+        <button type="button" data-to="s-switch">Перевод</button>
+        <button type="button" data-to="s-oac">С&nbsp;антикоагулянтами</button>
+        <button type="button" data-to="s-sev">Лёгкие и&nbsp;тяжёлые</button>
+        <button type="button" data-to="s-spec">Особые случаи</button>
+        <button type="button" data-to="s-topics">Темы</button>
+      </nav>
+      <section class="algo" id="s-calc" aria-labelledby="h-calc">
+        <h2 class="algo-h" id="h-calc">Подобрать схему</h2>
+        <div class="calc calc-top" id="pcalc">
+          <p class="calc-h">Пациент<small>Пример&nbsp;— замените данными пациента</small></p>
+          <p class="fl" id="evLbl">Событие</p>
+          <div class="seg s2" role="group" aria-labelledby="evLbl">
+            <button type="button" class="chip" data-ev="is" aria-pressed="true">Инсульт</button>
+            <button type="button" class="chip" data-ev="tia" aria-pressed="false">ТИА</button>
+          </div>
+          <div id="nihssBox"><label class="fl" for="nihss">NIHSS <small>сейчас</small></label><input class="inp" id="nihss" type="number" inputmode="numeric" min="0" max="42" step="1" value="3"></div>
+          <div id="abcdBox" hidden><label class="fl" for="abcd">ABCD2 <small>0–&#8288;7</small></label><input class="inp" id="abcd" type="number" inputmode="numeric" min="0" max="7" step="1" value="5"></div>
+          <label class="fl" for="onset">Начало симптомов <small>или когда видели здоровым</small></label>
+          <input class="inp" id="onset" type="datetime-local">
+          <p class="fl" id="repLbl">Реперфузия</p>
+          <div class="seg s3" role="group" aria-labelledby="repLbl">
+            <button type="button" class="chip" data-rep="none" aria-pressed="true">Нет</button>
+            <button type="button" class="chip" data-rep="ivt" aria-pressed="false">ТЛТ</button>
+            <button type="button" class="chip" data-rep="evt" aria-pressed="false">Только ТЭ</button>
+          </div>
+          <div id="ivtBox" hidden><label class="fl" for="ivt">Время ТЛТ</label><input class="inp" id="ivt" type="datetime-local"></div>
+          <p class="fl" id="htLbl">Геморрагическая трансформация на&nbsp;КТ или МРТ</p>
+          <div class="seg s2" role="group" aria-labelledby="htLbl">
+            <button type="button" class="chip" data-ht="no" aria-pressed="true">Нет</button>
+            <button type="button" class="chip" data-ht="yes" aria-pressed="false">Есть</button>
+          </div>
+          <div class="flags" role="group" aria-label="Что ещё учесть">
+            <button type="button" class="chip" data-flag="af" aria-pressed="false">ФП</button>
+            <button type="button" class="chip" data-flag="sten" aria-pressed="false">Симптомный стеноз ≥&nbsp;50%</button>
+            <button type="button" class="chip" data-flag="athero" aria-pressed="false">Атеросклеротический генез</button>
+            <button type="button" class="chip" data-flag="icas" aria-pressed="false">Интракраниальный стеноз 70–&#8288;99%</button>
+            <button type="button" class="chip" data-flag="ich" aria-pressed="false">ВЧК в&nbsp;анамнезе</button>
+            <button type="button" class="chip" data-flag="onclop" aria-pressed="false">Уже принимает клопидогрел</button>
+            <button type="button" class="chip" data-flag="cyp" aria-pressed="false">Носитель CYP2C19 LoF</button>
+          </div>
+          <label class="fl" for="d1">Первая доза <small>день 1 для даты перевода</small></label>
+          <input class="inp" id="d1" type="date">
+          <div class="res" id="pres" aria-live="polite"></div>
+        </div>
+      </section>
+      <section class="algo algo-2" id="s-scheme" aria-labelledby="h-scheme">
+        <h2 class="algo-h" id="h-scheme">Кому какая схема</h2>
+        <ul class="mon">
+          <li><p class="sw-k">Малый ИИ (NIHSS ≤ 3) или ТИА с ABCD2 ≥ 4</p><p class="sw-v">клопидогрел 300 мг → 75 мг + АСК</p><p class="sw-s">21 день (КР: 21–⁠90), затем один препарат · КР по ИИ 2024, УУР A · инструкция клопидогрела</p></li>
+          <li><p class="sw-k">ИИ с NIHSS ≤ 5, ТИА с ABCD2 ≥ 6 или ТИА со стенозом ≥ 50%</p><p class="sw-v">тикагрелор 180 мг → 90 мг × 2 + АСК</p><p class="sw-s">30 дней, старт в первые 24 ч · КР по ИИ 2024, УУР B · в РФ вне инструкции</p></li>
+          <li><p class="sw-k">Атеросклеротический ИИ с NIHSS ≤ 5 или ТИА с ABCD2 ≥ 4, 24–⁠72 ч</p><p class="sw-v">клопидогрел 300 мг → 75 мг + АСК 100 мг</p><p class="sw-s">21 день, затем клопидогрел · INSPIRES, AHA/ASA 2026 (2a)</p></li>
+          <li><p class="sw-k">Интракраниальный стеноз 70–⁠99%</p><p class="sw-v">АСК + клопидогрел 75 мг</p><p class="sw-s">до 90 дней · КР по ИИ 2024, УУР B</p></li>
+          <li><p class="sw-k">Остальные некардиоэмболические ИИ и ТИА низкого риска</p><p class="sw-v">АСК 75–⁠150 мг или клопидогрел 75 мг</p><p class="sw-s">в первые 24 ч, длительно · КР по ИИ 2024, УУР A</p></li>
+          <li><p class="sw-k">Тяжёлый обширный ИИ</p><p class="sw-v">АСК 160–⁠300 мг, затем 75–⁠150 мг</p><p class="sw-s">в первые 48 ч · IST, CAST; AHA/ASA 2026 (1A) · ДААТ не назначают</p></li>
+          <li><p class="sw-k">ФП</p><p class="sw-v">АСК до старта ПОАК</p><p class="sw-s">с первой дозы ПОАК АСК не дают — сочетание не рекомендовано · КР по ИИ 2024 (УУР C и B), КР по ФП 2025 (ЕОК IIaB и IIIB)</p></li>
+        </ul>
+        <p class="algo-note">Перед любой ДААТ&nbsp;— КТ или МРТ без кровоизлияния. При&nbsp;показании к&nbsp;антикоагулянту ДААТ, как правило, не&nbsp;назначают (ESO&nbsp;2021).</p>
+      </section>
+      <section class="algo" id="s-dose" aria-labelledby="h-dose">
+        <h2 class="algo-h" id="h-dose">Дозы</h2>
+        <div class="dz">
+          <div class="dr"><span class="dk">АСК</span><span class="dv">75–⁠150 мг × 1</span><span class="dd">первая доза в РКИ ДААТ — 75–⁠300 мг (CHANCE), 300–⁠325 мг (THALES) · тяжёлый ИИ: 160–⁠300 мг в первые 48 ч · в ДААТ по инструкции клопидогрела — 75–⁠100 мг</span></div>
+          <div class="dr"><span class="dk">Клопидогрел</span><span class="dv">300 мг → 75 мг × 1</span><span class="dd">нагрузка 300 мг — инструкция, CHANCE, INSPIRES, ESO; 600 мг — POINT, полный эффект через 2 ч · уже принимает — без нагрузки (ESO)</span></div>
+          <div class="dr"><span class="dk">Тикагрелор</span><span class="dv">180 мг → 90 мг × 2</span><span class="dd">THALES, CHANCE-2 · показания при инсульте в инструкции РФ нет · противопоказан при ВЧК в анамнезе · поддерживающая АСК с ним — 75–⁠150 мг, выше 300 мг не рекомендуется</span></div>
+        </div>
+        <p class="algo-note">Правило «старше 75&nbsp;лет&nbsp;— клопидогрел без нагрузочной дозы» в&nbsp;инструкции относится к&nbsp;инфаркту миокарда с&nbsp;подъёмом&nbsp;ST, не&nbsp;к&nbsp;инсульту.</p>
+      </section>
+      <section class="algo algo-2" id="s-time" aria-labelledby="h-time">
+        <h2 class="algo-h" id="h-time">Когда начинать</h2>
+        <ul class="mon">
+          <li><p class="sw-k">Без реперфузии</p><p class="sw-v">антиагрегант в первые 24 ч; АСК — не позже 48 ч</p><p class="sw-s">алгоритм КР по ИИ 2024 · AHA/ASA 2026: АСК в первые 48 ч (1A)</p></li>
+          <li><p class="sw-k">ДААТ с клопидогрелом</p><p class="sw-v">как можно раньше: КР — через 12–⁠24 ч, не позже 7 суток</p><p class="sw-s">КР по ИИ 2024 · CHANCE — 24 ч, POINT — 12 ч, INSPIRES — до 72 ч</p></li>
+          <li><p class="sw-k">ДААТ с тикагрелором</p><p class="sw-v">в первые 24 ч</p><p class="sw-s">КР по ИИ 2024, THALES</p></li>
+          <li><p class="sw-k">После тромболизиса</p><p class="sw-v">через 24 ч</p><p class="sw-s">КР по ИИ 2024 · раньше — решением врачебной комиссии · при ГТ — отсроченно</p></li>
+          <li><p class="sw-k">Только тромбэктомия</p><p class="sw-v">в первые 24 ч, если нет ГТ</p><p class="sw-s">алгоритм КР по ИИ 2024</p></li>
+          <li><p class="sw-k">Геморрагическая трансформация</p><p class="sw-v">антиагрегант — отсроченно</p><p class="sw-s">алгоритм КР по ИИ 2024; точного срока в КР нет</p></li>
+          <li><p class="sw-k">ФП</p><p class="sw-v">АСК до старта ПОАК; с первой дозы ПОАК — без АСК</p><p class="sw-s">КР по ИИ 2024 (УУР C), КР по ФП 2025 (ЕОК IIaB); сочетание не рекомендовано</p></li>
+        </ul>
+        <p class="algo-note">Раньше&nbsp;— лучше: в&nbsp;INSPIRES абсолютная польза ДААТ&nbsp;— 1,42% за&nbsp;первую неделю, 0,49% за&nbsp;вторую, 0,29% за&nbsp;третью.</p>
+      </section>
+      <div class="go-wrap"><button class="big primary" id="go" type="button">Начать тренировку</button></div>
+    </div>
+    <div class="r-right">
+      <h2 class="lbl" id="s-switch">Перевод на&nbsp;монотерапию</h2>
+      <div class="mx-wrap">
+        <ul class="lst">
+          <li><p class="sw-k">ДААТ с клопидогрелом, 22-й день</p><p class="sw-v">второй препарат отменить; дальше — клопидогрел 75 мг или АСК 75–⁠150 мг</p><p class="sw-s">КР по ИИ 2024 · в CHANCE и INSPIRES оставляли клопидогрел</p></li>
+          <li><p class="sw-k">ДААТ с тикагрелором, 31-й день</p><p class="sw-v">тикагрелор отменить; дальше — АСК 75–⁠150 мг или клопидогрел 75 мг</p><p class="sw-s">КР по ИИ 2024, THALES</p></li>
+          <li><p class="sw-k">CHANCE-2, 22-й день</p><p class="sw-v">АСК отменить, тикагрелор 90 мг × 2 — до 90-го дня</p><p class="sw-s">AHA/ASA 2026 (2b) · в РФ вне инструкции</p></li>
+          <li><p class="sw-k">Интракраниальный стеноз 70–⁠99%</p><p class="sw-v">клопидогрел — до 90 дней, дальше — один препарат</p><p class="sw-s">КР по ИИ 2024, УУР B</p></li>
+          <li><p class="sw-k">Больше 90 дней</p><p class="sw-v">ДААТ не продолжают: кровотечений больше, пользы нет</p><p class="sw-s">КР по ИИ 2024, УУР A · SPS3, MATCH</p></li>
+          <li><p class="sw-k">Как отменять</p><p class="sw-v">в нужный день просто не дают второй препарат, без снижения дозы</p><p class="sw-s">в РКИ второй препарат отменяли в заданный день</p></li>
+        </ul>
+      </div>
+      <h2 class="lbl" id="s-oac">С&nbsp;антикоагулянтами</h2>
+      <div class="mx-wrap">
+        <ul class="lst">
+          <li><p class="iv-k">ФП, до старта ПОАК</p><p class="iv-v v-yes"><span class="sr">да: </span>АСК (КР по ИИ 2024, УУР C; КР по ФП 2025, ЕОК IIaB); с первой дозы ПОАК — без АСК</p></li>
+          <li><p class="iv-k">ФП, на ПОАК <span>· без стента</span></p><p class="iv-v v-no"><span class="sr">нельзя: </span>ПОАК без антиагреганта: КР по ИИ 2024 (УУР B), КР по ФП 2025 (ЕОК IIIB) · ATIS-NVAF: кровотечения 19,5% против 8,6%</p></li>
+          <li><p class="iv-k">ФП и стент <span>· коронарный или артериальный</span></p><p class="iv-v v-maybe"><span class="sr">с условием: </span>сочетание по показаниям стента — с кардиологом; запрет КР на это не распространяется</p></li>
+          <li><p class="iv-k">Профилактика ТГВ <span>· НМГ или НФГ в профилактической дозе</span></p><p class="iv-v v-yes"><span class="sr">да: </span>у обездвиженных — вместе с антиагрегантом (КР по ИИ 2024, УУР A)</p></li>
+          <li><p class="iv-k">Ривароксабан 2,5 мг × 2 + АСК <span>· ИБС или другой атеросклероз</span></p><p class="iv-v v-maybe"><span class="sr">с условием: </span>через месяц после нелакунарного ИИ, при низком риске кровотечения (КР по ИИ 2024, УУР B) · не после лакунарного и геморрагического</p></li>
+          <li><p class="iv-k">Механический митральный протез <span>· ИИ на целевом МНО</span></p><p class="iv-v v-maybe"><span class="sr">с условием: </span>варфарин + АСК 75–⁠100 мг или МНО 3,0–⁠3,5 (КР по ИИ 2024, УУР A)</p></li>
+        </ul>
+      </div>
+      <h2 class="lbl" id="s-sev">Лёгкие и&nbsp;тяжёлые</h2>
+      <div class="mx-wrap">
+        <ul class="lst">
+          <li><p class="iv-k">ТИА низкого риска <span>· ABCD2 ≤ 3, без стеноза</span></p><p class="iv-v v-yes"><span class="sr">да: </span>один препарат в первые 24 ч; ДААТ не нужна (ESO: 11 из 11 экспертов против)</p></li>
+          <li><p class="iv-k">Малый ИИ, ТИА высокого риска <span>· NIHSS ≤ 3 или ABCD2 ≥ 4</span></p><p class="iv-v v-yes"><span class="sr">да: </span>ДААТ с клопидогрелом 21 день</p></li>
+          <li><p class="iv-k">ИИ с NIHSS 4–⁠5</p><p class="iv-v v-yes"><span class="sr">да: </span>тикагрелор + АСК в первые 24 ч; атеросклероз — клопидогрел + АСК до 72 ч (INSPIRES); иначе — один препарат (рис. 5 КР допускает ДААТ до 7 суток)</p></li>
+          <li><p class="iv-k">Средний ИИ, NIHSS 6–⁠10</p><p class="iv-v v-maybe"><span class="sr">с условием: </span>в КР — один препарат · ATAMIS (NIHSS 4–⁠10): ДААТ 14 дней — раннее ухудшение 4,8% против 6,7%; польза — при старте в первые 24 ч</p></li>
+          <li><p class="iv-k">Тяжёлый обширный ИИ, лежачий</p><p class="iv-v v-yes"><span class="sr">да: </span>АСК 160–⁠300 мг в первые 48 ч, затем 75–⁠150 мг; ДААТ не назначают — данных нет · профилактика ТГВ НМГ</p></li>
+          <li><p class="iv-k">Дисфагия, зонд</p><p class="iv-v v-maybe"><span class="sr">с условием: </span>Кардиомагнил можно растереть · Аспирин Кардио не измельчают · тикагрелор — порошок в воде, через зонд от CH8 · для клопидогрела в инструкции указаний нет</p></li>
+        </ul>
+      </div>
+      <h2 class="lbl" id="s-spec">Особые случаи</h2>
+      <div class="mx-wrap">
+        <ul class="lst">
+          <li><p class="iv-k">Интракраниальный стеноз 50–⁠99%</p><p class="iv-v v-yes"><span class="sr">да: </span>АСК 325 мг (УУР A); 70–⁠99% — + клопидогрел до 90 дней (УУР B)</p></li>
+          <li><p class="iv-k">Диссекция</p><p class="iv-v v-yes"><span class="sr">да: </span>антиагрегант или варфарин не меньше 3 месяцев или до стабилизации стенки (КР по ИИ 2024, УУР B)</p></li>
+          <li><p class="iv-k">Лакунарный малый ИИ</p><p class="iv-v v-yes"><span class="sr">да: </span>короткая ДААТ — по общим правилам; долгая — вред: SPS3, больших кровотечений ОР 1,97, смертность ОР 1,52</p></li>
+          <li><p class="iv-k">Инсульт на фоне АСК</p><p class="iv-v v-maybe"><span class="sr">с условием: </span>польза смены препарата или повышения дозы не доказана (AHA/ASA 2026, 2b) · искать причину</p></li>
+          <li><p class="iv-k">Носитель CYP2C19 LoF</p><p class="iv-v v-maybe"><span class="sr">с условием: </span>тикагрелор + АСК 21 день, затем тикагрелор до 90-го дня (CHANCE-2; AHA/ASA 2026, 2b)</p></li>
+          <li><p class="iv-k">ВЧК в анамнезе</p><p class="iv-v v-maybe"><span class="sr">с условием: </span>тикагрелор противопоказан (инструкция); ДААТ с клопидогрелом не изучена — в РКИ таких не включали; по умолчанию один препарат</p></li>
+          <li><p class="iv-k">Тройная антиагрегантная</p><p class="iv-v v-no"><span class="sr">нельзя: </span>вред: TARDIS — кровотечения ОШ 2,54 без пользы (КР по ИИ 2024, УУР A)</p></li>
+          <li><p class="iv-k">Мойя-мойя</p><p class="iv-v v-yes"><span class="sr">да: </span>АСК (КР по ИИ 2024, УУР C)</p></li>
+        </ul>
+      </div>
+      <p class="mx-note">Ранняя ДААТ при&nbsp;ТЛТ: EAST (NIHSS&nbsp;0–&#8288;5, клопидогрел + АСК в&nbsp;первые 6&nbsp;ч после ТЛТ)&nbsp;— пользы нет; TAPIS (NIHSS&nbsp;4–&#8288;10, тикагрелор + АСК в&nbsp;первые 6&nbsp;ч от&nbsp;начала&nbsp;— до, во&nbsp;время или после ТЛТ, тикагрелор 7&nbsp;дней)&nbsp;— mRS&nbsp;0–&#8288;1 68,7% против 62,0%. В&nbsp;КР по&nbsp;ИИ&nbsp;2024&nbsp;— антиагрегант через 24&nbsp;ч.</p>
+      <h2 class="lbl">Одна ситуация&nbsp;— разное решение</h2>
+      <div class="mx-wrap">
+        <div class="md"><div><p class="cp-en">ИИ, NIHSS <span class="pr">3</span></p><p class="cp-ru">ДААТ: клопидогрел + АСК 21 день</p><p class="cp-en">ИИ, NIHSS <span class="pr">12</span></p><p class="cp-ru">один препарат: АСК</p></div></div>
+        <div class="md"><div><p class="cp-en">ТИА, ABCD2 <span class="pr">5</span></p><p class="cp-ru">ДААТ с клопидогрелом</p><p class="cp-en">ТИА, ABCD2 <span class="pr">2</span>, без стеноза</p><p class="cp-ru">один препарат</p></div></div>
+        <div class="md"><div><p class="cp-en">Без реперфузии</p><p class="cp-ru">антиагрегант в первые 24 ч</p><p class="cp-en">После <span class="pr">тромболизиса</span></p><p class="cp-ru">через 24 ч</p></div></div>
+        <div class="md"><div><p class="cp-en">ДААТ с <span class="pr">клопидогрелом</span></p><p class="cp-ru">22-й день — монотерапия</p><p class="cp-en">ДААТ с <span class="pr">тикагрелором</span></p><p class="cp-ru">31-й день — монотерапия</p></div></div>
+        <div class="md"><div><p class="cp-en">ФП, <span class="pr">до</span> старта ПОАК</p><p class="cp-ru">АСК</p><p class="cp-en">ФП, <span class="pr">на</span> ПОАК</p><p class="cp-ru">без АСК</p></div></div>
+        <div class="md"><div><p class="cp-en">NIHSS 4, <span class="pr">18 ч</span> от начала</p><p class="cp-ru">тикагрелор + АСК</p><p class="cp-en">NIHSS 4, <span class="pr">48 ч</span>, атеросклероз</p><p class="cp-ru">клопидогрел + АСК (INSPIRES)</p></div></div>
+        <div class="md"><div><p class="cp-en">Кардиомагнил через <span class="pr">зонд</span></p><p class="cp-ru">можно растереть</p><p class="cp-en">Аспирин Кардио через <span class="pr">зонд</span></p><p class="cp-ru">нельзя: кишечнорастворимая оболочка</p></div></div>
+      </div>
+      <h2 class="lbl">Ловушки</h2>
+      <div class="mx-wrap">
+        <ul class="errs">
+          <li class="err"><span class="sr">Неверно:</span> <s>ДААТ при тяжёлом инсульте «для надёжности»</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">При NIHSS &gt; 5 — один препарат</span><span class="err-note">ДААТ доказана при малом ИИ и ТИА высокого риска</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>ДААТ до выписки и дальше, «пока не кончатся таблетки»</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">21 день с клопидогрелом, 30 — с тикагрелором</span><span class="err-note">дольше 90 дней — кровотечения без пользы (КР, УУР A)</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>ДААТ без нагрузки у не принимавшего клопидогрел</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Клопидогрел 300 мг в первый день</span><span class="err-note">без нагрузки эффект набирается днями</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Старше 75 — клопидогрел без нагрузки</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Нагрузка 300 мг и старше 75</span><span class="err-note">правило «без нагрузки» — из инструкции для ИМ с подъёмом ST</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>АСК сразу после тромболизиса</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Через 24 ч</span><span class="err-note">ARTIS: АСК в/в в первые 90 мин — сВЧК 4,3% против 1,6%</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>АСК вместе с ПОАК при ФП</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">ПОАК без АСК</span><span class="err-note">кровотечений больше, пользы нет (КР по ФП 2025)</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Аспирин Кардио растолочь для зонда</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Кардиомагнил растереть</span><span class="err-note">кишечнорастворимую оболочку разрушать нельзя</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Тикагрелор при ВЧК в анамнезе</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Один препарат, ДААТ — индивидуально</span><span class="err-note">тикагрелор противопоказан; в РКИ ДААТ таких не включали</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Инсульт на АСК — срочно сменить препарат</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Искать причину инсульта</span><span class="err-note">польза смены не доказана (AHA/ASA 2026)</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Ждать утра, чтобы начать ДААТ</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Начать как можно раньше</span><span class="err-note">больше всего повторов — в первую неделю</span></li>
+        </ul>
+      </div>
+      <h2 class="lbl" id="s-topics">Темы</h2>
+      <div class="topics" id="topics"></div>
+      <h2 class="lbl">Источники</h2>
+      <ol class="src">
+        <li><a href="https://cr.minzdrav.gov.ru/preview-cr/814_1" target="_blank" rel="noopener">КР «Ишемический инсульт и транзиторная ишемическая атака», Минздрав РФ, 2024 (814_1): разделы 3, 5.1, 5.3, 5.4, 5.9, прил. Б, рис. 5</a></li>
+        <li><a href="https://cr.minzdrav.gov.ru/preview-cr/382_2" target="_blank" rel="noopener">КР «Фибрилляция и трепетание предсердий», Минздрав РФ, 2025 (382_2)</a></li>
+        <li><a href="https://doi.org/10.1161/STR.0000000000000513" target="_blank" rel="noopener">Prabhakaran S, et al. 2026 AHA/ASA Guideline for the early management of acute ischemic stroke. Stroke 2026: раздел 4.8</a></li>
+        <li><a href="https://doi.org/10.1177/23969873211000877" target="_blank" rel="noopener">Dawson J, et al. ESO expedited recommendation on short-term DAPT after minor stroke and high-risk TIA. Eur Stroke J 2021;6:CLXXXVII–CXCI</a></li>
+        <li><a href="https://www.vidal.ru/drugs/plavix" target="_blank" rel="noopener">Инструкция по применению клопидогрела (Плавикс)</a></li>
+        <li><a href="https://medi.ru/instrukciya/brilinta_13363/" target="_blank" rel="noopener">Инструкция по применению тикагрелора (Брилинта)</a></li>
+        <li><a href="https://medi.ru/instrukciya/aspirin-kardio_3646/" target="_blank" rel="noopener">Инструкция по применению АСК (Аспирин Кардио)</a></li>
+        <li><a href="https://cardiomagnyl.ru/o-kardiomagnil/instruction/" target="_blank" rel="noopener">Инструкция по применению АСК с магния гидроксидом (Кардиомагнил)</a></li>
+        <li><a href="https://doi.org/10.1056/NEJMoa1215340" target="_blank" rel="noopener">Wang Y, et al. Clopidogrel with aspirin in acute minor stroke or TIA (CHANCE). N Engl J Med 2013;369:11–&#8288;19</a></li>
+        <li><a href="https://doi.org/10.1056/NEJMoa1800410" target="_blank" rel="noopener">Johnston SC, et al. Clopidogrel and aspirin in acute ischemic stroke and high-risk TIA (POINT). N Engl J Med 2018;379:215–&#8288;25</a></li>
+        <li><a href="https://doi.org/10.1161/CIRCULATIONAHA.119.040713" target="_blank" rel="noopener">Johnston SC, et al. Time course for benefit and risk of clopidogrel and aspirin (POINT). Circulation 2019;140:658–&#8288;64</a></li>
+        <li><a href="https://doi.org/10.1001/jamaneurol.2019.2531" target="_blank" rel="noopener">Pan Y, et al. Clopidogrel-aspirin in minor stroke or TIA: pooled CHANCE and POINT. JAMA Neurol 2019;76:1466–&#8288;73</a></li>
+        <li><a href="https://doi.org/10.1056/NEJMoa1916870" target="_blank" rel="noopener">Johnston SC, et al. Ticagrelor and aspirin or aspirin alone (THALES). N Engl J Med 2020;383:207–&#8288;17</a></li>
+        <li><a href="https://doi.org/10.1056/NEJMoa2111749" target="_blank" rel="noopener">Wang Y, et al. Ticagrelor versus clopidogrel in CYP2C19 loss-of-function carriers (CHANCE-2). N Engl J Med 2021;385:2520–&#8288;30</a></li>
+        <li><a href="https://doi.org/10.1056/NEJMoa2309137" target="_blank" rel="noopener">Gao Y, et al. Dual antiplatelet treatment up to 72 hours after ischemic stroke (INSPIRES). N Engl J Med 2023;389:2413–&#8288;24</a></li>
+        <li><a href="https://doi.org/10.1212/WNL.0000000000209845" target="_blank" rel="noopener">Guan L, et al. INSPIRES: weekly benefit and risk of DAPT. Neurology 2024;103:e209845</a></li>
+        <li><a href="https://doi.org/10.1001/jama.2023.7827" target="_blank" rel="noopener">Chen HS, et al. DAPT vs alteplase in minor nondisabling stroke (ARAMIS). JAMA 2023;329:2135–&#8288;44</a></li>
+        <li><a href="https://doi.org/10.1001/jamaneurol.2024.0146" target="_blank" rel="noopener">Chen HS, et al. Clopidogrel plus aspirin in mild to moderate stroke (ATAMIS). JAMA Neurol 2024;81:450–&#8288;60</a></li>
+        <li><a href="https://doi.org/10.1016/S0140-6736(26)00757-9" target="_blank" rel="noopener">Wang A, et al. Ticagrelor with aspirin combined with intravenous thrombolysis (TAPIS). Lancet 2026;407:1919–&#8288;28</a></li>
+        <li><a href="https://doi.org/10.1093/eurheartj/ehaf702" target="_blank" rel="noopener">Chen HS, et al. Early antiplatelet treatment for minor stroke following thrombolysis (EAST). Eur Heart J 2026;47:746–&#8288;56</a></li>
+        <li><a href="https://doi.org/10.1016/S0140-6736(12)60949-0" target="_blank" rel="noopener">Zinkstok SM, et al. Early administration of aspirin in patients treated with alteplase (ARTIS). Lancet 2012;380:731–&#8288;37</a></li>
+        <li><a href="https://doi.org/10.1016/S0140-6736(22)00014-9" target="_blank" rel="noopener">van der Steen W, et al. Aspirin and heparin during endovascular treatment (MR CLEAN-MED). Lancet 2022;399:1059–&#8288;69</a></li>
+        <li><a href="https://doi.org/10.1016/S0140-6736(97)04011-7" target="_blank" rel="noopener">International Stroke Trial (IST). Lancet 1997;349:1569–&#8288;81</a></li>
+        <li><a href="https://doi.org/10.1016/S0140-6736(97)04010-5" target="_blank" rel="noopener">CAST Collaborative Group. Chinese Acute Stroke Trial. Lancet 1997;349:1641–&#8288;49</a></li>
+        <li><a href="https://doi.org/10.1002/14651858.CD000029.pub4" target="_blank" rel="noopener">Minhas JS, et al. Oral antiplatelet therapy for acute ischaemic stroke. Cochrane Database Syst Rev 2022</a></li>
+        <li><a href="https://doi.org/10.1016/S0140-6736(16)30468-8" target="_blank" rel="noopener">Rothwell PM, et al. Effects of aspirin on risk and severity of early recurrent stroke. Lancet 2016;388:365–&#8288;75</a></li>
+        <li><a href="https://doi.org/10.1056/NEJMoa1204133" target="_blank" rel="noopener">Benavente OR, et al. Clopidogrel plus aspirin in recent lacunar stroke (SPS3). N Engl J Med 2012;367:817–&#8288;25</a></li>
+        <li><a href="https://doi.org/10.1016/S0140-6736(04)16721-4" target="_blank" rel="noopener">Diener HC, et al. Aspirin and clopidogrel vs clopidogrel alone (MATCH). Lancet 2004;364:331–&#8288;37</a></li>
+        <li><a href="https://doi.org/10.1016/S0140-6736(17)32849-0" target="_blank" rel="noopener">Bath PM, et al. Triple versus guideline antiplatelet therapy (TARDIS). Lancet 2018;391:850–&#8288;59</a></li>
+        <li><a href="https://doi.org/10.1001/jamaneurol.2025.3662" target="_blank" rel="noopener">Okazaki S, et al. Antithrombotics for ischemic stroke with AF and atherosclerosis (ATIS-NVAF). JAMA Neurol 2025;82:1227–&#8288;34</a></li>
+        <li><a href="https://doi.org/10.1056/NEJMoa1904143" target="_blank" rel="noopener">Yasuda S, et al. Antithrombotic therapy for AF with stable coronary disease (AFIRE). N Engl J Med 2019;381:1103–&#8288;13</a></li>
+        <li><a href="https://doi.org/10.1056/NEJMoa1105335" target="_blank" rel="noopener">Chimowitz MI, et al. Stenting versus aggressive medical therapy for intracranial stenosis (SAMMPRIS). N Engl J Med 2011;365:993–&#8288;1003</a></li>
+        <li><a href="https://doi.org/10.1161/CIRCULATIONAHA.116.024913" target="_blank" rel="noopener">Pan Y, et al. Genetic polymorphisms and clopidogrel efficacy for stroke or TIA: meta-analysis. Circulation 2017;135:21–&#8288;33</a></li>
+        <li><a href="https://doi.org/10.1161/01.CIR.0000160869.75810.98" target="_blank" rel="noopener">Hochholzer W, et al. Time dependence of platelet inhibition after a 600-mg loading dose of clopidogrel. Circulation 2005;111:2560–&#8288;64</a></li>
+        <li><a href="https://doi.org/10.1056/NEJMoa2214299" target="_blank" rel="noopener">Zi W, et al. Tirofiban for stroke without large or medium-sized vessel occlusion (RESCUE BT2). N Engl J Med 2023;388:2025–&#8288;36</a></li>
+        <li><a href="https://doi.org/10.1056/NEJMoa2503678" target="_blank" rel="noopener">Tao C, et al. Tirofiban after intravenous thrombolysis (ASSET-IT). N Engl J Med 2025;393:1191–&#8288;1201</a></li>
+        <li><a href="https://doi.org/10.1056/NEJMoa2314779" target="_blank" rel="noopener">Adeoye O, et al. Argatroban or eptifibatide with thrombolysis (MOST). N Engl J Med 2024;391:810–&#8288;20</a></li>
+        <li><a href="https://doi.org/10.1016/S1474-4422(23)00113-8" target="_blank" rel="noopener">Pan Y, et al. Indobufen versus aspirin after ischaemic stroke (INSURE). Lancet Neurol 2023;22:485–&#8288;93</a></li>
+        <li><a href="https://doi.org/10.1056/NEJMoa1007964" target="_blank" rel="noopener">Bhatt DL, et al. Clopidogrel with or without omeprazole (COGENT). N Engl J Med 2010;363:1909–&#8288;17</a></li>
+      </ol>
+      <p class="foot">Сверено 29&nbsp;сентября 2026&nbsp;г. Справочник для&nbsp;врача: решение принимают по&nbsp;клинической ситуации и&nbsp;протоколу отделения.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+// ——— Темы по группам: правило и примеры. […] — главное в примере (оранжевый).
+const MIXED_TOPIC = 12;
+const GROUPS = {"who": "Кому и чем", "when": "Когда и сколько", "spec": "Особые пациенты", "mix": "Итог"};
+const TOPICS = [
+ {
+  "n": 1,
+  "group": "who",
+  "title": "Кому ДААТ, кому одна таблетка",
+  "sub": "алгоритм КР по ИИ 2024",
+  "rule": "Всем с некардиоэмболическим ИИ и ТИА — антиагрегант: АСК 75–⁠150 мг или клопидогрел 75 мг (КР по ИИ 2024, УУР A). Двойная антиагрегантная терапия (ДААТ; в КР — ДАТТ) нужна не всем, а тем, у кого риск раннего повтора высок, а инфаркт мал: малый ИИ и ТИА высокого риска.\n\nАлгоритм КР по ИИ 2024 (прил. Б, рис. 5). ТИА с ФП — ПОАК сразу. ТИА высокого риска — ДААТ, низкого — АСК или клопидогрел в первые 24 ч. ИИ без реперфузии и без ФП: малый (NIHSS ≤ 5), меньше недели от начала — ДААТ; остальные — АСК или клопидогрел в первые 24 ч. ИИ с ФП — АСК или клопидогрел до старта ПОАК. После тромболизиса — антиагрегант через 24 ч, после одной тромбэктомии — в первые 24 ч; при геморрагической трансформации — отсроченно.\n\nДва варианта ДААТ в КР: клопидогрел + АСК при NIHSS ≤ 3 или ABCD2 ≥ 4 — 21–⁠90 дней (УУР A); тикагрелор + АСК при NIHSS ≤ 5, ABCD2 ≥ 6 или любой ТИА со стенозом ≥ 50% — 30 дней (УУР B). Перед ДААТ — КТ или МРТ без кровоизлияния (ESO 2021).\n\nЧто даёт ДААТ: по оценке ESO, 21 день клопидогрела с АСК предотвращает 26 ишемических инсультов на 1000 пролеченных; 30 дней тикагрелора с АСК — 13 инсультов ценой 2 геморрагических.",
+  "ex": [
+   {
+    "en": "NIHSS [≤ 3] или ABCD2 [≥ 4] — [ДААТ].",
+    "ru": "Клопидогрел + АСК, КР по ИИ 2024, УУР A."
+   },
+   {
+    "en": "NIHSS [12] — [один препарат].",
+    "ru": "АСК или клопидогрел."
+   },
+   {
+    "en": "ТИА с ФП — [ПОАК сразу].",
+    "ru": "Антиагрегант не нужен."
+   }
+  ]
+ },
+ {
+  "n": 2,
+  "group": "who",
+  "title": "Клопидогрел + АСК",
+  "sub": "CHANCE, POINT, INSPIRES",
+  "rule": "КР по ИИ 2024 (УУР A): малый ИИ (NIHSS ≤ 3) или ТИА с ABCD2 ≥ 4 — клопидогрел + АСК, начало через 12–⁠24 ч от симптомов (можно позже, но не позже 7 суток), не меньше 21 и не больше 90 дней, затем один препарат. Инструкция клопидогрела (Плавикс) теперь содержит это показание: нагрузка 300 мг, затем 75 мг + АСК 75–⁠100 мг, старт в первые 24 ч, 21 день, затем монотерапия.\n\nCHANCE (2013, 5170 пациентов): клопидогрел 300 → 75 мг + АСК 75 мг 21 день — инсультов за 90 дней 8,2% против 11,7% (ОР 0,68), средних и тяжёлых кровотечений по 0,3%. POINT (2018, 4881): клопидогрел 600 → 75 мг + АСК 90 дней — ишемических событий 5,0% против 6,5% (ОР 0,75), но больших кровотечений 0,9% против 0,4%. Объединённый анализ: польза — только первые 21 день (ОР 0,66), кровотечения копятся всё время.\n\nINSPIRES (2023, 6100): атеросклеротический ИИ с NIHSS ≤ 5 или ТИА с ABCD2 ≥ 4, старт до 72 ч (87% — через 24–⁠72 ч): клопидогрел 300 → 75 мг + АСК 100 мг 21 день, затем клопидогрел — инсультов 7,3% против 9,2% (ОР 0,79), средних и тяжёлых кровотечений 0,9% против 0,4%. AHA/ASA 2026 — класс 2a.",
+  "ex": [
+   {
+    "en": "CHANCE: инсульт [8,2%] против 11,7%.",
+    "ru": "21 день ДААТ, кровотечения не чаще."
+   },
+   {
+    "en": "POINT: польза — первые [21 день].",
+    "ru": "Кровотечения копятся все 90 дней."
+   },
+   {
+    "en": "INSPIRES: старт до [72 ч].",
+    "ru": "Атеросклеротический малый ИИ или ТИА."
+   }
+  ]
+ },
+ {
+  "n": 3,
+  "group": "who",
+  "title": "Тикагрелор + АСК",
+  "sub": "THALES, CHANCE-2",
+  "rule": "КР по ИИ 2024 (УУР B): ИИ с NIHSS ≤ 5, ТИА с ABCD2 ≥ 6 или любая ТИА с симптомным стенозом ≥ 50% экстра- или интракраниальной артерии — тикагрелор + АСК в первые 24 ч на 30 дней. В инструкции тикагрелора (Брилинта) в РФ показания при инсульте нет — назначение вне инструкции.\n\nTHALES (2020, 11 016 пациентов от 40 лет): тикагрелор 180 мг → 90 мг × 2 + АСК 300–⁠325 мг, затем 75–⁠100 мг, 30 дней — инсульт или смерть 5,5% против 6,6% (ОР 0,83); тяжёлых кровотечений 0,5% против 0,1%, ВЧК 0,4% против 0,1%. При стенозе ≥ 30% на стороне инфаркта абсолютная польза больше: 8,1% против 10,9%.\n\nCHANCE-2 (2021, 6412 носителей аллелей CYP2C19 со сниженной функцией): тикагрелор против клопидогрела, оба с АСК 21 день — инсультов 6,0% против 7,6% (ОР 0,77), средних и тяжёлых кровотечений по 0,3%, но любых — 5,3% против 2,5%. AHA/ASA 2026 — класс 2b.\n\nИнструкция тикагрелора: противопоказан при ВЧК в анамнезе, умеренной и тяжёлой печёночной недостаточности, с сильными ингибиторами CYP3A4 (кларитромицин, кетоконазол); поддерживающая доза АСК вместе с ним — 75–⁠150 мг, выше 300 мг не рекомендуется. Таблетку можно измельчить, развести водой и ввести через назогастральный зонд.",
+  "ex": [
+   {
+    "en": "Тикагрелор + АСК — [30 дней].",
+    "ru": "Старт в первые 24 ч."
+   },
+   {
+    "en": "THALES: ВЧК [0,4%] против 0,1%.",
+    "ru": "Цена пользы — кровоизлияния."
+   },
+   {
+    "en": "ВЧК в анамнезе — тикагрелор [нельзя].",
+    "ru": "Противопоказание в инструкции."
+   }
+  ]
+ },
+ {
+  "n": 4,
+  "group": "who",
+  "title": "Нагрузочные дозы",
+  "sub": "клопидогрел 300 или 600 мг, тикагрелор 180 мг",
+  "rule": "Клопидогрел: нагрузка 300 мг — в инструкции, CHANCE, INSPIRES, ATAMIS; ESO 2021 советуют 300 мг тем, кто клопидогрел ещё не принимает. POINT использовал 600 мг. AHA/ASA 2026: нагрузка 300 или 600 мг. Крупных РКИ с клиническими исходами, сравнивающих 300 и 600 мг при инсульте, нет. У кардиологических пациентов после 600 мг полный антиагрегантный эффект — через 2 ч, после 300 мг он набирается медленнее.\n\nПравило «старше 75 лет — без нагрузочной дозы» в инструкции клопидогрела относится к инфаркту миокарда с подъёмом ST, а не к инсульту: в показании для ИИ и ТИА нагрузка 300 мг без возрастных оговорок.\n\nТикагрелор: 180 мг (2 таблетки по 90 мг), затем 90 мг × 2. АСК: первая доза в РКИ — 75–⁠300 мг (CHANCE), 100–⁠300 мг (INSPIRES), 300–⁠325 мг (THALES), затем 75–⁠100 мг; при тяжёлом ИИ — 160–⁠300 мг в первые 48 ч (CAST, IST).\n\nНосители аллелей CYP2C19 со сниженной функцией хуже отвечают на клопидогрел: инсультов 12,0% против 5,8% (мета‑анализ Pan 2017, ОР 1,92).",
+  "ex": [
+   {
+    "en": "Клопидогрел — нагрузка [300 мг].",
+    "ru": "Инструкция, CHANCE, ESO; POINT — 600 мг."
+   },
+   {
+    "en": "Старше 75 — нагрузка [тоже нужна].",
+    "ru": "«Без нагрузки» — правило для ИМ с подъёмом ST."
+   },
+   {
+    "en": "Тикагрелор — [180 мг], затем 90 мг × 2.",
+    "ru": "Две таблетки по 90 мг."
+   }
+  ]
+ },
+ {
+  "n": 5,
+  "group": "when",
+  "title": "Сроки старта",
+  "sub": "24 ч, 48 ч, 72 ч, 7 суток",
+  "rule": "Раньше — лучше: в POINT большая часть повторов пришлась на первую неделю, в INSPIRES абсолютная польза ДААТ — 1,42% за первую неделю, 0,49% за вторую и 0,29% за третью. Мета-анализ Rothwell 2016: АСК сильнее всего снижает ранние тяжёлые повторы, польза видна уже на 2–⁠3-й день.\n\nБез реперфузии антиагрегант дают в первые 24 ч (алгоритм КР), АСК — не позже 48 ч (AHA/ASA 2026, 1A; IST, CAST). ДААТ с клопидогрелом — КР: через 12–⁠24 ч от симптомов, возможно позже, но не позже 7 суток; ESO — в первые 24 ч; INSPIRES доказал пользу до 72 ч при атеросклеротическом ИИ. ДААТ с тикагрелором — только в первые 24 ч. Перед стартом — КТ или МРТ без кровоизлияния.\n\nПосле тромболизиса — через 24 ч; раньше — только решением врачебной комиссии (КР по ИИ 2024, УУР C). После одной тромбэктомии без ГТ — в первые 24 ч. При геморрагической трансформации — отсроченно; точного срока в КР нет.",
+  "ex": [
+   {
+    "en": "Без реперфузии — [первые 24 ч].",
+    "ru": "АСК — не позже 48 ч."
+   },
+   {
+    "en": "Клопидогрел + АСК — [не позже 7 суток].",
+    "ru": "КР по ИИ 2024; INSPIRES — до 72 ч."
+   },
+   {
+    "en": "Тикагрелор + АСК — [первые 24 ч].",
+    "ru": "Как в THALES."
+   }
+  ]
+ },
+ {
+  "n": 6,
+  "group": "when",
+  "title": "Длительность и перевод",
+  "sub": "21, 30, 90 дней",
+  "rule": "Клопидогрел + АСК — 21 день (КР: не меньше 21 и не больше 90 дней), затем один препарат: в CHANCE и INSPIRES оставляли клопидогрел, КР разрешают АСК или клопидогрел. Тикагрелор + АСК — 30 дней, затем АСК 75–⁠150 мг или клопидогрел 75 мг. CHANCE-2: с 22-го дня — тикагрелор до 90-го дня.\n\nПочему 21 день: в объединённом анализе CHANCE и POINT польза ограничена первыми 21 днями (ОР 0,66), а в POINT на 22–⁠90-й день ОР 1,38 — пользы нет, кровотечения продолжаются. Интракраниальный стеноз 70–⁠99% — исключение: клопидогрел к АСК до 90 дней (КР, УУР B; как в SAMMPRIS).\n\nДольше 90 дней ДААТ не продолжают (КР, УУР A): SPS3 — при лакунарном инсульте за 3,4 года больших кровотечений ОР 1,97, смертей ОР 1,52 без снижения повторов; MATCH — жизнеугрожающих кровотечений 2,6% против 1,3%.\n\nКак переводить: в нужный день второй препарат просто не дают — без постепенного снижения. День 1 — день первой дозы: при 21-дневной схеме с 22-го дня пациент принимает один препарат.",
+  "ex": [
+   {
+    "en": "Клопидогрел + АСК — [21 день].",
+    "ru": "С 22-го дня — один препарат."
+   },
+   {
+    "en": "Тикагрелор + АСК — [30 дней].",
+    "ru": "Дальше — АСК или клопидогрел."
+   },
+   {
+    "en": "Больше [90 дней] — нельзя.",
+    "ru": "КР по ИИ 2024, УУР A."
+   }
+  ]
+ },
+ {
+  "n": 7,
+  "group": "when",
+  "title": "Тромболизис и тромбэктомия",
+  "sub": "24 часа, EAST, TAPIS, тирофибан",
+  "rule": "Приём антиагрегантов до инсульта, включая ДААТ, — не повод отказаться от тромболизиса (КР по ИИ 2024, УУР B). После тромболизиса антиагрегант — через 24 ч; раньше — только при существенном риске без него (экстренное стентирование) и решением врачебной комиссии, так как это против инструкции алтеплазы (КР, УУР C). AHA/ASA 2026 — класс 2b.\n\nARTIS: АСК 300 мг в/в в первые 90 мин тромболизиса — сВЧК 4,3% против 1,6%, исследование остановлено. MR CLEAN-MED: АСК в/в во время тромбэктомии — сВЧК 14% против 7%. ARAMIS: при малом неинвалидизирующем ИИ (NIHSS ≤ 5) ДААТ не хуже алтеплазы (mRS 0–⁠1: 93,8% против 91,4%).\n\nНовые РКИ ранней ДААТ после тромболизиса. EAST (2026, NIHSS 0–⁠5): клопидогрел + АСК в первые 6 ч после тромболизиса — пользы нет (mRS 0–⁠1: 89,7% и 89,6%), безопасно. TAPIS (2026, получавшие ТЛТ, NIHSS 4–⁠10): тикагрелор + АСК в первые 6 ч от начала — до, во время или после ТЛТ; тикагрелор 7 дней, АСК до 90-го дня — mRS 0–⁠1 68,7% против 62,0% (ОР 1,11), сВЧК 0,9% против 0,7%. В КР этого пока нет.\n\nВнутривенный тирофибан: в КР по ИИ 2024 рекомендаций нет, AHA/ASA 2026 — эффективность не установлена (2b). Китайские РКИ: RESCUE BT2 и ASSET-IT — функциональный исход лучше; TREND — меньше раннего ухудшения. Эптифибатид к тромболизису (MOST) пользы не дал.",
+  "ex": [
+   {
+    "en": "После тромболизиса — [через 24 ч].",
+    "ru": "При ГТ — отсроченно."
+   },
+   {
+    "en": "ARTIS: сВЧК [4,3%] против 1,6%.",
+    "ru": "АСК в/в в первые 90 мин тромболизиса."
+   },
+   {
+    "en": "TAPIS: mRS 0–⁠1 [68,7%] против 62,0%.",
+    "ru": "Новое, в КР пока нет."
+   }
+  ]
+ },
+ {
+  "n": 8,
+  "group": "spec",
+  "title": "Лёгкие и тяжёлые",
+  "sub": "от ТИА до обширного инфаркта",
+  "rule": "ТИА низкого риска (ABCD2 ≤ 3, без стеноза) — один препарат: ESO — 11 из 11 экспертов против ДААТ. Малый ИИ и ТИА высокого риска — ДААТ. ИИ с NIHSS 4–⁠5 — тикагрелор + АСК в первые 24 ч или клопидогрел + АСК до 72 ч при атеросклерозе.\n\nСредний ИИ (NIHSS 6–⁠10): в КР — один препарат. ATAMIS (2024, NIHSS 4–⁠10, медиана 5): клопидогрел + АСК 14 дней в первые 48 ч — раннее ухудшение 4,8% против 6,7%, кровотечения сходны; в заранее спланированном анализе польза была только при старте в первые 24 ч. Это аргумент, но не рекомендация КР.\n\nТяжёлый обширный ИИ, лежачий пациент: АСК 160–⁠300 мг в первые 48 ч, затем 75–⁠150 мг (IST, CAST: на 1000 пролеченных — около 9 смертей и повторных инсультов меньше). ДААТ не назначают — таких пациентов в РКИ ДААТ не было. Профилактика тромбоза глубоких вен — НМГ или НФГ в профилактической дозе вместе с АСК (КР, УУР A). При геморрагической трансформации антиагрегант откладывают.\n\nДисфагия. Кардиомагнил по инструкции можно разломить, разжевать или растереть. Аспирин Кардио — кишечнорастворимый, его не разламывают и не измельчают. Тикагрелор измельчают в порошок, разводят в половине стакана воды, вводят через назогастральный зонд CH8 и больше. Для клопидогрела в инструкции указаний нет.",
+  "ex": [
+   {
+    "en": "Обширный ИИ — [АСК 160–⁠300 мг].",
+    "ru": "В первые 48 ч, ДААТ не назначают."
+   },
+   {
+    "en": "ATAMIS: раннее ухудшение [4,8%] против 6,7%.",
+    "ru": "NIHSS 4–⁠10, ДААТ 14 дней."
+   },
+   {
+    "en": "Зонд: [Кардиомагнил] растереть.",
+    "ru": "Аспирин Кардио — нельзя."
+   }
+  ]
+ },
+ {
+  "n": 9,
+  "group": "spec",
+  "title": "С антикоагулянтами",
+  "sub": "ФП, ПОАК, НМГ, COMPASS",
+  "rule": "ФП: до старта ПОАК — АСК (КР по ИИ 2024, УУР C; КР по ФП 2025, ЕОК IIaB; CAST и IST включали пациентов с ФП); с первой дозы ПОАК АСК уже не дают. ПОАК вместе с антиагрегантом для вторичной профилактики не назначают: КР по ИИ 2024 (УУР B), КР по ФП 2025 (ЕОК IIIB), AHA/ASA 2026 (вред). Исключение — другие показания, например стент.\n\nДоказательства: ATIS-NVAF (2025, 316 пациентов с инсультом, ФП и атеросклерозом) — добавление антиагреганта к антикоагулянту не дало пользы, а больших и клинически значимых кровотечений стало 19,5% против 8,6% (ОР 2,42). AFIRE (ФП и стабильная ИБС) — сочетание повышало смертность, исследование остановлено.\n\nНМГ или НФГ в профилактических дозах у обездвиженных — вместе с антиагрегантом (КР, УУР A); лечебный гепарин «мостом» не назначают (КР по ФП 2025).\n\nCOMPASS: ривароксабан 2,5 мг × 2 + АСК 100 мг — через месяц после нелакунарного некардиоэмболического ИИ при ИБС или другом атеросклерозе и низком риске кровотечения (КР, УУР B); не после лакунарного или геморрагического инсульта и не вместе с ДААТ.\n\nМеханический митральный протез и ИИ на целевом МНО (≥ 2,5): варфарин + АСК 75–⁠100 мг или МНО 3,0–⁠3,5 (КР, УУР A).",
+  "ex": [
+   {
+    "en": "ФП: АСК [до старта ПОАК].",
+    "ru": "С первой дозы ПОАК — без АСК."
+   },
+   {
+    "en": "ПОАК + АСК — [нельзя] без стента.",
+    "ru": "ATIS-NVAF: кровотечения 19,5% против 8,6%."
+   },
+   {
+    "en": "НМГ в профилактической дозе + АСК — [можно].",
+    "ru": "Профилактика ТГВ у лежачих."
+   }
+  ]
+ },
+ {
+  "n": 10,
+  "group": "spec",
+  "title": "Особые случаи",
+  "sub": "стеноз, диссекция, лакуны, CYP2C19",
+  "rule": "Интракраниальный стеноз 50–⁠99%: АСК 325 мг (КР, УУР A); 70–⁠99% — добавить клопидогрел 75 мг до 90 дней (УУР B). В медикаментозной группе SAMMPRIS — АСК 325 мг + клопидогрел 75 мг 90 дней: инсульт или смерть за 30 дней 5,8% против 14,7% после стентирования.\n\nДиссекция сонной или позвоночной артерии: антиагрегант или варфарин не меньше 3 месяцев или до стабилизации стенки (КР, УУР B). Мойя-мойя — АСК (УУР C).\n\nЛакунарный малый инсульт: короткая ДААТ — по общим правилам; долгая — вред (SPS3).\n\nИнсульт на фоне АСК: польза повышения дозы или смены препарата не доказана (AHA/ASA 2026, 2b); ищут причину — источник эмболии, стеноз, приверженность.\n\nCYP2C19: у носителей аллелей со сниженной функцией клопидогрел работает хуже; CHANCE-2 — тикагрелор + АСК 21 день, затем тикагрелор до 90 дней (AHA/ASA 2026, 2b; в РФ вне инструкции). Рутинный генотип или тест агрегации у взрослых КР не предлагают.\n\nЧего не делать: тройная антиагрегантная терапия — вред (TARDIS: кровотечения ОШ 2,54; КР, УУР A); индобуфен вместо АСК — INSURE: инсультов 7,9% против 6,4%, не хуже АСК доказать не удалось.",
+  "ex": [
+   {
+    "en": "Стеноз 70–⁠99% — клопидогрел [до 90 дней].",
+    "ru": "К АСК 325 мг."
+   },
+   {
+    "en": "Диссекция — [≥ 3 месяцев].",
+    "ru": "Антиагрегант или варфарин."
+   },
+   {
+    "en": "Тройная терапия — [вред].",
+    "ru": "TARDIS, КР по ИИ 2024."
+   }
+  ]
+ },
+ {
+  "n": 11,
+  "group": "spec",
+  "title": "Частые ошибки",
+  "sub": "что путают на практике",
+  "rule": "ДААТ при тяжёлом инсульте «для надёжности»: доказана только при малом ИИ и ТИА высокого риска; при NIHSS > 5 — один препарат. ДААТ «до конца упаковки» или без даты отмены: клопидогрел + АСК — 21 день, тикагрелор + АСК — 30 дней, дольше 90 дней — нельзя. Дату перевода на монотерапию пишут в выписке.\n\nКлопидогрел без нагрузки у того, кто его не принимал: эффект набирается днями, а риск повтора максимален в первую неделю. «Старше 75 — без нагрузки»: это правило из инструкции для ИМ с подъёмом ST.\n\nАСК в первые 24 ч после тромболизиса без врачебной комиссии; ПОАК вместе с АСК при ФП; Аспирин Кардио, растолчённый для зонда; тикагрелор при ВЧК в анамнезе; ДААТ сразу после тромболизиса по схеме CHANCE — CHANCE, POINT, THALES и INSPIRES таких пациентов не включали, а EAST пользы не показал.\n\nИнсульт на АСК — не обязательно «резистентность» к АСК: пользы смены препарата не доказано, сначала — поиск причины.",
+  "ex": [
+   {
+    "en": "NIHSS 14 — ДААТ? [Нет].",
+    "ru": "Один препарат."
+   },
+   {
+    "en": "ДААТ без даты отмены — [ошибка].",
+    "ru": "Дата перевода — в выписке."
+   },
+   {
+    "en": "Аспирин Кардио в зонд — [нет].",
+    "ru": "Кардиомагнил или тикагрелор."
+   }
+  ]
+ },
+ {
+  "n": 12,
+  "group": "mix",
+  "title": "Итог — всё вместе",
+  "sub": "",
+  "rule": "15 случайных карточек из всех тем вперемешку.",
+  "ex": []
+ }
+];
+
+// ——— Карточки. opts — варианты, a — правильный, why — пояснение.
+const CARDS = [
+ {
+  "id": "k-all",
+  "t": 1,
+  "q": "ИИ или ТИА без кардиоэмболии: антиагрегант нужен ___.",
+  "ru": "",
+  "opts": [
+   "всем",
+   "только при ДААТ",
+   "только после 7 дней"
+  ],
+  "a": "всем",
+  "why": "АСК 75–⁠150 мг или клопидогрел 75 мг (КР по ИИ 2024, УУР A)."
+ },
+ {
+  "id": "k-minor",
+  "t": 1,
+  "q": "Текст рекомендации КР (УУР A): малый ИИ для ДААТ с клопидогрелом — NIHSS ___.",
+  "ru": "",
+  "opts": [
+   "≤ 3",
+   "≤ 5",
+   "≤ 8"
+  ],
+  "a": "≤ 3",
+  "why": "≤ 5 в тексте КР — порог для тикагрелора; на рис. 5 КР — NIHSS ≤ 5 без указания препарата."
+ },
+ {
+  "id": "k-abcd",
+  "t": 1,
+  "q": "ТИА высокого риска для ДААТ с клопидогрелом — ABCD2 ___.",
+  "ru": "",
+  "opts": [
+   "≥ 4",
+   "≥ 6",
+   "≥ 2"
+  ],
+  "a": "≥ 4",
+  "why": "В КР — «более 3 баллов». ABCD2 ≥ 6 — порог для тикагрелора."
+ },
+ {
+  "id": "k-algo",
+  "t": 1,
+  "q": "Алгоритм КР по ИИ 2024: малый ИИ (NIHSS ≤ 5) без реперфузии и ФП, меньше недели — ___.",
+  "ru": "",
+  "opts": [
+   "ДААТ",
+   "только АСК",
+   "ПОАК"
+  ],
+  "a": "ДААТ",
+  "why": "Не малый ИИ — АСК или клопидогрел в первые 24 ч."
+ },
+ {
+  "id": "k-tia-af",
+  "t": 1,
+  "q": "ТИА и ФП по алгоритму КР по ИИ 2024 — ___.",
+  "ru": "",
+  "opts": [
+   "ПОАК сразу",
+   "ДААТ 21 день",
+   "АСК 14 дней"
+  ],
+  "a": "ПОАК сразу",
+  "why": "Антиагрегант вместо ПОАК не нужен."
+ },
+ {
+  "id": "k-lowtia",
+  "t": 1,
+  "q": "ТИА низкого риска без стеноза — ___.",
+  "ru": "",
+  "opts": [
+   "один препарат",
+   "ДААТ",
+   "ПОАК"
+  ],
+  "a": "один препарат",
+  "why": "ESO 2021: 11 из 11 экспертов против ДААТ при низком риске."
+ },
+ {
+  "id": "k-image",
+  "t": 1,
+  "q": "Перед стартом ДААТ обязательно ___.",
+  "ru": "",
+  "opts": [
+   "КТ или МРТ без кровоизлияния",
+   "тест агрегации",
+   "генотип CYP2C19"
+  ],
+  "a": "КТ или МРТ без кровоизлияния",
+  "why": "ESO 2021. Рутинные тесты агрегации и генотип КР у взрослых не предлагают."
+ },
+ {
+  "id": "k-eso26",
+  "t": 1,
+  "q": "ESO: 21 день клопидогрела с АСК предотвращает ___ ишемических инсульта на 1000 пролеченных.",
+  "ru": "",
+  "opts": [
+   "26",
+   "2",
+   "260"
+  ],
+  "a": "26",
+  "why": "Тикагрелор с АСК 30 дней — 13 инсультов ценой 2 геморрагических."
+ },
+ {
+  "id": "c-dur",
+  "t": 2,
+  "q": "КР по ИИ 2024: ДААТ клопидогрелом с АСК — не меньше ___ дня.",
+  "ru": "",
+  "opts": [
+   "21",
+   "7",
+   "90"
+  ],
+  "a": "21",
+  "why": "И не больше 90 дней, затем один препарат (УУР A)."
+ },
+ {
+  "id": "c-start",
+  "t": 2,
+  "q": "КР по ИИ 2024: ДААТ с клопидогрелом начинают не позже ___ от симптомов.",
+  "ru": "",
+  "opts": [
+   "7 суток",
+   "24 ч",
+   "30 дней"
+  ],
+  "a": "7 суток",
+  "why": "В КР — через 12–⁠24 ч, возможно позже, но не позже 7 суток."
+ },
+ {
+  "id": "c-label",
+  "t": 2,
+  "q": "Инструкция клопидогрела при малом ИИ и ТИА: нагрузка ___ мг.",
+  "ru": "",
+  "opts": [
+   "300",
+   "600",
+   "75"
+  ],
+  "a": "300",
+  "why": "Затем 75 мг + АСК 75–⁠100 мг, старт в первые 24 ч, 21 день, затем монотерапия."
+ },
+ {
+  "id": "c-chance",
+  "t": 2,
+  "q": "CHANCE: инсультов за 90 дней на ДААТ 8,2% против ___ на АСК.",
+  "ru": "",
+  "opts": [
+   "11,7%",
+   "8,5%",
+   "20%"
+  ],
+  "a": "11,7%",
+  "why": "ОР 0,68; средних и тяжёлых кровотечений — по 0,3%."
+ },
+ {
+  "id": "c-point",
+  "t": 2,
+  "q": "POINT: большие кровотечения при ДААТ 90 дней — ___.",
+  "ru": "",
+  "opts": [
+   "0,9% против 0,4%",
+   "поровну",
+   "меньше"
+  ],
+  "a": "0,9% против 0,4%",
+  "why": "ОР 2,32. Нагрузка — 600 мг, АСК 50–⁠325 мг."
+ },
+ {
+  "id": "c-pool",
+  "t": 2,
+  "q": "CHANCE + POINT: польза ДААТ ограничена первыми ___ днями.",
+  "ru": "",
+  "opts": [
+   "21",
+   "7",
+   "90"
+  ],
+  "a": "21",
+  "why": "ОР 0,66 в первые 21 день; на 22–⁠90-й день пользы нет."
+ },
+ {
+  "id": "c-insp",
+  "t": 2,
+  "q": "INSPIRES: ДААТ при малом ИИ из-за атеросклероза помогает при старте до ___ ч.",
+  "ru": "",
+  "opts": [
+   "72",
+   "24",
+   "12"
+  ],
+  "a": "72",
+  "why": "Инсультов 7,3% против 9,2% (ОР 0,79); 87% начали через 24–⁠72 ч."
+ },
+ {
+  "id": "c-insp-bleed",
+  "t": 2,
+  "q": "INSPIRES: средние и тяжёлые кровотечения — ___.",
+  "ru": "",
+  "opts": [
+   "0,9% против 0,4%",
+   "поровну",
+   "5% против 1%"
+  ],
+  "a": "0,9% против 0,4%",
+  "why": "ОР 2,08 — редко, но вдвое чаще."
+ },
+ {
+  "id": "c-insp-week",
+  "t": 2,
+  "q": "INSPIRES: абсолютная польза ДААТ больше всего на ___ неделе.",
+  "ru": "",
+  "opts": [
+   "1-й",
+   "3-й",
+   "12-й"
+  ],
+  "a": "1-й",
+  "why": "1,42% — за первую, 0,49% — за вторую, 0,29% — за третью неделю."
+ },
+ {
+  "id": "t-dur",
+  "t": 3,
+  "q": "ДААТ тикагрелором с АСК по КР по ИИ 2024 — ___ дней.",
+  "ru": "",
+  "opts": [
+   "30",
+   "21",
+   "90"
+  ],
+  "a": "30",
+  "why": "Старт в первые 24 ч (УУР B)."
+ },
+ {
+  "id": "t-who",
+  "t": 3,
+  "q": "Тикагрелор + АСК по КР: ИИ с NIHSS ___.",
+  "ru": "",
+  "opts": [
+   "≤ 5",
+   "≤ 3",
+   "≤ 10"
+  ],
+  "a": "≤ 5",
+  "why": "Или ТИА с ABCD2 ≥ 6, или любая ТИА со стенозом ≥ 50%."
+ },
+ {
+  "id": "t-sten",
+  "t": 3,
+  "q": "Любая ТИА с симптомным стенозом ≥ 50% по КР — показание к ___.",
+  "ru": "",
+  "opts": [
+   "тикагрелору с АСК",
+   "ПОАК",
+   "тройной терапии"
+  ],
+  "a": "тикагрелору с АСК",
+  "why": "Экстра- или интракраниальной артерии, в первые 24 ч, 30 дней."
+ },
+ {
+  "id": "t-load",
+  "t": 3,
+  "q": "Нагрузочная доза тикагрелора — ___ мг.",
+  "ru": "",
+  "opts": [
+   "180",
+   "90",
+   "300"
+  ],
+  "a": "180",
+  "why": "Две таблетки по 90 мг, затем 90 мг × 2."
+ },
+ {
+  "id": "t-ich",
+  "t": 3,
+  "q": "THALES: ВЧК на тикагрелоре с АСК — ___.",
+  "ru": "",
+  "opts": [
+   "0,4% против 0,1%",
+   "поровну",
+   "2% против 1%"
+  ],
+  "a": "0,4% против 0,1%",
+  "why": "Тяжёлые кровотечения — 0,5% против 0,1%."
+ },
+ {
+  "id": "t-thales",
+  "t": 3,
+  "q": "THALES: инсульт или смерть за 30 дней — 5,5% против ___.",
+  "ru": "",
+  "opts": [
+   "6,6%",
+   "5,5%",
+   "11%"
+  ],
+  "a": "6,6%",
+  "why": "ОР 0,83; 11 016 пациентов."
+ },
+ {
+  "id": "t-contra",
+  "t": 3,
+  "q": "Тикагрелор противопоказан при ___.",
+  "ru": "",
+  "opts": [
+   "ВЧК в анамнезе",
+   "сахарном диабете",
+   "ФП"
+  ],
+  "a": "ВЧК в анамнезе",
+  "why": "А также при умеренной и тяжёлой печёночной недостаточности, с кларитромицином и кетоконазолом."
+ },
+ {
+  "id": "t-label",
+  "t": 3,
+  "q": "Показание к тикагрелору при инсульте в инструкции РФ ___.",
+  "ru": "",
+  "opts": [
+   "отсутствует",
+   "есть"
+  ],
+  "a": "отсутствует",
+  "why": "Назначение по КР — вне инструкции."
+ },
+ {
+  "id": "t-asa",
+  "t": 3,
+  "q": "С тикагрелором поддерживающая доза АСК по инструкции — ___ мг.",
+  "ru": "",
+  "opts": [
+   "75–⁠150",
+   "300–⁠500",
+   "1000"
+  ],
+  "a": "75–⁠150",
+  "why": "Выше 300 мг не рекомендуется; в THALES — 75–⁠100 мг после нагрузки."
+ },
+ {
+  "id": "t-ch2",
+  "t": 3,
+  "q": "CHANCE-2: у носителей CYP2C19 LoF тикагрелор против клопидогрела — инсультов ___.",
+  "ru": "",
+  "opts": [
+   "6,0% против 7,6%",
+   "поровну",
+   "больше"
+  ],
+  "a": "6,0% против 7,6%",
+  "why": "ОР 0,77; средних и тяжёлых кровотечений по 0,3%, любых — 5,3% против 2,5%."
+ },
+ {
+  "id": "l-eso",
+  "t": 4,
+  "q": "ESO 2021: нагрузка клопидогрелом ___ мг тем, кто его ещё не принимает.",
+  "ru": "",
+  "opts": [
+   "300",
+   "600",
+   "900"
+  ],
+  "a": "300",
+  "why": "POINT использовал 600 мг; AHA/ASA 2026 — 300 или 600 мг."
+ },
+ {
+  "id": "l-already",
+  "t": 4,
+  "q": "Пациент уже постоянно принимает клопидогрел: нагрузочная доза по ESO ___.",
+  "ru": "",
+  "opts": [
+   "не нужна",
+   "600 мг",
+   "300 мг дважды"
+  ],
+  "a": "не нужна",
+  "why": "ESO советуют нагрузку тем, кто препарат ещё не принимает."
+ },
+ {
+  "id": "l-75",
+  "t": 4,
+  "q": "82 года, малый ИИ, старт ДААТ: клопидогрел ___.",
+  "ru": "",
+  "opts": [
+   "300 мг нагрузка, затем 75 мг",
+   "75 мг без нагрузки"
+  ],
+  "a": "300 мг нагрузка, затем 75 мг",
+  "why": "«Старше 75 — без нагрузки» — правило инструкции для ИМ с подъёмом ST."
+ },
+ {
+  "id": "l-600",
+  "t": 4,
+  "q": "После 600 мг клопидогрела полный антиагрегантный эффект — через ___ ч.",
+  "ru": "",
+  "opts": [
+   "2",
+   "24",
+   "72"
+  ],
+  "a": "2",
+  "why": "Hochholzer 2005, кардиологические пациенты; после 300 мг — медленнее."
+ },
+ {
+  "id": "l-rct",
+  "t": 4,
+  "q": "Крупные РКИ с клиническими исходами, сравнивающие нагрузку 300 и 600 мг при инсульте, ___.",
+  "ru": "",
+  "opts": [
+   "не проводились",
+   "показали превосходство 600 мг"
+  ],
+  "a": "не проводились",
+  "why": "Выбор — между схемами CHANCE (300) и POINT (600)."
+ },
+ {
+  "id": "l-asa-thales",
+  "t": 4,
+  "q": "THALES: первая доза АСК — ___ мг.",
+  "ru": "",
+  "opts": [
+   "300–⁠325",
+   "75",
+   "1000"
+  ],
+  "a": "300–⁠325",
+  "why": "Затем 75–⁠100 мг."
+ },
+ {
+  "id": "l-cyp",
+  "t": 4,
+  "q": "Носители CYP2C19 LoF на клопидогреле: инсультов ___.",
+  "ru": "",
+  "opts": [
+   "12,0% против 5,8%",
+   "поровну",
+   "меньше"
+  ],
+  "a": "12,0% против 5,8%",
+  "why": "Мета-анализ Pan 2017: ОР 1,92."
+ },
+ {
+  "id": "s-24",
+  "t": 5,
+  "q": "Без реперфузии антиагрегант по алгоритму КР — в первые ___ ч.",
+  "ru": "",
+  "opts": [
+   "24",
+   "72",
+   "6"
+  ],
+  "a": "24",
+  "why": "АСК — не позже 48 ч (AHA/ASA 2026, 1A)."
+ },
+ {
+  "id": "s-48",
+  "t": 5,
+  "q": "AHA/ASA 2026: АСК при ИИ — в первые ___ ч.",
+  "ru": "",
+  "opts": [
+   "48",
+   "4,5",
+   "96"
+  ],
+  "a": "48",
+  "why": "Класс 1A; IST и CAST."
+ },
+ {
+  "id": "s-tic24",
+  "t": 5,
+  "q": "ДААТ с тикагрелором — только в первые ___ ч.",
+  "ru": "",
+  "opts": [
+   "24",
+   "72",
+   "168"
+  ],
+  "a": "24",
+  "why": "Как в THALES; после 24 ч — клопидогрел + АСК."
+ },
+ {
+  "id": "s-ivt",
+  "t": 5,
+  "q": "После тромболизиса антиагрегант по КР — через ___.",
+  "ru": "",
+  "opts": [
+   "24 ч",
+   "6 ч",
+   "7 дней"
+  ],
+  "a": "24 ч",
+  "why": "Раньше — только решением врачебной комиссии (КР, УУР C)."
+ },
+ {
+  "id": "s-evt",
+  "t": 5,
+  "q": "По алгоритму КР: только тромбэктомия, без ГТ — антиагрегант ___.",
+  "ru": "",
+  "opts": [
+   "в первые 24 ч",
+   "через 7 дней",
+   "через 24 ч после КТ"
+  ],
+  "a": "в первые 24 ч",
+  "why": "Алгоритм КР по ИИ 2024."
+ },
+ {
+  "id": "s-ht",
+  "t": 5,
+  "q": "Геморрагическая трансформация: антиагрегант по алгоритму КР — ___.",
+  "ru": "",
+  "opts": [
+   "отсроченно",
+   "в первые 24 ч",
+   "никогда"
+  ],
+  "a": "отсроченно",
+  "why": "Точного срока в КР нет — по КТ в динамике."
+ },
+ {
+  "id": "s-week",
+  "t": 5,
+  "q": "POINT: большая часть повторов пришлась на ___ неделю.",
+  "ru": "",
+  "opts": [
+   "первую",
+   "третью",
+   "десятую"
+  ],
+  "a": "первую",
+  "why": "Поэтому ДААТ начинают как можно раньше."
+ },
+ {
+  "id": "s-roth",
+  "t": 5,
+  "q": "Rothwell 2016: польза АСК видна уже на ___.",
+  "ru": "",
+  "opts": [
+   "2–⁠3-й день",
+   "30-й день",
+   "третий месяц"
+  ],
+  "a": "2–⁠3-й день",
+  "why": "Сильнее всего АСК снижает ранние тяжёлые повторы."
+ },
+ {
+  "id": "d-22",
+  "t": 6,
+  "q": "ДААТ клопидогрелом с АСК 21 день: монотерапия — с ___ дня.",
+  "ru": "",
+  "opts": [
+   "22-го",
+   "21-го",
+   "30-го"
+  ],
+  "a": "22-го",
+  "why": "День 1 — день первой дозы."
+ },
+ {
+  "id": "d-31",
+  "t": 6,
+  "q": "ДААТ тикагрелором с АСК 30 дней: монотерапия — с ___ дня.",
+  "ru": "",
+  "opts": [
+   "31-го",
+   "22-го",
+   "91-го"
+  ],
+  "a": "31-го",
+  "why": "Дальше АСК 75–⁠150 мг или клопидогрел 75 мг."
+ },
+ {
+  "id": "d-which",
+  "t": 6,
+  "q": "После 21 дня ДААТ в CHANCE и INSPIRES оставляли ___.",
+  "ru": "",
+  "opts": [
+   "клопидогрел",
+   "АСК",
+   "оба"
+  ],
+  "a": "клопидогрел",
+  "why": "КР по ИИ 2024 разрешают АСК или клопидогрел."
+ },
+ {
+  "id": "d-90",
+  "t": 6,
+  "q": "ДААТ дольше ___ дней КР не рекомендуют.",
+  "ru": "",
+  "opts": [
+   "90",
+   "30",
+   "180"
+  ],
+  "a": "90",
+  "why": "Кровотечений больше, пользы нет (УУР A)."
+ },
+ {
+  "id": "d-point",
+  "t": 6,
+  "q": "POINT: на 22–⁠90-й день ДААТ ОР ишемических событий — ___.",
+  "ru": "",
+  "opts": [
+   "1,38 — пользы нет",
+   "0,65 — польза",
+   "0,30 — большая польза"
+  ],
+  "a": "1,38 — пользы нет",
+  "why": "ОР 0,65 — это первые 21 день."
+ },
+ {
+  "id": "d-sps3",
+  "t": 6,
+  "q": "SPS3, лакунарный инсульт, ДААТ 3,4 года: смертность ___.",
+  "ru": "",
+  "opts": [
+   "выше: ОР 1,52",
+   "ниже",
+   "та же"
+  ],
+  "a": "выше: ОР 1,52",
+  "why": "Большие кровотечения — ОР 1,97, повторов не меньше."
+ },
+ {
+  "id": "d-taper",
+  "t": 6,
+  "q": "Переход на монотерапию: второй препарат ___.",
+  "ru": "",
+  "opts": [
+   "просто отменяют в нужный день",
+   "снижают дозу неделю",
+   "заменяют гепарином"
+  ],
+  "a": "просто отменяют в нужный день",
+  "why": "Постепенная отмена не нужна."
+ },
+ {
+  "id": "d-icas",
+  "t": 6,
+  "q": "Интракраниальный стеноз 70–⁠99%: клопидогрел к АСК — до ___ дней.",
+  "ru": "",
+  "opts": [
+   "90",
+   "21",
+   "365"
+  ],
+  "a": "90",
+  "why": "КР по ИИ 2024, УУР B; как в SAMMPRIS."
+ },
+ {
+  "id": "d-ch2",
+  "t": 6,
+  "q": "CHANCE-2: с 22-го дня до 90-го — ___.",
+  "ru": "",
+  "opts": [
+   "тикагрелор",
+   "клопидогрел",
+   "АСК"
+  ],
+  "a": "тикагрелор",
+  "why": "АСК отменяют; AHA/ASA 2026 — 2b, в РФ вне инструкции."
+ },
+ {
+  "id": "i-prior",
+  "t": 7,
+  "q": "Приём ДААТ до инсульта — ___ тромболизиса.",
+  "ru": "",
+  "opts": [
+   "не противопоказание для",
+   "противопоказание для"
+  ],
+  "a": "не противопоказание для",
+  "why": "КР по ИИ 2024, УУР B."
+ },
+ {
+  "id": "i-artis",
+  "t": 7,
+  "q": "ARTIS: АСК в/в в первые 90 мин тромболизиса — сВЧК ___.",
+  "ru": "",
+  "opts": [
+   "4,3% против 1,6%",
+   "поровну",
+   "меньше"
+  ],
+  "a": "4,3% против 1,6%",
+  "why": "Исследование остановлено досрочно."
+ },
+ {
+  "id": "i-kom",
+  "t": 7,
+  "q": "Антиагрегант в первые 24 ч после алтеплазы по КР — только ___.",
+  "ru": "",
+  "opts": [
+   "решением врачебной комиссии",
+   "по желанию врача",
+   "при NIHSS ≤ 3"
+  ],
+  "a": "решением врачебной комиссии",
+  "why": "Это против инструкции алтеплазы; показание — например, экстренное стентирование."
+ },
+ {
+  "id": "i-east",
+  "t": 7,
+  "q": "EAST: клопидогрел + АСК в первые 6 ч после тромболизиса при NIHSS 0–⁠5 — ___.",
+  "ru": "",
+  "opts": [
+   "пользы нет",
+   "исход лучше",
+   "сВЧК втрое чаще"
+  ],
+  "a": "пользы нет",
+  "why": "mRS 0–⁠1: 89,7% и 89,6%; безопасность сходна."
+ },
+ {
+  "id": "i-tapis",
+  "t": 7,
+  "q": "TAPIS: тикагрелор + АСК в первые 6 ч от начала у получавших ТЛТ с NIHSS 4–⁠10 — mRS 0–⁠1 ___.",
+  "ru": "",
+  "opts": [
+   "68,7% против 62,0%",
+   "поровну",
+   "хуже"
+  ],
+  "a": "68,7% против 62,0%",
+  "why": "ОР 1,11; сВЧК 0,9% против 0,7%; тикагрелор 7 дней. В КР пока нет."
+ },
+ {
+  "id": "i-aramis",
+  "t": 7,
+  "q": "ARAMIS: при малом неинвалидизирующем ИИ ДААТ по сравнению с алтеплазой ___.",
+  "ru": "",
+  "opts": [
+   "не хуже",
+   "хуже",
+   "опаснее"
+  ],
+  "a": "не хуже",
+  "why": "mRS 0–⁠1: 93,8% против 91,4%."
+ },
+ {
+  "id": "i-mrclean",
+  "t": 7,
+  "q": "MR CLEAN-MED: АСК в/в во время тромбэктомии — сВЧК ___.",
+  "ru": "",
+  "opts": [
+   "14% против 7%",
+   "поровну",
+   "меньше"
+  ],
+  "a": "14% против 7%",
+  "why": "Исследование остановлено из-за вреда."
+ },
+ {
+  "id": "i-tiro",
+  "t": 7,
+  "q": "Тирофибан в/в по AHA/ASA 2026: эффективность ___.",
+  "ru": "",
+  "opts": [
+   "не установлена (2b)",
+   "доказана (1A)",
+   "вред (3)"
+  ],
+  "a": "не установлена (2b)",
+  "why": "В КР по ИИ 2024 рекомендаций нет; китайские РКИ RESCUE BT2 и ASSET-IT — исход лучше."
+ },
+ {
+  "id": "v-sev",
+  "t": 8,
+  "q": "Тяжёлый обширный ИИ без ФП: ___.",
+  "ru": "",
+  "opts": [
+   "АСК 160–⁠300 мг в первые 48 ч",
+   "ДААТ 21 день",
+   "тикагрелор + АСК"
+  ],
+  "a": "АСК 160–⁠300 мг в первые 48 ч",
+  "why": "Затем 75–⁠150 мг; ДААТ у таких пациентов не изучали."
+ },
+ {
+  "id": "v-ist",
+  "t": 8,
+  "q": "IST и CAST: АСК в первые 48 ч — на 1000 пролеченных около ___ смертей и повторных инсультов меньше.",
+  "ru": "",
+  "opts": [
+   "9",
+   "90",
+   "1"
+  ],
+  "a": "9",
+  "why": "IST — 300 мг до 14 дней, CAST — 160 мг до 4 недель."
+ },
+ {
+  "id": "v-atamis",
+  "t": 8,
+  "q": "ATAMIS (NIHSS 4–⁠10): ДААТ 14 дней снизила раннее неврологическое ухудшение до ___.",
+  "ru": "",
+  "opts": [
+   "4,8% против 6,7%",
+   "1% против 10%",
+   "не снизила"
+  ],
+  "a": "4,8% против 6,7%",
+  "why": "Кровотечения сходны; польза — при старте в первые 24 ч. В КР пока нет."
+ },
+ {
+  "id": "v-dvt",
+  "t": 8,
+  "q": "Лежачий пациент на АСК: профилактика ТГВ ___.",
+  "ru": "",
+  "opts": [
+   "НМГ в профилактической дозе",
+   "не нужна",
+   "лечебная доза гепарина"
+  ],
+  "a": "НМГ в профилактической дозе",
+  "why": "КР по ИИ 2024, УУР A."
+ },
+ {
+  "id": "v-cm",
+  "t": 8,
+  "q": "Кардиомагнил по инструкции ___.",
+  "ru": "",
+  "opts": [
+   "можно растереть",
+   "нельзя делить"
+  ],
+  "a": "можно растереть",
+  "why": "Можно разломить, разжевать или растереть — подходит для зонда."
+ },
+ {
+  "id": "v-ac",
+  "t": 8,
+  "q": "Аспирин Кардио ___.",
+  "ru": "",
+  "opts": [
+   "не измельчают",
+   "растирают для зонда"
+  ],
+  "a": "не измельчают",
+  "why": "Кишечнорастворимая оболочка; исключение — первая доза при подозрении на ИМ."
+ },
+ {
+  "id": "v-ng",
+  "t": 8,
+  "q": "Тикагрелор при дисфагии по инструкции ___.",
+  "ru": "",
+  "opts": [
+   "измельчают и вводят через зонд",
+   "противопоказан",
+   "дают ректально"
+  ],
+  "a": "измельчают и вводят через зонд",
+  "why": "Порошок в половине стакана воды; зонд CH8 и больше."
+ },
+ {
+  "id": "v-45",
+  "t": 8,
+  "q": "ИИ с NIHSS 4 через 18 ч без реперфузии — по тексту КР: ___.",
+  "ru": "",
+  "opts": [
+   "тикагрелор + АСК",
+   "ДААТ не нужна",
+   "ПОАК"
+  ],
+  "a": "тикагрелор + АСК",
+  "why": "NIHSS ≤ 5 и первые 24 ч; клопидогрел по КР — при NIHSS ≤ 3 (или INSPIRES при атеросклерозе)."
+ },
+ {
+  "id": "o-before",
+  "t": 9,
+  "q": "ФП, ПОАК начнём на 6-й день: до этого ___.",
+  "ru": "",
+  "opts": [
+   "АСК",
+   "ничего",
+   "ДААТ"
+  ],
+  "a": "АСК",
+  "why": "КР по ИИ 2024 (УУР C), КР по ФП 2025 (ЕОК IIaB); с первой дозы ПОАК АСК уже не дают."
+ },
+ {
+  "id": "o-comb",
+  "t": 9,
+  "q": "ПОАК + АСК при ФП без стента — ___.",
+  "ru": "",
+  "opts": [
+   "не рекомендовано",
+   "рекомендовано"
+  ],
+  "a": "не рекомендовано",
+  "why": "КР по ИИ 2024 (УУР B), КР по ФП 2025 (ЕОК IIIB)."
+ },
+ {
+  "id": "o-atis",
+  "t": 9,
+  "q": "ATIS-NVAF: антиагрегант к антикоагулянту — большие и значимые кровотечения ___.",
+  "ru": "",
+  "opts": [
+   "19,5% против 8,6%",
+   "поровну",
+   "меньше"
+  ],
+  "a": "19,5% против 8,6%",
+  "why": "Пользы не было, исследование остановлено."
+ },
+ {
+  "id": "o-stent",
+  "t": 9,
+  "q": "ФП и недавний стент: запрет КР на ПОАК + антиагрегант ___.",
+  "ru": "",
+  "opts": [
+   "не распространяется",
+   "действует"
+  ],
+  "a": "не распространяется",
+  "why": "Схему выбирают по показаниям стента вместе с кардиологом."
+ },
+ {
+  "id": "o-lmwh",
+  "t": 9,
+  "q": "НМГ в профилактической дозе вместе с АСК у лежачих — ___.",
+  "ru": "",
+  "opts": [
+   "можно",
+   "нельзя"
+  ],
+  "a": "можно",
+  "why": "КР по ИИ 2024, УУР A."
+ },
+ {
+  "id": "o-compass",
+  "t": 9,
+  "q": "COMPASS по КР: ривароксабан 2,5 мг × 2 + АСК — через ___ после нелакунарного ИИ.",
+  "ru": "",
+  "opts": [
+   "месяц",
+   "24 ч",
+   "год"
+  ],
+  "a": "месяц",
+  "why": "При ИБС или другом атеросклерозе и низком риске кровотечения (УУР B)."
+ },
+ {
+  "id": "o-compass-no",
+  "t": 9,
+  "q": "Схему COMPASS не назначают после ___ инсульта.",
+  "ru": "",
+  "opts": [
+   "лакунарного",
+   "обширного"
+  ],
+  "a": "лакунарного",
+  "why": "И после геморрагического, и вместе с ДААТ."
+ },
+ {
+  "id": "o-valve",
+  "t": 9,
+  "q": "Механический митральный протез, ИИ на целевом МНО: ___.",
+  "ru": "",
+  "opts": [
+   "варфарин + АСК 75–⁠100 мг",
+   "ПОАК",
+   "отменить варфарин"
+  ],
+  "a": "варфарин + АСК 75–⁠100 мг",
+  "why": "Или МНО 3,0–⁠3,5 (КР по ИИ 2024, УУР A)."
+ },
+ {
+  "id": "x-icas",
+  "t": 10,
+  "q": "Интракраниальный стеноз 50–⁠99%: АСК ___ мг.",
+  "ru": "",
+  "opts": [
+   "325",
+   "75",
+   "1000"
+  ],
+  "a": "325",
+  "why": "КР по ИИ 2024, УУР A."
+ },
+ {
+  "id": "x-samm",
+  "t": 10,
+  "q": "SAMMPRIS, медикаментозная группа: инсульт или смерть за 30 дней — ___.",
+  "ru": "",
+  "opts": [
+   "5,8% против 14,7% после стента",
+   "поровну",
+   "хуже, чем после стента"
+  ],
+  "a": "5,8% против 14,7% после стента",
+  "why": "АСК 325 мг + клопидогрел 75 мг 90 дней."
+ },
+ {
+  "id": "x-diss",
+  "t": 10,
+  "q": "Диссекция: антитромботическая терапия — не меньше ___.",
+  "ru": "",
+  "opts": [
+   "3 месяцев",
+   "21 дня",
+   "года"
+  ],
+  "a": "3 месяцев",
+  "why": "Антиагрегант или варфарин, до стабилизации стенки (УУР B)."
+ },
+ {
+  "id": "x-fail",
+  "t": 10,
+  "q": "Инсульт на фоне АСК: смена препарата или повышение дозы — ___.",
+  "ru": "",
+  "opts": [
+   "польза не доказана",
+   "обязательно"
+  ],
+  "a": "польза не доказана",
+  "why": "AHA/ASA 2026, 2b; искать причину."
+ },
+ {
+  "id": "x-triple",
+  "t": 10,
+  "q": "TARDIS: тройная антиагрегантная терапия — кровотечения ___.",
+  "ru": "",
+  "opts": [
+   "ОШ 2,54 без пользы",
+   "меньше",
+   "поровну"
+  ],
+  "a": "ОШ 2,54 без пользы",
+  "why": "КР по ИИ 2024: не рекомендована (УУР A)."
+ },
+ {
+  "id": "x-indo",
+  "t": 10,
+  "q": "INSURE: индобуфен вместо АСК — инсультов ___.",
+  "ru": "",
+  "opts": [
+   "7,9% против 6,4%",
+   "меньше",
+   "поровну"
+  ],
+  "a": "7,9% против 6,4%",
+  "why": "Не хуже АСК доказать не удалось."
+ },
+ {
+  "id": "x-moya",
+  "t": 10,
+  "q": "Мойя-мойя с ИИ/ТИА по КР — ___.",
+  "ru": "",
+  "opts": [
+   "АСК",
+   "ДААТ пожизненно",
+   "варфарин"
+  ],
+  "a": "АСК",
+  "why": "УУР C."
+ },
+ {
+  "id": "x-test",
+  "t": 10,
+  "q": "Рутинный тест агрегации или генотип CYP2C19 у взрослых КР ___.",
+  "ru": "",
+  "opts": [
+   "не предлагают",
+   "требуют перед ДААТ"
+  ],
+  "a": "не предлагают",
+  "why": "Тест агрегации в КР — только у детей."
+ },
+ {
+  "id": "x-ppi",
+  "t": 10,
+  "q": "COGENT: омепразол к ДААТ — ЖК-события ___.",
+  "ru": "",
+  "opts": [
+   "1,1% против 2,9%",
+   "поровну",
+   "больше"
+  ],
+  "a": "1,1% против 2,9%",
+  "why": "Сосудистых событий не больше (ОР 0,99); это ИБС, не инсульт."
+ },
+ {
+  "id": "f-severe",
+  "t": 11,
+  "q": "NIHSS 14, ИИ без кардиоэмболии: ДААТ ___.",
+  "ru": "",
+  "opts": [
+   "не назначают",
+   "назначают на 21 день"
+  ],
+  "a": "не назначают",
+  "why": "ДААТ доказана при малом ИИ и ТИА высокого риска; здесь — АСК."
+ },
+ {
+  "id": "f-end",
+  "t": 11,
+  "q": "Выписка на ДААТ: в ней обязательно ___.",
+  "ru": "",
+  "opts": [
+   "дата отмены второго препарата",
+   "повтор нагрузки",
+   "тест агрегации"
+  ],
+  "a": "дата отмены второго препарата",
+  "why": "Иначе ДААТ тянется месяцами."
+ },
+ {
+  "id": "f-noload",
+  "t": 11,
+  "q": "ДААТ без нагрузочной дозы у пациента, не принимавшего клопидогрел, — ___.",
+  "ru": "",
+  "opts": [
+   "ошибка",
+   "норма"
+  ],
+  "a": "ошибка",
+  "why": "Эффект набирается днями, а риск повтора максимален в первую неделю."
+ },
+ {
+  "id": "f-poac",
+  "t": 11,
+  "q": "ФП, пациент на апиксабане, «для сосудов» добавили АСК — ___.",
+  "ru": "",
+  "opts": [
+   "ошибка",
+   "правильно"
+  ],
+  "a": "ошибка",
+  "why": "Кровотечений больше, пользы нет."
+ },
+ {
+  "id": "f-ivt",
+  "t": 11,
+  "q": "ДААТ по схеме CHANCE сразу после тромболизиса — ___.",
+  "ru": "",
+  "opts": [
+   "без доказанной пользы и против КР",
+   "стандарт КР"
+  ],
+  "a": "без доказанной пользы и против КР",
+  "why": "CHANCE, POINT, THALES и INSPIRES ТЛТ не включали; EAST (NIHSS 0–⁠5) — пользы нет; по КР — через 24 ч."
+ },
+ {
+  "id": "f-tube",
+  "t": 11,
+  "q": "Для зонда растолкли Аспирин Кардио — ___.",
+  "ru": "",
+  "opts": [
+   "ошибка",
+   "правильно"
+  ],
+  "a": "ошибка",
+  "why": "Кишечнорастворимую оболочку не разрушают; Кардиомагнил можно растереть."
+ },
+ {
+  "id": "f-wait",
+  "t": 11,
+  "q": "Малый ИИ ночью: ДААТ начать ___.",
+  "ru": "",
+  "opts": [
+   "как можно раньше, после КТ",
+   "утром на обходе",
+   "через 3 дня"
+  ],
+  "a": "как можно раньше, после КТ",
+  "why": "Больше всего повторов — в первую неделю."
+ },
+ {
+  "id": "f-forever",
+  "t": 11,
+  "q": "ДААТ на 6 месяцев при малом лакунарном ИИ — ___.",
+  "ru": "",
+  "opts": [
+   "ошибка",
+   "правильно"
+  ],
+  "a": "ошибка",
+  "why": "Дольше 90 дней КР не рекомендуют (УУР A); SPS3 — больших кровотечений ОР 1,97, смертность ОР 1,52."
+ }
+];
+
+const NEW_PER_SESSION = 10;
+const MIXED_SIZE = 15;
+const INTERVALS = [1, 3, 7, 16];            // дни
+const DAY = 86400000;
+const LS_STATE = "dapt:state";
+const LS_TAB = "dapt:tab";
+const LS_OPEN = "dapt:open";
+const TOPIC_BY = {};
+TOPICS.forEach(t => { TOPIC_BY[t.n] = t; });
+
+let progress = {};
+let queue = [];
+let index = 0;
+let answered = false;
+let autoSpeak = false;   // озвучки в этом приложении нет
+let mode = "main";          // main | topic | mixed
+let topicN = null;
+let lapsed = {};
+let seen = new Set();
+let stats = { first: 0, correct: 0 };
+let shownOpts = [];
+let cloudDoc = null;
+let writing = false, dirty = false, retried = false, pushTimer = null;
+
+const $ = id => document.getElementById(id);
+function el(tag, cls, text){
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+}
+try{ document.documentElement.lang = "ru"; }catch(e){}
+
+// Мета-теги для установки на домашний экран
+(function addMobileMeta(){
+  const metas = [
+    ["apple-mobile-web-app-capable", "yes"],
+    ["mobile-web-app-capable", "yes"],
+    ["apple-mobile-web-app-status-bar-style", "black-translucent"],
+    ["apple-mobile-web-app-title", "ДААТ"],
+    ["theme-color", "#0e1113"]
+  ];
+  for (const [name, content] of metas){
+    if (document.querySelector('meta[name="' + name + '"]')) continue;
+    const m = document.createElement("meta");
+    m.setAttribute("name", name);
+    m.setAttribute("content", content);
+    document.head.appendChild(m);
+  }
+  // Плитка для экрана «Домой» и значок вкладки
+  const links = [
+    ["apple-touch-icon", "180x180", "data:image/png;base64,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"],
+    ["icon", "192x192", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAMAAABlApw1AAABgFBMVEX7+vj19fPv7uzq6ujj4+GixdToflvkfFreeVilp6d+n615hozWdlbUdVa8ak+EZlxfY2V0STxGW2Q9SVA6Oz0vMjQoMTUoMDUlMjgsLS8nLjImLTIlKy4kLDAjKi4iKS0hJysgJysfJSkfJCkeJCkeJCgeJCcfIyYeIiYdJCgdIyccIycdIyYdIiYcIiccIiYcIiUbIiYcISUbISYbISUbISQaISUbICQaICUaICQaICMaHyMZICQZHyQZHyMZHyIZHiEYHyMXHSAXHB8THSMUHCAOGyIVGhwVGBsTGBwTFxoSFxoSFhkRFhgRFRcQFRkQFBcPExUMFRoPEhUOEhQMEhcRERIOERQOERMOERIMERQOEBINEBMNEBINEBENDxEMEBIMDxIMDxEMDxAJEBQMDhAMDg8LDhALDg8LDQ8LDQ4KDg8KDQ8KDQ4KDQ0HDhILDA0KDA4KDA0KCw0JDA4JDA0JCw0JCwwICwwJCgwICgwICgsICQsHCQoGCAkEBgjStdk4AAAVgUlEQVR42u2di1caybaHUUFFFBEQIsjzDiqtpJFpkvC4CDTavB9RR+ZGNAMhDV64M+0EMBL0X79V3c1Tz0yjBXPOWuy1EoGQ5PfVflT1pugS5f/DTTQDmAHMAGYAM4AZwAxgBjADmAHMAGYAM4AZwAxgBvAiKxQK//4ABYH2zwIUkNg0AAqTtYkCjPxfxZ79cwiil6ovPm9/Le0SWvffu+RfvIJ/7TL/QgLRi+QX/8J+++3zgF5e43WxWCqXK5Vq9abOcFa/qVYr5evCr/nTXO7XSp2+fBGB6EWj/9tnVuRnTjL3o0zTQGCtDgQ2Gk3WGg2mDkQWC1BjOhmPUhQZ9HldBztWi9lkNBj0ep1OC01nsMardP4FBKJx9ecLNBTZgCJvK1dXpUr99qb6tXT1CahMp1mR4WdFcqbT6/UGg9FoMpktVutPdmwfJwjirdWgMSSZF/hANJ7+S7pezgGRZDjo9e5sazUajU6/DUUOaNSyGqFIswWItGEYDkR6PB5fYMB8Xg+09wRrnqOAadNVH59ANI7+fPkmatH1B5IdRqjRasfechq9gyJ9PlajhxBkAUJjZq4nANDXX08bNEYb4XsyjB6Pm0BgRxrLt09jEoiE6//EkBpjIOAhJmcBTbh5NR6BcIBPt14NHiAmah5MU6h2pxNEAD0HMOHNdx5iwhbQH9x1Z0TEAJXs5tuJ6yfe27UlusQjIAHoTvcFZtsYICZvAU3yvlwcg0AoQC2u8RHTANBbz4r/R/8mOIqEAVwVGlbDUwccwt/29/ff7oMfOG7fJ+Bs8DoAoyF4EP61zmcyKoDrYkX3UzcD9gkfsc9qD8KopeIUFXUfJkkyTf1Mka8kCJhMl/EjK8UILUUiQQ4oVk613VH3UD7TYdoHhLoNMOtUSpVKdehVKpUypUqmot6+CsBnMp4lszHrEcMvzZEAXBfraS3ngENSuSJTKZWWoJ1SS1RROyWTKOwrK+qVfZVk5RelMrn/KgCv2XCWSiZTNq9AAoEATFzr5eKHAjqTwZUV0/uoUiKLWtJKifJBJZEZ0mrJCuXRv7LUeiwQIBFPWcnGFTKAYpFJ8h54S76RrPiiQHHapFqRvPFCjF/U4GkQAJB48LVzsVV/lk4lErGY5bQqZEkhBABc8zHdEMJZAPhb8M0bMPhRCgD8UEpUZBC+dnj4eoBTFiB55PyGEKCeGwQgoFi7ys47YwXmrp0le/1q6CddjvNAwpqjEQFcF0v1bhXCofb9MKQA1WdFovoFRBNBUvvsHyBYztkgAEiCWOqQZAS4QChAngc4DBokK1aQsEqLiiBB+PwBAH4BUxgeNElWDn0/v3YxhOmyEAB4IOysXyMDqBW03Ax16DNJJCb7iiyufEOCqJHoQQjpfYfE4ZFqZUXle20OEG+12SzrgThlLxevEAGUq0UeACfVYB5QqaIm5Zug741SqX6jfqOHsY/r7R7Lz6+OIVyb5gBilK1YukYGUNF1J6i3VJQgo28JCqj2xZNkmCS52hn0EN7XJ8GhNjkKUEAAUKnqsPfdtRAIeLh6A6N9uA/WcG9xbtx/RrMe1SayaT6EKqUiMoC63jb5yxkOIJ5jPZAgnUJWEwIB6Fu9dToAHk2UBwh6m8W/z2KhAE3D1AAoDiDpD7fQAZRbBsuUALQ8QIqg0AGUyi3jlAB8WvKUA9iPNxEC3JvMU7kmJgLa8BkXQrZ0A1ESXwGAttk0LYAgB5Cw5hl0AKW2xRSYEoCPA4hZi3UB18WCAazGKQHo3l+wAJStVi1eowPYmRaA3nWRSiXiceqgUUEJcGCYFsDBJQRIhN33NEoA97QADDscwNERWgCvfloAVhYg+Y5so7oeYAGCUwOwsAApnLpHCkDqpgRgNHMesCfvaIQA99MDMF2mIYA116SLaK6JCxCA0k4HwGdiARJxa6FBF9G0VQrFYqkVnRaAeZsFiNlohr5GCBCfEoDHYshDAApjakg9kNb6pgUAm6Mp0tmsIvMAWE83u83RvzQXZsMOMJtt8FMOnN1oMG53NxX23leQAuSeAdgZlkrYPJkvmVjiyzmJOXr6A7Fw2DMWAOzupo7CSAB615SNU+37Jz2ozPl5CB8Y6gyhlEmBKTYzx/zr+LFaKpGa/eN2d9Nu6p5GCvBJ+0R/WCGTbfY+FMOJmEI8L1Op1eCHVM2/bjuXieZFioztebVPXeOxa1kAPA4ArtABfLsaBcBDugWRSHbeleY8lormFA+x4+MvNnHvdSwmnRPPSZ8FwM4V/b/eNTcGm6OJNJZtogUoa0dS0ZZRzInnxb2nWZkICLWClDVnlV0APLy5ML8wL9587tNL2xeZ7IvtaXc3nU0nU/Z8g6Zf/xFTD4Cp6EYBzqWihYU5ZQbjlYoXRPxIgz/ilQFKycLCgujpSLNvUzwDgLMACXuRQQpQr+qwoT1BeMDISpNmbT1/AAArFzcqBceFxWRK8fzCnCT8jAd2zhXSpwAE292NYdU6WgBGbx/KOOyjQiadA9GhZbXBZAVPto+tXH5wgnFyU/oFOmpeFcOe5sBHhfR/ngJo4rlUinI2qnQZIUCtOdLdBYrVQPOCSMFGhy2rgAElDWRwODfwcxcYY9mjYg466pkYAl6DSQNscDrxaGK5VJr0tiooAehaa6Q5GjBKQ+oFqJnCuaiZh88kyvB5uKfHlpGpMttimMbGwFAQefyBUOBcJf09lsl8PD8fiDC2t5gOB++RAlSq98MAWEYp+xgGMdSLjpAEBNTC3JxEpgUI3LtCOim+wya7SJG1DW3NMht1m9sKqVqlUioUis0+AQuQPSLBNIAUoD3cHAURpEhkYNjwFQZLKOegDxbmRGKZjqtGWAYUektCxcZQop8EWEwh5Uws40zdL7NeLQkA3kUBQAkVwBUEMA13d3GpLgBKJxhzsdXj5CJ6QQQJFuZFYq4IAUq2yoqhb9THA2GyrTPZnERGLf0dLEfOv3wZCKGAljxLZQ/TLbQAlc5QcxRLqGRZmy3DTgX8QsEG9MzN8QgyKNxjleoJzHIuE41OBSABPOw6ibCxho90d9M4uKCki5/RAgSGJlFFxmyOsTHUXSjYYscK6bxoHs69MDOwjEr2GEuQGTbZJcMO5Iss7nm2u5s+KDCoAYaao3hYav4d+D4Bo6O3UMDwTEwlXYABI5J+tIEIksq4UJ+Hc3YCG10Nbkot/qfNUe9ZOonT9QoLkEcGYBsAgM4HtQNkn3iuGx34AXQCFjtXg3IEBjwApjOpUgVWp2qMjSGA9GQ5KDUGXE96i+6LdMwFLijLxd9QAgw2R8EqRgrkQwY4thLgATzEJSlmTdhYt5g8MVjmY7HjcGyTnQp0IXx0f5lUP/oaAHBepCkvuKBECFCq0B3XAACWkKofz6HFxNxUYDtWd1cLZpi0c2IMA5X23IoD45JdpBh1gccm2Qzjz3R3s2TwDsxjQjYuCgOgAcBAcxRmX8AKigdm7lYYS0wl4eskXNfBzLbGpOoYzr/CrjNio8sJj0z31AMG22U2zM5j6ADKAMDXB8B662CMghUGLBSIY/Wc4twCX7MCuWKRIvEBUHLqXAG4nFhYUH8cXdEl/M92d7NH8IKyhBCApjvhPoD1o5S/DADpDJcT4JoxoJ4X/1cMuMWK/y6dE0lj+KNM9mjjs5USi+bBiwZiZLyx57u7WW/yDiVAoUxXOv3mKB6zSUMhnuURxtCcJPRRvSCSaL6A0hoDl2aycEAvmxMrDtj3/7dZJhaLJRKJVBP62xYL7O5m3ew8htQDbaoH8MEsnVcd8mOrAmMLSoxUdaySisVSmUImEUtVGTysgkWKWwB6zOptMx4Ix0ICOkRw62uW+LWBHKDbHAXVG85O/PIroFBwtX4zEDsPqIFmhcqUie2A2ALeyPLzrOc4FOhdJPz91tfLNFFiOIA8oipEV9r95qgjlMlmuk8y53CH3nEsjGM2gsqCypoIYTC0cVilenVLeHfOazZeJt31OnKA9EB3F+tLAw8x+DUl7hISs9l2sNdtn/ZYDJdxbh5DBwCS+C6tfdV+LNcYvcVLKvgdKUARALRy2hfv9nA59pz+sQDIHxXkAKcvBXA5/JGTiFU4gO6SjLbRA3zSjn5XzOUaiQuX8zn9/pNd9YZcvusXFkUem+4inAQAJbQAzeJQc9S1t/cu5P9A7Dn6r+35I081ukJb6/LlpcU1s1AATHsWzAGAIlqARlk7sC3R4T85cWyb9/wnEYeLJ3Ke7G4+I/LD7qZ8eW1ZLhSA2NfmjvLfkXugUR1ojroiZhAU6/I1+bo64geB4wBEEbVcHnE8FeT4uLG4tizYAwSuzfqKTVQeyPMA1Ua9t/WVcEQ21pY2zHvm9cWlpXWH3+WKRLbV8uXFpwAgT3ZPxgVIHtX+RA7ANPtbXx0R+eLGRz8R8YPgWFyP7IXUG+tLS2tL8shwGjscH0IhFw8QEjoVaGPBJlMpowWoMHf97i4AkPtByWHHdnVZHXFtbW2tra6OALgcJ5Fd85aZC6Et4QAUeccD5JEAFFkPtPtbXx0n8o2TPQiiXlpdXQSPQ5HtteURAFD+QVasglxZX14FABGnMP3vtWGqXZ8AwEBz9MM6O56OyOYyGHcA4PKb5SxAf5SdoV0QVksbVjPIjtXVVcEAHq0vPgmAjrEP4NhiM5IDWGQBdlmAfpi4CL98EaT6xw8uGEKrq5vPVahnAXTOdLtWKaEEKNHVemewOcoJdZzAEAI54CDeOQDAsnxgVuvWHgd8xL9LIIDtdBIAD4NbX119kaAKQWXvWIC9d67uAsIM5C+tg1QB71oaB8CnsxbvJgHwZOurK2ReA2HD1Ue/fAkA9BY8eyfd/B4bIKAz37RqlSJyAOvo1ldQRZeW5VuRPRaGBTD3AWDcLPUBltQnwgG+NxEDFAHA4+jO0d0T9fISr59wRiDA2iDA0jAAW3gFAnRua1WBX4keA8A2vPFyL7K1tig3c/rh3AYBerPVEIB6TADLwy3ngUIBGUCt/jj8lWiHnwDriVBorzu3rXMAzichxE13YwDobQ9M7StqAObBPAjg/ACGfOOEcPSqJgAYmK04gEUeYHk8AOdjHaUH4L9UqTEd0wCAi4jI17ZOdnf3oDl6AL3Zih/29RcBuB9v0APc3m/3m6Mu18m6HFzonnAGFhCjtZKbmkFdHZyvhW59dU0C4M9vgwAnG/JNtVq9wVvk6XTLTnJw3Hd3Q1ur4wEcAICvqAFatLEHAC5owDJhaXmJs0UQKNzKGhT7rkrXuz2wFgLTBPCQenkNTsoCl9MB4w4AKKMFqNa+fzIPeACuL9e6tgwAIifypeXlxfVdf/+ybVsO4FbXN9bX1xaXltc2hO7dNVkfbmo0aoB2ztoHAAtNoG2RcwB7JamWAyA5sL5MRyi0sQ5eWVefbGyo1ZtbQtdCJgsPUEAKkDzQ+Xqtng35ejf+YWfa7wD6tszmXcfuQAPLSZychPwg0x3gVyQSEbx31/xQRweQL/IAUa+u3xzt1h+2BkFpkUgo5Pf73/mHWoh7ey7CCaqsA5Rah9ArSq/F9FCvogaot6jgQG/R4djrmcMBJi+n0+l60ql7aXva2EENUKrUGySpndKXEa2GDlPlPiFDBlBlakFKMzWANkKAAueBRjEY1xDTAbDpW0wFsQcqzXwwrZ0SgF3XQA1Qrtzlglntz9Mh2NfdsgAFdCFUrtwnwzktPh0AXHdzixiArrSjZE77dkoA2koTPQBFnWqx99Mh0BbRA9yHo2c6+7RubFBAD9A8SpzppnVfAG0ebttFCFCiq4w3dTa1OzNocy0aMUC97E5fTA8gixyAKbizF9O6M4NXm0YOcHvqzuYNZu80Q6iAFuB99tI4pTszENqrRoXbd4wIoEwzn4jspWk6NzbwWPWtKloAkMQ37uSleTr3BQgYdh4qqAEq7SD1+WA6X+r2anLtKo0YgG4nfQVSM5U7jhrZS2K6WEA6EzMNdyqnwdyTzwBMc92udydiZAB09UfaTVsmH0Mez2b0gUEJwF3QwI9ZSRK4YMJTWQDfDD7+2bih6RIyAD6LmebdUSI40SzwBAJGjZX50WCq3L5pdADABX802vfhmEVzhEKqm71buHf4XuyE3agxpKPlTv+KGMVnZHxbAqZxuxOn9BqPQCe8Z0X6hkR62Rux4zhm/8kKb45vMrK3x+dvPa8zR+nLcOPu9ka4A4Tce50/XeCPb832QyVt3DR5g90NuZ6nI+ljNR7iGGYDGlmRBlbk4O3xdTr2Hv7wDv47By6vL0iSVDxdqBXP0uSPP+vdphBKgCJI40br+8PDw6lJo7dgPY2cSjCS+uF7+OuASAN7f3yrFXO6WY3ReDKdzZ2yDWP6f2u1Wp35xjD1eq0G6/7ni9Ncnop36rVqSfjdy4Xc/b7IBdEN0/h+3+48Pv7qMui4YTRsw+MRdDqDyWJzeoMkBTXyIj+D4luBGqFKoLFWq9DsdmL2u0ncWRwXFxdnZ/AXa6e5XM5duqtXvxaRAvAuKFVr9Ubrvv3jx+PjY6fVbHceHsCjx4fOXb30ay6bhpbNnV1C5VApUAkknnEKL3itF/yjETs9heqzZyTZAZNAETEAf2ZI6Wutfvvn3V37B6f9oWuP7OPOd6b8KceeYUFRXLScXVxesmPNSexa7hnLAkvn4gf11h/cTqGiwPvfCzvCgr8Z+lcQEX827+7bgKHdGTaeBLK0G3QBkFAkGQ6zkZ8CMcUOdFfqMwbdl7DluVWEcP1Cz+DoEoAwgoectFrfv9/ftwFJ1zq9BxwM65R2o3KVS0WpcPDIdxQMk1QM5gdPkR6yVCqdpaxZkMFcnqAF6BPAo2RuGIb51mjwZ7W0Wnd3rRYk4q09YJxjAEmzCnwSpYI+r9vtOYLZngCKOYxUMpkETxLvd/KwAtFltOcPDOw36B43Q1dubm7+YHp2y1ujaxzZHUcG2GDmsyCdH62bq9NUlAx63fArB95gmKJiiVQiRh5ayds2w66jxzh9YJyDdLoEJYgAKaBVK9VqrWf1en0UirVmn6zV/gHd0um0mFIe5EnY68TsdpvdHa10mqDa8hlQzOfRAuSHDjAqlYHRXYNPvrJWGbQqNB6ry9XoOwkUZDbAOiBRinSj07lj4LFB3QBCDpD/+0OYujE2CCeABKLcN8GMzNSqvQqURw+QF3SSVN9KwyT/iuUbCDaOiV1PlMeoP+MCPD1JrSgQpVT6l16pdw2Mfu8qbGIA//IwuBeSdHlgFsHl2/VEzyP7a4S/JvkN2sDbrq6urlnrv+X6+mriJ8L9DcUYnMMs0F5+KN/kj3Wc8LGIUzxY89/mWMfJobzk3/pnjzZ9pfh/HgCBzQBmADOAGcAMYAYwA5gBzAD+g+3/Ab7zy65TdHasAAAAAElFTkSuQmCC"]
+  ];
+  for (const [rel, sizes, href] of links){
+    if (document.querySelector('link[rel="' + rel + '"]')) continue;
+    const l = document.createElement("link");
+    l.setAttribute("rel", rel);
+    l.setAttribute("sizes", sizes);
+    l.setAttribute("type", "image/png");
+    l.setAttribute("href", href);
+    document.head.appendChild(l);
+  }
+})();
+
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
+function loadLocal(){
+  try{
+    const raw = lsGet(LS_STATE);
+    const s = raw ? JSON.parse(raw) : null;
+    return (s && s.progress && typeof s.progress === "object") ? s.progress : {};
+  }catch(e){ return {}; }
+}
+function saveLocal(){ lsSet(LS_STATE, JSON.stringify({ progress: progress })); }
+function mergeProgress(a, b){
+  const out = {};
+  const keys = new Set(Object.keys(a || {}).concat(Object.keys(b || {})));
+  keys.forEach(k => {
+    const x = (a || {})[k], y = (b || {})[k];
+    if (!x){ if (y) out[k] = y; return; }
+    if (!y){ out[k] = x; return; }
+    out[k] = (y.ts || 0) > (x.ts || 0) ? y : x;
+  });
+  return out;
+}
+function dayStart(ts){ const d = new Date(ts); d.setHours(0, 0, 0, 0); return d.getTime(); }
+function shuffle(arr){
+  for (let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+  return arr;
+}
+function plural(n, one, few, many){
+  const a = n % 10, b = n % 100;
+  if (a === 1 && b !== 11) return one;
+  if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return few;
+  return many;
+}
+function unseenCount(){ return CARDS.filter(c => !progress[c.id]).length; }
+function topicLabel(n){ return n === MIXED_TOPIC ? "Всё вместе" : "Тема " + n + " · " + TOPIC_BY[n].title; }
+function label(a){ return a === "" ? "ничего" : a; }
+
+// ——— Предложение с пропуском
+function isStart(q, i){ const b = q.slice(0, i).trimEnd(); return b === "" || /[.!?]$/.test(b); }
+function cap(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+function split(card, word){
+  const i = card.q.indexOf("___");
+  const start = isStart(card.q, i);
+  const pre = card.q.slice(0, i);
+  let post = card.q.slice(i + 3);
+  if (word) return { pre: pre, word: start ? cap(word) : word, post: post };
+  post = post.replace(/^\s+/, "");                  // ответ «ничего»: слово после пропуска встаёт на его место
+  return { pre: pre, word: "", post: start ? cap(post) : post };
+}
+function fullText(card){ const p = split(card, card.a); return p.pre + p.word + p.post; }
+function exText(en){ return en.replace(/\|\w\]/g, "]").replace(/[\[\]]/g, ""); }
+function richText(s){
+  const f = document.createDocumentFragment();
+  String(s).replace(/ → /g, "\u00a0→\u00a0").split(/(-[a-z]+)/).forEach(part => { if (/^-[a-z]+$/.test(part)) f.append(el("span", "nw", part)); else if (part) f.append(part); });
+  return f;
+}
+// [текст|x] — форма в фокусе: без метки used to — оранжевый, |b be used to — зелёный, |g get used to — синий, |w would и |p пассив — подчёркнуты
+const MARK_CLS = { b: "good", g: "st", w: "hl", p: "hl" };
+function modalCls(t){ const i = t.lastIndexOf("|"); return i > 0 ? (MARK_CLS[t.slice(i + 1)] || "pr") : "pr"; }
+function markText(t){ const i = t.lastIndexOf("|"); return i > 0 ? t.slice(0, i) : t; }
+function marked(s){
+  const f = document.createDocumentFragment();
+  const re = /\[([^\]]+)\]/g;
+  let last = 0, m;
+  while ((m = re.exec(s))){
+    if (m.index > last) f.append(richText(s.slice(last, m.index)));
+    f.append(el("span", modalCls(m[1]), markText(m[1])));
+    last = re.lastIndex;
+  }
+  if (last < s.length) f.append(richText(s.slice(last)));
+  return f;
+}
+
+// ——— Синхронизация прогресса между устройствами (личная, у каждого зрителя своя)
+function schedulePush(){
+  if (!cloudDoc) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(pushCloud, 700);
+}
+async function pushCloud(){
+  if (!cloudDoc) return;
+  if (writing){ dirty = true; return; }
+  writing = true; dirty = false;
+  try{
+    await cloudDoc.set({ progress: progress, v: 1 });
+    retried = false;
+  }catch(e){
+    const c = e && e.code;
+    if (c === "unavailable" && !retried){ retried = true; setTimeout(pushCloud, 1200 + Math.random() * 1200); }
+    else if (c !== "unavailable" && c !== "resource_exhausted") cloudDoc = null;
+  }
+  writing = false;
+  if (dirty) pushCloud();
+}
+async function connectCloud(){
+  try{
+    if (!window.claude || typeof window.claude.use !== "function") return;
+    const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+    if (!db || !user) return;
+    const uid = await user.id();
+    if (!uid) return;
+    let ref;
+    try{ ref = db.doc("data/users/" + uid + "/progress"); }catch(e){ return; }
+    const snap = await ref.get();
+    const body = snap.exists ? (snap.data() || {}) : {};
+    const remote = (body.progress && typeof body.progress === "object") ? body.progress : {};
+    const before = JSON.stringify(progress);
+    progress = mergeProgress(progress, remote);
+    saveLocal();
+    cloudDoc = ref;
+    if (JSON.stringify(progress) !== JSON.stringify(remote)) schedulePush();
+    if (JSON.stringify(progress) !== before){
+      renderTopics();
+      if (mode === "main" && stats.first === 0 && !answered){ buildMain(); render(); }
+    }
+  }catch(e){ /* офлайн-режим */ }
+}
+
+function stopAudio(){}   // озвучки в этом приложении нет
+
+// ——— Очередь
+// Новые карточки идут вперемешку по темам: кому ДААТ, схемы, нагрузка, сроки, перевод, особые пациенты чередуются.
+const FRESH_ORDER = (function(){
+  const pools = {};
+  CARDS.forEach(c => { const k = "t" + c.t; (pools[k] = pools[k] || []).push(c); });
+  // темы «сверх основы» (late) вступают позже
+  const late = {};
+  TOPICS.forEach(t => { if (t.late) late["t" + t.n] = t.late; });
+  const keys = Object.keys(pools), list = keys.map(k => pools[k]), used = list.map(() => 0), out = [];
+  while (out.length < CARDS.length){
+    let best = -1, bestR = 9;
+    list.forEach((p, i) => {
+      if (used[i] >= p.length) return;
+      const r = (used[i] + 0.5) / p.length + (late[keys[i]] || 0);
+      if (r < bestR){ bestR = r; best = i; }
+    });
+    out.push(list[best][used[best]++]);
+  }
+  return out;
+})();
+function resetSession(){ lapsed = {}; seen = new Set(); stats = { first: 0, correct: 0 }; index = 0; }
+function buildMain(){
+  const now = Date.now();
+  const due = CARDS.filter(c => progress[c.id] && progress[c.id].due <= now);
+  const fresh = FRESH_ORDER.filter(c => !progress[c.id]).slice(0, NEW_PER_SESSION);
+  queue = shuffle(due).concat(shuffle(fresh));
+  mode = "main"; topicN = null;
+  resetSession();
+}
+function buildTopic(n){
+  if (n === MIXED_TOPIC){
+    queue = shuffle(CARDS.slice()).slice(0, MIXED_SIZE);
+    mode = "mixed";
+  } else {
+    queue = shuffle(CARDS.filter(c => c.t === n));
+    mode = "topic";
+  }
+  topicN = n;
+  resetSession();
+}
+
+function setBar(done, total){
+  $("barFill").style.width = (total ? Math.min(100, Math.round(done / total * 100)) : 100) + "%";
+}
+function show(id, on){ $(id).hidden = !on; }
+
+function renderOpts(card){
+  const box = $("opts");
+  box.textContent = "";
+  shownOpts = shuffle(card.opts.slice());
+  const longest = Math.max.apply(null, shownOpts.map(o => o.length));
+  const n = shownOpts.length;
+  const cols = longest > 8 ? 1 : (n === 3 ? (longest <= 5 ? 3 : 1) : 2);   // три в ряд — только короткие: 21, ≤ 3, 180; два — до 8 знаков
+  box.className = "opts c" + cols;
+  shownOpts.forEach(o => {
+    const b = el("button", "opt" + (longest > 9 ? " long" : ""));
+    b.type = "button";
+    if (o === ""){
+      b.setAttribute("aria-label", "Ничего не нужно");
+      b.append(el("span", null, "—"), el("small", null, "ничего"));
+    } else {
+      if (!/[а-яё]/i.test(o)) b.lang = "en";
+      b.textContent = o;
+    }
+    b.addEventListener("click", () => choose(o));
+    box.append(b);
+  });
+}
+
+function render(){
+  stopAudio();
+  answered = false;
+  const card = queue[index];
+  $("card").scrollTop = 0;
+  if (!card){ renderDone(); return; }
+  show("kind", true);
+  $("kind").textContent = topicLabel(card.t);
+  const q = $("q");
+  q.textContent = "";
+  const i = card.q.indexOf("___");
+  // пропуск и знак препинания после него не разрываются переносом строки
+  const post = card.q.slice(i + 3), pm = post.match(/^[?.!,;:]+/);
+  const gapBox = el("span", "nw");
+  gapBox.append(el("span", "gap"));
+  if (pm) gapBox.append(pm[0]);
+  q.append(card.q.slice(0, i), gapBox, pm ? post.slice(pm[0].length) : post);
+  q.setAttribute("aria-label", card.q.replace("___", "пропуск"));
+  show("hint", true);
+  $("hint").textContent = card.ru ? card.ru : "Выбери вариант";
+  show("back", false);
+  renderOpts(card);
+  show("opts", true);
+  show("actNext", false);
+  show("actDone", false);
+  const prefix = mode === "topic" ? "Тема " + topicN + " · " : mode === "mixed" ? "Всё вместе · " : "";
+  $("status").textContent = prefix + "Карточка " + (index + 1) + " из " + queue.length;
+  setBar(index, queue.length);
+}
+
+function renderDone(){
+  show("kind", false);
+  const q = $("q");
+  q.removeAttribute("aria-label");
+  q.textContent = mode === "main" ? "На сегодня всё" : mode === "mixed" ? "Итог пройден" : "Тема " + topicN + " пройдена";
+  const left = unseenCount();
+  let text = stats.first ? "Верно с первого раза: " + stats.correct + " из " + stats.first + ". " : "";
+  if (mode === "main") text += left ? "Новых карточек в запасе: " + left + ". " : "Все карточки уже в работе. ";
+  text += "Повторы вернутся сами — завтра, через 3, 7 и 16 дней.";
+  $("hint").textContent = text;
+  show("hint", true);
+  show("back", false);
+  show("opts", false);
+  show("actNext", false);
+  const more = $("more");
+  if (mode === "main"){
+    more.hidden = !left;
+    const k = Math.min(NEW_PER_SESSION, left);
+    more.textContent = "Ещё " + k + " " + plural(k, "новая", "новых", "новых");
+  } else {
+    more.hidden = false;
+    more.textContent = "Обычная тренировка";
+  }
+  show("actDone", true);
+  $("status").textContent = "Готово";
+  setBar(1, 1);
+}
+
+function choose(opt){
+  if (answered) return;
+  const card = queue[index];
+  if (!card) return;
+  answered = true;
+  const exact = opt === card.a;
+  const alsoNote = !exact && card.also && Object.prototype.hasOwnProperty.call(card.also, opt) ? card.also[opt] : null;
+  const ok = exact || alsoNote !== null;
+
+  if (!seen.has(card.id)){
+    seen.add(card.id);
+    stats.first++;
+    if (ok) stats.correct++;
+  }
+  const prev = progress[card.id];
+  let step = prev ? prev.step : -1;
+  if (!ok){
+    step = 0;
+    lapsed[card.id] = true;
+    queue.splice(Math.min(queue.length, index + 4), 0, card);   // вернётся через несколько карточек
+  } else if (step < 0 || lapsed[card.id]){
+    step = 0;
+  } else {
+    step = Math.min(INTERVALS.length - 1, step + 1);
+  }
+  progress[card.id] = { step: step, due: dayStart(Date.now()) + INTERVALS[step] * DAY, ts: Date.now() };
+  saveLocal();
+  schedulePush();
+
+  const q = $("q");
+  q.textContent = "";
+  q.removeAttribute("aria-label");
+  const p = split(card, card.a);
+  if (p.word) q.append(p.pre, el("span", "good", p.word), p.post);
+  else q.append(p.pre, el("span", "zero", "∅"), p.post);
+
+  const v = $("verdict");
+  v.textContent = "";
+  if (exact){
+    v.className = "verdict ok";
+    v.append("Верно");
+  } else if (ok){
+    v.className = "verdict ok";
+    v.append("Тоже верно: ", el("b", null, opt), ". " + alsoNote.charAt(0).toUpperCase() + alsoNote.slice(1) + ".");
+  } else {
+    v.className = "verdict bad";
+    v.append("Нужно ", el("b", "good", label(card.a)), " · твой ответ: ", el("b", null, label(opt)));
+  }
+  const why = $("why"); why.textContent = ""; why.append(richText(card.why));
+  show("hint", false);
+  show("back", true);
+  show("opts", false);
+  show("actNext", true);
+}
+
+function next(){
+  if (!answered) return;
+  index++;
+  render();
+}
+
+// ——— Правила
+function learnedIn(n){
+  const cards = CARDS.filter(c => c.t === n);
+  const done = cards.filter(c => progress[c.id] && progress[c.id].step >= 1).length;
+  return done + "/" + cards.length;
+}
+const PLAY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>';
+let openTopic = null;
+function renderTopics(){
+  const box = $("topics");
+  box.textContent = "";
+  let group = null;
+  TOPICS.forEach(t => {
+    if (t.group !== group){
+      group = t.group;
+      box.append(el("p", "t-group", GROUPS[group]));
+    }
+    const item = el("div", "t-item");
+    const head = el("button", "t-head");
+    head.type = "button";
+    head.setAttribute("aria-expanded", String(openTopic === t.n));
+    const txt = el("span", "t-txt");
+    const title = el("span", "t-title", t.title);
+    if (/[a-z]/.test(t.title) && !/[а-я]/i.test(t.title)) title.lang = "en";
+    txt.append(title);
+    if (t.sub) txt.append(el("span", "t-sub", t.sub));
+    head.append(el("span", "t-n", String(t.n)), txt,
+                el("span", "t-count", t.n === MIXED_TOPIC ? "" : learnedIn(t.n)), el("span", "t-chev", "›"));
+    head.addEventListener("click", () => {
+      openTopic = openTopic === t.n ? null : t.n;
+      lsSet(LS_OPEN, openTopic ? String(openTopic) : "");
+      stopAudio();
+      renderTopics();
+    });
+    item.append(head);
+    if (openTopic === t.n){
+      const body = el("div", "t-body");
+      String(t.rule).split("\n\n").forEach(par => { const rule = el("p", "t-rule"); rule.append(richText(par)); body.append(rule); });
+      t.ex.forEach((ex, i) => {
+        const row = el("div", "ex");
+        const en = el("p", "ex-en"); en.append(marked(ex.en));
+        row.append(en, el("p", "ex-ru", ex.ru));
+        body.append(row);
+      });
+      const train = el("button", "t-train", t.n === MIXED_TOPIC ? "Начать итоговую тренировку" : "Потренировать эту тему");
+      train.type = "button";
+      train.addEventListener("click", () => { buildTopic(t.n); setTab("drill"); render(); });
+      body.append(train);
+      item.append(body);
+    }
+    box.append(item);
+  });
+}
+
+function setTab(name){
+  const drill = name === "drill";
+  $("drill").hidden = !drill;
+  $("rule").hidden = drill;
+  $("meta").hidden = !drill;
+  $("barWrap").hidden = !drill;
+  $("tabDrill").setAttribute("aria-selected", String(drill));
+  $("tabRule").setAttribute("aria-selected", String(!drill));
+  if (!drill){ stopAudio(); renderTopics(); }
+  lsSet(LS_TAB, name);
+}
+
+// ——— События
+$("tabDrill").addEventListener("click", () => setTab("drill"));
+$("tabRule").addEventListener("click", () => setTab("rule"));
+$("go").addEventListener("click", () => {
+  if (mode !== "main" || !queue[index]){ buildMain(); render(); }
+  setTab("drill");
+});
+$("toRule").addEventListener("click", () => setTab("rule"));
+$("more").addEventListener("click", () => { buildMain(); render(); });
+$("next").addEventListener("click", next);
+// Клавиатура на компьютере: 1, 2, 3 — варианты по порядку на экране; пробел или Enter — дальше
+document.addEventListener("keydown", e => {
+  if ($("drill").hidden || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (e.target && e.target.closest && e.target.closest("button")) return;
+  if (!answered){
+    const i = parseInt(e.key, 10) - 1;
+    if (i >= 0 && i < shownOpts.length && queue[index]) choose(shownOpts[i]);
+  } else if (e.key === " " || e.key === "Enter"){
+    e.preventDefault(); next();
+  }
+});
+
+
+// ——— Переход к разделам справочника
+document.querySelectorAll(".jump button").forEach(b => b.addEventListener("click", () => {
+  const t = document.getElementById(b.dataset.to);
+  if (!t) return;
+  const smooth = !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  try{ t.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" }); }catch(e){ t.scrollIntoView(); }
+}));
+
+// ——— Помощники
+const HOUR = 3600000;
+const pc = { ev: "is", rep: "none", ht: "no", af: false, sten: false, athero: false, icas: false, ich: false, onclop: false, cyp: false };
+const fmtD = new Intl.DateTimeFormat("ru-RU", { weekday: "short", day: "numeric", month: "long" });
+const fmtDM = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long" });
+function pad2(n){ return String(n).padStart(2, "0"); }
+function toInput(d){ return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()) + "T" + pad2(d.getHours()) + ":" + pad2(d.getMinutes()); }
+function toDateInput(d){ return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); }
+function fromInput(v){
+  const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(v || "");
+  return m ? new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]) : null;
+}
+function fromDate(v){
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(v || "");
+  return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null;
+}
+function addDays(d, n){ return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
+function hm(d){ return pad2(d.getHours()) + ":" + pad2(d.getMinutes()); }
+function whenT(d){ return fmtD.format(d) + ", " + hm(d); }
+function tp(s){
+  return String(s)
+    .replace(/(\d)–(\d)/g, "$1–⁠$2")
+    .replace(/(\d) (?=(?:мг|мл|мин|лет|ч(?![а-яё])|дн|сут|кг|недел|месяц|янв|фев|мар|апр|ма[яй]|июн|июл|авг|сен|окт|ноя|дек))/g, "$1 ")
+    .replace(/ ([×<>≤≥=≈−→]) /g, " $1 ")
+    .replace(/ \+ /g, " + ")
+    .replace(/(^|[\s(])([<>≤≥≈]) (?=\d)/g, "$1$2 ")
+    .replace(/(NIHSS|ABCD2|ОР|ОШ|КР по) (?=[\d<>≤≥=≈А-ЯA-Z])/g, "$1 ")
+    .replace(/(^|[\s(«])(не|в|с|к|и|а|о|у|на|по|за|из|от|до|со|но|же|ли|при|без|для) /g, "$1$2 ")
+    .replace(/ — /g, " — ");
+}
+function pill(now, from, to){
+  if (now < from) return ["ещё рано", "p-wait"];
+  if (to && now >= to) return ["срок прошёл", "p-late"];
+  return ["сейчас", "p-now"];
+}
+function line(k, v, n, cls, p){
+  const box = el("div", "rl" + (cls ? " " + cls : ""));
+  box.append(el("p", "rk", tp(k)));
+  box.append(el("p", "rv", tp(v)));
+  if (n || p){
+    const nn = el("p", "rn", tp(n || ""));
+    if (p) nn.append(n ? " " : "", el("span", "pill " + p[1], p[0]));
+    box.append(nn);
+  }
+  return box;
+}
+function row(name, dose, cls, why){
+  const li = el("li");
+  li.append(el("span", "n", tp(name)), el("span", "d" + (cls ? " " + cls : ""), tp(dose)));
+  if (why) li.append(el("span", "w", tp(why)));
+  return li;
+}
+function numv(id){ const v = String($(id).value).replace(",", ".").trim(); return v === "" ? NaN : Number(v); }
+function ago(ms){
+  const h = Math.floor(ms / HOUR);
+  if (h < 1) return "меньше часа";
+  if (h < 48) return h + " ч";
+  return Math.floor(h / 24) + " сут " + (h % 24) + " ч";
+}
+
+// ——— Решение: схема по КР по ИИ 2024 (текст и алгоритм рис. 5), AHA/ASA 2026, ESO 2021, РКИ
+function decide(ev, score, hrs){
+  // kind: clop | tic | cyp | icas | mono | late | severe | poac | asa_af | ivt | evt | ht
+  const notes = [];
+  const done = r => { r.notes = notes; return r; };
+  if (pc.ht === "yes") return done({ kind: "ht", why: "алгоритм КР по ИИ 2024: при ГТ — отсроченное назначение; точного срока в КР нет" });
+  if (pc.af){
+    if (ev === "tia") return done({ kind: "poac", why: "алгоритм КР по ИИ 2024: ТИА и ФП — ПОАК сразу" });
+    return done({ kind: "asa_af", why: "АСК до старта ПОАК — КР по ИИ 2024 (УУР C), КР по ФП 2025 (ЕОК IIaB); с первой дозы ПОАК — без АСК" });
+  }
+  if (pc.rep === "ivt") return done({ kind: "ivt", why: "алгоритм КР по ИИ 2024: после тромболизиса — АСК или клопидогрел через 24 ч" });
+  if (pc.rep === "evt") return done({ kind: "evt", why: "алгоритм КР по ИИ 2024: только тромбэктомия без ГТ — в первые 24 ч" });
+  const in24 = hrs <= 24, in72 = hrs <= 72, in7d = hrs <= 168;
+  const athero = pc.sten || pc.athero;
+  let r = null;
+  if (ev === "tia"){
+    const tic = (score >= 6 || pc.sten) && in24;
+    const clop = score >= 4 && in7d;
+    if (tic && clop) r = { kind: "tic", why: score >= 6 ? "ТИА с ABCD2 ≥ 6 — КР по ИИ 2024, УУР B" : "ТИА со стенозом ≥ 50% — КР по ИИ 2024, УУР B", alt: "или клопидогрел + АСК 21 день — УУР A" + (in24 ? ", по инструкции" : "") };
+    else if (tic) r = { kind: "tic", why: score >= 6 ? "ТИА с ABCD2 ≥ 6 — КР по ИИ 2024, УУР B" : "ТИА со стенозом ≥ 50% — КР по ИИ 2024, УУР B" };
+    else if (clop) r = { kind: "clop", why: "ТИА с ABCD2 ≥ 4 — КР по ИИ 2024, УУР A" + (in24 ? "; инструкция клопидогрела" : "") };
+    else if (score >= 4 || pc.sten) r = { kind: "late", why: score >= 4 ? "больше 7 суток — ДААТ по КР уже не начинают" : "ТИА со стенозом: ДААТ с тикагрелором — только в первые 24 ч" };
+    else r = { kind: "mono", why: "ТИА низкого риска — алгоритм КР по ИИ 2024; ESO: ДААТ не нужна" };
+  } else if (score <= 3){
+    if (in7d){
+      r = { kind: "clop", why: "малый ИИ, NIHSS ≤ 3 — КР по ИИ 2024, УУР A" + (in24 ? "; инструкция клопидогрела" : "") };
+      if (in24) r.alt = "или тикагрелор + АСК 30 дней — КР, УУР B, вне инструкции";
+    } else r = { kind: "late", why: "больше 7 суток — ДААТ по КР уже не начинают" };
+  } else if (score <= 5){
+    if (in24){
+      r = { kind: "tic", why: "ИИ с NIHSS ≤ 5, первые 24 ч — КР по ИИ 2024, УУР B" };
+      if (athero) r.alt = "или клопидогрел + АСК 21 день — INSPIRES";
+    } else if (athero && in72) r = { kind: "clop", why: "атеросклеротический ИИ с NIHSS ≤ 5, до 72 ч — INSPIRES, AHA/ASA 2026 (2a)" };
+    else if (in7d){
+      r = { kind: "mono", why: "NIHSS 4–5 позже 24 ч без атеросклероза: по тексту КР и РКИ — один препарат" };
+      notes.push("рис. 5 КР допускает ДААТ при NIHSS ≤ 5 до 7 суток, но текст КР и РКИ — только тикагрелор в первые 24 ч или атеросклероз до 72 ч (INSPIRES)");
+    } else r = { kind: "late", why: "больше 7 суток — ДААТ по КР уже не начинают" };
+  } else if (score <= 10){
+    r = { kind: "mono", why: "NIHSS > 5 — по КР один препарат" };
+    notes.push("ATAMIS (NIHSS 4–10): клопидогрел + АСК 14 дней — раннее ухудшение 4,8% против 6,7%; польза — при старте в первые 24 ч; в КР пока нет");
+  } else {
+    r = { kind: "severe", why: "тяжёлый ИИ — IST, CAST; AHA/ASA 2026 (1A)" };
+  }
+  // CHANCE-2: носитель CYP2C19 LoF при показании к ДААТ с клопидогрелом в первые 24 ч
+  if (pc.cyp && r.kind === "clop" && in24 && (ev === "tia" ? score >= 4 : score <= 3)){
+    r = { kind: "cyp", why: "носитель CYP2C19 LoF — CHANCE-2; AHA/ASA 2026 (2b); в РФ вне инструкции", alt: "или клопидогрел + АСК 21 день — если тикагрелор недоступен" };
+  } else if (pc.cyp && r.kind === "clop") notes.push("носитель CYP2C19 LoF: клопидогрел работает хуже; схема CHANCE-2 — только в первые 24 ч");
+  // интракраниальный стеноз 70–99%: клопидогрел к АСК до 90 дней (КР, УУР B); SAMMPRIS — ТИА и неинвалидизирующий инсульт
+  if (pc.icas){
+    if (r.kind === "clop"){ r.icas = true; r.alt = ""; }
+    else if (r.kind === "tic") notes.push("интракраниальный стеноз 70–99%: после этой ДААТ — клопидогрел к АСК до 90 дней по КР (УУР B)");
+    else if (r.kind === "severe") notes.push("интракраниальный стеноз 70–99%: вопрос о клопидогреле к АСК — после стабилизации; при тяжёлом ИИ данных нет (SAMMPRIS включал ТИА и неинвалидизирующий инсульт)");
+    else if (r.kind === "mono" || r.kind === "late"){
+      r = { kind: "icas", why: "интракраниальный стеноз 70–99% — КР по ИИ 2024: АСК 325 мг (УУР A) + клопидогрел до 90 дней (УУР B)" };
+      notes.push("в SAMMPRIS включали ТИА и неинвалидизирующий инсульт");
+    }
+  }
+  // ВЧК в анамнезе: тикагрелор противопоказан, ДААТ в РКИ не изучена
+  if (pc.ich && ["clop", "tic", "cyp", "icas"].includes(r.kind)){
+    r = { kind: "mono", why: "ВЧК в анамнезе: тикагрелор противопоказан (инструкция); ДААТ не изучена — CHANCE, POINT, THALES и INSPIRES таких не включали" };
+    notes.push("по умолчанию — один препарат; ДААТ — индивидуально, с оценкой риска кровотечения");
+  }
+  return done(r);
+}
+
+function renderPlan(){
+  const box = $("pres");
+  box.textContent = "";
+  const ev = pc.ev;
+  $("nihssBox").hidden = ev !== "is";
+  $("abcdBox").hidden = ev !== "tia";
+  $("ivtBox").hidden = pc.rep !== "ivt";
+  const onset = fromInput($("onset").value);
+  const score = ev === "is" ? numv("nihss") : numv("abcd");
+  const smax = ev === "is" ? 42 : 7;
+  if (!(score >= 0 && score <= smax && Math.round(score) === score)){
+    box.append(line("Схема", ev === "is" ? "Введите NIHSS: 0–42" : "Введите ABCD2: 0–7", "")); return;
+  }
+  if (!onset){ box.append(line("Схема", "Укажите начало симптомов", "")); return; }
+  const now = new Date();
+  if (onset - now > 5 * 60000){ box.append(line("Схема", "Время начала позже текущего", "Проверьте дату и время.", "warn")); return; }
+  const hrs = (now - onset) / HOUR;
+  const d1 = fromDate($("d1").value) || new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const r = decide(ev, score, hrs);
+  const loadC = pc.onclop ? "75 мг, без нагрузки — уже принимает (ESO)" : "300 мг, затем 75 мг × 1";
+  const list = el("ul", "dzr");
+  let head, win = null, sw = null, swWhat = "";
+
+  if (r.kind === "clop"){
+    head = r.icas ? "Клопидогрел + АСК до 90 дней" : "Клопидогрел + АСК 21 день";
+    list.append(row("Клопидогрел", loadC, "", pc.onclop ? "" : "нагрузка 300 мг — инструкция, CHANCE, INSPIRES; 600 мг — POINT"));
+    list.append(row("АСК", r.icas ? "325 мг × 1" : "75–100 мг × 1", "", r.icas ? "интракраниальный стеноз — КР, УУР A" : "первая доза в РКИ — до 300 мг"));
+    win = [onset, new Date(onset.getTime() + 168 * HOUR), "как можно раньше после КТ; КР — не позже 7 суток; ESO — в первые 24 ч; INSPIRES — до 72 ч"];
+    sw = addDays(d1, r.icas ? 90 : 21); swWhat = r.icas ? "с 91-го дня — один препарат" : "с 22-го дня — клопидогрел 75 мг или АСК 75–150 мг";
+  } else if (r.kind === "tic"){
+    head = "Тикагрелор + АСК 30 дней";
+    list.append(row("Тикагрелор", "180 мг, затем 90 мг × 2", "", "в РФ при инсульте вне инструкции; при дисфагии — измельчить"));
+    list.append(row("АСК", "300 мг, затем 75–100 мг × 1", "", "как в THALES; по инструкции тикагрелора — 75–150 мг, выше 300 мг нельзя"));
+    win = [onset, new Date(onset.getTime() + 24 * HOUR), "только в первые 24 ч от начала"];
+    sw = addDays(d1, 30); swWhat = "с 31-го дня — АСК 75–150 мг или клопидогрел 75 мг";
+  } else if (r.kind === "cyp"){
+    head = "Тикагрелор + АСК 21 день, затем тикагрелор до 90-го дня";
+    list.append(row("Тикагрелор", "180 мг, затем 90 мг × 2", "", "до 90-го дня"));
+    list.append(row("АСК", "75–300 мг, затем 75 мг × 1", "", "первые 21 день"));
+    win = [onset, new Date(onset.getTime() + 24 * HOUR), "в первые 24 ч от начала"];
+    sw = addDays(d1, 21); swWhat = "с 22-го дня — только тикагрелор, до 90-го дня";
+  } else if (r.kind === "icas"){
+    head = "АСК 325 мг + клопидогрел до 90 дней";
+    list.append(row("АСК", "325 мг × 1", "", "КР, УУР A"));
+    list.append(row("Клопидогрел", "75 мг × 1", "", "до 90 дней, КР, УУР B"));
+    win = [onset, new Date(onset.getTime() + 24 * HOUR), "антиагрегант — в первые 24 ч (алгоритм КР)"];
+    sw = addDays(d1, 90); swWhat = "с 91-го дня — один препарат";
+  } else if (r.kind === "mono" || r.kind === "late"){
+    head = r.kind === "late" ? "Один препарат" : "Один препарат: АСК или клопидогрел";
+    list.append(row("АСК", "75–150 мг × 1", "", "первая доза — до 300 мг"));
+    list.append(row("или клопидогрел", "75 мг × 1", "", "КР по ИИ 2024, УУР A"));
+    win = [onset, new Date(onset.getTime() + 24 * HOUR), "в первые 24 ч; АСК — не позже 48 ч"];
+  } else if (r.kind === "severe"){
+    head = "АСК 160–300 мг, затем 75–150 мг";
+    list.append(row("АСК", "160–300 мг × 1", "", "в первые 48 ч; дальше 75–150 мг"));
+    list.append(row("ДААТ", "не назначают", "no", "у таких пациентов не изучали"));
+    win = [onset, new Date(onset.getTime() + 48 * HOUR), "в первые 48 ч; per os — после скрининга глотания"];
+  } else if (r.kind === "poac"){
+    head = "ПОАК сразу";
+    list.append(row("Антиагрегант", "не нужен", "", "ПОАК вместо него"));
+  } else if (r.kind === "asa_af"){
+    head = "АСК до старта ПОАК";
+    list.append(row("АСК", "75–150 мг × 1", "", "до старта ПОАК; с первой дозы ПОАК — без АСК"));
+    list.append(row("ПОАК + АСК", "не сочетать", "no", "КР по ИИ 2024 (УУР B), КР по ФП 2025"));
+    const base = pc.rep === "ivt" ? fromInput($("ivt").value) : null;
+    if (pc.rep === "ivt") win = base ? [new Date(base.getTime() + 24 * HOUR), null, "через 24 ч после тромболизиса"] : null;
+    else win = [onset, new Date(onset.getTime() + 24 * HOUR), "в первые 24 ч"];
+    r.notes.push("срок ПОАК — по размеру инфаркта и ГТ (ELAN; приложение «ПОАК»)");
+  } else if (r.kind === "ivt"){
+    head = "АСК или клопидогрел через 24 ч";
+    list.append(row("АСК", "75–150 мг × 1", "", "при ГТ — отсроченно"));
+    list.append(row("или клопидогрел", "75 мг × 1", "", ""));
+    const t = fromInput($("ivt").value);
+    if (t && t >= onset) win = [new Date(t.getTime() + 24 * HOUR), null, "через 24 ч после тромболизиса; раньше — решением врачебной комиссии"];
+    r.notes.push("ранняя ДААТ при ТЛТ: CHANCE, POINT, THALES, INSPIRES таких пациентов не включали; EAST (NIHSS 0–5) — пользы нет; TAPIS (NIHSS 4–10, тикагрелор + АСК в первые 6 ч от начала, тикагрелор 7 дней) — mRS 0–1 лучше; в КР пока нет");
+  } else if (r.kind === "evt"){
+    head = "АСК или клопидогрел в первые 24 ч";
+    list.append(row("АСК", "75–150 мг × 1", "", "если на КТ нет ГТ"));
+    list.append(row("или клопидогрел", "75 мг × 1", "", ""));
+    win = [onset, new Date(onset.getTime() + 24 * HOUR), "в первые 24 ч; при экстренном стентировании — по показаниям стента"];
+  } else if (r.kind === "ht"){
+    head = "Антиагрегант — отсроченно";
+    list.append(row("АСК или клопидогрел", "после КТ в динамике", "low", "точного срока в КР нет"));
+  }
+
+  box.append(line("Схема", head, r.why + (r.alt ? " · " + r.alt : ""), "lead" + (r.kind === "ht" || r.kind === "late" ? " warn" : "")));
+  const dw = el("div", "rl");
+  dw.append(el("p", "rk", tp("Препараты и дозы")));
+  dw.append(list);
+  box.append(dw);
+  if (win){
+    const endTxt = win[1] ? "до " + whenT(win[1]) : "с " + whenT(win[0]);
+    let pl = pill(now, win[0], win[1]);
+    if (pl[1] === "p-late" && !["clop", "tic", "cyp"].includes(r.kind)) pl = ["начать сейчас", "p-now"];
+    box.append(line("Когда начать", endTxt, win[2], "", pl));
+  } else if (pc.rep === "ivt"){
+    box.append(line("Когда начать", "Укажите время тромболизиса", "антиагрегант — через 24 ч после него"));
+  }
+  if (sw){
+    box.append(line("Перевод на монотерапию", fmtD.format(sw), swWhat + "; день 1 — " + fmtDM.format(d1), "ok"));
+  }
+  for (const n of r.notes) box.append(el("p", "res-note", tp(n.charAt(0).toUpperCase() + n.slice(1) + ".")));
+  const dapt = ["clop", "tic", "cyp", "icas"].includes(r.kind);
+  box.append(el("p", "res-note", tp("Прошло от начала: " + ago(now - onset) + "." + (dapt ? " Перед ДААТ — КТ или МРТ без кровоизлияния." : ""))));
+}
+
+function pressOne(sel, attr, val){
+  document.querySelectorAll(sel).forEach(b => b.setAttribute("aria-pressed", String(b.dataset[attr] === val)));
+}
+function initCalc(){
+  const d = new Date(Date.now() - 10 * HOUR);
+  d.setMinutes(Math.floor(d.getMinutes() / 5) * 5, 0, 0);
+  $("onset").value = toInput(d);
+  const t = new Date(Date.now() - 8 * HOUR); t.setMinutes(Math.floor(t.getMinutes() / 5) * 5, 0, 0);
+  $("ivt").value = toInput(t);
+  $("d1").value = toDateInput(new Date());
+  const bind = (attr, key) => document.querySelectorAll("[data-" + attr + "]").forEach(b => b.addEventListener("click", () => { pc[key] = b.dataset[attr]; pressOne("[data-" + attr + "]", attr, pc[key]); renderPlan(); }));
+  bind("ev", "ev"); bind("rep", "rep"); bind("ht", "ht");
+  document.querySelectorAll("[data-flag]").forEach(b => b.addEventListener("click", () => {
+    const k = b.dataset.flag; pc[k] = !pc[k]; b.setAttribute("aria-pressed", String(pc[k])); renderPlan();
+  }));
+  ["nihss", "abcd", "onset", "ivt", "d1"].forEach(id => { $(id).addEventListener("input", renderPlan); $(id).addEventListener("change", renderPlan); });
+  renderPlan();
+  setInterval(() => { if (!$("rule").hidden) renderPlan(); }, 60000);
+}
+
+function boot(){
+  progress = loadLocal();
+  const o = parseInt(lsGet(LS_OPEN) || "", 10);
+  openTopic = TOPIC_BY[o] ? o : null;
+  buildMain();
+  render();
+  const saved = lsGet(LS_TAB);
+  setTab(saved === "drill" || saved === "rule" ? saved : (Object.keys(progress).length ? "drill" : "rule"));
+  renderTopics();
+  initCalc();
+  connectCloud();
+}
+boot();
+</script>
+
+</body></html>

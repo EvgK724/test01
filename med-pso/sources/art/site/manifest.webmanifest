@@ -1,0 +1,29 @@
+{
+  "name": "Артерии мозга",
+  "short_name": "Артерии",
+  "description": "Атлас артерий мозга для врачей ПСО: схемы, показания к ВСТЭ по КР МЗ РФ 2024 и AHA/ASA 2026, тренажёр.",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0e1113",
+  "theme_color": "#0e1113",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

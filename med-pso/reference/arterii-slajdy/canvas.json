@@ -1,0 +1,129 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Main.dc.html": {
+      "h": 900,
+      "title": "01 · Титульный",
+      "w": 1600,
+      "x": 0,
+      "y": 720
+    },
+    "Slide02.dc.html": {
+      "h": 900,
+      "title": "02 · Два бассейна",
+      "w": 1600,
+      "x": 1680,
+      "y": 720
+    },
+    "Slide03.dc.html": {
+      "h": 900,
+      "title": "03 · ВСА",
+      "w": 1600,
+      "x": 3360,
+      "y": 720
+    },
+    "Slide04.dc.html": {
+      "h": 900,
+      "title": "04 · СМА",
+      "w": 1600,
+      "x": 5040,
+      "y": 720
+    },
+    "Slide05.dc.html": {
+      "h": 900,
+      "title": "05 · ПМА",
+      "w": 1600,
+      "x": 0,
+      "y": 1740
+    },
+    "Slide06.dc.html": {
+      "h": 900,
+      "title": "06 · ЗМА",
+      "w": 1600,
+      "x": 1680,
+      "y": 1740
+    },
+    "Slide07.dc.html": {
+      "h": 900,
+      "title": "07 · ПА и ОА",
+      "w": 1600,
+      "x": 3360,
+      "y": 1740
+    },
+    "Slide08.dc.html": {
+      "h": 900,
+      "title": "08 · Стволовые синдромы",
+      "w": 1600,
+      "x": 5040,
+      "y": 1740
+    },
+    "Slide09.dc.html": {
+      "h": 900,
+      "title": "09 · Мозжечковые артерии",
+      "w": 1600,
+      "x": 0,
+      "y": 2760
+    },
+    "Slide10.dc.html": {
+      "h": 900,
+      "title": "10 · Виллизиев круг",
+      "w": 1600,
+      "x": 1680,
+      "y": 2760
+    },
+    "Slide11.dc.html": {
+      "h": 900,
+      "title": "11 · Коллатерали",
+      "w": 1600,
+      "x": 3360,
+      "y": 2760
+    },
+    "Slide12.dc.html": {
+      "h": 900,
+      "title": "12 · Территории",
+      "w": 1600,
+      "x": 5040,
+      "y": 2760
+    },
+    "Slide13.dc.html": {
+      "h": 900,
+      "title": "13 · ASPECTS",
+      "w": 1600,
+      "x": 0,
+      "y": 3780
+    },
+    "Slide14.dc.html": {
+      "x": 1680,
+      "y": 3780,
+      "w": 1600,
+      "h": 900,
+      "title": "14 · Сводка"
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-09-17T05:01:29.107Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {},
+  "notes": {},
+  "order": [
+    "Main.dc.html",
+    "Slide02.dc.html",
+    "Slide03.dc.html",
+    "Slide04.dc.html",
+    "Slide05.dc.html",
+    "Slide06.dc.html",
+    "Slide07.dc.html",
+    "Slide08.dc.html",
+    "Slide09.dc.html",
+    "Slide10.dc.html",
+    "Slide11.dc.html",
+    "Slide12.dc.html",
+    "Slide13.dc.html",
+    "Slide14.dc.html"
+  ],
+  "pages": [],
+  "title": "Design"
+}

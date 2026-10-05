@@ -1,0 +1,1308 @@
+<script>try{parent.__pso.attach("att",window)}catch(e){}</script>
+<title>АТТ после инсульта</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..700&family=Unbounded:wght@500..700&display=swap">
+<style>
+/* Layout: one-screen app. Header, scrolling view, floating pill tab bar in the thumb zone.
+   Colour = topic: DAPT amber, AF & timing sky, combinations violet, LA/LAA thrombus rose, APS lime,
+   stenting orange, PFO cyan, DVT orchid —
+   on a midnight ground, the same family as want-you-to and noun-prepositions. Single dark look by design. */
+:root {
+  --k: 1;
+  --bg: #0b0d12;
+  --panel-2: #1c202b;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-2: rgba(255, 255, 255, 0.14);
+  --fg: #ece8e1;
+  --muted: #a3a8b5;
+  --faint: #6e7486;
+  --accent: #5fd0bf;      --accent-rgb: 95, 208, 191;
+  --amber: #f2b766;       --amber-rgb: 242, 183, 102;
+  --bad: #f07468;         --bad-rgb: 240, 116, 104;
+  --good: #7dd197;        --good-rgb: 125, 209, 151;
+  --t-dapt: #f2b766;      --t-dapt-rgb: 242, 183, 102;
+  --t-af: #74b9ff;        --t-af-rgb: 116, 185, 255;
+  --t-combo: #b99cff;     --t-combo-rgb: 185, 156, 255;
+  --t-lat: #f49ac1;       --t-lat-rgb: 244, 154, 193;
+  --t-aps: #c7dc6f;       --t-aps-rgb: 199, 220, 111;
+  --t-stent: #ff9a5c;     --t-stent-rgb: 255, 154, 92;
+  --t-pfo: #4fd3ee;       --t-pfo-rgb: 79, 211, 238;
+  --t-dvt: #e58cf0;       --t-dvt-rgb: 229, 140, 240;
+  --f-display: "Unbounded", "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-body: "Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --shadow: 0 calc(1px*var(--k)) 0 rgba(255, 255, 255, 0.05) inset, 0 calc(28px*var(--k)) calc(56px*var(--k)) -28px rgba(0, 0, 0, 0.85);
+  color-scheme: dark;
+}
+.t-dapt  { --t: var(--t-dapt);  --t-rgb: var(--t-dapt-rgb); }
+.t-af    { --t: var(--t-af);    --t-rgb: var(--t-af-rgb); }
+.t-combo { --t: var(--t-combo); --t-rgb: var(--t-combo-rgb); }
+.t-lat   { --t: var(--t-lat);   --t-rgb: var(--t-lat-rgb); }
+.t-aps   { --t: var(--t-aps);   --t-rgb: var(--t-aps-rgb); }
+.t-stent { --t: var(--t-stent); --t-rgb: var(--t-stent-rgb); }
+.t-pfo   { --t: var(--t-pfo);   --t-rgb: var(--t-pfo-rgb); }
+.t-dvt   { --t: var(--t-dvt);   --t-rgb: var(--t-dvt-rgb); }
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { height: 100%; background: var(--bg); -webkit-text-size-adjust: 100%; overscroll-behavior: none; }
+/* Окно — во весь экран до самого низа; отступ под полоску «Домой» — только у панели вкладок. */
+body {
+  margin: 0;
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+  padding-top: env(safe-area-inset-top, 0px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: var(--fg);
+  font: 400 calc(17px*var(--k))/1.5 var(--f-body);
+  -webkit-tap-highlight-color: transparent;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(calc(900px*var(--k)) calc(520px*var(--k)) at -12% -8%, rgba(var(--t-dapt-rgb), 0.09), transparent 62%),
+    radial-gradient(calc(760px*var(--k)) calc(520px*var(--k)) at 112% 4%, rgba(var(--t-af-rgb), 0.08), transparent 60%),
+    radial-gradient(calc(900px*var(--k)) calc(640px*var(--k)) at 100% 112%, rgba(var(--t-lat-rgb), 0.07), transparent 62%);
+}
+button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
+a { color: var(--accent); }
+:focus-visible { outline: calc(2px*var(--k)) solid var(--accent); outline-offset: calc(2px*var(--k)); }
+p { margin: 0; }
+
+/* ---------- header ---------- */
+.top {
+  flex: none;
+  display: flex; align-items: center; justify-content: space-between; gap: calc(12px*var(--k));
+  padding-block: calc(10px*var(--k)) calc(8px*var(--k));
+  padding-inline: max(calc(16px*var(--k)), env(safe-area-inset-left, 0px)) max(calc(16px*var(--k)), env(safe-area-inset-right, 0px));
+}
+.brand { margin: 0; display: flex; align-items: center; gap: calc(10px*var(--k)); font: 650 calc(17px*var(--k))/1.1 var(--f-display); letter-spacing: -0.01em; white-space: nowrap; }
+.dots { display: inline-grid; grid-template-columns: repeat(4, auto); gap: calc(4px*var(--k)); }
+.dots i { width: calc(7px*var(--k)); height: calc(7px*var(--k)); border-radius: 50%; background: var(--t); box-shadow: 0 0 calc(10px*var(--k)) rgba(var(--t-rgb), 0.7); }
+.due-chip {
+  min-height: calc(44px*var(--k)); padding: 0 calc(14px*var(--k));
+  border-radius: calc(22px*var(--k)); border: calc(1px*var(--k)) solid var(--line);
+  background: rgba(255, 255, 255, 0.04); color: var(--muted);
+  font-size: calc(14px*var(--k)); font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.due-chip b { color: var(--fg); font-weight: 650; }
+
+/* ---------- views ---------- */
+/* Только вертикальная прокрутка: что бы ни оказалось шире экрана, страница не уезжает вбок. */
+main { flex: 1; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.view {
+  max-width: calc(680px*var(--k));
+  margin: 0 auto;
+  padding-block: calc(12px*var(--k)) calc(32px*var(--k));
+  padding-inline: max(calc(16px*var(--k)), env(safe-area-inset-left, 0px)) max(calc(16px*var(--k)), env(safe-area-inset-right, 0px));
+}
+h2 {
+  margin: calc(32px*var(--k)) 0 calc(12px*var(--k));
+  display: flex; align-items: center; gap: calc(10px*var(--k));
+  font: 650 calc(12.5px*var(--k))/1.2 var(--f-body); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+}
+h2::after { content: ""; flex: 1; height: calc(1px*var(--k)); background: linear-gradient(90deg, var(--line-2), transparent); }
+.view > h2:first-child { margin-top: calc(8px*var(--k)); }
+.lede { color: var(--muted); max-width: 64ch; }
+.panel {
+  border-radius: calc(22px*var(--k)); border: calc(1px*var(--k)) solid var(--line);
+  background: linear-gradient(165deg, rgba(36, 41, 56, 0.9), rgba(20, 23, 31, 0.92));
+  box-shadow: var(--shadow);
+}
+
+/* ---------- review ---------- */
+.hero { padding: calc(20px*var(--k)); display: grid; grid-template-columns: minmax(0, 1fr); gap: calc(14px*var(--k)); }
+.hero-title { margin: 0; font: 650 calc(21px*var(--k))/1.25 var(--f-display); letter-spacing: -0.01em; text-wrap: balance; overflow-wrap: anywhere; hyphens: auto; }
+.hero-note { font-size: calc(14.5px*var(--k)); color: var(--muted); }
+.hero-note b { color: var(--amber); font-weight: 600; }
+.topic-nav { display: flex; flex-wrap: wrap; gap: calc(8px*var(--k)); }
+.tchip {
+  min-height: calc(44px*var(--k)); padding: 0 calc(14px*var(--k));
+  display: inline-flex; align-items: center; gap: calc(8px*var(--k));
+  border-radius: calc(22px*var(--k)); border: calc(1px*var(--k)) solid rgba(var(--t-rgb), 0.45);
+  background: rgba(var(--t-rgb), 0.08); color: var(--fg);
+  font-size: calc(15px*var(--k)); font-weight: 560;
+}
+.tchip::before { content: ""; width: calc(8px*var(--k)); height: calc(8px*var(--k)); border-radius: 50%; background: var(--t); }
+.topic { margin-top: calc(16px*var(--k)); padding: calc(18px*var(--k)); border-color: rgba(var(--t-rgb), 0.3);
+  background: radial-gradient(calc(420px*var(--k)) calc(240px*var(--k)) at 100% 0%, rgba(var(--t-rgb), 0.12), transparent 70%), linear-gradient(165deg, rgba(36, 41, 56, 0.9), rgba(20, 23, 31, 0.92)); }
+.topic-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: calc(4px*var(--k)) calc(12px*var(--k)); margin-bottom: calc(12px*var(--k)); }
+.topic-title { margin: 0; min-width: 0; font: 650 calc(19px*var(--k))/1.25 var(--f-display); color: var(--t); text-wrap: balance; overflow-wrap: anywhere; hyphens: auto; }
+.topic-count { font-size: calc(13px*var(--k)); color: var(--faint); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.points { list-style: none; margin: 0; padding: 0; display: grid; gap: calc(12px*var(--k)); }
+.points li { display: grid; grid-template-columns: calc(6px*var(--k)) minmax(0, 1fr); gap: calc(12px*var(--k)); }
+.points li::before { content: ""; margin-top: calc(9px*var(--k)); width: calc(6px*var(--k)); height: calc(6px*var(--k)); border-radius: 50%; background: var(--t); }
+.points p { max-width: 66ch; }
+.points b { font-weight: 650; }
+.points .warn { color: var(--amber); }
+.srcs { display: inline-flex; flex-wrap: wrap; gap: calc(4px*var(--k)); margin-left: calc(4px*var(--k)); vertical-align: middle; }
+.src {
+  display: inline-block; padding: calc(1px*var(--k)) calc(7px*var(--k));
+  border-radius: calc(6px*var(--k)); border: calc(1px*var(--k)) solid var(--line-2);
+  font-size: calc(12px*var(--k)); line-height: 1.5; color: var(--muted); white-space: nowrap; text-decoration: none;
+}
+.src.ru { color: var(--amber); border-color: rgba(var(--amber-rgb), 0.4); }
+.reflist { margin: 0; padding-left: calc(22px*var(--k)); display: grid; gap: calc(10px*var(--k)); font-size: calc(15px*var(--k)); color: var(--muted); }
+.reflist li { min-width: 0; overflow-wrap: anywhere; }
+.reflist b { color: var(--fg); font-weight: 600; }
+.reflist .tag { color: var(--accent); font-weight: 600; }
+.disclaimer { padding: calc(14px*var(--k)) calc(16px*var(--k)); border-radius: calc(16px*var(--k)); border: calc(1px*var(--k)) solid rgba(var(--amber-rgb), 0.35); background: rgba(var(--amber-rgb), 0.07); font-size: calc(14.5px*var(--k)); color: var(--fg); }
+
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(8px*var(--k)); }
+.stats div { padding: calc(14px*var(--k)) calc(12px*var(--k)); border-radius: calc(16px*var(--k)); border: calc(1px*var(--k)) solid var(--line); background: rgba(255, 255, 255, 0.035); display: grid; gap: calc(4px*var(--k)); }
+.stats b { font: 650 calc(28px*var(--k))/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.stats div:nth-child(1) b { color: var(--t-af); }
+.stats div:nth-child(2) b { color: var(--amber); }
+.stats div:nth-child(3) b { color: var(--good); }
+.stats span { font-size: calc(13px*var(--k)); color: var(--muted); }
+.sync-note { margin-top: calc(12px*var(--k)); font-size: calc(15px*var(--k)); color: var(--muted); }
+
+/* ---------- buttons ---------- */
+.btn {
+  min-height: calc(56px*var(--k)); padding: 0 calc(18px*var(--k));
+  border-radius: calc(18px*var(--k)); border: calc(1px*var(--k)) solid var(--line-2);
+  background: var(--panel-2); color: var(--fg);
+  font: 620 calc(17px*var(--k))/1.15 var(--f-body);
+  transition: transform 0.12s, background 0.15s;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary {
+  border-color: rgba(var(--amber-rgb), 0.55);
+  background: linear-gradient(180deg, rgba(var(--amber-rgb), 0.22), rgba(var(--amber-rgb), 0.1));
+  color: #f8dfb4;
+  box-shadow: 0 calc(10px*var(--k)) calc(26px*var(--k)) -16px rgba(var(--amber-rgb), 0.6), inset 0 calc(1px*var(--k)) 0 rgba(255, 255, 255, 0.07);
+}
+.btn-warn { margin-top: calc(14px*var(--k)); color: var(--bad); border-color: rgba(var(--bad-rgb), 0.35); background: rgba(var(--bad-rgb), 0.07); }
+.chip {
+  min-height: calc(44px*var(--k)); padding: 0 calc(14px*var(--k));
+  border-radius: calc(22px*var(--k)); border: calc(1px*var(--k)) solid var(--line);
+  background: rgba(255, 255, 255, 0.04); color: var(--muted); font-size: calc(15px*var(--k)); font-weight: 560;
+}
+.chip[aria-pressed="true"] { color: var(--fg); border-color: rgba(var(--t-rgb, var(--accent-rgb)), 0.75); background: rgba(var(--t-rgb, var(--accent-rgb)), 0.12); }
+
+/* ---------- cards & training shared ---------- */
+#v-cards, #v-train { min-height: 100%; display: flex; flex-direction: column; padding-bottom: 0; }
+.bar { display: flex; align-items: center; gap: calc(8px*var(--k)); flex-wrap: wrap; }
+.bar .left { flex: 1; min-width: 0; color: var(--muted); font-size: calc(15px*var(--k)); font-variant-numeric: tabular-nums; }
+.bar .left b { color: var(--fg); font-weight: 600; }
+.filters { display: flex; gap: calc(6px*var(--k)); overflow-x: auto; padding-block: calc(10px*var(--k)) calc(2px*var(--k)); scrollbar-width: none; }
+.filters::-webkit-scrollbar { display: none; }
+.filters .chip { flex: none; min-height: calc(40px*var(--k)); font-size: calc(14px*var(--k)); }
+.stage { position: relative; flex: 1; display: flex; flex-direction: column; justify-content: center; padding-block: calc(12px*var(--k)) calc(8px*var(--k)); }
+.card {
+  position: relative; padding: calc(20px*var(--k));
+  border-radius: calc(24px*var(--k)); border: calc(1px*var(--k)) solid rgba(var(--t-rgb), 0.32);
+  background: radial-gradient(calc(420px*var(--k)) calc(240px*var(--k)) at 100% 0%, rgba(var(--t-rgb), 0.13), transparent 70%), linear-gradient(165deg, rgba(38, 43, 59, 0.95), rgba(19, 22, 30, 0.96));
+  box-shadow: var(--shadow);
+  touch-action: pan-y; -webkit-user-select: none; user-select: none; cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.card.dragging { transition: none; }
+.card.lean-know { border-color: var(--good); }
+.card.lean-again { border-color: var(--bad); }
+.ghost { position: absolute; z-index: 2; pointer-events: none; transition: transform 0.24s ease-in, opacity 0.24s ease-in; }
+.kind { font: 650 calc(12px*var(--k))/1.3 var(--f-body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--t); }
+.q { margin-top: calc(14px*var(--k)); font: 600 calc(22px*var(--k))/1.35 var(--f-body); text-wrap: pretty; }
+.back { margin-top: calc(18px*var(--k)); padding-top: calc(16px*var(--k)); border-top: calc(1px*var(--k)) solid var(--line); display: grid; gap: calc(10px*var(--k)); }
+.ans { font-size: calc(18px*var(--k)); line-height: 1.5; }
+.ans b { font-weight: 650; color: var(--t); }
+.hint { margin-top: calc(14px*var(--k)); font-size: calc(13px*var(--k)); color: var(--faint); }
+
+.controls {
+  position: sticky; bottom: 0; z-index: 3; display: grid; gap: calc(10px*var(--k));
+  padding-block: calc(12px*var(--k));
+  background: linear-gradient(to top, var(--bg) 72%, rgba(11, 13, 18, 0));
+}
+.rate { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(8px*var(--k)); }
+.rate .btn { min-height: calc(66px*var(--k)); padding: 0 calc(6px*var(--k)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(5px*var(--k)); }
+.rate small { font: 500 calc(12px*var(--k))/1 var(--f-body); color: var(--muted); }
+.r-again { color: var(--bad); border-color: rgba(var(--bad-rgb), 0.4); background: rgba(var(--bad-rgb), 0.09); }
+.r-almost { color: var(--amber); border-color: rgba(var(--amber-rgb), 0.3); background: rgba(var(--amber-rgb), 0.07); }
+.r-know { color: var(--good); border-color: rgba(var(--good-rgb), 0.4); background: rgba(var(--good-rgb), 0.09); }
+.done { display: grid; gap: calc(16px*var(--k)); }
+.done-kicker { font: 650 calc(12px*var(--k))/1 var(--f-body); letter-spacing: 0.1em; text-transform: uppercase; color: var(--good); }
+.done-title { margin: 0; font: 650 calc(26px*var(--k))/1.2 var(--f-display); letter-spacing: -0.01em; text-wrap: balance; }
+.done-next { color: var(--muted); }
+
+/* ---------- training ---------- */
+.case { padding: calc(20px*var(--k)); display: grid; gap: calc(14px*var(--k)); border-color: rgba(var(--t-rgb), 0.3); }
+.case-text { font-size: calc(18px*var(--k)); line-height: 1.5; }
+.case-q { font-weight: 650; font-size: calc(18px*var(--k)); }
+.opts { display: grid; gap: calc(8px*var(--k)); }
+.opt {
+  min-height: calc(52px*var(--k)); padding: calc(11px*var(--k)) calc(15px*var(--k));
+  border-radius: calc(14px*var(--k)); border: calc(1px*var(--k)) solid var(--line);
+  background: rgba(255, 255, 255, 0.04); color: var(--fg);
+  font: 520 calc(16.5px*var(--k))/1.35 var(--f-body); text-align: left;
+}
+.opt[aria-pressed="true"] { border-color: rgba(var(--accent-rgb), 0.8); background: rgba(var(--accent-rgb), 0.12); }
+.checked .opt.correct { border-color: rgba(var(--good-rgb), 0.85); background: rgba(var(--good-rgb), 0.12); }
+.checked .opt[aria-pressed="true"]:not(.correct) { border-color: rgba(var(--bad-rgb), 0.85); background: rgba(var(--bad-rgb), 0.1); }
+.checked .opt { cursor: default; }
+.feedback { display: grid; gap: calc(8px*var(--k)); padding: calc(14px*var(--k)); border-radius: calc(16px*var(--k)); border: calc(1px*var(--k)) solid var(--line); background: rgba(255, 255, 255, 0.035); }
+.feedback.ok { border-color: rgba(var(--good-rgb), 0.45); background: rgba(var(--good-rgb), 0.07); }
+.feedback.no { border-color: rgba(var(--bad-rgb), 0.45); background: rgba(var(--bad-rgb), 0.07); }
+.fb-title { font-weight: 700; }
+.feedback.ok .fb-title { color: var(--good); }
+.feedback.no .fb-title { color: var(--bad); }
+
+/* ---------- test ---------- */
+.task { padding-block: calc(18px*var(--k)); border-top: calc(1px*var(--k)) solid var(--line); }
+.task-head { display: flex; align-items: center; gap: calc(10px*var(--k)); margin-bottom: calc(10px*var(--k)); }
+.num { width: calc(30px*var(--k)); height: calc(30px*var(--k)); border-radius: 50%; display: grid; place-items: center; border: calc(1px*var(--k)) solid rgba(var(--t-rgb), 0.6); color: var(--t); font: 650 calc(13px*var(--k))/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.ttype { font: 650 calc(12px*var(--k))/1.3 var(--f-body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--t); }
+.res { margin-left: auto; font-weight: 700; font-size: calc(18px*var(--k)); }
+.task.ok .res { color: var(--good); }
+.task.no .res { color: var(--bad); }
+.tq { font-size: calc(17.5px*var(--k)); line-height: 1.5; margin-bottom: calc(12px*var(--k)); font-weight: 560; }
+.check-row { position: sticky; bottom: 0; padding-block: calc(12px*var(--k)); display: grid; background: linear-gradient(to top, var(--bg) 72%, rgba(11, 13, 18, 0)); }
+.key { margin-top: calc(24px*var(--k)); }
+.score { font: 650 calc(42px*var(--k))/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.score span { font: 500 calc(17px*var(--k))/1 var(--f-body); color: var(--muted); }
+.key-list { list-style: none; margin: calc(16px*var(--k)) 0 0; padding: 0; display: grid; gap: calc(14px*var(--k)); }
+.key-list li { display: grid; grid-template-columns: calc(30px*var(--k)) minmax(0, 1fr); gap: calc(10px*var(--k)); }
+.key-list .km { font-weight: 700; font-variant-numeric: tabular-nums; }
+.key-list .km.ok { color: var(--good); }
+.key-list .km.no { color: var(--bad); }
+.key-list .ka { font-weight: 620; }
+.key-list .yours { font-size: calc(15px*var(--k)); color: var(--muted); }
+.why { font-size: calc(15.5px*var(--k)); color: var(--fg); opacity: 0.9; }
+
+/* ---------- tab bar ---------- */
+.tabs-wrap {
+  flex: none;
+  padding-block: calc(4px*var(--k)) max(calc(8px*var(--k)), calc(env(safe-area-inset-bottom, 0px) - calc(8px*var(--k))));
+  padding-inline: max(calc(12px*var(--k)), env(safe-area-inset-left, 0px)) max(calc(12px*var(--k)), env(safe-area-inset-right, 0px));
+}
+.tabs {
+  max-width: calc(680px*var(--k)); margin: 0 auto;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: calc(4px*var(--k)); padding: calc(5px*var(--k));
+  border-radius: calc(24px*var(--k)); border: calc(1px*var(--k)) solid var(--line);
+  background: rgba(24, 27, 37, 0.92);
+  box-shadow: 0 calc(1px*var(--k)) 0 rgba(255, 255, 255, 0.05) inset, 0 calc(18px*var(--k)) calc(40px*var(--k)) -18px rgba(0, 0, 0, 0.9);
+}
+.tab {
+  min-height: calc(56px*var(--k));
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(4px*var(--k));
+  border: 0; border-radius: calc(19px*var(--k)); background: none; color: var(--faint);
+  font: 560 calc(12px*var(--k))/1 var(--f-body);
+  transition: background 0.15s, color 0.15s;
+}
+.tab svg { width: calc(23px*var(--k)); height: calc(23px*var(--k)); flex: none; }
+.tab[aria-selected="true"] { color: var(--fg); background: rgba(var(--accent-rgb), 0.12); }
+.tab[aria-selected="true"] svg { color: var(--accent); filter: drop-shadow(0 0 calc(8px*var(--k)) rgba(var(--accent-rgb), 0.55)); }
+
+@media (min-width: 700px) {
+  .view { padding-block: calc(24px*var(--k)) calc(44px*var(--k)); }
+  .tab { flex-direction: row; gap: calc(8px*var(--k)); font-size: calc(14px*var(--k)); }
+}
+html.wide .view, html.wide .tabs { max-width: calc(860px*var(--k)); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+</style>
+<script>
+/* Масштаб под экран — как в «want you to»: телефон — как есть, iPad — крупнее. Все размеры умножены на --k. */
+(function () {
+  function fit() {
+    var w = window.innerWidth || 390, h = window.innerHeight || 760;
+    var wide = w >= 900 && w / h > 1.15;
+    var k = wide ? h / 600 : Math.min(w / 440, h / 780);
+    if (w < 600) k = 1;
+    k = Math.max(1, Math.min(k, 1.9));
+    document.documentElement.style.setProperty('--k', k.toFixed(3));
+    document.documentElement.classList.toggle('wide', w >= 700);
+  }
+  fit();
+  window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', function () { setTimeout(fit, 150); });
+})();
+</script>
+<header class="top">
+  <h1 class="brand"><span class="dots" aria-hidden="true"><i class="t-dapt"></i><i class="t-af"></i><i class="t-combo"></i><i class="t-lat"></i><i class="t-aps"></i><i class="t-stent"></i><i class="t-pfo"></i><i class="t-dvt"></i></span>АТТ после ИИ</h1>
+  <button type="button" class="due-chip" id="dueChip">…</button>
+</header>
+
+<main id="main">
+  <!-- ======== Разбор ======== -->
+  <section class="view" id="v-review" aria-label="Разбор">
+    <div class="panel hero">
+      <p class="hero-title">Трудные места АТТ после инсульта</p>
+      <p class="hero-note">Опора — <b>КР МЗ РФ «Ишемический инсульт и ТИА» 2024</b>, работы проф. А.А. Кулеша, ESC 2024, ESO 2024 по ООО, ESVS 2023, CHEST 2021, EULAR 2019 и РКИ последних лет (ELAN, OPTIMAS, CATALYST, INSPIRES, THALES, CHANCE-2, ARCADIA, TRAPS, CLOSE, CASSISS, CLOTS 3). У каждого тезиса указан источник.</p>
+      <div class="topic-nav" id="topicNav"></div>
+    </div>
+    <div id="topics"></div>
+
+    <h2>Источники</h2>
+    <ol class="reflist" id="refs"></ol>
+
+    <h2>Важно</h2>
+    <p class="disclaimer">Учебный тренажёр для врачей. Не заменяет клинические рекомендации, инструкции к препаратам и решение лечащего врача. Дозы и противопоказания сверяйте с актуальной инструкцией.</p>
+
+    <h2>Прогресс</h2>
+    <div class="stats" id="stats"></div>
+    <p class="sync-note" id="syncNote">Прогресс хранится на этом устройстве.</p>
+    <button type="button" class="btn btn-warn" id="resetBtn">Сбросить прогресс карточек</button>
+  </section>
+
+  <!-- ======== Карточки ======== -->
+  <section class="view" id="v-cards" aria-label="Карточки" hidden>
+    <div class="bar"><span class="left" id="sessCount"></span></div>
+    <div class="stage" id="stage"></div>
+    <div class="controls" id="controls"></div>
+  </section>
+
+  <!-- ======== Тренировка ======== -->
+  <section class="view" id="v-train" aria-label="Тренировка" hidden>
+    <div class="bar"><span class="left" id="trainStats"></span></div>
+    <div class="filters" id="trainFilters" role="group" aria-label="Тема"></div>
+    <div class="stage" id="trainStage"></div>
+    <div class="controls" id="trainControls"></div>
+  </section>
+
+  <!-- ======== Тест ======== -->
+  <section class="view" id="v-test" aria-label="Тест" hidden>
+    <h2 id="testTitle">Тест</h2>
+    <p class="lede" id="testLede">Ответы и разбор с источниками — в конце, после проверки.</p>
+    <div id="tasks"></div>
+    <div class="check-row"><button type="button" class="btn btn-primary" id="checkBtn">Проверить</button></div>
+    <section class="key" id="key" hidden></section>
+  </section>
+</main>
+
+<div class="tabs-wrap">
+<nav class="tabs" role="tablist" aria-label="Разделы">
+  <button type="button" class="tab" role="tab" data-tab="review" aria-selected="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 5.5A1.5 1.5 0 0 1 5 4h6v16H5a1.5 1.5 0 0 1-1.5-1.5z"/><path d="M20.5 5.5A1.5 1.5 0 0 0 19 4h-6v16h6a1.5 1.5 0 0 0 1.5-1.5z"/></svg>
+    Разбор
+  </button>
+  <button type="button" class="tab" role="tab" data-tab="cards" aria-selected="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7.5" width="14" height="13" rx="2.5"/><path d="M7 4h11.5A2.5 2.5 0 0 1 21 6.5V17"/></svg>
+    Карточки
+  </button>
+  <button type="button" class="tab" role="tab" data-tab="train" aria-selected="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>
+    Случаи
+  </button>
+  <button type="button" class="tab" role="tab" data-tab="test" aria-selected="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>
+    Тест
+  </button>
+</nav>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /*DATA-START*/
+  /* ================= ДАННЫЕ =================
+     src — ключи из SOURCES. Чтобы добавить карточку, случай или вопрос — допишите объект в массив. */
+  const TOPICS = {
+    dapt:  { name: 'ДАТТ', short: 'ДАТТ' },
+    af:    { name: 'ФП: ОАК и сроки', short: 'ФП и сроки' },
+    combo: { name: 'Комбинации', short: 'Комбинации' },
+    lat:   { name: 'Тромб в ЛП', short: 'Тромб ЛП' },
+    aps:   { name: 'АФС', short: 'АФС' },
+    stent: { name: 'Стентирование', short: 'Стент' },
+    pfo:   { name: 'ООО', short: 'ООО' },
+    dvt:   { name: 'ТГВ голени', short: 'ТГВ' }
+  };
+
+  const SOURCES = {
+    KR24: { tag: 'КР 2024', ru: true, ref: 'Клинические рекомендации МЗ РФ «Ишемический инсульт и транзиторная ишемическая атака у взрослых», 2024 (ID 814).', url: 'https://cr.minzdrav.gov.ru/preview-cr/814_1' },
+    KUL24: { tag: 'Кулеш 2024', ru: true, ref: 'Кулеш А.А., Дёмин Д.А., Кучеренко С.С. Десять правил назначения пероральных антикоагулянтов после инсульта. Неврология, нейропсихиатрия, психосоматика. 2024;16(4):111–121.', url: 'https://doi.org/10.14412/2074-2711-2024-4-111-121' },
+    KUL23: { tag: 'Кулеш 2023', ru: true, ref: 'Кулеш А.А., Янишевский С.Н., Дёмин Д.А. и др. Оптимизация вторичной профилактики у пациентов с атеротромботическим ИИ или ТИА высокого риска. Журнал неврологии и психиатрии им. С.С. Корсакова. 2023;123(6).', url: 'https://doi.org/10.17116/jnevro202312306136' },
+    KUL21: { tag: 'Кулеш 2021', ru: true, ref: 'Кулеш А.А. Сложные вопросы ведения пациентов с фибрилляцией предсердий: взгляд невролога. Неврология, нейропсихиатрия, психосоматика. 2021;13(5):4–13.', url: 'https://doi.org/10.14412/2074-2711-2021-5-4-13' },
+    COMPRU: { tag: 'Совет экспертов COMPASS', ru: true, ref: 'Арутюнов Г.П., …, Кулеш А.А. и др. Результаты COMPASS как основа нового подхода к лечению неврологических пациентов. Резолюция совета экспертов. Журнал неврологии и психиатрии им. С.С. Корсакова. 2022;122(4).', url: 'https://doi.org/10.17116/jnevro202212204194' },
+    ESC24: { tag: 'ESC 2024', ref: '2024 ESC/EACTS Guidelines for the management of atrial fibrillation; обзор ключевых положений: Europace 2024;26(12):euae298.', url: 'https://doi.org/10.1093/europace/euae298' },
+    CHANCE: { tag: 'CHANCE', ref: 'Wang Y. et al. Clopidogrel with aspirin in acute minor stroke or TIA (CHANCE). N Engl J Med. 2013.' },
+    POINT: { tag: 'POINT', ref: 'Johnston S.C. et al. Clopidogrel and aspirin in acute ischemic stroke and high-risk TIA (POINT). N Engl J Med. 2018.' },
+    THALES: { tag: 'THALES', ref: 'Johnston S.C. et al. Ticagrelor and aspirin or aspirin alone in acute ischemic stroke or TIA. N Engl J Med. 2020.', url: 'https://doi.org/10.1056/NEJMoa1916870' },
+    CHANCE2: { tag: 'CHANCE-2', ref: 'Wang Y. et al. Ticagrelor versus clopidogrel in CYP2C19 loss-of-function carriers with stroke or TIA. N Engl J Med. 2021.', url: 'https://doi.org/10.1056/NEJMoa2111749' },
+    INSPIRES: { tag: 'INSPIRES', ref: 'Gao Y. et al. Dual antiplatelet treatment up to 72 hours after ischemic stroke. N Engl J Med. 2023.', url: 'https://doi.org/10.1056/NEJMoa2309137' },
+    SAMMPRIS: { tag: 'SAMMPRIS', ref: 'Chimowitz M.I. et al. Stenting versus aggressive medical therapy for intracranial arterial stenosis (SAMMPRIS). N Engl J Med. 2011.' },
+    COMPASS: { tag: 'COMPASS', ref: 'Eikelboom J.W. et al. Rivaroxaban with or without aspirin in stable cardiovascular disease (COMPASS). N Engl J Med. 2017.' },
+    ELAN: { tag: 'ELAN', ref: 'Fischer U. et al. Early versus later anticoagulation for stroke with atrial fibrillation (ELAN). N Engl J Med. 2023;388:2411–2421.', url: 'https://doi.org/10.1056/NEJMoa2303048' },
+    ELANSIZE: { tag: 'ELAN: размер инфаркта', ref: 'Goeldlin M.B. et al. Early vs late anticoagulation in minor, moderate, and major ischemic stroke with atrial fibrillation: post hoc analysis of the ELAN randomized clinical trial. JAMA Neurol. 2024;81(7):693–702.', url: 'https://doi.org/10.1001/jamaneurol.2024.1450' },
+    TIMING: { tag: 'TIMING', ref: 'Oldgren J. et al. Early versus delayed NOAC therapy after acute ischemic stroke in AF (TIMING). Circulation. 2022.' },
+    OPTIMAS: { tag: 'OPTIMAS', ref: 'Werring D.J. et al. Optimal timing of anticoagulation after acute ischaemic stroke with AF (OPTIMAS). Lancet. 2024.', url: 'https://doi.org/10.1016/S0140-6736(24)02197-4' },
+    CATALYST: { tag: 'CATALYST', ref: 'CATALYST collaboration. Optimal timing of anticoagulation after ischaemic stroke and AF: IPD meta-analysis of RCTs. Lancet. 2025.', url: 'https://doi.org/10.1016/S0140-6736(25)00439-8' },
+    SEIFFGE: { tag: 'Seiffge 2020', ref: 'Seiffge D.J. et al. Ischemic stroke despite oral anticoagulant therapy in patients with atrial fibrillation. Ann Neurol. 2020.', url: 'https://doi.org/10.1002/ana.25700' },
+    AFIRE: { tag: 'AFIRE', ref: 'Yasuda S. et al. Antithrombotic therapy for atrial fibrillation with stable coronary disease (AFIRE). N Engl J Med. 2019.', url: 'https://doi.org/10.1056/NEJMoa1904143' },
+    AUGUSTUS: { tag: 'AUGUSTUS', ref: 'Lopes R.D. et al. Antithrombotic therapy after ACS or PCI in atrial fibrillation (AUGUSTUS). N Engl J Med. 2019.' },
+    ESUS: { tag: 'NAVIGATE / RE-SPECT ESUS', ref: 'Hart R.G. et al. Rivaroxaban for stroke prevention after ESUS (NAVIGATE ESUS). N Engl J Med. 2018; Diener H.C. et al. Dabigatran for prevention of stroke after ESUS (RE-SPECT ESUS). N Engl J Med. 2019.' },
+    ARCADIA: { tag: 'ARCADIA', ref: 'Kamel H. et al. Apixaban vs aspirin in patients with cryptogenic stroke and atrial cardiopathy (ARCADIA). JAMA. 2024;331:573–581.' },
+    ARTESIA: { tag: 'ARTESiA', ref: 'Healey J.S. et al. Apixaban for stroke prevention in subclinical atrial fibrillation. N Engl J Med. 2024.', url: 'https://doi.org/10.1056/NEJMoa2310234' },
+    NOAH: { tag: 'NOAH-AFNET 6', ref: 'Kirchhof P. et al. Anticoagulation with edoxaban in patients with atrial high-rate episodes. N Engl J Med. 2023.', url: 'https://doi.org/10.1056/NEJMoa2303062' },
+    XTRA: { tag: 'X-TRA', ref: 'Lip G.Y.H. et al. Left atrial thrombus resolution in AF or flutter: rivaroxaban (X-TRA) and CLOT-AF registry. Am Heart J. 2016.', url: 'https://doi.org/10.1016/j.ahj.2016.05.007' },
+    RELATED: { tag: 'RE-LATED AF', ref: 'Ferner M. et al. RE-LATED AF — AFNET 7: resolution of LAA thrombus, dabigatran vs phenprocoumon (дизайн). Clin Res Cardiol. 2016.', url: 'https://doi.org/10.1007/s00392-015-0883-7' },
+    EHRA20: { tag: 'EHRA 2020', ref: 'Farkowski M.M. et al. Diagnosis and management of LAA thrombus: EHRA survey. Europace. 2020;22:162–169.', url: 'https://doi.org/10.1093/europace/euz257' },
+    EHRA23: { tag: 'EHRA 2023', ref: 'Anic A. et al. Diagnostic and therapeutic pathways for the malignant left atrial appendage: EHRA physician survey. Europace. 2023.', url: 'https://doi.org/10.1093/europace/euad204' },
+    TRAPS: { tag: 'TRAPS', ref: 'Pengo V. et al. Rivaroxaban vs warfarin in high-risk patients with antiphospholipid syndrome. Blood. 2018.', url: 'https://doi.org/10.1182/blood-2018-04-848333' },
+    ORDIROS: { tag: 'Ordi-Ros 2019', ref: 'Ordi-Ros J. et al. Rivaroxaban versus vitamin K antagonist in antiphospholipid syndrome. Ann Intern Med. 2019.', url: 'https://doi.org/10.7326/M19-0291' },
+    ASTRO: { tag: 'ASTRO-APS', ref: 'Woller S.C. et al. Apixaban compared with warfarin in thrombotic APS. Blood Adv. 2022.', url: 'https://doi.org/10.1182/bloodadvances.2021005808' },
+    EULAR19: { tag: 'EULAR 2019', ref: 'Tektonidou M.G. et al. EULAR recommendations for the management of antiphospholipid syndrome in adults. Ann Rheum Dis. 2019.', url: 'https://doi.org/10.1136/annrheumdis-2019-215213' },
+    APASS: { tag: 'APASS', ref: 'APASS Investigators. Antiphospholipid antibodies and subsequent thrombo-occlusive events in patients with ischemic stroke. JAMA. 2004.' },
+    ESVS23: { tag: 'ESVS 2023', ref: 'Naylor R. et al. European Society for Vascular Surgery (ESVS) 2023 Clinical Practice Guidelines on the Management of Atherosclerotic Carotid and Vertebral Artery Disease. Eur J Vasc Endovasc Surg. 2023;65(1):7–111.', url: 'https://doi.org/10.1016/j.ejvs.2022.04.011' },
+    CASSISS: { tag: 'CASSISS', ref: 'Gao P. et al. Stenting plus medical therapy vs medical therapy alone in symptomatic intracranial stenosis: the CASSISS randomized clinical trial. JAMA. 2022;328(6):534–542.', url: 'https://doi.org/10.1001/jama.2022.12000' },
+    STOPCAD: { tag: 'STOP-CAD', ref: 'Sousa J.A. et al. Emergent carotid stenting during thrombectomy in tandem occlusions secondary to dissection: a STOP-CAD secondary study. Stroke. 2025;56(4):808–817.', url: 'https://doi.org/10.1161/STROKEAHA.124.048295' },
+    TIROFIBAN: { tag: 'ARTISTA 2025', ref: 'Medina-Rodriguez M. et al. Tirofiban versus aspirin to prevent in-stent thrombosis after emergent carotid artery stenting in acute ischemic stroke. J Neurointerv Surg. 2025;17(7):697–702.', url: 'https://doi.org/10.1136/jnis-2024-021845' },
+    ESO24PFO: { tag: 'ESO 2024 (ООО)', ref: 'Caso V. et al. European Stroke Organisation (ESO) Guidelines on the diagnosis and management of patent foramen ovale (PFO) after stroke. Eur Stroke J. 2024;9(4):800–834.', url: 'https://doi.org/10.1177/23969873241247978' },
+    PASCAL: { tag: 'PASCAL', ref: 'Kent D.M. et al. Heterogeneity of treatment effects in an analysis of pooled individual patient data from randomized trials of device closure of PFO after stroke. JAMA. 2021;326(22):2277–2286.', url: 'https://doi.org/10.1001/jama.2021.20956' },
+    CLOSE: { tag: 'CLOSE', ref: 'Mas J.L. et al. Patent foramen ovale closure or anticoagulation vs. antiplatelets after stroke (CLOSE). N Engl J Med. 2017;377:1011–1021.', url: 'https://doi.org/10.1056/NEJMoa1705915' },
+    PFOAF: { tag: 'ФП после окклюдера', ref: 'Vukadinović D. et al. Device-related risk of atrial fibrillation after closure of patent foramen ovale: a systematic review and meta-analysis. Clin Res Cardiol. 2022;111(5):583–587.', url: 'https://doi.org/10.1007/s00392-021-01964-2' },
+    KUL19: { tag: 'Кулеш 2019', ru: true, ref: 'Кулеш А.А., Шестаков В.В. Открытое овальное окно и эмболический криптогенный инсульт. Неврология, нейропсихиатрия, психосоматика. 2019;11(2):4–11.' },
+    KUL21PE: { tag: 'Кулеш 2021, ООО', ru: true, ref: 'Кулеш А.А., Дёмин Д.А., Белопасова А.В. и др. Криптогенный инсульт. Часть 2: парадоксальная эмболия. Медицинский совет. 2021;(19):16–33.' },
+    CLOTS3: { tag: 'CLOTS 3', ref: 'CLOTS Trials Collaboration (Dennis M. et al.). Effectiveness of intermittent pneumatic compression in reduction of risk of deep vein thrombosis in patients who have had a stroke (CLOTS 3). Lancet. 2013;382:516–524.', url: 'https://doi.org/10.1016/S0140-6736(13)61050-8' },
+    CLOTS1: { tag: 'CLOTS 1', ref: 'CLOTS Trials Collaboration (Dennis M. et al.). Effectiveness of thigh-length graduated compression stockings to reduce the risk of deep vein thrombosis after stroke (CLOTS 1). Lancet. 2009;373:1958–1965.', url: 'https://doi.org/10.1016/S0140-6736(09)60941-7' },
+    CHEST21: { tag: 'CHEST 2021', ref: 'Stevens S.M. et al. Antithrombotic therapy for VTE disease: second update of the CHEST guideline and expert panel report. Chest. 2021;160(6):e545–e608.', url: 'https://doi.org/10.1016/j.chest.2021.07.055' },
+    ESC19PE: { tag: 'ESC 2019 (ТЭЛА)', ref: 'Konstantinides S.V. et al. 2019 ESC Guidelines for the diagnosis and management of acute pulmonary embolism. Eur Heart J. 2020;41(4):543–603.', url: 'https://doi.org/10.1093/eurheartj/ehz405' },
+    DAVIDSON: { tag: 'EINSTEIN: АСК + ОАК', ref: 'Davidson B.L. et al. Bleeding risk of patients with acute venous thromboembolism taking NSAIDs or aspirin (анализ EINSTEIN DVT/PE). JAMA Intern Med. 2014;174(6):947–953.', url: 'https://doi.org/10.1001/jamainternmed.2014.946' }
+  };
+
+  // Разбор: по теме — тезисы. В тексте можно <b>…</b>; src — источники.
+  const REVIEW = {
+    dapt: [
+      { t: '<b>Кому ДАТТ:</b> малый некардиоэмболический ИИ (NIHSS ≤3) или ТИА высокого риска (ABCD2 ≥4). АСК + клопидогрел начинают в первые 12–24 ч (не позже 7 суток), курс 21–90 дней.', src: ['KR24', 'CHANCE', 'POINT'] },
+      { t: '<b>Стандарт — 21 день</b> АСК + клопидогрел (CHANCE), затем монотерапия. Нагрузочная доза клопидогрела 300–600 мг.', src: ['CHANCE', 'POINT'] },
+      { t: '<span class="warn">ДАТТ дольше 90 дней не рекомендуется</span> — растёт риск кровотечений.', src: ['KR24'] },
+      { t: '<b>Тикагрелор + АСК 30 дней</b> (старт в первые 24 ч) при NIHSS ≤5 или ТИА высокого риска: инсульт/смерть 5,5% vs 6,6%; тяжёлые кровотечения 0,5% vs 0,1%.', src: ['KR24', 'THALES'] },
+      { t: '<b>CYP2C19:</b> у носителей LOF-аллелей тикагрелор + АСК лучше клопидогрела + АСК: инсульт за 90 дней 6,0% vs 7,6% (HR 0,77); тяжёлые кровотечения не различались, всех кровотечений больше (5,3% vs 2,5%).', src: ['CHANCE2'] },
+      { t: '<b>Окно до 72 ч</b> при атеросклеротическом генезе (NIHSS ≤5 / ТИА высокого риска): клопидогрел + АСК снизили частоту инсульта 7,3% vs 9,2% (HR 0,79) ценой умеренных/тяжёлых кровотечений 0,9% vs 0,4%.', src: ['INSPIRES'] },
+      { t: '<b>Симптомный интракраниальный стеноз 70–99%:</b> ДАТТ до 90 дней на фоне интенсивного контроля факторов риска.', src: ['SAMMPRIS'] },
+      { t: '<b>Атеротромботический ИИ высокого риска</b> (тяжёлый экстракраниальный, любой интракраниальный атеросклероз, атероматоз дуги аорты): короткая ДАТТ (АСК + клопидогрел или тикагрелор), затем — АСК + ривароксабан 2,5 мг ×2 не ранее 30 дней, интенсивная гиполипидемическая терапия.', src: ['KUL23', 'COMPRU', 'COMPASS'] }
+    ],
+    af: [
+      { t: '<b>ПОАК предпочтительнее варфарина</b>, кроме механических клапанов и умеренного/тяжёлого митрального стеноза.', src: ['ESC24', 'KUL24'] },
+      { t: '<b>Митральный стеноз</b> с площадью ≤1,5 см² — только АВК, МНО 2,0–3,0. <b>Механический митральный протез</b> — варфарин, МНО 3,0 (2,5–3,5). ПОАК здесь противопоказаны.', src: ['KUL24'] },
+      { t: '<b>Сроки старта ПОАК — по ELAN (предпочтительно).</b> Тяжесть оценивают по <b>размеру инфаркта на КТ/МРТ</b>, а не по NIHSS. Малый (≤1,5 см) и средний (бассейн корковой ветви СМА, ПМА или ЗМА) — <b>в первые 48 ч</b>; большой (более обширный инфаркт в этих бассейнах, инфаркт ствола или мозжечка &gt;1,5 см) — <b>на 6–7 сутки</b>.', src: ['ELAN'] },
+      { t: '<b>ELAN</b> (2013 пациентов): составная точка за 30 дней 2,9% против 4,1%, повторный ИИ 1,4% против 2,5%, сВЧК 0,2% в обеих группах. Размер инфаркта эффект не менял: при большом инфаркте 3,7% против 7,0%, без роста сВЧК. Не включали пациентов с выраженной геморрагической трансформацией и уже получавших ОАК на момент инсульта.', src: ['ELAN', 'ELANSIZE'] },
+      { t: '<b>Правило 1–3–6–12 дней (Динер), оно же в КР 2024</b> (ТИА — 1 сутки; NIHSS &lt;8 — 3 дня; 8–16 — 6–8 дней; тяжёлый — 12–14 дней), — это по сути «поздняя» группа ELAN. Ранний старт по ELAN не увеличил сВЧК и снизил число событий, поэтому ориентир сегодня — ELAN.', src: ['KR24', 'ELAN'] },
+      { t: '<b>Другие РКИ — тоже за ранний старт:</b> OPTIMAS — старт ≤4 дней не хуже, чем на 7–14 день (3,3% против 3,3%); TIMING — ≤4 дней не хуже 5–10 дней.', src: ['OPTIMAS', 'TIMING'] },
+      { t: '<b>CATALYST</b> (мета-анализ индивидуальных данных TIMING, ELAN, OPTIMAS, START; 5441 пациент): старт ≤4 дней — составная точка 2,1% против 3,0% (OR 0,70), повторный ИИ 1,7% против 2,6% (OR 0,66), сВЧК 0,4% в обеих группах.', src: ['CATALYST'] },
+      { t: '<span class="warn">Гепарин и НМГ сразу после ИИ при ФП не рекомендуются</span> — «мост» до старта ОАК не нужен. Профилактические дозы для профилактики ТГВ у обездвиженных — допустимы.', src: ['KR24'] },
+      { t: '<b>Полная доза ПОАК.</b> Снижать — только по критериям инструкции (апиксабан 2,5 мг ×2 — при ≥2 из 3: возраст ≥80 лет, масса ≤60 кг, креатинин ≥133 мкмоль/л). Необоснованное снижение повышает риск инсульта, не уменьшая кровотечений.', src: ['ESC24', 'KUL24'] },
+      { t: '<b>Инсульт на фоне ОАК:</b> искать конкурирующий механизм (атеросклероз, болезнь мелких сосудов, иные источники), проверить дозу, приверженность и взаимодействия. Не добавлять антиагрегант и не менять рутинно ПОАК на другой ПОАК или варфарин.', src: ['ESC24', 'KUL24', 'SEIFFGE'] },
+      { t: '<b>Риск после «прорывного» инсульта выше:</b> HR 1,6 по сравнению с пациентами без предшествующей ОАК при сходном CHA₂DS₂-VASc; смена ОАК риск не снижала.', src: ['SEIFFGE'] }
+    ],
+    combo: [
+      { t: '<span class="warn">ФП + ИИ: ОАК + антиагрегант большинству не назначают</span> — больше кровотечений без снижения повторных инсультов.', src: ['KR24', 'ESC24'] },
+      { t: '<b>ФП + стабильная ИБС</b> (&gt;12 мес после ЧКВ/АКШ): монотерапия ОАК. В AFIRE ривароксабан один был не хуже по эффективности и безопаснее комбинации; исследование остановили досрочно из-за роста смертности в группе комбинации.', src: ['AFIRE'] },
+      { t: '<b>ФП + недавний ОКС/ЧКВ:</b> по кардиологическим показаниям — короткая тройная терапия (обычно до 1 недели), затем ОАК + клопидогрел до 12 месяцев, далее ОАК. Схема без АСК даёт меньше кровотечений.', src: ['AUGUSTUS'] },
+      { t: '<b>Без ФП, мультифокальный атеросклероз:</b> АСК 100 мг + ривароксабан 2,5 мг ×2 (по COMPASS) — не ранее 30 дней после ИИ/ТИА.', src: ['KUL23', 'COMPRU', 'COMPASS'] },
+      { t: '<b>ESUS:</b> антиагрегант, не ОАК. NAVIGATE ESUS и RE-SPECT ESUS — без пользы антикоагулянтов; ARCADIA (предсердная кардиопатия) — апиксабан не лучше АСК. Продолжать поиск ФП.', src: ['ESUS', 'ARCADIA'] },
+      { t: '<b>Субклиническая ФП по устройствам:</b> ARTESiA — апиксабан снизил инсульт/эмболию (0,78% vs 1,24% в год), но большие кровотечения 1,71% vs 0,94%; NOAH-AFNET 6 — эдоксабан без пользы. ESC 2024: ПОАК можно рассмотреть при высоком риске инсульта и низком риске кровотечения.', src: ['ARTESIA', 'NOAH', 'ESC24'] },
+      { t: '<b>Тромб ЛЖ после ИМ</b> при ИИ/ТИА: варфарин, МНО 2,5 (2,0–3,0), не менее 3 месяцев.', src: ['KR24'] }
+    ],
+    lat: [
+      { t: '<b>Тромб в ЛП/ушке ЛП</b> у пациента с ИИ — показание к ОАК, как при ФП. Гепариновый «мост» не применяют: гепарин и НМГ сразу после ИИ при ФП не рекомендуются.', src: ['KR24'] },
+      { t: '<b>Сроки старта ОАК:</b> отдельных РКИ для пациентов с тромбом нет — применяют общий подход ELAN по размеру инфаркта (≤48 ч при малом и среднем, 6–7 сутки при большом).', src: ['ELAN', 'CATALYST'] },
+      { t: '<b>ПОАК или варфарин</b> — оба допустимы. X-TRA: ривароксабан 6 недель — полное растворение 41,5%, растворение или уменьшение 60,4%. RE-LATED AF сравнивал дабигатран с фенпрокумоном с ЧПЭхоКГ на 3–6 неделе.', src: ['XTRA', 'RELATED'] },
+      { t: '<b>Контроль:</b> повторная ЧПЭхоКГ через 3–4 недели. До подтверждённого растворения — без кардиоверсии и абляции; перед плановой кардиоверсией нужно ≥3 недель эффективной ОАК.', src: ['EHRA20', 'ESC24'] },
+      { t: '<b>Тромб на адекватной ОАК</b> («злокачественное» ушко): проверить приверженность и дозу, сменить препарат на ОАК с другим механизмом (ПОАК ↔ варфарин, ингибитор Xa ↔ дабигатран), повторить контроль через 3–4 недели; обычно делают до двух попыток, рассматривают НМГ.', src: ['EHRA20', 'EHRA23'] },
+      { t: '<span class="warn">Окклюзия ушка ЛП при наличии тромба противопоказана.</span> Её рассматривают, когда тромба нет: эмболии на фоне ОАК после исключения других причин или высокий риск кровотечений.', src: ['EHRA23'] },
+      { t: '<b>Антиагрегант к ОАК</b> из-за тромба не добавляют: польза не доказана, растёт риск кровотечений.', src: ['ESC24', 'KR24'] }
+    ],
+    aps: [
+      { t: '<b>Доказанный АФС + ИИ/ТИА:</b> варфарин, целевое МНО 2,5 (2,0–3,0).', src: ['KR24'] },
+      { t: '<span class="warn">ПОАК при АФС не рекомендуются.</span> TRAPS (тройная позитивность): события на ривароксабане 19% vs 3% на варфарине, в том числе 4 ишемических инсульта. Ordi-Ros 2019: инсультов 9 vs 0. ASTRO-APS: 6 инсультов на апиксабане vs 0.', src: ['KR24', 'TRAPS', 'ORDIROS', 'ASTRO'] },
+      { t: '<b>EULAR 2019:</b> при артериальном тромбозе — АВК с МНО 2–3 или 3–4 с учётом индивидуального риска тромбоза и кровотечения; ривароксабан не применять при тройной позитивности.', src: ['EULAR19'] },
+      { t: '<b>Рецидив на адекватной терапии:</b> добавить низкую дозу АСК, повысить целевое МНО до 3–4 или перейти на НМГ.', src: ['EULAR19'] },
+      { t: '<b>Диагностика:</b> волчаночный антикоагулянт, антитела к кардиолипину и к β2-гликопротеину I; положительный результат подтверждают повторно не ранее чем через 12 недель. Тест на волчаночный антикоагулянт на фоне антикоагулянтов (особенно ПОАК и гепарина) может давать ложноположительный результат.', src: ['EULAR19'] },
+      { t: '<b>Высокий риск:</b> тройная позитивность, стойкий волчаночный антикоагулянт, высокие титры антител.', src: ['EULAR19', 'TRAPS'] },
+      { t: '<b>Однократные aPL без критериев АФС:</b> антиагрегант; варфарин не превосходит АСК.', src: ['APASS'] }
+    ],
+    stent: [
+      { t: '<b>Кому реваскуляризация ВСА:</b> симптомный стеноз (КР 2024 — &gt;50–70%, ESVS 2023 — 50–99%) — КЭЭ или стентирование, оптимально в первые 14 дней после симптомов. Всегда на фоне оптимальной медикаментозной терапии: антиагрегант, интенсивная гиполипидемическая и антигипертензивная терапия.', src: ['KR24', 'ESVS23'] },
+      { t: '<b>Стентирование ВСА:</b> АСК 75–325 мг + клопидогрел 75 мг, начатые не менее чем за 3 дня до процедуры (при срочном вмешательстве — нагрузочная доза клопидогрела 300 мг). ДАТТ не менее 4 недель после стентирования, затем пожизненно монотерапия антиагрегантом.', src: ['ESVS23'] },
+      { t: '<b>Повторное событие на адекватной ОАК</b> при ипсилатеральном стенозе ВСА 50–99% — показание к КЭЭ или стентированию. Рутинно добавлять антиагрегант к ОАК или менять ОАК не нужно: устраняют конкурирующий механизм.', src: ['ESVS23', 'ESC24'] },
+      { t: '<b>ФП + стент ВСА: РКИ нет.</b> Экспертная экстраполяция с ЧКВ при ФП (AUGUSTUS): ОАК + клопидогрел без АСК на срок, когда без ФП была бы ДАТТ (≥4 недель), затем, как правило, монотерапия ОАК. Тройную терапию сводят к минимуму.', src: ['ESVS23', 'AUGUSTUS'] },
+      { t: '<span class="warn">Интракраниальный стеноз 70–99%: стент не лучше медикаментозной терапии.</span> SAMMPRIS — инсульт/смерть за 30 дней 14,7% при стентировании против 5,8%; CASSISS (2022) — 8,0% против 7,2%, без разницы. Стандарт — ДАТТ 90 дней, затем монотерапия, плюс жёсткий контроль факторов риска.', src: ['SAMMPRIS', 'CASSISS'] },
+      { t: '<b>Экстренный стент ВСА при тандемной окклюзии</b> (во время тромбэктомии): стенту нужна антиагрегация, а она повышает риск кровоизлияния, особенно после тромболизиса. РКИ нет. В регистре ARTISTA тирофибан по сравнению с АСК: тромбоз стента 1,3% против 9,4%, сВЧК 2,6% против 11,7% (наблюдательные данные).', src: ['TIROFIBAN'] },
+      { t: '<b>Тандемная окклюзия при диссекции ВСА:</b> STOP-CAD — с экстренным стентом реканализация чаще (81,8% против 76,6%), но функциональный исход и сВЧК (7,3% против 7,9%) не различались. Решают индивидуально; нужны РКИ.', src: ['STOPCAD'] }
+    ],
+    pfo: [
+      { t: '<b>КР 2024:</b> 18–60 лет, криптогенный инсульт (ESUS) и ООО с высоким риском эмболии — транскатетерное закрытие ООО с последующей длительной антитромбоцитарной терапией. ООО и аневризма межпредсердной перегородки (АМПП) — источники низкого или неопределённого кардиоэмболического риска.', src: ['KR24'] },
+      { t: '<b>Отбор по PASCAL:</b> шкала RoPE (молодой возраст, нет сосудистых факторов риска, корковый инфаркт) + признаки ООО высокого риска (большой шунт, АМПП). Эффект закрытия: связь «вероятна» — HR 0,10; «возможна» — HR 0,38; «маловероятна» — пользы нет (HR 1,14).', src: ['PASCAL', 'ESO24PFO'] },
+      { t: '<b>ESO 2024:</b> закрытие + антиагрегант у отобранных пациентов 18–60 лет с ООО-ассоциированным инсультом; больше всех выигрывают пациенты с большим шунтом и АМПП. При «маловероятной» связи по PASCAL — против закрытия. Старше 60 и моложе 18 лет — данных недостаточно.', src: ['ESO24PFO'] },
+      { t: '<span class="warn">Длительная ОАК вместо закрытия не рекомендуется</span>, если нет других показаний (ТГВ/ТЭЛА, ФП, АФС и др.). В CLOSE сравнение ОАК с антиагрегантами было недостаточно мощным: 3/187 против 7/174.', src: ['ESO24PFO', 'CLOSE'] },
+      { t: '<b>CLOSE:</b> закрытие + длительная антиагрегантная терапия — 0 инсультов из 238 против 14 из 235 на одних антиагрегантах (HR 0,03). Цена — осложнения процедуры 5,9% и ФП 4,6% против 0,9%.', src: ['CLOSE'] },
+      { t: '<b>После окклюдера:</b> в РКИ обычно АСК + клопидогрел 1–3 месяца, затем длительно монотерапия антиагрегантом. ФП после закрытия чаще (мета-анализ: Amplatzer 3,9% против 1,5%, GORE 6,6% против 0,4%); при «маловероятной» связи по PASCAL избыток ФП после 45-го дня — 4,4%.', src: ['CLOSE', 'PFOAF', 'PASCAL'] },
+      { t: '<b>Парадоксальная эмболия (Кулеш и соавт.):</b> кроме ООО — дефект межпредсердной перегородки и лёгочные артериовенозные мальформации. В анамнезе ищут ситуации с пробой Вальсальвы перед инсультом (натуживание, кашель, подъём тяжести), ТГВ и ТЭЛА.', src: ['KUL21PE', 'KUL19'] },
+      { t: '<b>ООО + ТГВ/ТЭЛА:</b> венозный тромбоз — самостоятельное показание к антикоагулянту (по правилам лечения ВТЭ); вопрос о закрытии ООО решают отдельно.', src: ['ESO24PFO', 'CHEST21'] }
+    ],
+    dvt: [
+      { t: '<b>Профилактика у обездвиженных (КР 2024):</b> перемежающаяся пневматическая компрессия (ППК). Из антикоагулянтов НМГ предпочтительнее НФГ; дозы профилактические — НФГ 5000 ЕД п/к 2–3 раза в сутки или НМГ.', src: ['KR24'] },
+      { t: '<b>CLOTS 3:</b> ППК снизила частоту проксимального ТГВ — 8,5% против 12,1% — и, возможно, улучшила выживаемость. Повреждения кожи — 3% против 1%.', src: ['CLOTS3'] },
+      { t: '<span class="warn">Компрессионные чулки до бедра не работают:</span> CLOTS 1 — проксимальный ТГВ 10,0% против 10,5%, повреждения кожи 5% против 1%.', src: ['CLOTS1'] },
+      { t: '<b>Профилактическая доза ≠ лечебная.</b> Лечебные дозы гепарина/НМГ сразу после ИИ при ФП не рекомендуются; профилактические у обездвиженных — допустимы. Лечебная доза нужна при подтверждённом ТГВ/ТЭЛА.', src: ['KR24'] },
+      { t: '<b>Проксимальный ТГВ после ИИ</b> — показание к полной антикоагуляции. РКИ о сроках старта после инсульта нет: решают индивидуально, сопоставляя риск ТЭЛА с размером инфаркта и геморрагической трансформацией. ТГВ, спровоцированный обратимым фактором (иммобилизацией), лечат обычно 3 месяца.', src: ['CHEST21', 'ESC19PE'] },
+      { t: '<b>Антикоагулянт абсолютно противопоказан</b> (например, паренхиматозная гематома) при проксимальном ТГВ — кава-фильтр, а антикоагулянт — как только позволит риск кровотечения.', src: ['CHEST21', 'ESC19PE'] },
+      { t: '<b>Изолированный ТГВ вен голени</b> без выраженных симптомов и факторов риска распространения — УЗИ раз в неделю в течение 2 недель вместо антикоагуляции; при распространении — лечить. Факторы риска распространения: положительный D-димер, тромб &gt;5 см или &gt;7 мм, несколько вен, близость к проксимальным венам, нет обратимой причины, рак, ВТЭ в анамнезе, <b>госпитализация</b>.', src: ['CHEST21'] },
+      { t: '<b>Антикоагулянт + АСК:</b> при ВТЭ добавление АСК почти удваивает клинически значимые кровотечения (36,6 против 16,9 на 100 пациенто-лет; HR 1,70). Антиагрегант на время лечения ТГВ оставляют только при веском показании (например, недавний стент); ДАТТ вместе с антикоагулянтом — избегать.', src: ['DAVIDSON', 'ESC24'] }
+    ]
+  };
+
+  // Карточки: q — вопрос (лицевая сторона), a — ответ.
+  const CARDS = [
+    { id: 'd1', t: 'dapt', q: 'Кому показана ДАТТ (АСК + клопидогрел) после ИИ/ТИА?', a: 'Малый <b>некардиоэмболический</b> ИИ (NIHSS ≤3) или ТИА высокого риска (ABCD2 ≥4). Старт в первые 12–24 ч (не позже 7 суток), курс 21–90 дней.', src: ['KR24', 'CHANCE', 'POINT'] },
+    { id: 'd2', t: 'dapt', q: 'Почему ДАТТ не продлевают дольше 90 дней?', a: 'Польза сосредоточена в первые недели (стандарт — <b>21 день</b>), дальше растёт риск кровотечений. ДАТТ дольше 90 дней не рекомендуется.', src: ['KR24', 'CHANCE'] },
+    { id: 'd3', t: 'dapt', q: 'ДАТТ с тикагрелором: кому, когда, сколько?', a: 'NIHSS ≤5 или ТИА высокого риска, без реперфузии: <b>тикагрелор + АСК 30 дней</b>, старт в первые 24 ч. Инсульт/смерть 5,5% vs 6,6%; тяжёлые кровотечения 0,5% vs 0,1%.', src: ['KR24', 'THALES'] },
+    { id: 'd4', t: 'dapt', q: 'Что показал CHANCE-2?', a: 'У носителей LOF-аллелей CYP2C19 <b>тикагрелор + АСК</b> лучше клопидогрела + АСК: инсульт 6,0% vs 7,6% (HR 0,77). Тяжёлые кровотечения не различались, всех кровотечений больше (5,3% vs 2,5%).', src: ['CHANCE2'] },
+    { id: 'd5', t: 'dapt', q: 'INSPIRES: что нового?', a: 'ДАТТ эффективна при старте <b>до 72 ч</b> у пациентов с малым ИИ (NIHSS ≤5)/ТИА высокого риска <b>атеросклеротического генеза</b>: инсульт 7,3% vs 9,2% (HR 0,79); умеренные/тяжёлые кровотечения 0,9% vs 0,4%.', src: ['INSPIRES'] },
+    { id: 'd6', t: 'dapt', q: 'Симптомный интракраниальный стеноз 70–99%: антитромбоцитарная тактика?', a: '<b>АСК + клопидогрел до 90 дней</b> на фоне интенсивного контроля факторов риска, затем монотерапия.', src: ['SAMMPRIS'] },
+    { id: 'd7', t: 'dapt', q: 'Атеротромботический ИИ высокого риска по Кулешу (2023): кто это и что предлагают?', a: 'Тяжёлый экстракраниальный, любой интракраниальный атеросклероз, атероматоз дуги аорты. <b>Короткая ДАТТ</b> (АСК + клопидогрел или тикагрелор), затем <b>АСК + ривароксабан 2,5 мг ×2</b> не ранее 30 дней, интенсивная гиполипидемическая терапия.', src: ['KUL23', 'COMPASS'] },
+    { id: 'f1', t: 'af', q: 'ПОАК или варфарин при ФП после инсульта?', a: '<b>ПОАК предпочтительнее.</b> Варфарин — при механических клапанах и умеренном/тяжёлом митральном стенозе.', src: ['ESC24', 'KUL24'] },
+    { id: 'f2', t: 'af', q: 'Митральный стеноз и механический митральный протез: какой ОАК и какое МНО?', a: 'Стеноз с площадью ≤1,5 см² — <b>только АВК, МНО 2–3</b>. Механический митральный протез — <b>варфарин, МНО 3,0 (2,5–3,5)</b>. ПОАК противопоказаны.', src: ['KUL24'] },
+    { id: 'f3', t: 'af', q: 'Сроки старта ПОАК при ФП после ИИ по ELAN?', a: 'По <b>размеру инфаркта на КТ/МРТ</b>: малый (≤1,5 см) и средний (бассейн корковой ветви) — <b>в первые 48 ч</b>; большой — <b>на 6–7 сутки</b>.', src: ['ELAN'] },
+    { id: 'f10', t: 'af', q: 'Как ELAN делит инфаркты на малые, средние и большие?', a: '<b>Малый</b> — ≤1,5 см. <b>Средний</b> — в бассейне корковой ветви СМА, ПМА или ЗМА. <b>Большой</b> — более обширный инфаркт в этих бассейнах, а также инфаркт ствола или мозжечка &gt;1,5 см. Решает визуализация, а не NIHSS.', src: ['ELAN'] },
+    { id: 'f11', t: 'af', q: 'Правило 1–3–6–12 (Динер, КР 2024) и ELAN — в чём разница?', a: 'Правило 1–3–6–12: тяжесть по клинике/NIHSS, старт на 1/3/6/12 день (КР 2024: 1 / 3 / 6–8 / 12–14). Это «поздняя» группа ELAN. Ранний старт по ELAN <b>не увеличил сВЧК и снизил события</b> — ориентир сегодня ELAN.', src: ['KR24', 'ELAN'] },
+    { id: 'f4', t: 'af', q: 'ELAN: что получили и кого не включали?', a: 'Составная точка 2,9% против 4,1% за 30 дней; повторный ИИ 1,4% против 2,5%; сВЧК <b>0,2% в обеих группах</b>. При большом инфаркте — 3,7% против 7,0%. Не включали пациентов с <b>выраженной геморрагической трансформацией</b> и уже получавших ОАК.', src: ['ELAN', 'ELANSIZE'] },
+    { id: 'f5', t: 'af', q: 'OPTIMAS и CATALYST: итог?', a: 'OPTIMAS: старт <b>≤4 дней</b> не хуже, чем на 7–14 день (3,3% против 3,3%). CATALYST (4 РКИ, 5441 пациент): ранний старт — составная точка 2,1% против 3,0% (OR 0,70), повторный ИИ OR 0,66, сВЧК 0,4% в обеих группах.', src: ['OPTIMAS', 'CATALYST'] },
+    { id: 'f6', t: 'af', q: 'Нужен ли «мост» гепарином/НМГ до старта ОАК после ИИ при ФП?', a: '<b>Нет.</b> Гепарин и НМГ сразу после ИИ при ФП не рекомендуются. Профилактические дозы против ТГВ у обездвиженных — допустимы.', src: ['KR24'] },
+    { id: 'f7', t: 'af', q: 'Можно ли снизить дозу ПОАК «для безопасности» у пожилого после инсульта?', a: '<b>Нет.</b> Только по критериям инструкции (апиксабан 2,5 мг ×2 — при ≥2 из 3: ≥80 лет, ≤60 кг, креатинин ≥133 мкмоль/л). Необоснованное снижение повышает риск инсульта, не снижая кровотечений.', src: ['ESC24'] },
+    { id: 'f8', t: 'af', q: 'Инсульт на фоне ОАК: первые шаги?', a: 'Искать <b>конкурирующий механизм</b> (атеросклероз, болезнь мелких сосудов, иные источники), проверить <b>дозу, приверженность, взаимодействия</b>.', src: ['ESC24', 'KUL24'] },
+    { id: 'f9', t: 'af', q: 'Инсульт на фоне ПОАК: добавить антиагрегант или сменить ПОАК?', a: '<b>Ни то, ни другое рутинно.</b> Антиагрегант — больше кровотечений без пользы; смена ПОАК на другой ПОАК или варфарин без показаний не рекомендуется. После «прорывного» инсульта риск повтора выше (HR 1,6), смена ОАК его не снижала.', src: ['ESC24', 'SEIFFGE'] },
+    { id: 'c1', t: 'combo', q: 'ФП + ИИ: можно ли ОАК + антиагрегант?', a: 'Большинству — <b>не рекомендуется</b>. Исключение — недавний ОКС/стентирование, по кардиологическим показаниям и на ограниченный срок.', src: ['KR24', 'ESC24'] },
+    { id: 'c2', t: 'combo', q: 'ФП + стабильная ИБС (ЧКВ более года назад): нужен ли антиагрегант к ОАК?', a: '<b>Нет, монотерапия ОАК.</b> AFIRE: ривароксабан один не хуже по эффективности и безопаснее комбинации; исследование остановили досрочно из-за роста смертности в группе комбинации.', src: ['AFIRE'] },
+    { id: 'c3', t: 'combo', q: 'ФП + ОКС/ЧКВ 2 недели назад: схема?', a: 'Короткая тройная терапия (обычно до 1 недели), затем <b>ОАК + клопидогрел</b> до 12 месяцев, далее ОАК. Без АСК — меньше кровотечений.', src: ['AUGUSTUS'] },
+    { id: 'c4', t: 'combo', q: 'ESUS: ОАК или антиагрегант?', a: '<b>Антиагрегант.</b> NAVIGATE ESUS, RE-SPECT ESUS — без пользы ОАК; ARCADIA (предсердная кардиопатия) — апиксабан не лучше АСК. Продолжать поиск ФП.', src: ['ESUS', 'ARCADIA'] },
+    { id: 'c5', t: 'combo', q: 'Субклиническая ФП по устройствам: ARTESiA и NOAH?', a: 'ARTESiA: апиксабан ↓ инсульт/эмболию (0,78% vs 1,24% в год), ↑ большие кровотечения (1,71% vs 0,94%). NOAH: эдоксабан без пользы. ESC 2024: <b>можно рассмотреть</b> при высоком риске инсульта и низком риске кровотечения.', src: ['ARTESIA', 'NOAH', 'ESC24'] },
+    { id: 'c6', t: 'combo', q: 'АСК + ривароксабан 2,5 мг ×2 после ИИ: кому и когда?', a: 'Без ФП, при мультифокальном атеросклерозе (по COMPASS — ИБС/атеросклероз периферических артерий), в группе высокого риска; <b>не ранее 30 дней</b> после ИИ/ТИА.', src: ['KUL23', 'COMPRU', 'COMPASS'] },
+    { id: 'l1', t: 'lat', q: 'Тромб в ушке ЛП при ИИ: что назначают и нужен ли гепарин?', a: '<b>ОАК</b> (ПОАК или варфарин) по общим срокам. Гепариновый «мост» — <b>нет</b>: гепарин и НМГ сразу после ИИ при ФП не рекомендуются.', src: ['KR24'] },
+    { id: 'l2', t: 'lat', q: 'Тромб в ушке ЛП: как и когда контролировать?', a: 'Повторная <b>ЧПЭхоКГ через 3–4 недели</b>. До растворения — <b>без кардиоверсии и абляции</b>; перед плановой кардиоверсией — ≥3 недель эффективной ОАК.', src: ['EHRA20', 'ESC24'] },
+    { id: 'l3', t: 'lat', q: 'Тромб сохраняется или возник на адекватной ОАК — что делать?', a: 'Проверить приверженность и дозу; <b>сменить ОАК на препарат с другим механизмом</b> (ПОАК ↔ варфарин, ингибитор Xa ↔ дабигатран), контроль через 3–4 недели; обычно до двух попыток, возможны НМГ.', src: ['EHRA20', 'EHRA23'] },
+    { id: 'l4', t: 'lat', q: 'ПОАК для растворения тромба ЛП/ушка — какие данные?', a: 'X-TRA: ривароксабан 6 недель — полное растворение <b>41,5%</b>, растворение или уменьшение <b>60,4%</b>. RE-LATED AF: дабигатран vs фенпрокумон с ЧПЭхоКГ на 3–6 неделе.', src: ['XTRA', 'RELATED'] },
+    { id: 'l5', t: 'lat', q: 'Окклюзия ушка ЛП у пациента с тромбом?', a: '<b>Противопоказана, пока тромб есть.</b> Её рассматривают без тромба: эмболии на фоне ОАК после исключения других причин или высокий риск кровотечений.', src: ['EHRA23'] },
+    { id: 'a1', t: 'aps', q: 'АФС + ИИ/ТИА: антикоагулянт и МНО?', a: '<b>Варфарин, МНО 2,5 (2–3).</b> EULAR 2019 при артериальном тромбозе допускает МНО 2–3 или 3–4 по индивидуальному риску.', src: ['KR24', 'EULAR19'] },
+    { id: 'a2', t: 'aps', q: 'Почему при АФС не используют ПОАК?', a: 'РКИ: TRAPS (тройная позитивность) — события 19% vs 3%, 4 ИИ на ривароксабане; Ordi-Ros — инсультов 9 vs 0; ASTRO-APS — 6 vs 0 на апиксабане. КР 2024: <b>ПОАК не рекомендуются</b>.', src: ['KR24', 'TRAPS', 'ORDIROS', 'ASTRO'] },
+    { id: 'a3', t: 'aps', q: 'Рецидив тромбоза при АФС на адекватном варфарине?', a: 'Добавить <b>низкую дозу АСК</b>, или повысить <b>МНО до 3–4</b>, или перейти на <b>НМГ</b>.', src: ['EULAR19'] },
+    { id: 'a4', t: 'aps', q: 'Как подтвердить АФС и в чём ловушка тестов?', a: 'Волчаночный антикоагулянт, антитела к кардиолипину и β2-гликопротеину I; повторить <b>через ≥12 недель</b>. Тест на ВА на фоне ПОАК и гепарина может быть ложноположительным.', src: ['EULAR19'] },
+    { id: 'a5', t: 'aps', q: 'Однократно положительные aPL без критериев АФС после ИИ?', a: '<b>Антиагрегант.</b> Варфарин не превосходит АСК.', src: ['APASS'] },
+    { id: 's1', t: 'stent', q: 'Стентирование ВСА: какая антиагрегантная схема до и после?', a: 'АСК 75–325 мг + клопидогрел 75 мг <b>не менее чем за 3 дня до</b> процедуры (срочно — нагрузка клопидогрелом 300 мг). <b>ДАТТ ≥4 недель</b> после, затем пожизненно монотерапия антиагрегантом.', src: ['ESVS23'] },
+    { id: 's2', t: 'stent', q: 'Симптомный стеноз ВСА: в какие сроки КЭЭ или стентирование?', a: '<b>Оптимально в первые 14 дней</b> после симптомов — на фоне антиагреганта, интенсивной гиполипидемической и антигипертензивной терапии.', src: ['ESVS23', 'KR24'] },
+    { id: 's3', t: 'stent', q: 'ФП + стентирование ВСА: какая схема?', a: '<b>РКИ нет.</b> По аналогии с ЧКВ (AUGUSTUS): <b>ОАК + клопидогрел без АСК</b> на срок ДАТТ после стента (≥4 недель), затем, как правило, монотерапия ОАК. Тройную терапию минимизируют. Это экспертная экстраполяция.', src: ['ESVS23', 'AUGUSTUS'] },
+    { id: 's4', t: 'stent', q: 'Интракраниальный стеноз 70–99%: стентировать?', a: '<b>Рутинно — нет.</b> SAMMPRIS: инсульт/смерть за 30 дней 14,7% против 5,8% на медикаментозной терапии; CASSISS: 8,0% против 7,2%. Стандарт — ДАТТ 90 дней + контроль факторов риска.', src: ['SAMMPRIS', 'CASSISS'] },
+    { id: 's5', t: 'stent', q: 'Повторный ИИ на адекватной ОАК + ипсилатеральный стеноз ВСА 50–99%: тактика?', a: '<b>КЭЭ или стентирование</b> (ESVS 2023). Антиагрегант к ОАК рутинно не добавляют и ОАК не меняют — устраняют конкурирующий механизм.', src: ['ESVS23', 'ESC24'] },
+    { id: 's6', t: 'stent', q: 'Экстренный стент ВСА при тандемной окклюзии: чем антиагрегировать?', a: '<b>РКИ нет.</b> Антиагрегация нужна против тромбоза стента, но повышает риск кровоизлияния. Регистр ARTISTA: тирофибан против АСК — тромбоз стента 1,3% против 9,4%, сВЧК 2,6% против 11,7%.', src: ['TIROFIBAN'] },
+    { id: 's7', t: 'stent', q: 'Тандемная окклюзия при диссекции ВСА: стентировать экстренно?', a: 'STOP-CAD (ретроспективно): с экстренным стентом <b>реканализация чаще</b> (81,8% против 76,6%), но <b>исход и сВЧК не различались</b>. Решают индивидуально.', src: ['STOPCAD'] },
+    { id: 'p1', t: 'pfo', q: 'Кому закрывают ООО по КР 2024?', a: '<b>18–60 лет</b>, криптогенный инсульт (ESUS) и ООО с высоким риском эмболии: транскатетерное закрытие, затем <b>длительно антиагрегант</b>.', src: ['KR24'] },
+    { id: 'p2', t: 'pfo', q: 'Что такое классификация PASCAL?', a: 'RoPE (молодой возраст, нет сосудистых факторов риска, корковый инфаркт) + признаки ООО высокого риска (большой шунт, АМПП) → связь инсульта с ООО <b>маловероятна / возможна / вероятна</b>. HR закрытия: 1,14 / 0,38 / 0,10.', src: ['PASCAL'] },
+    { id: 'p3', t: 'pfo', q: 'Кому закрытие ООО полезнее всего, а кому не нужно?', a: 'Больше всех выигрывают пациенты с <b>большим шунтом и АМПП</b>. Против закрытия — при «маловероятной» связи по PASCAL. Старше 60 и моложе 18 лет — данных недостаточно.', src: ['ESO24PFO'] },
+    { id: 'p4', t: 'pfo', q: 'ООО-ассоциированный инсульт: можно ли вместо закрытия назначить ОАК?', a: '<b>Нет</b> — длительная ОАК не рекомендуется без других показаний (ESO 2024). В CLOSE сравнение ОАК и антиагрегантов недостаточно мощное: 3/187 против 7/174.', src: ['ESO24PFO', 'CLOSE'] },
+    { id: 'p5', t: 'pfo', q: 'CLOSE: эффективность и цена закрытия ООО?', a: 'Инсультов <b>0 против 14</b> (HR 0,03). Осложнения процедуры 5,9%, ФП 4,6% против 0,9%.', src: ['CLOSE'] },
+    { id: 'p6', t: 'pfo', q: 'Антитромботическая терапия после окклюдера ООО?', a: 'В РКИ обычно <b>АСК + клопидогрел 1–3 месяца</b>, затем длительно <b>монотерапия антиагрегантом</b>. ФП после закрытия чаще: Amplatzer 3,9% против 1,5%, GORE 6,6% против 0,4%.', src: ['CLOSE', 'PFOAF', 'KR24'] },
+    { id: 'p7', t: 'pfo', q: 'Что в анамнезе подсказывает парадоксальную эмболию?', a: 'Инсульт после <b>пробы Вальсальвы</b> (натуживание, кашель, подъём тяжести), <b>ТГВ или ТЭЛА</b>. Кроме ООО — дефект межпредсердной перегородки, лёгочные артериовенозные мальформации.', src: ['KUL21PE'] },
+    { id: 'v1', t: 'dvt', q: 'Профилактика ТГВ у обездвиженного пациента с ИИ: что работает?', a: '<b>ППК</b> (CLOTS 3: проксимальный ТГВ 8,5% против 12,1%) и <b>НМГ в профилактической дозе</b> (предпочтительнее НФГ).', src: ['KR24', 'CLOTS3'] },
+    { id: 'v2', t: 'dvt', q: 'Компрессионные чулки после инсульта?', a: '<b>Нет.</b> CLOTS 1: проксимальный ТГВ 10,0% против 10,5%; повреждения кожи 5% против 1%.', src: ['CLOTS1'] },
+    { id: 'v3', t: 'dvt', q: 'Профилактические дозы НФГ/НМГ после ИИ — можно?', a: '<b>Да</b>, у обездвиженных: НФГ 5000 ЕД п/к 2–3 раза в сутки или НМГ (предпочтительнее). Не путать с лечебными дозами сразу после ИИ при ФП — они не рекомендуются.', src: ['KR24'] },
+    { id: 'v4', t: 'dvt', q: 'Изолированный ТГВ вен голени: всегда антикоагулянт?', a: '<b>Не всегда.</b> Без выраженных симптомов и факторов риска распространения — УЗИ еженедельно 2 недели; при распространении — лечить. Госпитализация — уже фактор риска распространения.', src: ['CHEST21'] },
+    { id: 'v5', t: 'dvt', q: 'Проксимальный ТГВ, спровоцированный иммобилизацией после ИИ: сколько лечить?', a: 'Обычно <b>3 месяца</b> полной антикоагуляции (обратимый провоцирующий фактор). Срок старта — индивидуально, по размеру инфаркта и геморрагической трансформации.', src: ['CHEST21', 'ESC19PE'] },
+    { id: 'v6', t: 'dvt', q: 'Проксимальный ТГВ, а антикоагулянт абсолютно противопоказан?', a: '<b>Кава-фильтр</b>, затем антикоагулянт, как только позволит риск кровотечения.', src: ['CHEST21', 'ESC19PE'] },
+    { id: 'v7', t: 'dvt', q: 'ТГВ на антикоагулянте — продолжать ли АСК?', a: 'АСК + антикоагулянт: клинически значимые кровотечения <b>36,6 против 16,9</b> на 100 пациенто-лет (HR 1,70). Оставлять — только при веском показании; ДАТТ + антикоагулянт — избегать.', src: ['DAVIDSON'] }
+  ];
+
+  // Клинические случаи: опции, a — индекс верного, why — разбор.
+  const CASES = [
+    { t: 'dapt', text: '67 лет. ТИА 6 часов назад: слабость в правой руке 20 минут. ABCD2 — 5. ЭКГ: синусовый ритм. КТ без очагов.', q: 'Антитромботическая терапия?',
+      opts: ['АСК 100 мг, монотерапия', 'АСК + клопидогрел с нагрузкой, 21 день, затем монотерапия', 'Апиксабан 5 мг ×2', 'АСК + клопидогрел на 12 месяцев'], a: 1,
+      why: 'ТИА высокого риска (ABCD2 ≥4) без кардиоэмболии — ДАТТ в первые 12–24 ч на 21 день. Больше 90 дней ДАТТ не рекомендуется.', src: ['KR24', 'CHANCE'] },
+    { t: 'dapt', text: 'Малый ИИ (NIHSS 3), прошло 40 часов. Атеросклероз: стеноз ипсилатеральной СМА 60%. Тромболизис не проводили.', q: 'Можно ли ещё начать ДАТТ?',
+      opts: ['Нет, окно ДАТТ — только 24 часа', 'Да: клопидогрел + АСК, при атеросклеротическом генезе — до 72 ч', 'Только тикагрелор в монотерапии', 'Начать ПОАК'], a: 1,
+      why: 'INSPIRES: ДАТТ, начатая до 72 ч при атеросклеротическом генезе, снизила частоту инсульта (7,3% vs 9,2%) ценой небольшого роста кровотечений.', src: ['INSPIRES'] },
+    { t: 'dapt', text: 'Малый ИИ (NIHSS 2). Генотипирование: носитель CYP2C19*2 (LOF-аллель).', q: 'Выбор ДАТТ?',
+      opts: ['Клопидогрел + АСК', 'Тикагрелор + АСК', 'Удвоенная доза клопидогрела', 'АСК монотерапия'], a: 1,
+      why: 'CHANCE-2: у носителей LOF-аллелей тикагрелор + АСК снизил риск инсульта (6,0% vs 7,6%); тяжёлые кровотечения не различались.', src: ['CHANCE2'] },
+    { t: 'dapt', text: 'ТИА в вертебробазилярном бассейне, симптомный стеноз основной артерии 80%. ФП нет.', q: 'Тактика антитромботической терапии?',
+      opts: ['АСК + клопидогрел до 90 дней + интенсивный контроль факторов риска', 'Стентирование и ДАТТ 21 день', 'Варфарин', 'АСК + клопидогрел пожизненно'], a: 0,
+      why: 'SAMMPRIS: агрессивная медикаментозная терапия с ДАТТ 90 дней лучше стентирования; затем монотерапия.', src: ['SAMMPRIS'] },
+    { t: 'dapt', text: 'Атеротромботический ИИ 2 месяца назад: стеноз ВСА 80% (оперирован), ИБС, атеросклероз артерий ног. ФП нет. ДАТТ завершена.', q: 'Как усилить длительную профилактику у пациента высокого риска?',
+      opts: ['Вернуть ДАТТ на год', 'АСК + ривароксабан 2,5 мг ×2', 'Апиксабан 5 мг ×2', 'Ничего: только АСК'], a: 1,
+      why: 'Мультифокальный атеросклероз: АСК + ривароксабан 2,5 мг ×2 (COMPASS) — не ранее 30 дней после ИИ; позиция Кулеша и соавт. (2023) и совета экспертов.', src: ['KUL23', 'COMPRU', 'COMPASS'] },
+    { t: 'af', text: 'ФП, ИИ NIHSS 4, небольшой корковый инфаркт, без геморрагической трансформации. День 1.', q: 'Когда начать ПОАК?',
+      opts: ['Через 14 дней — как всем', 'В первые 48 ч: по ELAN это малый/средний инфаркт', 'Сразу эноксапарин в лечебной дозе, ПОАК — при выписке', 'Только АСК до 3 месяцев'], a: 1,
+      why: 'ELAN: малый или средний инфаркт по визуализации — старт в первые 48 ч. По правилу 1–3–6–12 (КР 2024) вышел бы 3-й день; ELAN показал, что раньше не опаснее. CATALYST: старт ≤4 дней снижает повторный ИИ.', src: ['ELAN', 'CATALYST', 'KR24'] },
+    { t: 'af', text: 'ФП, тяжёлый ИИ: NIHSS 18, обширный инфаркт в бассейне СМА. Геморрагической трансформации нет.', q: 'Срок старта ОАК?',
+      opts: ['Через 24 часа', 'На 6–7 сутки (ELAN: большой инфаркт)', 'Не назначать ОАК вообще', 'Только через 12–14 дней — раньше опасно'], a: 1,
+      why: 'ELAN: большой инфаркт — 6–7 сутки. В подгруппе большого инфаркта события 3,7% против 7,0% без роста сВЧК. 12–14 дней по правилу 1–3–6–12 (КР 2024) — это «поздняя» группа ELAN.', src: ['ELAN', 'ELANSIZE', 'KR24'] },
+    { t: 'af', text: 'ФП. NIHSS 9: гемиплегия и дизартрия. МРТ: лакунарный инфаркт 1,3 см во внутренней капсуле. Геморрагической трансформации нет.', q: 'Когда начать ПОАК?',
+      opts: ['Через 6–8 дней: NIHSS 9 — средний инсульт', 'В первые 48 ч: по ELAN инфаркт ≤1,5 см — малый', 'Через 12–14 дней', 'Не раньше выписки'], a: 1,
+      why: 'ELAN оценивает тяжесть по размеру инфаркта на КТ/МРТ, а не по NIHSS: ≤1,5 см — малый, старт ≤48 ч. По правилу 1–3–6–12 с опорой на NIHSS вышло бы 6–8 дней.', src: ['ELAN', 'KR24'] },
+    { t: 'af', text: 'ФП. Инфаркт в бассейне корковой ветви СМА. На контрольной КТ — паренхиматозная гематома в зоне инфаркта (PH2).', q: 'Применимы ли сроки ELAN?',
+      opts: ['Да: ПОАК в первые 48 ч', 'Нет: выраженную геморрагическую трансформацию в ELAN не включали — срок решают индивидуально', 'ПОАК при ФП после гематомы не назначают никогда', 'Сразу лечебная доза НМГ'], a: 1,
+      why: 'ELAN не включал пациентов с выраженной геморрагической трансформацией, поэтому его сроки к ним не переносят. Решение индивидуальное (консилиум), с контролем визуализации.', src: ['ELAN'] },
+    { t: 'af', text: 'ФП, ИИ 2 дня назад. Кардиолог предлагает эноксапарин в лечебной дозе «пока не начнём ПОАК».', q: 'Ваше решение?',
+      opts: ['Согласиться: «мост» снижает риск повтора', 'Не назначать: гепарин/НМГ сразу после ИИ при ФП не рекомендуются', 'Назначить НФГ внутривенно', 'Назначить НМГ и АСК'], a: 1,
+      why: 'КР 2024: гепарин и НМГ непосредственно после ИИ при ФП не рекомендуются. Профилактические дозы против ТГВ у обездвиженных — допустимы.', src: ['KR24'] },
+    { t: 'af', text: '82 года, масса 70 кг, креатинин 90 мкмоль/л. ФП, ИИ. Назначен апиксабан 2,5 мг ×2 «из-за возраста».', q: 'Верная доза?',
+      opts: ['2,5 мг ×2 — верно', '5 мг ×2: критерий снижения только один', '2,5 мг 1 раз в день', 'Перевести на варфарин'], a: 1,
+      why: 'Апиксабан 2,5 мг ×2 — при ≥2 из 3 критериев (≥80 лет, ≤60 кг, креатинин ≥133 мкмоль/л). Необоснованное снижение повышает риск инсульта.', src: ['ESC24'] },
+    { t: 'af', text: '70 лет, клиренс креатинина 75 мл/мин, без взаимодействий. ФП. Повторный ИИ на фоне дабигатрана 110 мг ×2.', q: 'Наиболее вероятная коррекция?',
+      opts: ['Добавить АСК', 'Перейти на полную дозу 150 мг ×2: показаний к сниженной нет', 'Заменить на варфарин', 'Окклюзия ушка ЛП сразу'], a: 1,
+      why: 'Прорывной инсульт: проверить дозу. Сниженная доза без показаний — частая причина. Антиагрегант не добавляют, рутинная смена ОАК не рекомендуется.', src: ['ESC24', 'KUL24'] },
+    { t: 'af', text: 'ИИ на фоне апиксабана 5 мг ×2, приверженность хорошая. Обследование: симптомный стеноз ВСА 75% на стороне инфаркта.', q: 'Тактика?',
+      opts: ['Сменить на дабигатран', 'Добавить АСК пожизненно', 'Реваскуляризация ВСА по показаниям, продолжить ОАК, статин', 'Перевести на варфарин'], a: 2,
+      why: 'ESC 2024: при инсульте на фоне ОАК — искать конкурирующий механизм. Здесь он есть (атеросклероз ВСА). Смена ОАК и рутинное добавление антиагреганта не рекомендуются.', src: ['ESC24', 'SEIFFGE'] },
+    { t: 'af', text: 'ИИ. ФП нет. Ревматический митральный стеноз, площадь отверстия 1,2 см².', q: 'Антикоагулянт?',
+      opts: ['Апиксабан', 'Ривароксабан', 'Варфарин, МНО 2–3', 'Дабигатран'], a: 2,
+      why: 'Умеренный/тяжёлый митральный стеноз (≤1,5 см²) — только АВК, МНО 2–3; ПОАК противопоказаны.', src: ['KUL24'] },
+    { t: 'combo', text: 'ФП, ИИ. ИБС: ЧКВ со стентом 3 года назад, стенокардии нет. Получает АСК + апиксабан.', q: 'Что сделать с АСК?',
+      opts: ['Оставить АСК + апиксабан', 'Отменить АСК, монотерапия ОАК', 'Заменить АСК на клопидогрел', 'Отменить апиксабан'], a: 1,
+      why: 'Стабильная ИБС >12 мес — монотерапия ОАК (AFIRE: не хуже по эффективности, безопаснее; комбинация — больше смертей). КР 2024: комбинация ОАК + антиагрегант большинству не рекомендуется.', src: ['AFIRE', 'KR24'] },
+    { t: 'combo', text: 'ФП, малый ИИ. 2 недели назад ОКС, стентирование коронарной артерии.', q: 'Схема антитромботической терапии?',
+      opts: ['Только ПОАК', 'ПОАК + клопидогрел до 12 мес после ОКС (тройная — не дольше ~1 недели), затем ПОАК', 'ДАТТ без ОАК', 'Тройная терапия 12 месяцев'], a: 1,
+      why: 'AUGUSTUS: ОАК + ингибитор P2Y12 без АСК — меньше кровотечений. Тройная терапия — коротко, затем двойная до 12 месяцев, далее ОАК.', src: ['AUGUSTUS'] },
+    { t: 'combo', text: '58 лет, ESUS. Холтер 72 ч без ФП. NT-proBNP 400 пг/мл, ЛП расширено.', q: 'Профилактика?',
+      opts: ['Апиксабан — у него предсердная кардиопатия', 'Антиагрегант + длительный мониторинг ЭКГ для поиска ФП', 'Ривароксабан 15 мг', 'ДАТТ на год'], a: 1,
+      why: 'ARCADIA: апиксабан не лучше АСК при предсердной кардиопатии; NAVIGATE и RE-SPECT ESUS — без пользы ОАК при ESUS.', src: ['ARCADIA', 'ESUS'] },
+    { t: 'combo', text: 'ЭКС: эпизоды предсердной тахиаритмии (субклиническая ФП), до нескольких часов. ИИ в анамнезе, риск кровотечения низкий.', q: 'Как поступить?',
+      opts: ['ОАК противопоказаны', 'ПОАК можно рассмотреть: высокий риск инсульта при низком риске кровотечения', 'Только наблюдение', 'ДАТТ'], a: 1,
+      why: 'ARTESiA: апиксабан снизил риск инсульта, но увеличил большие кровотечения. ESC 2024: ПОАК можно рассмотреть при высоком риске инсульта и низком риске кровотечения.', src: ['ARTESIA', 'ESC24'] },
+    { t: 'lat', text: 'ФП, ИИ NIHSS 5. ЧПЭхоКГ: тромб в ушке ЛП 12 мм.', q: 'Тактика?',
+      opts: ['Срочная кардиоверсия', 'Лечебные дозы НМГ немедленно', 'ОАК по срокам, контроль ЧПЭхоКГ через 3–4 недели; кардиоверсия — только после растворения', 'Окклюзия ушка ЛП'], a: 2,
+      why: 'Тромб — показание к ОАК без гепаринового «моста». До подтверждённого растворения — без кардиоверсии и абляции.', src: ['KR24', 'EHRA20', 'ESC24'] },
+    { t: 'lat', text: 'Через 4 недели апиксабана 5 мг ×2 при хорошей приверженности тромб в ушке ЛП не уменьшился.', q: 'Следующий шаг?',
+      opts: ['Продолжать апиксабан ещё год', 'Сменить на ОАК с другим механизмом (варфарин или дабигатран), контроль через 3–4 недели', 'Добавить АСК', 'Окклюзия ушка ЛП'], a: 1,
+      why: 'Практика центров EHRA: при тромбе на адекватной ОАК — смена на препарат с другим механизмом и повторная визуализация через 3–4 недели; обычно до двух попыток, возможны НМГ.', src: ['EHRA20', 'EHRA23'] },
+    { t: 'lat', text: 'Пожилой пациент с тромбом в ушке ЛП, ФП, высокий риск кровотечений. Обсуждают окклюзию ушка ЛП.', q: 'Когда она возможна?',
+      opts: ['Сейчас, чтобы «закрыть» тромб', 'Только после растворения тромба', 'Никогда', 'Вместе с тромболизисом'], a: 1,
+      why: 'Окклюзия ушка ЛП при наличии тромба противопоказана. Её рассматривают без тромба: эмболии на фоне ОАК или высокий риск кровотечений.', src: ['EHRA23'] },
+    { t: 'lat', text: 'ФП, тромб в ушке ЛП, ИИ на ривароксабане. Коллега предлагает добавить клопидогрел.', q: 'Ваше решение?',
+      opts: ['Добавить клопидогрел', 'Не добавлять: польза не доказана, растёт риск кровотечений; проверить дозу и приверженность, сменить ОАК на препарат с другим механизмом', 'Добавить АСК и клопидогрел', 'Отменить ОАК'], a: 1,
+      why: 'ESC 2024: антиагрегант к ОАК после инсульта на фоне ОАК не добавляют. При тромбе — смена препарата на ОАК с другим механизмом.', src: ['ESC24', 'EHRA20'] },
+    { t: 'aps', text: '38 лет, ИИ. Тройная позитивность aPL, подтверждена через 12 недель. ФП нет.', q: 'Вторичная профилактика?',
+      opts: ['Ривароксабан 20 мг', 'Варфарин, МНО 2–3 (по EULAR возможно 3–4)', 'АСК 100 мг', 'Апиксабан 5 мг ×2'], a: 1,
+      why: 'КР 2024: при доказанном АФС — варфарин, МНО 2,5 (2–3); ПОАК не рекомендуются. TRAPS (тройная позитивность): на ривароксабане больше событий, включая ИИ.', src: ['KR24', 'TRAPS', 'EULAR19'] },
+    { t: 'aps', text: 'АФС, повторный ИИ на варфарине при МНО стабильно 2,4–2,8.', q: 'Что предложить?',
+      opts: ['Перейти на апиксабан', 'Добавить низкую дозу АСК, или МНО 3–4, или перейти на НМГ', 'Отменить антикоагулянт', 'ДАТТ'], a: 1,
+      why: 'EULAR 2019: при рецидиве на адекватной терапии — добавить низкую дозу АСК, повысить МНО до 3–4 или перейти на НМГ.', src: ['EULAR19'] },
+    { t: 'aps', text: 'ИИ у 45 лет. Однократно умеренно повышены антитела к кардиолипину; через 12 недель результат отрицательный.', q: 'Тактика?',
+      opts: ['Варфарин пожизненно', 'Антиагрегант: критериев АФС нет', 'Ривароксабан', 'Повторять анализ ежемесячно, без лечения'], a: 1,
+      why: 'Нестойкие aPL — не АФС. При изолированной позитивности варфарин не превосходит АСК (APASS).', src: ['APASS', 'EULAR19'] },
+    { t: 'aps', text: 'Пациент с АФС после ИИ просит заменить варфарин на ривароксабан: «неудобно контролировать МНО».', q: 'Ответ?',
+      opts: ['Можно, ПОАК не хуже', 'Нет: при АФС ПОАК повышают риск артериальных тромбозов, особенно инсульта', 'Можно при МНО-нестабильности', 'Только апиксабан'], a: 1,
+      why: 'КР 2024: ПОАК при АФС не рекомендуются. Ordi-Ros: 9 инсультов на ривароксабане vs 0 на АВК; ASTRO-APS: 6 vs 0 на апиксабане.', src: ['KR24', 'ORDIROS', 'ASTRO'] },
+    { t: 'aps', text: 'Пациенту на ривароксабане определили волчаночный антикоагулянт — положительно.', q: 'Как интерпретировать?',
+      opts: ['АФС доказан', 'Результат ненадёжен: ПОАК искажают тесты на ВА; повторить вне антикоагулянта или с поправкой на методику', 'Нужна ДАТТ', 'Срочно перевести на варфарин'], a: 1,
+      why: 'Тест на ВА на фоне антикоагулянтов (особенно ПОАК и гепарина) может давать ложноположительный результат; диагноз требует подтверждения через ≥12 недель.', src: ['EULAR19'] },
+    { t: 'stent', text: 'Малый ИИ 5 дней назад, симптомный стеноз ВСА 80%. Стентирование запланировано через сутки. Сейчас получает только АСК 100 мг.', q: 'Подготовка к стентированию?',
+      opts: ['Оставить только АСК', 'Добавить клопидогрел с нагрузкой 300 мг (до процедуры меньше 3 дней), после стента — ДАТТ не менее 4 недель', 'Заменить АСК на ривароксабан', 'Отменить АСК за 5 дней до процедуры'], a: 1,
+      why: 'ESVS 2023: клопидогрел за ≥3 дня до стентирования или нагрузка 300 мг при срочном вмешательстве; ДАТТ ≥4 недель, затем пожизненная монотерапия антиагрегантом.', src: ['ESVS23'] },
+    { t: 'stent', text: 'ФП, получает апиксабан 5 мг ×2. Повторная ТИА; стеноз ипсилатеральной ВСА 70%. Решено стентировать.', q: 'Схема после стентирования?',
+      opts: ['Апиксабан + АСК + клопидогрел 12 месяцев', 'Апиксабан + клопидогрел без АСК около 4 недель, затем апиксабан', 'Отменить апиксабан, ДАТТ пожизненно', 'Только апиксабан с первого дня'], a: 1,
+      why: 'РКИ нет. Экспертная экстраполяция с ЧКВ (AUGUSTUS): ОАК + ингибитор P2Y12 без АСК — меньше кровотечений. Срок двойной терапии — как у ДАТТ после стентирования ВСА (≥4 недель, ESVS 2023), затем ОАК. Событие на адекватной ОАК при стенозе 50–99% — показание к реваскуляризации.', src: ['ESVS23', 'AUGUSTUS'] },
+    { t: 'stent', text: 'Две ТИА за месяц на фоне АСК. Стеноз М1 левой СМА 85%. ФП нет. Последний эпизод — 4 недели назад.', q: 'Что предложить?',
+      opts: ['Стентирование М1 — так надёжнее', 'АСК + клопидогрел до 90 дней, затем монотерапия; жёсткий контроль факторов риска', 'Варфарин', 'ДАТТ пожизненно'], a: 1,
+      why: 'SAMMPRIS: инсульт/смерть за 30 дней 14,7% при стентировании против 5,8%; CASSISS: без разницы (8,0% против 7,2%). Стандарт — ДАТТ 90 дней и контроль факторов риска.', src: ['SAMMPRIS', 'CASSISS'] },
+    { t: 'stent', text: 'Тромбэктомия при тандемной окклюзии: атеросклеротическая окклюзия ВСА + М1. До этого — тромболизис. В ВСА ставят стент.', q: 'Что верно об антитромботической терапии?',
+      opts: ['После тромболизиса антиагреганты не нужны', 'Антиагрегация нужна против тромбоза стента; режим не стандартизирован, в наблюдательных данных тирофибан дал меньше тромбозов стента и сВЧК, чем АСК', 'Сразу ОАК в лечебной дозе', 'ДАТТ с нагрузкой — стандарт, доказанный в РКИ'], a: 1,
+      why: 'РКИ по антитромботике при экстренном стентировании нет. ARTISTA (ретроспективно): тирофибан против АСК — тромбоз стента 1,3% против 9,4%, сВЧК 2,6% против 11,7%.', src: ['TIROFIBAN'] },
+    { t: 'stent', text: 'Диссекция ВСА с тандемной окклюзией, идёт тромбэктомия. Интервенционный хирург спрашивает, ставить ли стент в ВСА.', q: 'Что известно?',
+      opts: ['Стент обязательно улучшает исход', 'STOP-CAD: со стентом реканализация чаще, но исход и сВЧК не различаются; решение индивидуальное', 'Стент при диссекции противопоказан', 'Стент удваивает риск сВЧК'], a: 1,
+      why: 'STOP-CAD (вторичный анализ): реканализация 81,8% против 76,6%; функциональная независимость и сВЧК без значимых различий. Нужны РКИ.', src: ['STOPCAD'] },
+    { t: 'pfo', text: '42 года, ESUS, корковый инфаркт. Сосудистых факторов риска нет. ЧПЭхоКГ: ООО с большим шунтом и аневризмой МПП.', q: 'Тактика?',
+      opts: ['Пожизненно варфарин', 'Закрытие ООО + длительно антиагрегант', 'Только АСК: закрытие не нужно', 'ДАТТ пожизненно'], a: 1,
+      why: 'PASCAL: связь с ООО «вероятна» (высокий RoPE + признаки высокого риска) — HR 0,10. КР 2024 и ESO 2024: закрытие + антиагрегант в 18–60 лет.', src: ['KR24', 'ESO24PFO', 'PASCAL'] },
+    { t: 'pfo', text: '58 лет, АГ, сахарный диабет, курит. Лакунарный инфаркт. На ЧПЭхоКГ — небольшое ООО без аневризмы МПП.', q: 'Закрывать ООО?',
+      opts: ['Да, всем с ООО до 60 лет', 'Нет: связь «маловероятна» по PASCAL, пользы нет; лечить ведущий механизм', 'Да, и добавить варфарин', 'Вместо закрытия назначить ОАК'], a: 1,
+      why: 'PASCAL «маловероятно»: HR 1,14, избыток ФП после 45-го дня 4,4%. ESO 2024 — против закрытия.', src: ['PASCAL', 'ESO24PFO'] },
+    { t: 'pfo', text: '35 лет, ООО-ассоциированный инсульт. От закрытия ООО пациентка отказывается и просит «самый сильный препарат».', q: 'Что рекомендовать?',
+      opts: ['Ривароксабан пожизненно', 'Антиагрегант; длительная ОАК без других показаний не рекомендуется', 'ДАТТ пожизненно', 'Ничего не назначать'], a: 1,
+      why: 'ESO 2024: против длительной антикоагуляции при ООО-ассоциированном инсульте без других показаний. CLOSE: ОАК против антиагрегантов — 3/187 и 7/174, мощности недостаточно.', src: ['ESO24PFO', 'CLOSE'] },
+    { t: 'pfo', text: '45 лет. Инсульт развился, когда поднимал тяжёлую коробку, через неделю после долгого авиаперелёта. ООО. УЗДС вен ног: тромбоз подколенной вены.', q: 'Главное решение по антитромботике?',
+      opts: ['Только АСК', 'Антикоагулянт по показанию ВТЭ, старт с учётом размера инфаркта; закрытие ООО — отдельный вопрос', 'Срочно закрыть ООО, антикоагулянт не нужен', 'ДАТТ 21 день'], a: 1,
+      why: 'Классика парадоксальной эмболии: проба Вальсальвы + ТГВ. Проксимальный ТГВ — самостоятельное показание к антикоагуляции; ESO 2024 допускает ОАК при ООО, если есть другое показание.', src: ['KUL21PE', 'ESO24PFO', 'CHEST21'] },
+    { t: 'dvt', text: 'ИИ, NIHSS 14, гемиплегия, не ходит. Вторые сутки.', q: 'Профилактика ТГВ?',
+      opts: ['Компрессионные чулки до бедра', 'ППК + НМГ в профилактической дозе с учётом риска кровотечения', 'Эноксапарин в лечебной дозе', 'Ничего, пока не начнёт ходить'], a: 1,
+      why: 'КР 2024: ППК у обездвиженных; НМГ предпочтительнее НФГ. CLOTS 3: ППК снижает проксимальный ТГВ; CLOTS 1: чулки не работают.', src: ['KR24', 'CLOTS3', 'CLOTS1'] },
+    { t: 'dvt', text: 'День 8 после ИИ средней тяжести, ФП нет, получает АСК. Отёк голени. УЗДС: тромбоз задних большеберцовых вен 3 см, подколенная вена и выше свободны. На КТ — петехиальная геморрагическая трансформация.', q: 'Тактика?',
+      opts: ['Лечебная доза НМГ немедленно + АСК', 'При высоком риске кровотечения — УЗИ еженедельно 2 недели, при распространении — антикоагуляция', 'Кава-фильтр', 'Дистальный тромбоз не опасен — ничего'], a: 1,
+      why: 'CHEST 2021: изолированный дистальный ТГВ — серийное УЗИ 2 недели или антикоагуляция при факторах риска распространения (госпитализация — один из них). При высоком риске кровотечения разумно серийное УЗИ; распространение — показание к антикоагуляции. Кава-фильтр при дистальном ТГВ не показан.', src: ['CHEST21'] },
+    { t: 'dvt', text: 'ИИ, NIHSS 6, небольшой инфаркт, день 5. Геморрагической трансформации нет. ФП нет; получает АСК + клопидогрел по поводу стеноза ВСА. УЗДС: тромбоз бедренной вены.', q: 'Что сделать?',
+      opts: ['Продолжить ДАТТ и добавить ривароксабан', 'Начать полную антикоагуляцию; ДАТТ не сохранять — максимум один антиагрегант при веском показании', 'Только ДАТТ — она защитит и вены', 'Кава-фильтр вместо антикоагуляции'], a: 1,
+      why: 'Проксимальный ТГВ — показание к антикоагуляции (при спровоцированном — обычно 3 месяца). АСК к антикоагулянту увеличивает клинически значимые кровотечения (HR 1,70); ДАТТ + антикоагулянт — избегать. Кава-фильтр — только при абсолютных противопоказаниях к антикоагуляции.', src: ['CHEST21', 'DAVIDSON', 'ESC19PE'] },
+    { t: 'dvt', text: 'Обширный ИИ с паренхиматозной гематомой, третьи сутки. УЗДС: проксимальный ТГВ. Признаков ТЭЛА нет.', q: 'Тактика?',
+      opts: ['Лечебная доза НМГ сразу', 'Кава-фильтр сейчас; антикоагулянт — как только позволит риск кровотечения', 'Только компрессионные чулки', 'АСК'], a: 1,
+      why: 'Проксимальный ТГВ при абсолютном противопоказании к антикоагуляции — кава-фильтр; антикоагуляцию начинают, когда риск кровотечения снизится.', src: ['CHEST21', 'ESC19PE'] }
+  ];
+
+  const TEST = [
+    { t: 'dapt', q: 'Какую максимальную длительность ДАТТ при некардиоэмболическом ИИ/ТИА допускают КР 2024?', opts: ['21 день', '90 дней', '6 месяцев', '12 месяцев'], a: 1, why: 'КР 2024: ДАТТ дольше 90 суток не рекомендуется из-за риска кровотечений; стандарт — 21 день.', src: ['KR24'] },
+    { t: 'dapt', q: 'Когда начинают ДАТТ после малого ИИ/ТИА высокого риска?', opts: ['В идеале в первые 12–24 ч, не позже 7 суток', 'Не раньше 72 ч', 'Через 14 дней', 'После выписки'], a: 0, why: 'КР 2024: как можно раньше, в идеале 12–24 ч; INSPIRES расширил окно до 72 ч при атеросклеротическом генезе.', src: ['KR24', 'INSPIRES'] },
+    { t: 'dapt', q: 'Схема по THALES:', opts: ['Тикагрелор + АСК 30 дней', 'Тикагрелор в монотерапии 90 дней', 'Клопидогрел + АСК 21 день', 'Прасугрел + АСК'], a: 0, why: 'THALES: тикагрелор + АСК 30 дней при NIHSS ≤5 или ТИА высокого риска; ↓ инсульт/смерть, ↑ тяжёлые кровотечения.', src: ['THALES', 'KR24'] },
+    { t: 'dapt', q: 'Кому по CHANCE-2 тикагрелор + АСК предпочтительнее клопидогрела + АСК?', opts: ['Всем пациентам с ТИА', 'Носителям LOF-аллелей CYP2C19', 'Пациентам старше 80 лет', 'При интракраниальном стенозе'], a: 1, why: 'CHANCE-2: у носителей LOF-аллелей CYP2C19 инсульт 6,0% vs 7,6%.', src: ['CHANCE2'] },
+    { t: 'af', q: 'ФП. На МРТ — инфаркт в бассейне корковой ветви СМА (средний по ELAN). Когда начать ПОАК?', opts: ['В первые 48 ч', 'Через 3–4 дня', 'Через 6–8 дней', 'Через 12–14 дней'], a: 0, why: 'ELAN: малый и средний инфаркт — старт в первые 48 ч; большой — 6–7 сутки.', src: ['ELAN'] },
+    { t: 'af', q: 'По какому признаку ELAN определяет тяжесть инсульта для выбора срока ПОАК?', opts: ['По NIHSS', 'По размеру инфаркта на КТ/МРТ', 'По шкале Рэнкина', 'По возрасту'], a: 1, why: 'ELAN: малый (≤1,5 см), средний (бассейн корковой ветви) и большой инфаркт — по визуализации.', src: ['ELAN'] },
+    { t: 'af', q: 'Большой инфаркт по ELAN. Ранний старт ПОАК —', opts: ['В первые 48 ч', 'На 6–7 сутки', 'На 12–14 сутки', 'Через 1 месяц'], a: 1, why: 'ELAN: большой инфаркт — 6–7 сутки (12–14 сутки — «поздняя» группа, правило 1–3–6–12). В подгруппе большого инфаркта ранний старт не повысил сВЧК.', src: ['ELAN', 'ELANSIZE'] },
+    { t: 'af', q: 'Что показал мета-анализ CATALYST (2025)?', opts: ['Ранний старт ПОАК повышает риск ВЧК', 'Старт ≤4 дней снижает повторный ИИ без роста сВЧК', 'Сроки не влияют ни на что', 'ПОАК хуже варфарина'], a: 1, why: 'CATALYST: OR 0,70 по составной точке, OR 0,66 по повторному ИИ, без роста симптомных ВЧК.', src: ['CATALYST'] },
+    { t: 'af', q: 'Гепарин/НМГ в лечебной дозе сразу после ИИ при ФП «до старта ПОАК»:', opts: ['Рекомендуется всем', 'Не рекомендуется', 'Только при NIHSS <8', 'Только при тромбе в ЛП'], a: 1, why: 'КР 2024: гепарин и НМГ непосредственно после ИИ при ФП не рекомендуются; «мост» не нужен.', src: ['KR24'] },
+    { t: 'af', q: '84 года, 75 кг, креатинин 95 мкмоль/л, ФП после ИИ. Доза апиксабана?', opts: ['2,5 мг ×2', '5 мг ×2', '2,5 мг 1 раз в день', '10 мг ×2'], a: 1, why: 'Нужно ≥2 из 3 критериев (≥80 лет, ≤60 кг, креатинин ≥133 мкмоль/л); здесь только возраст. ESC 2024 предостерегает от необоснованного снижения дозы.', src: ['ESC24'] },
+    { t: 'af', q: 'ИИ на фоне ПОАК. Что ESC 2024 НЕ рекомендует?', opts: ['Искать конкурирующий механизм', 'Проверять приверженность', 'Добавлять антиагрегант к ОАК', 'Проверять дозу'], a: 2, why: 'ESC 2024: добавление антиагреганта — больше кровотечений без доказанной пользы; рутинная смена ПОАК тоже не рекомендуется.', src: ['ESC24'] },
+    { t: 'combo', q: 'ФП + стабильная ИБС (ЧКВ более 1 года назад) после ИИ:', opts: ['ОАК + АСК', 'Монотерапия ОАК', 'ДАТТ', 'ОАК + клопидогрел пожизненно'], a: 1, why: 'AFIRE: монотерапия ривароксабаном не хуже по эффективности и безопаснее комбинации.', src: ['AFIRE'] },
+    { t: 'combo', q: 'ESUS с признаками предсердной кардиопатии (ARCADIA):', opts: ['Апиксабан лучше АСК', 'Апиксабан не лучше АСК', 'Варфарин лучше АСК', 'Нужна ДАТТ на год'], a: 1, why: 'ARCADIA (JAMA 2024): апиксабан не снизил риск повторного инсульта по сравнению с АСК.', src: ['ARCADIA'] },
+    { t: 'lat', q: 'Тромб в ушке ЛП обнаружен на ЧПЭхоКГ. Что до его растворения противопоказано?', opts: ['ОАК', 'Кардиоверсия и окклюзия ушка ЛП', 'Статины', 'Контрольная ЧПЭхоКГ'], a: 1, why: 'Кардиоверсия, абляция и окклюзия ушка ЛП — только после подтверждённого растворения тромба; контроль через 3–4 недели.', src: ['EHRA20', 'EHRA23', 'ESC24'] },
+    { t: 'lat', q: 'Тромб в ушке ЛП не растворился на адекватной ОАК. Наиболее принятый шаг?', opts: ['Добавить АСК', 'Сменить ОАК на препарат с другим механизмом действия', 'Отменить ОАК', 'Удвоить дозу ПОАК'], a: 1, why: 'Опросы EHRA (2020, 2023): смена ОАК на препарат с другим механизмом и повторная визуализация через 3–4 недели.', src: ['EHRA20', 'EHRA23'] },
+    { t: 'aps', q: 'Доказанный АФС + ИИ. Препарат по КР 2024?', opts: ['Ривароксабан', 'Апиксабан', 'Варфарин, МНО 2,5 (2–3)', 'АСК'], a: 2, why: 'КР 2024: варфарин, целевое МНО 2,5 (2–3); ПОАК не рекомендуются.', src: ['KR24'] },
+    { t: 'aps', q: 'Результат TRAPS:', opts: ['Ривароксабан не хуже варфарина', 'При тройной позитивности на ривароксабане больше тромбозов, включая инсульты', 'Апиксабан лучше варфарина', 'АСК не хуже варфарина'], a: 1, why: 'TRAPS остановлен досрочно: события 19% vs 3%, 4 ИИ и 3 ИМ на ривароксабане.', src: ['TRAPS'] },
+    { t: 'stent', q: 'Минимальный срок ДАТТ после стентирования ВСА по ESVS 2023:', opts: ['7 дней', '4 недели', '12 месяцев', 'ДАТТ не нужна'], a: 1, why: 'ESVS 2023: АСК + клопидогрел не менее 4 недель, затем пожизненно монотерапия антиагрегантом.', src: ['ESVS23'] },
+    { t: 'stent', q: 'CASSISS (2022), интракраниальный стеноз 70–99%: стент + медикаментозная терапия против одной медикаментозной —', opts: ['Стент вдвое снизил риск', 'Значимой разницы нет (8,0% против 7,2%)', 'Стент снизил смертность', 'Медикаментозная терапия хуже'], a: 1, why: 'CASSISS: инсульт/смерть 8,0% против 7,2% (HR 1,10), вторичные точки тоже без разницы. Не поддерживает рутинное стентирование.', src: ['CASSISS'] },
+    { t: 'stent', q: 'Повторный ИИ на адекватной ОАК, ипсилатеральный стеноз ВСА 60%. По ESVS 2023:', opts: ['Добавить АСК к ОАК', 'КЭЭ или стентирование', 'Сменить ПОАК на другой', 'Удвоить дозу ПОАК'], a: 1, why: 'ESVS 2023: при повторных событиях на терапевтической антикоагуляции и ипсилатеральном стенозе 50–99% рекомендуются КЭЭ или стентирование.', src: ['ESVS23'] },
+    { t: 'pfo', q: 'Возраст, в котором закрытие ООО рекомендовано по КР 2024 и ESO 2024:', opts: ['До 45 лет', '18–60 лет', 'Старше 60 лет', 'Любой возраст'], a: 1, why: 'КР 2024 и ESO 2024: 18–60 лет; для пациентов старше 60 и моложе 18 лет данных недостаточно.', src: ['KR24', 'ESO24PFO'] },
+    { t: 'pfo', q: 'Связь инсульта с ООО по PASCAL «маловероятна». Закрытие ООО —', opts: ['Обязательно', 'Не рекомендуется: пользы нет, ФП чаще', 'Только вместе с варфарином', 'Только при ТИА'], a: 1, why: 'PASCAL: HR 1,14 при «маловероятной» связи, избыток ФП после 45-го дня 4,4%. ESO 2024 — против закрытия.', src: ['PASCAL', 'ESO24PFO'] },
+    { t: 'pfo', q: 'Длительная терапия после закрытия ООО (КР 2024):', opts: ['ОАК пожизненно', 'Длительно антиагрегант', 'Ничего не нужно', 'ДАТТ пожизненно'], a: 1, why: 'КР 2024: транскатетерное закрытие ООО с последующей длительной антитромбоцитарной терапией; в РКИ сначала ДАТТ 1–3 месяца.', src: ['KR24', 'CLOSE'] },
+    { t: 'dvt', q: 'Что снижает риск проксимального ТГВ у обездвиженных после инсульта?', opts: ['Компрессионные чулки до бедра', 'Перемежающаяся пневматическая компрессия', 'Строгий постельный режим', 'АСК в монотерапии'], a: 1, why: 'CLOTS 3: ППК — 8,5% против 12,1%. CLOTS 1: чулки до бедра — без эффекта (10,0% против 10,5%).', src: ['CLOTS3', 'CLOTS1'] },
+    { t: 'dvt', q: 'Какой антикоагулянт предпочтителен для профилактики ТГВ после ИИ по КР 2024?', opts: ['НФГ', 'НМГ', 'Варфарин', 'Дабигатран'], a: 1, why: 'КР 2024: для профилактики ТГВ и ТЭЛА НМГ предпочтительнее НФГ; дозы профилактические.', src: ['KR24'] },
+    { t: 'dvt', q: 'Изолированный ТГВ вен голени без выраженных симптомов и факторов риска распространения (CHEST 2021):', opts: ['Кава-фильтр', 'УЗИ еженедельно 2 недели вместо антикоагуляции', 'Тромболизис', 'Антикоагуляция 12 месяцев'], a: 1, why: 'CHEST 2021: серийное УЗИ 2 недели; антикоагуляция — при распространении тромба, выраженных симптомах или факторах риска распространения.', src: ['CHEST21'] }
+  ];
+  /*DATA-END*/
+
+  /* ================= УТИЛИТЫ ================= */
+  const INTERVALS = [1, 3, 7, 16];
+  const SESSION_MAX = 12;
+  const LS_KEY = 'stroke-att.progress.v1';
+  const TAB_KEY = 'stroke-att.tab';
+  const ORDER = (function () {     // по одной карточке из каждой темы по кругу
+    const by = {};
+    CARDS.forEach(c => { (by[c.t] = by[c.t] || []).push(c.id); });
+    const keys = Object.keys(TOPICS), out = [];
+    for (let i = 0; out.length < CARDS.length; i++) keys.forEach(k => { if (by[k] && by[k][i]) out.push(by[k][i]); });
+    return out;
+  })();
+  const byId = Object.fromEntries(CARDS.map(c => [c.id, c]));
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const reduced = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const srcTags = keys => '<span class="srcs">' + keys.map(k => {
+    const s = SOURCES[k];
+    return s.url
+      ? '<a class="src' + (s.ru ? ' ru' : '') + '" href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.tag) + '</a>'
+      : '<span class="src' + (s.ru ? ' ru' : '') + '">' + esc(s.tag) + '</span>';
+  }).join('') + '</span>';
+  const topicLabel = t => TOPICS[t].name;
+
+  function plural(n, one, few, many) {
+    const a = Math.abs(n) % 100, b = a % 10;
+    if (a > 10 && a < 20) return many;
+    if (b > 1 && b < 5) return few;
+    if (b === 1) return one;
+    return many;
+  }
+  function today() {
+    const d = new Date();
+    return Math.floor((d.getTime() - d.getTimezoneOffset() * 60000) / 86400000);
+  }
+  function inDays(n) {
+    return n <= 0 ? 'сегодня' : n === 1 ? 'завтра' : 'через ' + n + ' ' + plural(n, 'день', 'дня', 'дней');
+  }
+  function shuffle(a) {
+    const r = a.slice();
+    for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; }
+    return r;
+  }
+
+  /* ================= ПРОГРЕСС ================= */
+  function blank() { return { v: 1, t: 0, resetAt: 0, cards: {}, test: { best: null, last: null, at: 0 } }; }
+  function normalize(s) {
+    const b = blank();
+    if (!s || typeof s !== 'object' || s.v !== 1) return b;
+    b.t = +s.t || 0;
+    b.resetAt = +s.resetAt || 0;
+    if (s.cards && typeof s.cards === 'object') {
+      for (const id of Object.keys(s.cards)) {
+        const c = s.cards[id];
+        if (byId[id] && c && typeof c === 'object') b.cards[id] = { l: Math.max(0, Math.min(4, c.l | 0)), d: c.d | 0, t: +c.t || 0, n: c.n | 0 };
+      }
+    }
+    if (s.test && typeof s.test === 'object') {
+      b.test.best = Number.isFinite(s.test.best) ? s.test.best : null;
+      b.test.last = Number.isFinite(s.test.last) ? s.test.last : null;
+      b.test.at = +s.test.at || 0;
+    }
+    return b;
+  }
+  function loadLocal() {
+    try { const raw = localStorage.getItem(LS_KEY); if (raw) return normalize(JSON.parse(raw)); } catch (e) { /* пусто */ }
+    return blank();
+  }
+  function saveLocal() { try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) { /* приватный режим */ } }
+  function save() { saveLocal(); sync.push(); }
+  let state = loadLocal();
+
+  function mergeIn(r) {
+    const before = JSON.stringify(state);
+    const resetAt = Math.max(state.resetAt, r.resetAt);
+    const cards = {};
+    for (const id of ORDER) {
+      const a = state.cards[id], b = r.cards[id];
+      const pick = !a ? b : !b ? a : (b.t > a.t ? b : a);
+      if (pick && pick.t >= resetAt) cards[id] = pick;
+    }
+    const test = r.test.at > state.test.at ? Object.assign({}, r.test) : Object.assign({}, state.test);
+    const bests = [state.test.best, r.test.best].filter(Number.isFinite);
+    test.best = bests.length ? Math.max.apply(null, bests) : null;
+    state = { v: 1, t: Math.max(state.t, r.t), resetAt: resetAt, cards: cards, test: test };
+    return JSON.stringify(state) !== before;
+  }
+
+  // Синхронизация между iPhone и iPad — только когда страница открыта как артефакт Claude.
+  const sync = {
+    ref: null, on: false, busy: false, again: false, timer: 0,
+    async init() {
+      if (!window.claude || typeof window.claude.use !== 'function') return;
+      try {
+        const res = await Promise.all([window.claude.use('user'), window.claude.use('db')]);
+        const user = res[0], db = res[1];
+        if (!user || !db) return;
+        const id = await user.id();
+        if (!id) return;
+        this.ref = db.doc('data/users/' + id + '/progress');
+        await this.pull();
+        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') this.pull(); });
+      } catch (e) { this.ref = null; }
+    },
+    async pull() {
+      if (!this.ref) return;
+      try {
+        const snap = await this.ref.get();
+        this.on = true;
+        renderSyncNote();
+        const remote = snap.exists ? normalize(snap.data()) : null;
+        if (remote && mergeIn(remote)) { saveLocal(); onExternalChange(); }
+        const differs = remote ? JSON.stringify(remote) !== JSON.stringify(state) : state.t > 0;
+        if (differs) this.push(0);
+      } catch (e) { this.fail(e); }
+    },
+    push(delay) {
+      if (!this.ref) return;
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => this.flush(), delay == null ? 1200 : delay);
+    },
+    async flush() {
+      if (!this.ref) return;
+      if (this.busy) { this.again = true; return; }
+      this.busy = true;
+      try { await this.ref.set(JSON.parse(JSON.stringify(state))); }
+      catch (e) { this.fail(e); }
+      finally { this.busy = false; if (this.again) { this.again = false; this.flush(); } }
+    },
+    fail(e) {
+      const code = e && e.code;
+      if (code && code !== 'unavailable' && code !== 'resource_exhausted') { this.ref = null; this.on = false; renderSyncNote(); }
+    }
+  };
+
+  function counts() {
+    let fresh = 0, learning = 0, solid = 0, due = 0;
+    const t = today();
+    for (const id of ORDER) {
+      const c = state.cards[id];
+      if (!c) { fresh++; continue; }
+      if (c.l >= 3) solid++; else learning++;
+      if (c.d <= t) due++;
+    }
+    return { fresh: fresh, learning: learning, solid: solid, due: due, pending: due + fresh };
+  }
+  function nextDueIn() {
+    const t = today();
+    let min = Infinity;
+    for (const id of ORDER) { const c = state.cards[id]; if (c && c.d > t) min = Math.min(min, c.d); }
+    return min === Infinity ? 0 : min - t;
+  }
+
+  /* ================= РАЗБОР ================= */
+  function renderReview() {
+    $('#topicNav').innerHTML = Object.keys(TOPICS).map(k =>
+      '<button type="button" class="tchip t-' + k + '" data-jump="' + k + '">' + esc(TOPICS[k].short) + '</button>').join('');
+    $('#topics').innerHTML = Object.keys(TOPICS).map(k =>
+      '<section class="panel topic t-' + k + '" id="topic-' + k + '">' +
+        '<div class="topic-head"><h3 class="topic-title">' + esc(TOPICS[k].name) + '</h3>' +
+        '<span class="topic-count">' + REVIEW[k].length + ' ' + plural(REVIEW[k].length, 'тезис', 'тезиса', 'тезисов') + '</span></div>' +
+        '<ul class="points">' + REVIEW[k].map(p => '<li><p>' + p.t + srcTags(p.src) + '</p></li>').join('') + '</ul>' +
+      '</section>').join('');
+    $('#refs').innerHTML = Object.keys(SOURCES).map(k => {
+      const s = SOURCES[k];
+      return '<li><span class="tag">' + esc(s.tag) + '.</span> ' + esc(s.ref) +
+        (s.url ? ' <a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.url.replace('https://', '')) + '</a>' : '') + '</li>';
+    }).join('');
+    renderStats();
+  }
+  function statsHTML() {
+    const k = counts();
+    return '<div><b>' + k.fresh + '</b><span>новых</span></div>' +
+      '<div><b>' + k.learning + '</b><span>учу</span></div>' +
+      '<div><b>' + k.solid + '</b><span>закреплено</span></div>';
+  }
+  function renderStats() { $('#stats').innerHTML = statsHTML(); }
+  function renderSyncNote() {
+    $('#syncNote').textContent = sync.on ? 'Прогресс синхронизируется между вашими устройствами.' : 'Прогресс хранится на этом устройстве.';
+  }
+  function renderDueChip() {
+    const k = counts();
+    $('#dueChip').innerHTML = k.pending ? 'Сегодня: <b>' + k.pending + '</b>' : 'Всё повторено';
+  }
+
+  /* ================= КАРТОЧКИ ================= */
+  let session = { queue: [], total: 0, flipped: false, touched: false, cram: false };
+
+  function buildSession(cram) {
+    const t = today();
+    let q;
+    if (cram) q = shuffle(ORDER);
+    else {
+      const due = ORDER.filter(id => state.cards[id] && state.cards[id].d <= t).sort((a, b) => state.cards[a].d - state.cards[b].d);
+      const fresh = ORDER.filter(id => !state.cards[id]);
+      q = due.concat(fresh).slice(0, SESSION_MAX);
+    }
+    session = { queue: q, total: q.length, flipped: false, touched: false, cram: !!cram };
+    renderCard();
+  }
+  function renderCount() {
+    $('#sessCount').innerHTML = session.queue.length ? (session.cram ? '<b>Тренировка</b> · ' : '') + 'осталось ' + session.queue.length : '';
+  }
+  function renderCard() {
+    renderCount();
+    if (!session.queue.length) { renderDone(); return; }
+    const c = byId[session.queue[0]];
+    const st = state.cards[c.id];
+    session.flipped = false;
+    $('#stage').innerHTML =
+      '<article class="card t-' + c.t + '" id="card" tabindex="0" aria-label="Карточка">' +
+        '<p class="kind">' + esc(topicLabel(c.t)) + (st ? '' : ' · новая') + '</p>' +
+        '<p class="q">' + esc(c.q) + '</p>' +
+        '<div class="back" hidden><p class="ans">' + c.a + '</p><p>' + srcTags(c.src) + '</p></div>' +
+        '<p class="hint">Коснитесь карточки, чтобы открыть ответ. Свайп вправо — знаю, влево — не знаю.</p>' +
+      '</article>';
+    bindCard($('#card'));
+    renderControls();
+  }
+  function renderControls() {
+    const ctr = $('#controls');
+    if (!session.queue.length) return;
+    if (!session.flipped) {
+      ctr.innerHTML = '<button type="button" class="btn btn-primary" id="showBtn">Показать ответ</button>';
+      $('#showBtn').addEventListener('click', flip);
+      return;
+    }
+    const st = state.cards[session.queue[0]];
+    const iv = INTERVALS[Math.min(st ? st.l : 0, 3)];
+    const sub = session.cram ? ['ещё раз', 'дальше', 'дальше'] : ['ещё раз сейчас', 'завтра', inDays(iv)];
+    ctr.innerHTML = '<div class="rate">' +
+      '<button type="button" class="btn r-again" data-r="again">Не знаю<small>' + sub[0] + '</small></button>' +
+      '<button type="button" class="btn r-almost" data-r="almost">Почти<small>' + sub[1] + '</small></button>' +
+      '<button type="button" class="btn r-know" data-r="know">Знаю<small>' + sub[2] + '</small></button></div>';
+    $$('[data-r]', ctr).forEach(b => b.addEventListener('click', () => rateAnim(b.dataset.r)));
+  }
+  function flip() {
+    const el = $('#card');
+    if (!el || session.flipped) return;
+    session.flipped = true;
+    $('.back', el).hidden = false;
+    $('.hint', el).hidden = true;
+    renderControls();
+  }
+  function bindCard(el) {
+    let x0 = 0, y0 = 0, dx = 0, down = false, drag = false, pid = null;
+    el.addEventListener('pointerdown', e => {
+      if (e.target.closest('a, button')) return;
+      down = true; drag = false; dx = 0; x0 = e.clientX; y0 = e.clientY; pid = e.pointerId;
+    });
+    el.addEventListener('pointermove', e => {
+      if (!down || e.pointerId !== pid) return;
+      const mx = e.clientX - x0, my = e.clientY - y0;
+      if (!drag) {
+        if (Math.abs(mx) > 10 && Math.abs(mx) > Math.abs(my) * 1.2) {
+          drag = true; el.classList.add('dragging');
+          try { el.setPointerCapture(pid); } catch (err) { /* не критично */ }
+        } else if (Math.abs(my) > 12) { down = false; return; }
+      }
+      if (drag) {
+        dx = mx;
+        el.style.transform = 'translateX(' + dx + 'px) rotate(' + (dx / 26) + 'deg)';
+        el.classList.toggle('lean-know', dx > 40);
+        el.classList.toggle('lean-again', dx < -40);
+      }
+    });
+    const end = e => {
+      if (!down) return;
+      down = false;
+      el.classList.remove('dragging');
+      if (drag) {
+        if (dx > 90) { rateAnim('know'); return; }
+        if (dx < -90) { rateAnim('again'); return; }
+        el.style.transform = '';
+        el.classList.remove('lean-know', 'lean-again');
+      } else if (e.type === 'pointerup') flip();
+    };
+    el.addEventListener('pointerup', end);
+    el.addEventListener('pointercancel', end);
+  }
+  function rateAnim(r) {
+    if (!session.queue.length) return;
+    const el = $('#card');
+    let ghost = null;
+    if (el && !reduced()) {
+      ghost = el.cloneNode(true);
+      ghost.removeAttribute('id');
+      ghost.classList.add('ghost');
+      ghost.classList.remove('dragging');
+      ghost.style.top = el.offsetTop + 'px';
+      ghost.style.left = el.offsetLeft + 'px';
+      ghost.style.width = el.offsetWidth + 'px';
+    }
+    rate(r);
+    if (!ghost) return;
+    $('#stage').appendChild(ghost);
+    requestAnimationFrame(() => {
+      ghost.style.transform = r === 'know' ? 'translateX(120%) rotate(8deg)' : r === 'again' ? 'translateX(-120%) rotate(-8deg)' : 'translateY(-28px) scale(0.97)';
+      ghost.style.opacity = '0';
+    });
+    setTimeout(() => ghost.remove(), 280);
+  }
+  function rate(r) {
+    const id = session.queue[0];
+    if (!id) return;
+    if (!session.cram) {
+      const t = today();
+      const c = state.cards[id] ? Object.assign({}, state.cards[id]) : { l: 0, d: t, t: 0, n: 0 };
+      if (r === 'know') { const iv = INTERVALS[Math.min(c.l, 3)]; c.l = Math.min(c.l + 1, 4); c.d = t + iv; }
+      else if (r === 'almost') c.d = t + 1;
+      else { c.l = 0; c.d = t; }
+      c.t = Date.now(); c.n = (c.n || 0) + 1;
+      state.cards[id] = c; state.t = Date.now();
+      save();
+    }
+    session.queue.shift();
+    session.touched = true;
+    if (r === 'again') session.queue.splice(Math.min(3, session.queue.length), 0, id);
+    renderCard(); renderDueChip(); renderStats();
+  }
+  function renderDone() {
+    const k = counts();
+    const next = nextDueIn();
+    const title = session.cram ? 'Все ' + CARDS.length + ' карточек пройдены'
+      : session.total ? 'Пройдено: ' + session.total + ' ' + plural(session.total, 'карточка', 'карточки', 'карточек') : 'На сегодня всё повторено';
+    const nextLine = k.pending ? 'Сегодня ждут ещё ' + k.pending + ' ' + plural(k.pending, 'карточка', 'карточки', 'карточек') + '.'
+      : next ? 'Следующее повторение — ' + inDays(next) + '.' : '';
+    $('#stage').innerHTML = '<div class="done">' +
+      '<p class="done-kicker">' + (session.cram ? 'Тренировка завершена' : session.total ? 'Сессия завершена' : 'Готово') + '</p>' +
+      '<h3 class="done-title">' + title + '</h3><div class="stats">' + statsHTML() + '</div>' +
+      (nextLine ? '<p class="done-next">' + nextLine + '</p>' : '') + '</div>';
+    $('#controls').innerHTML =
+      (k.pending ? '<button type="button" class="btn btn-primary" id="moreBtn">Продолжить: ещё ' + Math.min(k.pending, SESSION_MAX) + '</button>' : '') +
+      '<button type="button" class="btn" id="allBtn">Пройти все ' + CARDS.length + ' карточек без расписания</button>';
+    if (k.pending) $('#moreBtn').addEventListener('click', () => buildSession(false));
+    $('#allBtn').addEventListener('click', () => buildSession(true));
+  }
+
+  /* ================= ТРЕНИРОВКА: КЛИНИЧЕСКИЕ СЛУЧАИ ================= */
+  let tr = null;
+  let trFilter = 'all';
+  function renderTrainFilters() {
+    const keys = ['all'].concat(Object.keys(TOPICS));
+    $('#trainFilters').innerHTML = keys.map(k =>
+      '<button type="button" class="chip' + (k === 'all' ? '' : ' t-' + k) + '" data-f="' + k + '" aria-pressed="' + (k === trFilter) + '">' +
+      (k === 'all' ? 'Все темы' : esc(TOPICS[k].short)) + '</button>').join('');
+  }
+  function startTraining() {
+    const pool = CASES.map((c, i) => i).filter(i => trFilter === 'all' || CASES[i].t === trFilter);
+    tr = { queue: shuffle(pool), total: pool.length, right: 0, answered: 0, streak: 0, best: 0, cur: -1, checked: false, ok: false, pick: null, order: [] };
+    nextCase();
+  }
+  function nextCase() {
+    if (!tr.queue.length) { renderTrainDone(); return; }
+    tr.cur = tr.queue[0];
+    tr.checked = false; tr.ok = false; tr.pick = null;
+    tr.order = shuffle(CASES[tr.cur].opts.map((_, j) => j));
+    renderCase();
+  }
+  function renderTrainStats() {
+    const acc = tr && tr.answered ? Math.round(tr.right / tr.answered * 100) + '%' : '—';
+    $('#trainStats').innerHTML = tr && tr.queue.length
+      ? 'осталось <b>' + tr.queue.length + '</b> · серия <b>' + tr.streak + '</b> · точность <b>' + acc + '</b>' : '';
+  }
+  function renderCase() {
+    renderTrainStats();
+    const c = CASES[tr.cur];
+    let html = '<div class="panel case t-' + c.t + '"><p class="kind">' + esc(topicLabel(c.t)) + '</p>' +
+      '<p class="case-text">' + esc(c.text) + '</p><p class="case-q">' + esc(c.q) + '</p>' +
+      '<div class="opts' + (tr.checked ? ' checked' : '') + '">' + tr.order.map(j =>
+        '<button type="button" class="opt' + (j === c.a ? ' correct' : '') + '" data-j="' + j + '" aria-pressed="' + (tr.checked && tr.pick === j) + '"' +
+        (tr.checked ? ' tabindex="-1"' : '') + '>' + esc(c.opts[j]) + '</button>').join('') + '</div>';
+    if (tr.checked) {
+      html += '<div class="feedback ' + (tr.ok ? 'ok' : 'no') + '"><p class="fb-title">' + (tr.ok ? '✓ Верно' : '✗ Верный ответ: ' + esc(c.opts[c.a])) + '</p>' +
+        '<p class="why">' + esc(c.why) + '</p><p>' + srcTags(c.src) + '</p></div>';
+    }
+    $('#trainStage').innerHTML = html + '</div>';
+    $('#trainControls').innerHTML = tr.checked ? '<button type="button" class="btn btn-primary" id="trNext">Следующий случай</button>' : '';
+    if (tr.checked) $('#trNext').addEventListener('click', advanceCase);
+  }
+  function answerCase(j) {
+    const c = CASES[tr.cur];
+    tr.pick = j; tr.checked = true; tr.ok = j === c.a; tr.answered++;
+    if (tr.ok) { tr.right++; tr.streak++; tr.best = Math.max(tr.best, tr.streak); } else tr.streak = 0;
+    renderCase();
+    const fb = $('#trainStage .feedback');
+    if (fb) fb.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'center' });
+  }
+  function advanceCase() {
+    const cur = tr.queue.shift();
+    if (!tr.ok) tr.queue.splice(Math.min(4, tr.queue.length), 0, cur);
+    nextCase();
+    $('#main').scrollTop = 0;
+  }
+  function renderTrainDone() {
+    renderTrainStats();
+    const acc = tr.answered ? Math.round(tr.right / tr.answered * 100) : 0;
+    $('#trainStage').innerHTML = '<div class="done"><p class="done-kicker">Тренировка завершена</p>' +
+      '<h3 class="done-title">Все ' + tr.total + ' ' + plural(tr.total, 'случай', 'случая', 'случаев') + ' разобраны</h3>' +
+      '<div class="stats"><div><b>' + acc + '%</b><span>верных ответов</span></div><div><b>' + tr.best + '</b><span>лучшая серия</span></div>' +
+      '<div><b>' + tr.answered + '</b><span>ответов</span></div></div>' +
+      '<p class="done-next">Ошибки возвращались, пока вы не ответили верно.</p></div>';
+    $('#trainControls').innerHTML = '<button type="button" class="btn btn-primary" id="trAgain">Ещё раз</button>';
+    $('#trAgain').addEventListener('click', startTraining);
+  }
+
+  /* ================= ТЕСТ ================= */
+  let test = { picks: {}, orders: {}, checked: false };
+  function renderTest() {
+    test = { picks: {}, orders: {}, checked: false };
+    $('#tasks').innerHTML = TEST.map((t, i) => {
+      const order = shuffle(t.opts.map((_, j) => j));
+      test.orders[i] = order;
+      return '<div class="task t-' + t.t + '" id="task-' + i + '"><div class="task-head"><span class="num">' + (i + 1) + '</span>' +
+        '<span class="ttype">' + esc(TOPICS[t.t].short) + '</span><span class="res" aria-live="polite"></span></div>' +
+        '<p class="tq">' + esc(t.q) + '</p><div class="opts">' + order.map(j =>
+          '<button type="button" class="opt' + (j === t.a ? ' correct' : '') + '" data-i="' + i + '" data-j="' + j + '" aria-pressed="false">' + esc(t.opts[j]) + '</button>').join('') +
+        '</div></div>';
+    }).join('');
+    const k = $('#key');
+    k.hidden = true; k.innerHTML = '';
+    const btn = $('#checkBtn');
+    btn.textContent = 'Проверить';
+    btn.onclick = checkTest;
+    renderTestLede();
+  }
+  function renderTestLede() {
+    const s = state.test;
+    $('#testTitle').textContent = 'Тест · ' + TEST.length + ' ' + plural(TEST.length, 'вопрос', 'вопроса', 'вопросов');
+    $('#testLede').textContent = 'Ответы и разбор с источниками — в конце, после проверки.' +
+      (s.best != null ? ' Лучший результат: ' + s.best + ' из ' + TEST.length + '.' : '');
+  }
+  function checkTest() {
+    test.checked = true;
+    let score = 0;
+    const rows = TEST.map((t, i) => {
+      const ok = test.picks[i] === t.a;
+      if (ok) score++;
+      const box = $('#task-' + i);
+      box.classList.add('checked', ok ? 'ok' : 'no');
+      $('.opts', box).classList.add('checked');
+      $('.res', box).textContent = ok ? '✓' : '✗';
+      const mine = test.picks[i] != null ? t.opts[test.picks[i]] : '';
+      return '<li><span class="km ' + (ok ? 'ok' : 'no') + '">' + (i + 1) + '</span><div>' +
+        '<p class="ka">' + esc(t.opts[t.a]) + '</p>' +
+        (!ok ? '<p class="yours">Ваш ответ: ' + (mine ? esc(mine) : 'нет ответа') + '</p>' : '') +
+        '<p class="why">' + esc(t.why) + srcTags(t.src) + '</p></div></li>';
+    });
+    const k = $('#key');
+    k.innerHTML = '<h2>Ключ</h2><p class="score">' + score + ' <span>из ' + TEST.length + '</span></p><ol class="key-list">' + rows.join('') + '</ol>';
+    k.hidden = false;
+    state.test.last = score;
+    state.test.best = state.test.best == null ? score : Math.max(state.test.best, score);
+    state.test.at = Date.now();
+    state.t = Date.now();
+    save();
+    renderTestLede();
+    const btn = $('#checkBtn');
+    btn.textContent = 'Пройти заново';
+    btn.onclick = () => { renderTest(); $('#main').scrollTop = 0; };
+    k.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' });
+  }
+
+  /* ================= НАВИГАЦИЯ ================= */
+  function showTab(name) {
+    $$('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
+    $$('.view').forEach(v => { v.hidden = v.id !== 'v-' + name; });
+    $('#main').scrollTop = 0;
+    try { localStorage.setItem(TAB_KEY, name); } catch (e) { /* не важно */ }
+  }
+  function onExternalChange() {
+    if (!session.touched) buildSession(false);
+    renderDueChip(); renderStats(); renderTestLede();
+  }
+  let resetArmed = 0;
+  function bindChrome() {
+    $$('.tab').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
+    $('#dueChip').addEventListener('click', () => {
+      showTab('cards');
+      if (!session.queue.length && counts().pending) buildSession(false);
+    });
+    $('#topicNav').addEventListener('click', e => {
+      const b = e.target.closest('[data-jump]');
+      if (b) $('#topic-' + b.dataset.jump).scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' });
+    });
+    $('#trainFilters').addEventListener('click', e => {
+      const b = e.target.closest('[data-f]');
+      if (!b) return;
+      trFilter = b.dataset.f;
+      renderTrainFilters();
+      startTraining();
+    });
+    $('#trainStage').addEventListener('click', e => {
+      const o = e.target.closest('.opt');
+      if (o && tr && !tr.checked) answerCase(+o.dataset.j);
+    });
+    $('#tasks').addEventListener('click', e => {
+      const b = e.target.closest('.opt');
+      if (!b || test.checked) return;
+      const i = +b.dataset.i;
+      test.picks[i] = +b.dataset.j;
+      $$('[data-i="' + i + '"]', $('#tasks')).forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    });
+    $('#resetBtn').addEventListener('click', () => {
+      const btn = $('#resetBtn');
+      if (Date.now() - resetArmed > 4000) {
+        resetArmed = Date.now();
+        btn.textContent = 'Нажмите ещё раз, чтобы сбросить';
+        setTimeout(() => { if (Date.now() - resetArmed >= 4000) btn.textContent = 'Сбросить прогресс карточек'; }, 4100);
+        return;
+      }
+      resetArmed = 0;
+      state.cards = {}; state.resetAt = Date.now(); state.t = Date.now();
+      save();
+      btn.textContent = 'Прогресс сброшен';
+      setTimeout(() => { btn.textContent = 'Сбросить прогресс карточек'; }, 2500);
+      buildSession(false); renderDueChip(); renderStats();
+    });
+    document.addEventListener('keydown', e => {
+      if ($('#v-cards').hidden || e.target.closest('input, textarea, select') || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (!session.queue.length) return;
+      if ((e.key === ' ' || e.key === 'Enter') && !e.target.closest('button, a')) { e.preventDefault(); flip(); }
+      else if (e.key === '1' || e.key === 'ArrowLeft') rateAnim('again');
+      else if (e.key === '2') { if (session.flipped) rateAnim('almost'); }
+      else if (e.key === '3' || e.key === 'ArrowRight') rateAnim('know');
+    });
+  }
+
+  /* ================= СТАРТ ================= */
+  renderReview();
+  renderSyncNote();
+  renderDueChip();
+  buildSession(false);
+  renderTrainFilters();
+  startTraining();
+  renderTest();
+  bindChrome();
+  let startTab = 'review';
+  try { startTab = localStorage.getItem(TAB_KEY) || 'review'; } catch (e) { /* по умолчанию разбор */ }
+  showTab(['review', 'cards', 'train', 'test'].indexOf(startTab) >= 0 ? startTab : 'review');
+  sync.init();
+
+  // Офлайн-режим для версии на GitHub Pages (внутри Claude не нужен).
+  if (!window.claude && 'serviceWorker' in navigator && location.protocol === 'https:') {
+    window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+  }
+})();
+</script>

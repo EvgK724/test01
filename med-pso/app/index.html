@@ -1,0 +1,642 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Медицина ПСО</title>
+<style>
+  /* Оболочка как у «Английского B2»: главная со сводкой и плитками модулей, модуль открывается поверх неё
+     в iframe. Один тёмный облик, как у всех модулей: почти чёрный фон, serif-заголовки, оранжевый акцент. */
+  :root{
+    --k:1; --kb:1;
+    color-scheme:dark;
+    --bg:#0e1113;
+    --surface:#171c1f;
+    --raise:#1f262a;
+    --line:#252c30;
+    --line-2:#343d42;
+    --text:#e8e8e8;
+    --soft:#c3cbcf;
+    --muted:#939ea3;
+    --accent:#d97757;
+    --accent-soft:rgba(217,119,87,.12);
+    --on-accent:#14181a;
+    --blue:#7cc0dd;
+    --blue-soft:rgba(124,192,221,.13);
+    --yes-text:#9ad0b4;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);overflow:hidden}
+  body{font-family:var(--sans);font-size:calc(17px*var(--k));line-height:1.5}
+  button{font:inherit;color:inherit}
+  .shell{position:relative;height:100%;overflow:hidden}
+
+  /* ——— Главная */
+  .home{position:absolute;inset:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .wrap{max-width:calc(1080px*var(--k));margin:0 auto;padding:calc(14px*var(--k)) calc(16px*var(--k)) calc(34px*var(--k));display:flex;flex-direction:column;gap:calc(18px*var(--k))}
+  .hd{display:flex;flex-direction:column;gap:calc(4px*var(--k));padding-top:calc(6px*var(--k))}
+  .eyebrow,.lbl{margin:0;font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+  h1{margin:0;font-family:var(--serif);font-weight:400;font-size:calc(clamp(34px,11.5vw,44px)*var(--k));line-height:1.08;text-wrap:balance}
+  .sum{margin:calc(2px*var(--k)) 0 0;font-size:calc(18px*var(--k));line-height:1.45;color:var(--soft);text-wrap:pretty}
+  .sum b{font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums}
+
+  .today{display:grid;grid-template-columns:repeat(auto-fit,minmax(calc(260px*var(--k)),1fr));gap:calc(10px*var(--k))}
+  .tcard{position:relative;display:flex;flex-direction:column;gap:calc(6px*var(--k));min-width:0;padding:calc(16px*var(--k)) calc(16px*var(--k)) calc(15px*var(--k));border-radius:calc(20px*var(--k));border:calc(1px*var(--k)) solid var(--line);background:var(--surface);text-align:left}
+  button.tcard{cursor:pointer}
+  button.tcard:active{background:var(--raise)}
+  .tcard.is-due{border-color:rgba(217,119,87,.55);background:linear-gradient(180deg,rgba(217,119,87,.10),rgba(217,119,87,.02) 70%),var(--surface)}
+  .big{margin:0;font-family:var(--serif);font-size:calc(46px*var(--k));line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+  .tsub{margin:0;font-size:calc(16px*var(--k));line-height:1.4;color:var(--soft)}
+  .term{margin:0;font-family:var(--serif);font-size:calc(28px*var(--k));line-height:1.15;text-wrap:balance;overflow-wrap:break-word}
+  .ru{margin:0;font-size:calc(16px*var(--k));line-height:1.4;color:var(--muted)}
+  .chips{display:flex;flex-wrap:wrap;gap:calc(6px*var(--k));margin-top:calc(4px*var(--k))}
+  .chip{min-height:calc(44px*var(--k));display:inline-flex;align-items:center;gap:calc(8px*var(--k));padding:0 calc(12px*var(--k)) 0 calc(8px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:var(--bg);font-size:calc(16px*var(--k));cursor:pointer;max-width:100%}
+  .chip img{width:calc(28px*var(--k));height:calc(28px*var(--k));border-radius:calc(7px*var(--k));flex:0 0 auto}
+  .chip span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chip b{font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums}
+  .chip:active{background:var(--raise)}
+
+  /* Карточка дня: вопрос с пропуском, ответ — по касанию */
+  .dq{margin:0;font-family:var(--serif);font-size:calc(21px*var(--k));line-height:1.3;text-wrap:pretty;overflow-wrap:break-word;hyphens:auto}
+  .gap{display:inline-block;min-width:3.2em;border-bottom:calc(2px*var(--k)) solid var(--accent)}
+  .ans{color:var(--accent)}
+  .dwhy{margin:0;font-size:calc(15px*var(--k));line-height:1.45;color:var(--soft);overflow-wrap:break-word;hyphens:auto}
+  .row{display:flex;flex-wrap:wrap;gap:calc(8px*var(--k));margin-top:calc(4px*var(--k))}
+  .btn{min-height:calc(44px*var(--k));display:inline-flex;align-items:center;justify-content:center;gap:calc(6px*var(--k));padding:0 calc(16px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:var(--bg);color:var(--text);font-size:calc(16px*var(--k));white-space:nowrap;cursor:pointer}
+  .btn.pri{border-color:rgba(217,119,87,.6);background:var(--accent-soft);color:var(--accent);font-weight:600}
+  .btn:active{background:var(--raise)}
+
+  .search{position:relative;display:flex;align-items:center}
+  .search svg{position:absolute;left:calc(14px*var(--k));width:calc(20px*var(--k));height:calc(20px*var(--k));color:var(--muted);pointer-events:none}
+  .search input{width:100%;min-height:calc(52px*var(--k));padding:0 calc(48px*var(--k)) 0 calc(44px*var(--k));border-radius:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:var(--surface);color:var(--text);font:inherit;font-size:max(16px,calc(17px*var(--k)));outline:none;-webkit-appearance:none;appearance:none}
+  .search input::placeholder{color:var(--muted)}
+  .search input:focus{border-color:var(--accent)}
+  .search input::-webkit-search-cancel-button{display:none}
+  .qx{position:absolute;right:calc(4px*var(--k));width:calc(44px*var(--k));height:calc(44px*var(--k));border:0;border-radius:calc(10px*var(--k));background:transparent;color:var(--muted);font-size:calc(24px*var(--k));line-height:1;cursor:pointer}
+
+  .grp{display:flex;flex-direction:column;gap:calc(8px*var(--k))}
+  .grp .lbl{margin-top:calc(6px*var(--k))}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(calc(260px*var(--k)),1fr));gap:calc(10px*var(--k))}
+  .tile{display:flex;flex-direction:column;gap:calc(8px*var(--k));min-width:0;padding:calc(14px*var(--k)) calc(16px*var(--k)) calc(14px*var(--k));border-radius:calc(18px*var(--k));border:calc(1px*var(--k)) solid var(--line);background:var(--surface);text-align:left;cursor:pointer}
+  .tile:active{background:var(--raise);transform:scale(.99)}
+  .tile:focus-visible,.tcard:focus-visible,.chip:focus-visible,.backb:focus-visible,.btn:focus-visible{outline:calc(2px*var(--k)) solid var(--accent);outline-offset:calc(2px*var(--k))}
+  .t-top{display:flex;align-items:center;gap:calc(12px*var(--k))}
+  .t-ic{flex:0 0 auto;width:calc(48px*var(--k));height:calc(48px*var(--k));border-radius:calc(11px*var(--k));background:var(--bg)}
+  .t-name{flex:1;min-width:0;font-family:var(--serif);font-size:calc(22px*var(--k));line-height:1.2;text-wrap:balance;overflow-wrap:break-word;hyphens:auto}
+  .t-due{flex:0 0 auto;min-width:calc(30px*var(--k));height:calc(30px*var(--k));padding:0 calc(8px*var(--k));border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:calc(15px*var(--k));font-weight:700;line-height:calc(30px*var(--k));text-align:center;font-variant-numeric:tabular-nums}
+  .t-desc{font-size:calc(15px*var(--k));line-height:1.4;color:var(--muted);text-wrap:pretty}
+  .t-foot{display:flex;align-items:center;gap:calc(10px*var(--k));margin-top:auto;padding-top:calc(2px*var(--k))}
+  .bar{flex:1;height:calc(4px*var(--k));border-radius:calc(2px*var(--k));background:var(--line);overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:inherit}
+  .cnt{font-size:calc(14px*var(--k));color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tag{font-size:calc(12px*var(--k));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);white-space:nowrap}
+
+  /* Найденное в карточках и темах */
+  .hits{display:flex;flex-direction:column;gap:calc(10px*var(--k))}
+  .hit{display:flex;flex-direction:column;gap:calc(6px*var(--k));min-width:0;padding:calc(14px*var(--k)) calc(16px*var(--k));border-radius:calc(18px*var(--k));border:calc(1px*var(--k)) solid var(--line);background:var(--surface)}
+  .h-top{display:flex;align-items:center;gap:calc(8px*var(--k));min-width:0;font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.04em;color:var(--blue)}
+  .h-top img{flex:0 0 auto;width:calc(22px*var(--k));height:calc(22px*var(--k));border-radius:calc(6px*var(--k))}
+  .h-top span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .h-title{margin:0;font-family:var(--serif);font-size:calc(21px*var(--k));line-height:1.25;text-wrap:balance;overflow-wrap:break-word}
+  .h-q{margin:0;font-size:calc(17px*var(--k));line-height:1.45;overflow-wrap:break-word;hyphens:auto}
+  .h-q .ans{font-weight:600}
+  .h-why{margin:0;font-size:calc(15px*var(--k));line-height:1.45;color:var(--muted);overflow-wrap:break-word;hyphens:auto}
+  .h-open{align-self:flex-start;min-height:44px;display:inline-flex;align-items:center;gap:calc(2px*var(--k));padding:0 calc(10px*var(--k)) 0 0;border:0;background:transparent;color:var(--accent);font-size:calc(15px*var(--k));white-space:nowrap;cursor:pointer}
+  mark{background:var(--blue-soft);color:inherit;border-radius:calc(3px*var(--k));padding:0 calc(1px*var(--k))}
+  .more{align-self:center}
+  .empty,.note{margin:0;padding:calc(6px*var(--k)) calc(4px*var(--k));font-size:calc(16px*var(--k));color:var(--soft)}
+  .foot{margin:calc(8px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.5;color:var(--muted);text-wrap:pretty}
+
+  /* ——— Открытый модуль */
+  .course{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;background:var(--bg);transform:translateX(100%);visibility:hidden;transition:transform .22s ease,visibility 0s linear .22s}
+  .course.open{transform:none;visibility:visible;transition:transform .22s ease,visibility 0s}
+  .cbar{flex:0 0 auto;display:grid;grid-template-columns:minmax(calc(96px*var(--kb)),1fr) auto minmax(calc(96px*var(--kb)),1fr);align-items:center;min-height:calc(50px*var(--kb));padding:0 calc(6px*var(--kb));border-bottom:calc(1px*var(--kb)) solid var(--line)}
+  .backb{justify-self:start;min-height:44px;min-width:44px;display:inline-flex;align-items:center;gap:calc(2px*var(--kb));padding:0 calc(12px*var(--kb)) 0 calc(4px*var(--kb));border:0;border-radius:calc(12px*var(--kb));background:transparent;color:var(--accent);font-size:calc(17px*var(--kb));cursor:pointer}
+  .backb svg{width:calc(26px*var(--kb));height:calc(26px*var(--kb))}
+  .backb:active{background:var(--raise)}
+  .ctitle{margin:0;min-width:0;font-family:var(--serif);font-weight:400;font-size:calc(19px*var(--kb));line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
+  .ctitle .full{display:none}
+  @media (min-width:600px){ .ctitle .full{display:inline} .ctitle .short{display:none} }
+  .cbody{position:relative;flex:1;min-height:0}
+  .cbody iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:var(--bg);opacity:0;transition:opacity .15s ease}
+  .cbody iframe.ready{opacity:1}
+  .cmsg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(12px*var(--k));padding:calc(24px*var(--k));text-align:center;color:var(--muted);font-size:calc(17px*var(--k))}
+  .cmsg p{margin:0;max-width:28em}
+  .retry{min-height:calc(50px*var(--k));padding:0 calc(22px*var(--k));border-radius:calc(14px*var(--k));border:0;background:var(--accent);color:var(--on-accent);font-weight:600;cursor:pointer}
+
+  @media (prefers-reduced-motion:reduce){ .course,.course.open{transition:none} .cbody iframe{transition:none} .tile:active{transform:none} }
+</style>
+<script>
+// Масштаб под экран, как в самих модулях: телефон — как есть, планшет — крупнее
+(function(){
+  function fit(){
+    var w = window.innerWidth || 390, h = window.innerHeight || 760;
+    var wide = w >= 900 && w / h > 1.15;
+    var k = wide ? h / 600 : Math.min(w / 440, h / 780);
+    if (w < 600) k = 1;
+    k = Math.max(1, Math.min(k, 1.9));
+    document.documentElement.style.setProperty("--k", k.toFixed(3));
+    document.documentElement.style.setProperty("--kb", Math.min(k, 1.3).toFixed(3));
+  }
+  fit();
+  window.addEventListener("resize", fit);
+  window.addEventListener("orientationchange", function(){ setTimeout(fit, 150); });
+})();
+</script>
+
+<div class="shell" lang="ru">
+  <main class="home" id="home">
+    <div class="wrap">
+      <header class="hd">
+        <p class="eyebrow" id="eyebrow">Неврология · ПСО</p>
+        <h1>Медицина ПСО</h1>
+        <p class="sum" id="sum">Считаю, что повторить сегодня…</p>
+      </header>
+      <section class="today" id="today" aria-label="Сегодня"></section>
+      <div class="search" role="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="search" placeholder="Найти: тикагрелор, ELAN, ГИТ" aria-label="Найти в модулях, темах и карточках">
+        <button class="qx" id="qx" type="button" aria-label="Очистить поиск" hidden>×</button>
+      </div>
+      <div id="groups"></div>
+      <section class="grp" id="found" aria-label="Найдено в карточках" hidden>
+        <h2 class="lbl" id="foundLbl">В темах и карточках</h2>
+        <div class="hits" id="hits"></div>
+      </section>
+      <p class="empty" id="empty" hidden>Ничего не нашлось. Попробуйте короче: «клопид», «ELAN», «ГИТ», «перфуз».</p>
+      <p class="foot" id="foot">Прогресс у каждого модуля свой и общий для iPhone и iPad. Учебное приложение для врачей ПСО: не заменяет клинические рекомендации, инструкции к препаратам и решение лечащего врача.</p>
+    </div>
+  </main>
+
+  <section class="course" id="course" aria-label="Модуль" aria-hidden="true">
+    <div class="cbar">
+      <button class="backb" id="back" type="button" aria-label="Все модули">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
+        <span>Модули</span>
+      </button>
+      <h2 class="ctitle" id="ctitle"></h2>
+      <span aria-hidden="true"></span>
+    </div>
+    <div class="cbody">
+      <div class="cmsg" id="cmsg"><p id="cmsgText">Открываю модуль…</p><button class="retry" id="retry" type="button" hidden>Попробовать ещё раз</button></div>
+      <iframe id="frame" title="Модуль"></iframe>
+    </div>
+  </section>
+</div>
+
+<script>
+// ——— Каталог: модули по группам. ids — карточки (для счётчиков), ls — ключ локального прогресса модуля
+const CAT = {"groups":[["reperf","Реперфузия и визуализация"],["prev","Ранняя вторичная профилактика"]],"apps":[{"key":"arterii","title":"Артерии мозга","label":"Артерии","desc":"сегменты, бассейны, синдромы, мишени для ВСТЭ; схемы сосудов","group":"reperf","kind":"gen","ls":"art:state","ids":["w-parts","w-acom","w-pcom","w-complete","w-fetal","w-fetal-occ","w-a1hypo","w-lepto","w-fig-acom","w-fig-pcom","w-tap-p1","i-c4","i-oph","i-c7","i-neck","i-T","i-tandem","i-pseudo","i-amaurosis","i-acha","i-eye-hemi","i-fig-c4","i-tap-c7","m-m1end","m-lsa","m-lsa-end","m-m2","m-dom","m-sup","m-inf","m-dot","m-fig-m2","m-fig-lsa","m-tap-m3","a-leg","a-heub","a-abulia","p-macula","p-alexia","p-p1","p-percheron","p-cortical","p-memory","a-fig-a2","p-fig-p2","a-tap-a1","v-c6","v-v3","v-junction","v-wall","v-aica","v-top","v-pinpoint","v-prodrome","v-III","v-hypo","v-fig-v4","v-fig-pica","v-tap-sca","s-gaze","s-aphasia","s-neglect","s-mca","s-lacune","s-hemianopia","s-lvo","s-neck","s-vertigo","s-fig-aca","s-fig-pca","s-tap-deep","k-arch","k-creat","k-40","k-hyper","k-aspects-ct","k-aspects-10","k-aspects-m1","k-aspects-vbb","k-pc","k-mip","k-collat","k-lams","k-fig-am2","k-fig-ai","k-tap-l","r-6h","r-mild","r-ivt","r-wait","r-defuse","r-ba","r-ba-aha","r-pca","r-m2","r-tandem","r-anticoag","r-fig-m1","r-fig-ba","r-fig-m4"],"topics":8,"extra":"","kw":"Виллизиев круг Внутренняя сонная артерия Средняя мозговая артерия ПМА и ЗМА Вертебробазилярная система Бассейны и синдромы КТА: где окклюзия Решение о ВСТЭ"},{"key":"perfuziya","title":"КТ-перфузия","label":"Перфузия","desc":"карты, ядро и пенумбра, коллатерали, отбор на ТЭ и ТЛТ","group":"reperf","kind":"gen","ls":"ctp:state","ids":["p1-bolus","p1-rate","p1-time","p1-aif","p1-vof","p1-formula","p1-trunc","p2-cbf-units","p2-cbv-units","p2-norm","p2-white","p2-tmax","p2-relative","p2-mtt","p3-core","p3-tmax","p3-cbv-pen","p3-cbv-core","p3-pen-vol","p3-ratio","p3-olig","p3-rescue","p4-hir","p4-high","p4-growth","p4-slow","p4-window","p4-tmax10","p5-core","p5-ratio","p5-pen","p5-window","p5-dawn","p5-dawn80","p5-large","p5-early","p6-window","p6-wake","p6-ratio","p6-core","p6-risk","p6-trace","p6-timeless","p6-guideline","p7-output","p7-ica","p7-seizure","p7-migraine","p7-lacune","p7-ghost","p7-late","p7-old","p7-motion","p8-first","p8-aif","p8-return","p8-cta","p8-mismatch","p8-aspects","p8-doctor"],"topics":8,"extra":"","kw":"Как это работает Карты Ядро и пенумбра Коллатерали Отбор на тромбэктомию Тромболизис в позднем окне Ловушки Как читать отчёт"},{"key":"poak","title":"Ранняя антикоагуляция","label":"ПОАК","desc":"ПОАК при ФП: сроки по ELAN и CATALYST, дозы, переходы, антидоты","group":"prev","kind":"gen","ls":"oac:state","ids":["e-elan-early","e-elan-major","e-elan-is","e-elan-sich","e-optimas","e-timing","e-catalyst","e-catalyst-sich","e-major","s-basis","s-minor","s-branch","s-deep","s-mca","s-two-cort","s-post","s-shower","s-two-small","s-after-evt","t-tia","t-minor","t-moderate","t-major","t-ivt","t-asa","t-asa-stop","t-heparin","t-proph","t-kr-minor","t-kr-severe","t-aha","t-kr25","x-hi","x-ph","x-ph-outcome","x-reperf","x-ckd","x-volume","x-break","x-combo","x-laao","d-full","d-api","d-api-crcl","d-riva","d-riva-food","d-dabi-80","d-dabi-30","d-edox","d-cg","d-dialysis","p-crush","p-dabi-caps","p-riva-tube","p-cbz","p-azole","p-verap","p-ppi","w-mech","w-ms","w-aps","w-lvt","w-start","w-inr","w-ttr","w-bridge","w-mitral","sw-asa","sw-lmwh","sw-ufh","sw-w-lt2","sw-w-2","sw-w-3","sw-to-w","sw-inr-time","sw-doac","a-ida","a-ida-dose","a-ida-restart","a-xa","a-vka","a-ufh","a-enox","a-charcoal","a-dialysis","l-warf","l-hep","l-48","l-dabi-12","l-dabi-tt","l-xa-12","l-xa-anti","l-evt"],"topics":10,"extra":"","kw":"Доказательства Размер инфаркта Сроки старта Особые ситуации Дозы ПОАК Зонд и взаимодействия Варфарин Переходы Антидоты Тромболизис на антикоагулянте"},{"key":"vits","title":"ВИТС после инсульта","label":"ВИТС","desc":"аторвастатин и розувастатин, цели ХС ЛНП, контроль, безопасность","group":"prev","kind":"gen","ls":"vits:state","ids":["w-most","w-target","w-50","w-extreme","w-tst","w-sparcl","w-ctt","w-icas","w-carotid","w-tg","d-atorva","d-rosu","d-mod-a","d-mod-r","d-effect","d-ezet","d-time","d-max","d-rosu-kk","d-atorva-kk","a-75new","a-75cont","a-75line","a-ctt","a-staree","a-staree-dfs","a-rosu70","a-ck70","s-kk30","s-asian","s-40list","s-cyclo","s-fusid","s-warf","s-preg","s-contra","s-amio","s-liver","t-48","t-lipids","t-nowait","t-inspires","t-inspires-fn","t-assort","t-ivt","t-inspires-reg","t-crush","n-blanco","n-end","n-lee","n-lee-red","n-life","n-disp","n-fail","m-kr","m-year","m-liver","m-168","m-ck","m-atorva-lft","m-early","m-visits","m-hba1c","e-ez","e-pcsk9","e-4","e-intol","e-tstez","e-racing","e-calc","e-calc2","e-calc3","r-plan","r-target","r-fourier","r-intol","r-alt3","r-alt2","r-restart","r-cyclo","r-inspires","h-ck4","h-ck10","h-ck-sym","h-ck-nosym","h-ctt","h-samson","h-ctt26","h-trans","h-intol","b-sparcl","b-tst-ich","b-bp","b-judge","b-hem","b-dm","b-lodestar","b-ht"],"topics":11,"extra":"","kw":"Кому ВИТС и цель Препараты и дозы Возраст Особые пациенты Когда начинать Не прерывать Сроки контроля Эскалация Снижение дозы Мышцы и печень Кровоизлияния и диабет"},{"key":"daat","title":"Антиагреганты при ИИ и ТИА","label":"ДААТ","desc":"ДААТ и монотерапия, нагрузка, сроки, перевод, с антикоагулянтами","group":"prev","kind":"gen","ls":"dapt:state","ids":["k-all","k-minor","k-abcd","k-algo","k-tia-af","k-lowtia","k-image","k-eso26","c-dur","c-start","c-label","c-chance","c-point","c-pool","c-insp","c-insp-bleed","c-insp-week","t-dur","t-who","t-sten","t-load","t-ich","t-thales","t-contra","t-label","t-asa","t-ch2","l-eso","l-already","l-75","l-600","l-rct","l-asa-thales","l-cyp","s-24","s-48","s-tic24","s-ivt","s-evt","s-ht","s-week","s-roth","d-22","d-31","d-which","d-90","d-point","d-sps3","d-taper","d-icas","d-ch2","i-prior","i-artis","i-kom","i-east","i-tapis","i-aramis","i-mrclean","i-tiro","v-sev","v-ist","v-atamis","v-dvt","v-cm","v-ac","v-ng","v-45","o-before","o-comb","o-atis","o-stent","o-lmwh","o-compass","o-compass-no","o-valve","x-icas","x-samm","x-diss","x-fail","x-triple","x-indo","x-moya","x-test","x-ppi","f-severe","f-end","f-noload","f-poac","f-ivt","f-tube","f-wait","f-forever"],"topics":11,"extra":"","kw":"Кому ДААТ, кому одна таблетка Клопидогрел + АСК Тикагрелор + АСК Нагрузочные дозы Сроки старта Длительность и перевод Тромболизис и тромбэктомия Лёгкие и тяжёлые С антикоагулянтами Особые случаи Частые ошибки"},{"key":"trombotsity","title":"Антитромботики при тромбоцитопении","label":"Тромбоциты","desc":"НМГ, ПОАК, АСК, клопидогрел при < 20, 20–50, > 50; ГИТ, ИТП","group":"prev","kind":"gen","ls":"thrombo:state","ids":["l-eha3","l-eha4","l-ehra","l-safe","l-rct","l-stable","l-recheck","l-who","k-thr","k-oak","k-tlt","k-04","k-50","k-improve","k-ipc","k-24","k-evt","f-pseudo","f-lmwh","f-hit","f-three","f-nsaid","f-ppi","f-panto","f-bleed","p-70","p-35","p-apix","p-20","p-ipc72","p-stock","p-cirr","p-ufh","t-60","t-35","t-35hr","t-14","t-20","t-resume","t-filter","t-trove","t-hr","d-60","d-ehra","d-eha","d-15","d-fall","d-vhr","d-iyen","d-droz","d-hit","a-60","a-35","a-20","a-resume","a-esc","a-acs","a-prim","a-dose","c-80","c-60b","c-40","c-icas40","c-icas60","c-esc","c-tic","c-iv","c-mcc","c-comb","c-coh","c-riva","r-100","r-wait","r-stop","r-cucc","r-trisp","r-xu","r-evt60","r-evt20","r-tor","h-what","h-4ts","h-low","h-int","h-time","h-fall","h-warf","h-trans","h-dur","h-apix","h-us","s-itp25","s-itp40","s-itpac","s-itpthr","s-cao","s-aabb","s-patch","s-ich","s-lp","s-valve","e-wait","e-70","e-poac","e-hit","e-dapt","e-tic","e-noprop","e-hittr","e-pseudo"],"topics":12,"extra":"","kw":"Три уровня тромбоцитов Что есть в КР по ИИ 2024 Сначала проверить НМГ: профилактика ТГВ НМГ: лечение ВТЭ ПОАК и ФП АСК Клопидогрел и ДААТ ТЛТ и тромбэктомия ГИТ ИТП, цирроз, трансфузии Частые ошибки"},{"key":"att","title":"АТТ после инсульта","label":"АТТ","desc":"ДАТТ, ФП, комбинации, тромб в ЛП, АФС, стенты, ООО, ТГВ; случаи и тест","group":"prev","kind":"att","ls":"stroke-att.progress.v1","ids":["d1","d2","d3","d4","d5","d6","d7","f1","f2","f3","f10","f11","f4","f5","f6","f7","f8","f9","c1","c2","c3","c4","c5","c6","l1","l2","l3","l4","l5","a1","a2","a3","a4","a5","s1","s2","s3","s4","s5","s6","s7","p1","p2","p3","p4","p5","p6","p7","v1","v2","v3","v4","v5","v6","v7"],"topics":8,"extra":"40 случаев · тест 26","kw":"ДАТТ ФП: ОАК и сроки Комбинации Тромб в ЛП АФС Стентирование ООО ТГВ голени"}],"built":"2026-10-05"};
+
+const APPS = {}; CAT.apps.forEach(a => { APPS[a.key] = a; });
+const $ = id => document.getElementById(id);
+const fmt = n => Number(n).toLocaleString("ru-RU");
+function plural(n, one, few, many){
+  const a = n % 10, b = n % 100;
+  if (a === 1 && b !== 11) return one;
+  if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return few;
+  return many;
+}
+const cards = n => n + "\u00a0" + plural(n, "карточка", "карточки", "карточек");
+function el(tag, cls, text){ const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
+function readJSON(k){ try{ return JSON.parse(lsGet(k) || "null"); }catch(e){ return null; } }
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const icon = key => "apps/icons/" + key + ".png";
+function iconImg(key, cls){ const i = el("img", cls); i.src = icon(key); i.alt = ""; i.decoding = "async"; return i; }
+
+// ——— Платформа: база прогресса и пользователь
+const RT = () => (window.claude && typeof window.claude.use === "function") ? window.claude : null;
+let dbP = null, uidP = null;
+function getDb(){
+  if (!dbP) dbP = (async () => { try{ const r = RT(); return r ? await r.use("db") : null; }catch(e){ return null; } })();
+  return dbP;
+}
+function getUid(){
+  if (!uidP) uidP = (async () => {
+    try{ const r = RT(); if (!r) return null; const u = await r.use("user"); return u ? (await u.id()) || null : null; }catch(e){ return null; }
+  })();
+  return uidP;
+}
+// Все модули писали прогресс в один документ data/users/<uid>/progress. Здесь у каждого — свой: progress-<ключ>.
+function mapPath(key, uid, p){
+  const m = /^data\/users\/([^/]+)\/progress$/.exec(p);
+  if (m) return "data/users/" + m[1] + "/progress-" + key;
+  return p;
+}
+function claudeFor(key){
+  return Object.freeze({
+    use: async name => {
+      const r = RT(); if (!r) return null;
+      const ns = await r.use(name);
+      if (!ns || name !== "db") return ns;
+      const uid = await getUid();
+      return new Proxy({}, { get(_, prop){
+        if (prop === "doc") return p => ns.doc(mapPath(key, uid, String(p)));
+        const v = ns[prop];
+        return typeof v === "function" ? v.bind(ns) : v;
+      } });
+    }
+  });
+}
+// ——— Мост для модулей: первая строка каждого модуля вызывает его до своих скриптов
+window.__pso = {
+  attach(key, win){
+    if (!APPS[key]) return;
+    try{ win.claude = claudeFor(key); }catch(e){}
+  }
+};
+
+// ——— Прогресс модулей: локальный (localStorage модуля) + облачный (progress-<ключ>), новее — по времени ответа
+const CLOUD = {};
+const DAY = 86400000;
+function dayIndex(){ const d = new Date(); return Math.floor((d.getTime() - d.getTimezoneOffset() * 60000) / DAY); }
+function newer(x, y, t){ return !x ? y : !y ? x : ((+y[t] || 0) > (+x[t] || 0) ? y : x); }
+// Модули из генераторов: { progress: { id: { step, due (мс), ts } } }
+function statsGen(a){
+  const l = readJSON(a.ls), c = CLOUD[a.key];
+  const lp = (l && l.progress && typeof l.progress === "object") ? l.progress : {};
+  const cp = (c && c.progress && typeof c.progress === "object") ? c.progress : {};
+  const now = Date.now();
+  let seen = 0, due = 0, known = 0;
+  a.ids.forEach(id => {
+    const p = newer(lp[id], cp[id], "ts"); if (!p) return;
+    seen++;
+    if (typeof p.due === "number" && p.due <= now) due++;
+    if ((p.step | 0) >= 1) known++;
+  });
+  return { total: a.ids.length, seen: seen, due: due, known: known };
+}
+// «АТТ»: { v: 1, resetAt, cards: { id: { l (уровень 0–4), d (день), t (время ответа) } } }
+function statsAtt(a){
+  const l = readJSON(a.ls) || {}, c = CLOUD[a.key] || {};
+  const lc = (l.v === 1 && l.cards && typeof l.cards === "object") ? l.cards : {};
+  const cc = (c.v === 1 && c.cards && typeof c.cards === "object") ? c.cards : {};
+  const resetAt = Math.max(+l.resetAt || 0, +c.resetAt || 0), today = dayIndex();
+  let seen = 0, due = 0, known = 0;
+  a.ids.forEach(id => {
+    const p = newer(lc[id], cc[id], "t"); if (!p || (+p.t || 0) < resetAt) return;
+    seen++;
+    if ((p.d | 0) <= today) due++;
+    if ((p.l | 0) >= 2) known++;
+  });
+  return { total: a.ids.length, seen: seen, due: due, known: known };
+}
+const statsOf = a => a.kind === "att" ? statsAtt(a) : statsGen(a);
+async function loadCloud(onlyKey){
+  const db = await getDb(), uid = await getUid();
+  if (!db || !uid) return false;
+  try{
+    if (onlyKey){
+      const s = await db.doc("data/users/" + uid + "/progress-" + onlyKey).get();
+      CLOUD[onlyKey] = s.exists ? (s.data() || {}) : {};
+    }else{
+      const snap = await db.collection("data/users/" + uid).get();
+      snap.docs.forEach(d => {
+        if (!d.exists || d.id.indexOf("progress-") !== 0) return;
+        const key = d.id.slice(9); if (!APPS[key]) return;
+        CLOUD[key] = d.data() || {};
+      });
+    }
+    return true;
+  }catch(e){ return false; }
+}
+
+// ——— Сводка, «Сегодня», плитки
+const STATS = {};
+function computeAll(){ CAT.apps.forEach(a => { STATS[a.key] = statsOf(a); }); }
+function renderSummary(){
+  let due = 0, withDue = 0, fresh = 0, total = 0;
+  CAT.apps.forEach(a => { const s = STATS[a.key]; due += s.due; if (s.due) withDue++; fresh += s.total - s.seen; total += s.total; });
+  $("eyebrow").textContent = CAT.apps.length + "\u00a0" + plural(CAT.apps.length, "модуль", "модуля", "модулей") + " · " + fmt(total) + "\u00a0" + plural(total, "карточка", "карточки", "карточек");
+  const sum = $("sum"); sum.textContent = "";
+  if (due){
+    sum.append("Сегодня к\u00a0повторению ", el("b", null, fmt(due)), "\u00a0" + plural(due, "карточка", "карточки", "карточек") + " в\u00a0" + withDue + "\u00a0" + plural(withDue, "модуле", "модулях", "модулях") + ".");
+  }else if (fresh === total){
+    sum.append("Выберите модуль и начните тренировку: впереди ", el("b", null, fmt(total)), "\u00a0" + plural(total, "карточка", "карточки", "карточек") + ".");
+  }else{
+    sum.append("Сегодня всё повторено. Новых карточек ждёт ", el("b", null, fmt(fresh)), ".");
+  }
+}
+function openBtn(node, key){ node.addEventListener("click", () => openCourse(key)); return node; }
+function chip(a, text, count){
+  const b = el("button", "chip"); b.type = "button";
+  b.append(iconImg(a.key), el("span", null, text), el("b", null, count));
+  return openBtn(b, a.key);
+}
+function renderToday(){
+  const box = $("today"); box.textContent = "";
+  // 1) что повторить — всего и по модулям
+  const dueList = CAT.apps.filter(a => STATS[a.key].due > 0).sort((x, y) => STATS[y.key].due - STATS[x.key].due);
+  const c1 = el("div", "tcard is-due");
+  c1.append(el("p", "lbl", "К повторению"));
+  if (dueList.length){
+    const n = dueList.reduce((s, a) => s + STATS[a.key].due, 0);
+    c1.append(el("p", "big", fmt(n)));
+    const chips = el("div", "chips");
+    dueList.forEach(a => {
+      const b = chip(a, a.label, String(STATS[a.key].due));
+      b.setAttribute("aria-label", a.title + ": " + cards(STATS[a.key].due) + " к повторению");
+      chips.append(b);
+    });
+    c1.append(chips);
+  }else{
+    c1.classList.remove("is-due");
+    const started = CAT.apps.some(a => STATS[a.key].seen > 0);
+    c1.append(el("p", "term", started ? "Всё повторено" : "Пока пусто"));
+    const next = CAT.apps.filter(a => STATS[a.key].seen > 0 && STATS[a.key].seen < STATS[a.key].total)[0] || CAT.apps.filter(a => STATS[a.key].seen === 0)[0];
+    if (next){
+      c1.append(el("p", "tsub", started ? "Можно взять новые карточки:" : "Здесь появятся карточки, которые пора повторить. Начать можно отсюда:"));
+      const chips = el("div", "chips");
+      chips.append(chip(next, next.label, "+" + (STATS[next.key].total - STATS[next.key].seen)));
+      c1.append(chips);
+    }
+  }
+  box.append(c1);
+  // 2) карточка дня — из поискового индекса, когда он загрузится
+  if (DAILY) box.append(DAILY);
+  // 3) продолжить последний модуль
+  const last = lsGet("pso:last");
+  if (last && APPS[last]){
+    const a = APPS[last], s = STATS[last];
+    const card = el("button", "tcard"); card.type = "button";
+    const top = el("span", "t-top"); top.append(iconImg(last, "t-ic"), el("span", "term", a.title));
+    card.append(el("p", "lbl", "Продолжить"), top);
+    card.append(el("p", "ru", s.due ? cards(s.due) + " к\u00a0повторению" : "изучено " + s.known + " из " + s.total));
+    box.append(openBtn(card, last));
+  }
+}
+const TILES = {};
+function tileFoot(t, a){
+  const s = STATS[a.key];
+  t.due.hidden = !s.due; t.due.textContent = String(s.due);
+  t.fill.style.width = (s.total ? Math.round(100 * s.known / s.total) : 0) + "%";
+  t.cnt.textContent = s.seen ? "изучено " + s.known + " из " + s.total : cards(s.total);
+  t.btn.setAttribute("aria-label", a.title + ". " + a.desc + ". " + (s.due ? s.due + " к повторению, " : "") + "изучено " + s.known + " из " + s.total);
+}
+function renderGroups(){
+  const box = $("groups"); box.textContent = "";
+  CAT.groups.forEach(([g, title]) => {
+    const apps = CAT.apps.filter(a => a.group === g);
+    const sec = el("section", "grp"); sec.dataset.g = g;
+    sec.append(el("h2", "lbl", title));
+    const grid = el("div", "grid");
+    apps.forEach(a => {
+      const btn = el("button", "tile"); btn.type = "button"; btn.dataset.k = a.key;
+      const top = el("span", "t-top"), name = el("span", "t-name", a.title), due = el("span", "t-due");
+      due.setAttribute("aria-hidden", "true");
+      top.append(iconImg(a.key, "t-ic"), name, due);
+      const foot = el("span", "t-foot"), bar = el("span", "bar"), fill = el("i"), cnt = el("span", "cnt");
+      bar.append(fill); foot.append(bar, cnt);
+      if (a.extra) foot.append(el("span", "tag", a.extra));
+      btn.append(top, el("span", "t-desc", a.desc), foot);
+      TILES[a.key] = { btn: btn, due: due, fill: fill, cnt: cnt, hay: norm(a.title + " " + a.label + " " + a.desc + " " + a.kw + " " + title + " " + a.key) };
+      tileFoot(TILES[a.key], a);
+      grid.append(openBtn(btn, a.key));
+    });
+    sec.append(grid);
+    box.append(sec);
+  });
+}
+function refreshTiles(){ CAT.apps.forEach(a => { if (TILES[a.key]) tileFoot(TILES[a.key], a); }); }
+function renderAll(){ computeAll(); renderSummary(); renderToday(); refreshTiles(); }
+
+// ——— Поисковый индекс: темы и карточки всех модулей (apps/search.json, грузится по требованию)
+let IDX = null, idxP = null;
+const clean = s => String(s || "").replace(/[\u00ad\u2060]/g, "").replace(/\u2011/g, "-");
+function norm(s){ return clean(s).toLowerCase().replace(/ё/g, "е").replace(/\u00a0/g, " ").trim(); }
+function loadIndex(){
+  if (!idxP) idxP = fetch("apps/search.json").then(r => { if (!r.ok) throw new Error("index " + r.status); return r.json(); }).then(j => {
+    const items = [];
+    CAT.apps.forEach(a => {
+      const m = j[a.key]; if (!m) return;
+      m.topics.forEach(t => items.push({ k: a.key, type: "topic", t: t.n, title: clean(t.title), sub: clean(t.sub), text: clean(t.text), hay: norm(t.title + " " + t.sub + " " + t.text) }));
+      m.cards.forEach(c => items.push({ k: a.key, type: c.kind || "card", id: a.key + ":" + c.id, t: c.t, topic: clean(m.names[c.t] || ""), q: clean(c.q), a: clean(c.a), why: clean(c.why), hay: norm(c.q.replace("___", " " + c.a + " ") + " " + c.why + " " + (m.names[c.t] || "")) }));
+    });
+    IDX = items;
+    return items;
+  }).catch(e => { idxP = null; throw e; });
+  return idxP;
+}
+// Подсветить найденные слова (ё = е)
+function hl(text, words){
+  const f = document.createDocumentFragment();
+  if (!words.length){ f.append(text); return f; }
+  const esc = w => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/е/g, "[её]");
+  const re = new RegExp("(" + words.map(esc).join("|") + ")", "gi");
+  let last = 0, m;
+  while ((m = re.exec(text))){
+    if (!m[0]) { re.lastIndex++; continue; }
+    if (m.index > last) f.append(text.slice(last, m.index));
+    f.append(el("mark", null, m[0]));
+    last = re.lastIndex;
+  }
+  if (last < text.length) f.append(text.slice(last));
+  return f;
+}
+// Вопрос с ответом на месте пропуска
+function filled(it, words, hide){
+  const p = el("p", hide ? "dq" : "h-q");
+  const i = it.q.indexOf("___");
+  const ans = hide ? el("span", "gap", "\u00a0".repeat(Math.max(4, Math.min(16, it.a.length)))) : el("span", "ans");
+  if (hide) ans.setAttribute("aria-label", "пропуск");
+  if (!hide) ans.append(hl(it.a, words));
+  if (i >= 0){
+    p.append(hl(it.q.slice(0, i), words), ans, hl(it.q.slice(i + 3), words));
+  }else{
+    p.append(hl(it.q, words));
+    if (!hide){ p.append(" → "); p.append(ans); }
+  }
+  return p;
+}
+function snippet(text, words){
+  const n = norm(text);
+  let at = -1; words.forEach(w => { const i = n.indexOf(w); if (i >= 0 && (at < 0 || i < at)) at = i; });
+  if (at < 0) return text.length > 220 ? text.slice(0, 220).replace(/\s+\S*$/, "") + "…" : text;
+  let s = Math.max(0, text.lastIndexOf("\n", at) + 1);
+  const dot = text.lastIndexOf(". ", at);
+  if (dot >= s && at - dot < 160) s = dot + 2; else if (at - s > 160) s = text.lastIndexOf(" ", at - 120) + 1;
+  let e = text.indexOf("\n", at); if (e < 0) e = text.length;
+  if (e - s > 300) e = text.indexOf(" ", s + 280) > 0 ? text.indexOf(" ", s + 280) : e;
+  const body = text.slice(s, e).trim();
+  return (s > 0 ? "…" : "") + body + (e < text.length && !/[.!?…]$/.test(body) ? "…" : "");
+}
+const TYPE = { card: "", case: " · случай", test: " · тест" };
+function hitView(it, words){
+  const a = APPS[it.k];
+  const box = el("article", "hit");
+  const top = el("div", "h-top");
+  top.append(iconImg(it.k), el("span", null, a.label + " · " + (it.type === "topic" ? "тема" : it.topic + TYPE[it.type])));
+  box.append(top);
+  if (it.type === "topic"){
+    const t = el("p", "h-title"); t.append(hl(it.title, words)); box.append(t);
+    if (it.sub) box.append(el("p", "h-why", it.sub));
+    const p = el("p", "h-q"); p.append(hl(snippet(it.text, words), words)); box.append(p);
+  }else{
+    box.append(filled(it, words, false));
+    if (it.why){ const w = el("p", "h-why"); w.append(hl(it.why, words)); box.append(w); }
+  }
+  const go = el("button", "h-open"); go.type = "button"; go.textContent = "Открыть «" + a.title + "» ›";
+  box.append(openBtn(go, it.k));
+  return box;
+}
+let hitsShown = 0, hitsAll = [], hitsWords = [];
+function showHits(more){
+  const box = $("hits");
+  if (!more){ box.textContent = ""; hitsShown = 0; }
+  const old = box.querySelector(".more"); if (old) old.remove();
+  const next = hitsAll.slice(hitsShown, hitsShown + 30);
+  next.forEach(it => box.append(hitView(it, hitsWords)));
+  hitsShown += next.length;
+  if (hitsShown < hitsAll.length){
+    const b = el("button", "btn more", "Показать ещё " + Math.min(30, hitsAll.length - hitsShown) + " из " + (hitsAll.length - hitsShown));
+    b.type = "button"; b.addEventListener("click", () => showHits(true)); box.append(b);
+  }
+}
+let searchSeq = 0;
+function applySearch(){
+  const q = norm($("q").value);
+  $("qx").hidden = !q;
+  $("today").hidden = !!q;
+  const words = q.split(/[\s\/,;+]+/).filter(Boolean);
+  let shown = 0;
+  const secs = {};
+  CAT.apps.forEach(a => {
+    const t = TILES[a.key];
+    const ok = !words.length || words.every(w => t.hay.indexOf(w) >= 0);
+    t.btn.hidden = !ok;
+    if (ok){ shown++; secs[a.group] = true; }
+  });
+  document.querySelectorAll("#groups .grp").forEach(s => { s.hidden = !secs[s.dataset.g]; });
+  const found = $("found");
+  if (!words.length){ found.hidden = true; $("empty").hidden = true; return; }
+  const seq = ++searchSeq;
+  const run = items => {
+    if (seq !== searchSeq) return;
+    hitsWords = words;
+    hitsAll = items.filter(it => words.every(w => it.hay.indexOf(w) >= 0));
+    hitsAll.sort((x, y) => (x.type === "topic" ? 0 : 1) - (y.type === "topic" ? 0 : 1));
+    found.hidden = !hitsAll.length;
+    $("foundLbl").textContent = "В темах и карточках · " + hitsAll.length;
+    showHits(false);
+    $("empty").hidden = shown + hitsAll.length > 0;
+  };
+  if (IDX) run(IDX);
+  else{
+    found.hidden = false; $("foundLbl").textContent = "Ищу в темах и карточках…"; $("hits").textContent = "";
+    loadIndex().then(run, () => { if (seq === searchSeq){ $("foundLbl").textContent = "Поиск по карточкам не загрузился — проверьте интернет."; $("empty").hidden = shown > 0; } });
+  }
+}
+$("q").addEventListener("input", applySearch);
+$("q").addEventListener("focus", () => { loadIndex().catch(() => {}); }, { once: true });
+$("qx").addEventListener("click", () => { $("q").value = ""; applySearch(); $("q").focus(); });
+
+// ——— Карточка дня: одна и та же весь день, из любого модуля; ответ — по касанию
+let DAILY = null;
+function buildDaily(items){
+  const pool = items.filter(it => it.type === "card" && it.q.indexOf("___") >= 0);
+  if (!pool.length) return;
+  let h = 2166136261; String(dayIndex()).split("").forEach(ch => { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); });
+  const it = pool[(h >>> 0) % pool.length], a = APPS[it.k];
+  const c = el("div", "tcard");
+  c.append(el("p", "lbl", "Карточка дня · " + a.label));
+  c.append(el("p", "ru", it.topic));
+  const q = filled(it, [], true); c.append(q);
+  const why = el("p", "dwhy", it.why); why.hidden = true; c.append(why);
+  const row = el("div", "row");
+  const show = el("button", "btn pri", "Показать ответ"); show.type = "button";
+  show.addEventListener("click", () => {
+    const g = q.querySelector(".gap"); if (g){ const s = el("span", "ans", it.a); g.replaceWith(s); }
+    why.hidden = !it.why; show.remove();
+  });
+  const go = el("button", "btn", "Открыть модуль"); go.type = "button";
+  row.append(show, openBtn(go, it.k)); c.append(row);
+  DAILY = c;
+  renderToday();
+}
+
+// ——— Открыть модуль
+const HEAD = '<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:dark;box-sizing:border-box}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#0e1113;color:#e8e8e8}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>';
+const htmlCache = new Map();
+let curKey = null, loadedKey = null;
+function getHtml(key){
+  let p = htmlCache.get(key);
+  if (!p){
+    p = fetch("apps/" + key + ".html").then(r => { if (!r.ok) throw new Error("html " + r.status); return r.text(); });
+    p.catch(() => htmlCache.delete(key));
+    htmlCache.set(key, p);
+  }
+  return p;
+}
+function courseMsg(text, retry){
+  $("cmsg").hidden = !text; $("cmsgText").textContent = text || ""; $("retry").hidden = !retry;
+}
+async function openCourse(key){
+  const a = APPS[key]; if (!a) return;
+  lsSet("pso:last", key);
+  try{ document.activeElement && document.activeElement.blur && document.activeElement.blur(); }catch(e){}
+  $("ctitle").textContent = ""; $("ctitle").append(el("span", "short", a.label), el("span", "full", a.title));
+  const frame = $("frame");
+  frame.title = a.title;
+  const course = $("course");
+  course.classList.add("open"); course.setAttribute("aria-hidden", "false");
+  $("home").setAttribute("aria-hidden", "true");
+  curKey = key;
+  if (loadedKey === key && frame.classList.contains("ready")){ $("back").focus({ preventScroll: true }); return; }
+  loadedKey = null;
+  frame.classList.remove("ready");
+  courseMsg("Открываю модуль…", false);
+  try{
+    const html = await getHtml(key);
+    if (curKey !== key) return;
+    loadedKey = key;
+    frame.srcdoc = HEAD + html + "\n</body></html>";
+  }catch(e){
+    if (curKey !== key) return;
+    courseMsg("Модуль не открылся. Проверьте интернет и попробуйте ещё раз.", true);
+  }
+}
+$("frame").addEventListener("load", () => {
+  const f = $("frame");
+  if (!loadedKey) return;
+  f.classList.add("ready");
+  courseMsg("", false);
+});
+$("retry").addEventListener("click", () => { const k = curKey; loadedKey = null; if (k) openCourse(k); });
+function closeCourse(){
+  const course = $("course");
+  if (!course.classList.contains("open")) return;
+  try{ const w = $("frame").contentWindow; if (w && w.speechSynthesis) w.speechSynthesis.cancel(); }catch(e){}
+  course.classList.remove("open"); course.setAttribute("aria-hidden", "true");
+  $("home").removeAttribute("aria-hidden");
+  const key = curKey;
+  renderAll();
+  if (key) loadCloud(key).then(ok => { if (ok) renderAll(); });
+  if (key && TILES[key] && !TILES[key].btn.hidden) try{ TILES[key].btn.focus({ preventScroll: true }); }catch(e){}
+}
+$("back").addEventListener("click", closeCourse);
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeCourse(); });
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && !$("course").classList.contains("open")) renderAll(); });
+
+// ——— Старт
+function idle(fn){ (window.requestIdleCallback || (f => setTimeout(f, 600)))(fn); }
+function start(data){
+  computeAll();
+  renderGroups();
+  renderAll();
+  loadCloud().then(ok => { if (ok) renderAll(); });
+  idle(() => {
+    loadIndex().then(buildDaily, () => {});
+    const last = lsGet("pso:last"); if (last && APPS[last]) getHtml(last).catch(() => {});
+  });
+  if (data && data.open && APPS[data.open]) openCourse(data.open);
+  if (data && typeof data.q === "string" && data.q){ $("q").value = data.q; applySearch(); }
+}
+const hot = window.claude && window.claude.hot;
+try{ if (hot && typeof hot.snapshot === "function") hot.snapshot(() => ({ open: $("course").classList.contains("open") ? curKey : null, q: $("q").value })); }catch(e){}
+try{
+  if (hot && typeof hot.ready === "function") hot.ready(d => start(d || {}));
+  else start((hot && hot.data) || {});
+}catch(e){ start({}); }
+</script>
+
+</body></html>

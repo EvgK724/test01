@@ -1,0 +1,46 @@
+/* Размеры подписей — в pt: сборка масштабирует только px, а подписи должны оставаться в масштабе схемы */
+  .art{display:block;width:100%;height:auto}
+  .art .ln{fill:none;stroke:#c3cbcf;stroke-linecap:round;stroke-linejoin:round;transition:stroke .2s ease}
+  .art .w4{stroke-width:5.5}
+  .art .w3{stroke-width:4.2}
+  .art .w2{stroke-width:3.2}
+  .art .w1{stroke-width:2.2}
+  .art .w0{stroke-width:1.5}
+  .art .faint{stroke:#46525a}
+  .art .hit{fill:none;stroke:transparent;stroke-width:20;stroke-linecap:round;pointer-events:stroke}
+  .art .hit.s{stroke-width:12}
+  .art .seg{cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .art .seg.on .ln{stroke:#d97757;filter:drop-shadow(0 0 5px rgba(217,119,87,.8))}
+  .art .vl{fill:#98a4a9;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;font-size:9.375pt;font-weight:600;pointer-events:none}
+  .art .vl.dim{fill:#65727a;font-size:8.25pt;font-weight:400}
+  .art .vl.on-reg{fill:#e8e8e8;font-size:9.75pt}
+  .art .cut{fill:#171c1f;stroke:#c3cbcf;stroke-width:2}
+  .art .bone{fill:none;stroke:#46525a;stroke-width:1.5;stroke-dasharray:4 4}
+  .art .sinus{fill:rgba(124,192,221,.06);stroke:rgba(124,192,221,.28);stroke-dasharray:3 3}
+  .art .brain{fill:rgba(255,255,255,.035);stroke:#3c474d;stroke-width:1.5}
+  .art .mid{fill:none;stroke:#3c474d;stroke-width:1.2;stroke-dasharray:4 5}
+  .art .gm{fill:none;stroke:#56626a;stroke-width:7;stroke-linecap:round;opacity:.45}
+  .art .nuc{fill:rgba(255,255,255,.06);stroke:#3c474d}
+  .art .vent,.art .vent2{fill:#0e1113;stroke:#3c474d;pointer-events:none}
+  .art .thal{fill:rgba(255,255,255,.035);stroke:#2c3438;pointer-events:none}
+  .art .outline{fill:none;stroke:#56626a;stroke-width:1.5;pointer-events:none}
+  .art .reg .area{stroke:#0e1113;stroke-width:1.5;transition:fill .2s ease}
+  .art .t-aca .area{fill:rgba(124,192,221,.26)}
+  .art .t-mca .area{fill:rgba(217,119,87,.24)}
+  .art .t-pca .area{fill:rgba(154,208,180,.26)}
+  .art .t-deep .area{fill:rgba(220,195,138,.42)}
+  .art .t-aca.on .area{fill:rgba(124,192,221,.75)}
+  .art .t-mca.on .area{fill:rgba(217,119,87,.72)}
+  .art .t-pca.on .area{fill:rgba(154,208,180,.75)}
+  .art .t-deep.on .area{fill:rgba(220,195,138,.9)}
+  .art[data-view="aspects"] .reg .area{fill:rgba(255,255,255,.07);stroke:#56626a;stroke-width:1.2}
+  .art[data-view="aspects"] .a-off .area{fill:rgba(255,255,255,.015);stroke:#2c3438}
+  .art[data-view="aspects"] .reg.on .area{fill:rgba(217,119,87,.6);stroke:#d97757}
+  .art .a-off{pointer-events:none}
+  /* Показания к ВСТЭ — «светофор»: зелёный со свечением — показана, жёлтый — индивидуально, красный — не рекомендована, серый — не мишень */
+  :root{--e-yes:#3ddc84;--e-maybe:#ffd23f;--e-no:#ff5a5f;--e-na:#4f5b62}
+  .evt .art .seg[data-evt="yes"] .ln{stroke:var(--e-yes);filter:drop-shadow(0 0 4px rgba(61,220,132,.75))}
+  .evt .art .seg[data-evt="maybe"] .ln{stroke:var(--e-maybe)}
+  .evt .art .seg[data-evt="no"] .ln{stroke:var(--e-no)}
+  .evt .art .seg[data-evt="na"] .ln{stroke:var(--e-na)}
+  .evt .art .seg.on .ln{stroke:#ffffff;filter:drop-shadow(0 0 5px rgba(255,255,255,.7))}
