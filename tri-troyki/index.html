@@ -35,7 +35,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html {
-  font-size: calc(100% * var(--k));
+  font-size: calc(110% * var(--k));
   height: 100%;
   padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
   background: var(--bg);
@@ -47,7 +47,7 @@ body {
   display: flex; flex-direction: column;
   overflow: hidden;
   background: var(--bg); color: var(--text);
-  font: 500 1.125rem/1.45 var(--sans);
+  font: 600 1.125rem/1.45 var(--sans);
 }
 button { font: inherit; color: inherit; cursor: pointer; }
 button:focus-visible, [tabindex]:focus-visible, summary:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
@@ -264,7 +264,7 @@ main {
 .fb { font-weight: 700; }
 .fb.ok { color: var(--ok); }
 .fb.bad { color: var(--bad); }
-.fb span { font-weight: 500; color: var(--text); }
+.fb span { font-weight: 600; color: var(--text); }
 .score { text-align: center; display: flex; flex-direction: column; gap: 4px; padding: 8px 0; }
 .score .num { font: 700 3.5rem/1 var(--serif); font-variant-numeric: tabular-nums; }
 .score p { color: var(--text-2); }
