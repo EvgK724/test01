@@ -1,12 +1,13 @@
-# Делает записи голосом Microsoft Ryan для приложения want-you-to
-# и коммитит их в ту же ветку. Запускается при изменении фраз или вручную.
+# Делает записи голосом Microsoft Ryan для каждого приложения, в котором есть tools/make_audio.py
+# (want-you-to, noun-prepositions, …), и коммитит их в ту же ветку.
+# Запускается при изменении фраз или вручную.
 name: Ryan voice audio
 
 on:
   push:
     paths:
-      - 'want-you-to/index.html'
-      - 'want-you-to/tools/**'
+      - '*/index.html'
+      - '*/tools/**'
       - '.github/workflows/ryan-audio.yml'
   workflow_dispatch:
 
@@ -30,17 +31,21 @@ jobs:
       - name: Install edge-tts
         run: pip install edge-tts==7.2.8
 
-      - name: Collect phrases
-        run: node want-you-to/tools/extract_phrases.mjs
-
-      - name: Generate audio (en-GB-RyanNeural)
-        run: python want-you-to/tools/make_audio.py
+      - name: Generate audio (en-GB-RyanNeural) for every app
+        run: |
+          for script in */tools/make_audio.py; do
+            dir="${script%/tools/make_audio.py}"
+            echo "::group::$dir"
+            node "$dir/tools/extract_phrases.mjs"
+            python "$script"
+            git add "$dir/audio" "$dir/phrases.json"
+            echo "::endgroup::"
+          done
 
       - name: Commit audio
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
-          git add want-you-to/audio want-you-to/phrases.json
           if git diff --cached --quiet; then
             echo "Audio is up to date"
             exit 0
