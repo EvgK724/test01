@@ -59,7 +59,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html { height: 100%; background: var(--bg); -webkit-text-size-adjust: 100%; }
+html { height: 100%; background: var(--bg); -webkit-text-size-adjust: 100%; overscroll-behavior: none; }
 /* Окно — во весь экран до самого низа; отступ под полоску «Домой» — только у панели вкладок. */
 body {
   margin: 0;
@@ -102,7 +102,8 @@ p { margin: 0; }
 .due-chip b { color: var(--fg); font-weight: 650; }
 
 /* ---------- views ---------- */
-main { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+/* Только вертикальная прокрутка: что бы ни оказалось шире экрана, страница не уезжает вбок. */
+main { flex: 1; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
 .view {
   max-width: calc(680px*var(--k));
   margin: 0 auto;
@@ -124,8 +125,8 @@ h2::after { content: ""; flex: 1; height: calc(1px*var(--k)); background: linear
 }
 
 /* ---------- review ---------- */
-.hero { padding: calc(20px*var(--k)); display: grid; gap: calc(14px*var(--k)); }
-.hero-title { margin: 0; font: 650 calc(21px*var(--k))/1.25 var(--f-display); letter-spacing: -0.01em; text-wrap: balance; }
+.hero { padding: calc(20px*var(--k)); display: grid; grid-template-columns: minmax(0, 1fr); gap: calc(14px*var(--k)); }
+.hero-title { margin: 0; font: 650 calc(21px*var(--k))/1.25 var(--f-display); letter-spacing: -0.01em; text-wrap: balance; overflow-wrap: anywhere; hyphens: auto; }
 .hero-note { font-size: calc(14.5px*var(--k)); color: var(--muted); }
 .hero-note b { color: var(--amber); font-weight: 600; }
 .topic-nav { display: flex; flex-wrap: wrap; gap: calc(8px*var(--k)); }
@@ -139,8 +140,8 @@ h2::after { content: ""; flex: 1; height: calc(1px*var(--k)); background: linear
 .tchip::before { content: ""; width: calc(8px*var(--k)); height: calc(8px*var(--k)); border-radius: 50%; background: var(--t); }
 .topic { margin-top: calc(16px*var(--k)); padding: calc(18px*var(--k)); border-color: rgba(var(--t-rgb), 0.3);
   background: radial-gradient(calc(420px*var(--k)) calc(240px*var(--k)) at 100% 0%, rgba(var(--t-rgb), 0.12), transparent 70%), linear-gradient(165deg, rgba(36, 41, 56, 0.9), rgba(20, 23, 31, 0.92)); }
-.topic-head { display: flex; align-items: baseline; justify-content: space-between; gap: calc(12px*var(--k)); margin-bottom: calc(12px*var(--k)); }
-.topic-title { margin: 0; font: 650 calc(19px*var(--k))/1.25 var(--f-display); color: var(--t); text-wrap: balance; }
+.topic-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: calc(4px*var(--k)) calc(12px*var(--k)); margin-bottom: calc(12px*var(--k)); }
+.topic-title { margin: 0; min-width: 0; font: 650 calc(19px*var(--k))/1.25 var(--f-display); color: var(--t); text-wrap: balance; overflow-wrap: anywhere; hyphens: auto; }
 .topic-count { font-size: calc(13px*var(--k)); color: var(--faint); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .points { list-style: none; margin: 0; padding: 0; display: grid; gap: calc(12px*var(--k)); }
 .points li { display: grid; grid-template-columns: calc(6px*var(--k)) minmax(0, 1fr); gap: calc(12px*var(--k)); }
@@ -156,6 +157,7 @@ h2::after { content: ""; flex: 1; height: calc(1px*var(--k)); background: linear
 }
 .src.ru { color: var(--amber); border-color: rgba(var(--amber-rgb), 0.4); }
 .reflist { margin: 0; padding-left: calc(22px*var(--k)); display: grid; gap: calc(10px*var(--k)); font-size: calc(15px*var(--k)); color: var(--muted); }
+.reflist li { min-width: 0; overflow-wrap: anywhere; }
 .reflist b { color: var(--fg); font-weight: 600; }
 .reflist .tag { color: var(--accent); font-weight: 600; }
 .disclaimer { padding: calc(14px*var(--k)) calc(16px*var(--k)); border-radius: calc(16px*var(--k)); border: calc(1px*var(--k)) solid rgba(var(--amber-rgb), 0.35); background: rgba(var(--amber-rgb), 0.07); font-size: calc(14.5px*var(--k)); color: var(--fg); }
@@ -343,7 +345,7 @@ html.wide .view, html.wide .tabs { max-width: calc(860px*var(--k)); }
   <!-- ======== Разбор ======== -->
   <section class="view" id="v-review" aria-label="Разбор">
     <div class="panel hero">
-      <p class="hero-title">Антитромботическая вторичная профилактика ишемического инсульта: трудные места</p>
+      <p class="hero-title">Трудные места АТТ после инсульта</p>
       <p class="hero-note">Опора — <b>КР МЗ РФ «Ишемический инсульт и ТИА» 2024</b>, работы проф. А.А. Кулеша, ESC 2024, ESO 2024 по ООО, ESVS 2023, CHEST 2021, EULAR 2019 и РКИ последних лет (ELAN, OPTIMAS, CATALYST, INSPIRES, THALES, CHANCE-2, ARCADIA, TRAPS, CLOSE, CASSISS, CLOTS 3). У каждого тезиса указан источник.</p>
       <div class="topic-nav" id="topicNav"></div>
     </div>
@@ -415,14 +417,14 @@ html.wide .view, html.wide .tabs { max-width: calc(860px*var(--k)); }
   /* ================= ДАННЫЕ =================
      src — ключи из SOURCES. Чтобы добавить карточку, случай или вопрос — допишите объект в массив. */
   const TOPICS = {
-    dapt:  { name: 'ДАТТ и антиагреганты', short: 'ДАТТ' },
-    af:    { name: 'ФП: выбор ОАК и сроки', short: 'ФП и сроки' },
-    combo: { name: 'Комбинации и особые случаи', short: 'Комбинации' },
-    lat:   { name: 'Тромб в ЛП и ушке ЛП', short: 'Тромб ЛП' },
-    aps:   { name: 'Антифосфолипидный синдром', short: 'АФС' },
-    stent: { name: 'Стентирование артерий', short: 'Стент' },
-    pfo:   { name: 'Открытое овальное окно', short: 'ООО' },
-    dvt:   { name: 'Тромбоз глубоких вен голени', short: 'ТГВ' }
+    dapt:  { name: 'ДАТТ', short: 'ДАТТ' },
+    af:    { name: 'ФП: ОАК и сроки', short: 'ФП и сроки' },
+    combo: { name: 'Комбинации', short: 'Комбинации' },
+    lat:   { name: 'Тромб в ЛП', short: 'Тромб ЛП' },
+    aps:   { name: 'АФС', short: 'АФС' },
+    stent: { name: 'Стентирование', short: 'Стент' },
+    pfo:   { name: 'ООО', short: 'ООО' },
+    dvt:   { name: 'ТГВ голени', short: 'ТГВ' }
   };
 
   const SOURCES = {
