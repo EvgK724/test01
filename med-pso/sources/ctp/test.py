@@ -53,7 +53,7 @@ async def run():
         wrong = await pg.evaluate("shownOpts.findIndex(o => o !== queue[index].a && !(queue[index].also && queue[index].also[o]))")
         await (await pg.query_selector_all("#opts .opt"))[wrong].click(); await pg.wait_for_timeout(200)
         out["verdict"] = await pg.inner_text("#verdict")
-        out["audio"] = await pg.evaluate("player.getAttribute('src')")
+        out["audio"] = await pg.evaluate("typeof player === 'undefined' && typeof speechSynthesis !== 'undefined' ? 'нет озвучки' : 'есть код озвучки'")
         out["q_lang"] = await pg.evaluate("document.getElementById('q').lang || document.documentElement.lang")
         await shot(pg, "wrong")
         n = 0

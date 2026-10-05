@@ -76,8 +76,6 @@
   .big{flex:1;min-height:calc(58px*var(--k));border-radius:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:transparent;font-size:calc(19px*var(--k));cursor:pointer}
   .primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
   .big:active,.opt:active{transform:scale(.985)}
-  .say{width:calc(58px*var(--k));height:calc(58px*var(--k));flex:0 0 calc(58px*var(--k));border-radius:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--accent);background:transparent;color:var(--accent);display:grid;place-items:center;cursor:pointer}
-  .say svg{width:calc(24px*var(--k));height:calc(24px*var(--k))}
 
   /* ——— Правила */
   .rule{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:calc(4px*var(--k)) calc(2px*var(--k)) calc(12px*var(--k))}
@@ -118,8 +116,6 @@
   .mm-pair p{margin:0}
   .mm-pair span{display:block;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2}
   .mm-pair small{display:block;font-size:calc(13px*var(--k));line-height:1.3;color:var(--muted)}
-  .mm-play{width:calc(44px*var(--k));height:calc(44px*var(--k));border-radius:50%;border:calc(1px*var(--k)) solid var(--line-2);background:transparent;color:var(--accent);display:grid;place-items:center;cursor:pointer}
-  .mm-play svg{width:calc(18px*var(--k));height:calc(18px*var(--k))}
   .mm-note{margin:calc(8px*var(--k)) 0 0;padding-top:calc(8px*var(--k));border-top:calc(1px*var(--k)) solid var(--line);font-size:calc(14px*var(--k));line-height:1.45;color:var(--soft)}
   .legend{margin:0 calc(2px*var(--k)) calc(10px*var(--k));font-size:calc(15px*var(--k));line-height:1.45;color:var(--soft)}
   .hl{color:var(--text);text-decoration:underline;text-decoration-thickness:calc(1.5px*var(--k));text-underline-offset:calc(3px*var(--k))}
@@ -1327,7 +1323,6 @@ const MIXED_SIZE = 15;
 const INTERVALS = [1, 3, 7, 16];            // дни
 const DAY = 86400000;
 const LS_STATE = "ctp:state";
-const LS_SPEAK = "ctp:autospeak";
 const LS_TAB = "ctp:tab";
 const LS_OPEN = "ctp:open";
 const TOPIC_BY = {};
@@ -1508,110 +1503,7 @@ async function connectCloud(){
   }catch(e){ /* офлайн-режим */ }
 }
 
-// ——— Озвучка: записи голосом Microsoft Ryan (en-GB) в папке audio/.
-// Если файла нет или он не загрузился — лучший британский голос устройства (голоса Siri исключены: в браузере они молчат).
-const TTS_LANG = "en-GB";
-const player = new Audio();
-player.preload = "auto";
-let playToken = 0, pending = null, ttsVoice = null;
-
-function stopAudio(){
-  playToken++;
-  pending = null;
-  try{ player.pause(); }catch(e){}
-  try{
-    if (window.speechSynthesis && (speechSynthesis.speaking || speechSynthesis.pending)) speechSynthesis.cancel();
-  }catch(e){}
-}
-function scoreVoice(v){
-  const lang = String(v.lang || "").toLowerCase().replace("_", "-");
-  const n = (String(v.name || "") + " " + String(v.voiceURI || "")).toLowerCase();
-  if (n.includes("siri")) return -1;
-  let s;
-  if (lang.startsWith("en-gb")) s = 100;
-  else if (lang.startsWith("en")) s = 10;
-  else return -1;
-  if (n.includes("ryan")) s += 60;
-  if (n.includes("natural") || n.includes("neural")) s += 40;
-  if (n.includes("premium")) s += 35;
-  if (n.includes("enhanced") || n.includes("improved")) s += 25;
-  if (n.includes("google")) s += 15;
-  if (/compact|eloquence|novelty|bad news|good news|bells|boing|bubbles|cellos|jester|organ|superstar|trinoids|whisper|wobble|zarvox|albert|fred|junior|ralph|kathy|grandma|grandpa|rocko|shelley|sandy|flo|eddy|reed/.test(n)) s -= 80;
-  return s;
-}
-function pickVoice(){
-  try{
-    const vs = window.speechSynthesis ? speechSynthesis.getVoices() : [];
-    let best = null, bestScore = -1;
-    for (const v of vs){ const s = scoreVoice(v); if (s > bestScore){ bestScore = s; best = v; } }
-    ttsVoice = best;
-  }catch(e){ ttsVoice = null; }
-}
-try{
-  if (window.speechSynthesis){
-    pickVoice();
-    if (typeof speechSynthesis.addEventListener === "function") speechSynthesis.addEventListener("voiceschanged", pickVoice);
-    else speechSynthesis.onvoiceschanged = pickVoice;
-  }
-}catch(e){}
-function speakTTS(text, rate){
-  try{
-    if (!window.speechSynthesis) return;
-    if (speechSynthesis.speaking || speechSynthesis.pending) speechSynthesis.cancel();
-    const make = withVoice => {
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = TTS_LANG;
-      if (withVoice && ttsVoice) u.voice = ttsVoice;
-      u.rate = rate || 0.9;
-      return u;
-    };
-    const u = make(true);
-    if (ttsVoice){
-      u.onerror = e => {
-        const err = e && e.error;
-        if (err === "interrupted" || err === "canceled") return;
-        try{ speechSynthesis.speak(make(false)); }catch(_){}
-      };
-    }
-    speechSynthesis.speak(u);
-  }catch(e){}
-}
-function fallbackTTS(token){
-  if (!pending || pending.token !== token) return;
-  const p = pending; pending = null;
-  speakTTS(p.text, p.rate);
-}
-function playClip(key, text, rate){
-  stopAudio();
-  const token = playToken;
-  if (!key){ speakTTS(text, rate); return; }
-  pending = { token: token, text: text, rate: rate };
-  const src = "audio/" + key + ".mp3";
-  try{
-    if (player.getAttribute("src") !== src) player.setAttribute("src", src);
-    try{ player.currentTime = 0; }catch(e){}
-    const pr = player.play();
-    if (pr && typeof pr.then === "function"){
-      pr.then(() => { if (pending && pending.token === token) pending = null; })
-        .catch(err => {
-          const n = err && err.name;
-          if (n === "AbortError" || n === "NotAllowedError") return;
-          fallbackTTS(token);
-        });
-    }
-  }catch(e){ fallbackTTS(token); }
-}
-player.addEventListener("error", () => { if (pending) fallbackTTS(pending.token); });
-function preloadClip(key){
-  if (!player.paused) return;
-  const src = "audio/" + key + ".mp3";
-  if (player.getAttribute("src") === src) return;
-  player.setAttribute("src", src);
-  try{ player.load(); }catch(e){}
-}
-
-// ——— Ситуации: прослушать
-document.querySelectorAll(".mm-play").forEach(b => b.addEventListener("click", () => playClip(b.dataset.key, b.dataset.text, 0.85)));
+function stopAudio(){}   // озвучки в этом приложении нет
 
 // ——— Очередь
 // Новые карточки идут вперемешку по темам: метод, карты, ядро и пенумбра, коллатерали, отбор, ловушки и отчёт чередуются.

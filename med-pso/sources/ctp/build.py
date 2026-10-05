@@ -3,6 +3,12 @@ here = pathlib.Path("ctp")
 sys.path.insert(0, str(here))
 from content import TOPICS, CARDS, GROUPS, MAPS, TISSUE, CONTRAST, ERRORS, MIXED_TOPIC
 tpl = (here / "template.html").read_text()
+# Озвучка — остаток английского шаблона, в «КТ-перфузии» она не нужна: убираем код, как в остальных модулях.
+_a, _b = tpl.index("// ——— Озвучка:"), tpl.index("// ——— Очередь")
+tpl = tpl[:_a] + "function stopAudio(){}   // озвучки в этом приложении нет\n\n" + tpl[_b:]
+tpl = tpl.replace('const LS_SPEAK = "ctp:autospeak";\n', "")
+tpl = re.sub(r"  \.(?:say|mm-play)(?: svg)?\{[^}]*\}\n", "", tpl)
+assert not re.search(r"speechSynthesis|playClip|preloadClip|LS_SPEAK|mm-play|\.say\{|new Audio", tpl)
 esc = html.escape
 NB = "\u00a0"
 def typo(s):

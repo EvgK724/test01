@@ -2,7 +2,7 @@
 // При установке заранее кэшируются и записи голоса Ryan из audio/index.json.
 // Записи Safari запрашивает кусками (заголовок Range) и не играет звук, если в ответ пришёл файл целиком, —
 // тогда приложение переходит на голос устройства. Поэтому в кэше лежит файл целиком, а отдаётся ровно запрошенный кусок (206).
-const CACHE = 'stroke-att-v4';
+const CACHE = 'stroke-att-v5';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './apple-touch-icon.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', (e) => {
