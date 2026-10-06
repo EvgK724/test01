@@ -3,7 +3,8 @@
 #
 # Что делает:
 #   1. Берёт тело каждого модуля — то, что сейчас публикуется отдельно:
-#      генераторы → sources/<папка>/index.html; «АТТ» → ../../stroke-att/index.html (блоки APP-HEAD и APP-BODY).
+#      генераторы → sources/<папка>/index.html; «АТТ» → ../../stroke-att/index.html (блоки APP-HEAD и APP-BODY);
+#      модули с полем source в каталоге («Где очаг») → ../../<source>, те же блоки.
 #      Сверяет с site/apps/<ключ>.html (опубликованные страницы) и печатает, совпадает ли модуль.
 #   2. Первой строкой добавляет мост: parent.__pso.attach("<ключ>", window) — оболочка подставит модулю
 #      свой window.claude, и прогресс модуля ляжет в отдельный документ progress-<ключ>.
@@ -31,8 +32,8 @@ def published(key):
     assert page.startswith(SK_HEAD + "\n") and page.endswith("\n</body></html>"), key
     return page[len(SK_HEAD) + 1:-len("\n</body></html>")]
 
-def att_body():
-    s = ATT_SRC.read_text()
+def app_body(src):
+    s = src.read_text()
     head = re.search(r"<!--APP-HEAD-->(.*?)<!--/APP-HEAD-->", s, re.S).group(1)
     body = re.search(r"<!--APP-BODY-->(.*?)<!--/APP-BODY-->", s, re.S).group(1)
     return head.strip() + "\n" + body.strip() + "\n", s
@@ -51,6 +52,36 @@ process.stdout.write(JSON.stringify(o));
 """
     return json.loads(subprocess.run(["node", "-e", js, str(src)], capture_output=True, text=True, check=True).stdout)
 
+def ochag_data(src):
+    js = r"""
+const fs = require('fs'); const s = fs.readFileSync(process.argv[1], 'utf8');
+const d = s.slice(s.indexOf('/*DATA-START*/'), s.indexOf('/*DATA-END*/'));
+const o = new Function(d + ';return {LEVELS,STEM,HEMI};')();
+process.stdout.write(JSON.stringify(o));
+"""
+    return json.loads(subprocess.run(["node", "-e", js, str(src)], capture_output=True, text=True, check=True).stdout)
+
+def ochag_index(D):
+    """«Где очаг»: тема = синдром; карточка = синдром по его картине (для поиска и «Карточки дня»)."""
+    topics, cards = [], []
+    for s in D["STEM"]:
+        lv = D["LEVELS"][s["level"]]
+        sym = "; ".join(x[1] for x in s["ipsi"]) + ". Противоположная сторона: " + "; ".join(x[1] for x in s["contra"])
+        topics.append({"n": s["id"], "title": s["name"], "sub": lv["name"] + " · " + s["brief"],
+                       "text": s["where"] + "\n\n" + sym + ".\n\n" + s["why"] + "\n\nАртерия: " + s["artery"]})
+        cards.append({"id": s["id"], "t": s["id"], "q": "Очаг " + lv["loc"] + ". На стороне очага: " + s["caseI"].replace("{I}", "к очагу").replace("{C}", "от очага")
+                      + ". На противоположной стороне: " + s["caseC"].replace("{I}", "к очагу").replace("{C}", "от очага") + ". Это ___.",
+                      "a": s["name"], "why": s["why"]})
+    for h in D["HEMI"]:
+        sym = "; ".join(x[1] for x in h["contra"])
+        extra = " ".join(h.get("other", []))
+        topics.append({"n": h["id"], "title": h["name"], "sub": "полушарный синдром · " + h["sub"],
+                       "text": sym + ". " + extra + "\n\nЛевое полушарие: " + "; ".join(h.get("left", []) or ["—"])
+                       + ". Правое: " + "; ".join(h.get("right", []) or ["—"]) + ".\n\n" + h["why"]})
+        cards.append({"id": h["id"], "t": h["id"], "q": "Противоположная сторона: " + h["caseC"] + ". " + h.get("caseX", "").replace("{I}", "к очагу").replace("{C}", "от очага")
+                      + " Бассейн: ___.", "a": h["short"], "why": h["why"]})
+    return topics, cards
+
 def plain(s):
     """HTML из «АТТ» → обычный текст для поиска и показа."""
     return html.unescape(re.sub(r"<[^>]+>", "", s))
@@ -62,8 +93,18 @@ def unmark(s):
 apps, index, report = [], {}, []
 for a in CAT["apps"]:
     key = a["key"]
-    pub = published(key)
-    if a["generator"]:
+    pub = published(key) if a.get("page") else None
+    if a.get("source"):
+        src = ROOT / ".." / a["source"]
+        body, _ = app_body(src)
+        D = ochag_data(src)
+        topics, cards = ochag_index(D)
+        tnames = {t["n"]: t["title"] for t in topics}
+        ids = [s["id"] for s in D["STEM"]] + [h["id"] for h in D["HEMI"]]
+        kind = "ochag"
+        extra = "схемы · тест"
+        ls = a["localStorage"]["LS_KEY"]
+    elif a["generator"]:
         folder = pathlib.Path(a["generator"].replace("sources/", "")).name
         body = (pathlib.Path(folder) / "index.html").read_text()
         T, C = grab(body, "TOPICS"), grab(body, "CARDS")
@@ -75,7 +116,7 @@ for a in CAT["apps"]:
         kind, extra = "gen", ""
         ls = a["localStorage"]["LS_STATE"]
     else:
-        body, src = att_body()
+        body, src = app_body(ATT_SRC)
         D = att_data(ATT_SRC)
         tnames = {k: v["name"] for k, v in D["TOPICS"].items()}
         topics = [{"n": k, "title": v["name"], "sub": "трудные места",
@@ -90,14 +131,14 @@ for a in CAT["apps"]:
         extra = f"{len(D['CASES'])} случаев · тест {len(D['TEST'])}"
         ls = a["localStorage"]["LS_KEY"]
     assert len(ids) == len(set(ids)), key
-    same = body == pub
-    report.append(f"{key:12} {'как опубликовано' if same else 'ИЗМЕНЁН относительно site/apps'} · тем {len(topics)} · карточек {len(ids)}")
+    same = "из " + a["source"] if a.get("source") else ("как опубликовано" if body == pub else "ИЗМЕНЁН относительно site/apps")
+    report.append(f"{key:12} {same} · тем {len(topics)} · {'синдромов' if kind == 'ochag' else 'карточек'} {len(ids)}")
     (OUT / "apps" / f"{key}.html").write_text(BRIDGE % key + body)
     for t in topics:
         t["title"] = unmark(t["title"])
     index[key] = {"topics": topics, "names": tnames, "cards": cards}
     icon = ROOT / "tiles" / f"{key}-icon.png"
-    if not icon.exists(): icon = HERE / f"tile-{key}" / "icon-400.png"   # у «АТТ» иконка своя, из shell/tile-att
+    if not icon.exists(): icon = HERE / f"tile-{key}" / "icon-400.png"   # у «АТТ» и «Где очаг» иконки свои, из shell/tile-<ключ>
     Image.open(icon).convert("RGB").resize((144, 144), Image.LANCZOS).save(OUT / "apps" / "icons" / f"{key}.png", optimize=True)
     apps.append({"key": key, "title": a["title"], "label": a["label"], "desc": a["desc"], "group": a["group"],
                  "kind": kind, "ls": ls, "ids": ids, "topics": len(topics), "extra": extra,

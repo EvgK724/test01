@@ -43,6 +43,11 @@ async def overflow(pg):
     }""")
 
 async def answer(fr, kind):
+    if kind == "ochag":                             # открыть синдром ствола и полушарный, ответить на вопрос теста
+        await fr.click('.tab[data-tab="stem"]'); await fr.click('[data-act="stem"][data-id="wallenberg"]')
+        await fr.click('.tab[data-tab="hemi"]'); await fr.click('[data-act="hemi"][data-id="aca"]')
+        await fr.click('.tab[data-tab="test"]'); await fr.click(".opt >> nth=0")
+        return await fr.locator(".fb").count() == 1
     if kind == "att":
         await fr.click('.tab[data-tab="cards"]'); await fr.click("#showBtn"); await fr.click('[data-r="know"]')
         return True
@@ -93,7 +98,7 @@ async def main():
         out["today"] = await pg.inner_text("#today")
         await pg.screenshot(path=str(HERE / "s-home-after.png"))
         # поиск
-        for q in ["тикагрелор", "ELAN", "Tmax", "ГИТ", "ёжик-несуществующий"]:
+        for q in ["тикагрелор", "ELAN", "Tmax", "ГИТ", "Валленберг", "гемианопсия", "ёжик-несуществующий"]:
             await pg.fill("#q", q); await pg.wait_for_timeout(500)
             out["search " + q] = {"tiles": await pg.locator(".tile:not([hidden])").count(),
                                   "hits": await pg.locator(".hit").count(),
@@ -126,6 +131,13 @@ async def main():
             await pg.screenshot(path=str(HERE / f"s-{name}.png"))
             await pg.click('.tile[data-k="trombotsity"]'); await pg.wait_for_selector("#frame.ready"); await pg.wait_for_timeout(400)
             o["module_overflow"] = await pg.frames[1].evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth")
+            await pg.click("#back"); await pg.wait_for_timeout(300)
+            await pg.click('.tile[data-k="ochag"]'); await pg.wait_for_selector("#frame.ready"); await pg.wait_for_timeout(400)
+            fr = pg.frames[1]
+            await fr.click('.tab[data-tab="stem"]'); await fr.click('[data-act="stem"][data-id="foville"]')
+            o["ochag_overflow"] = await fr.evaluate("document.querySelector('main').scrollWidth - document.querySelector('main').clientWidth")
+            o["ochag_header_hidden"] = await fr.evaluate("getComputedStyle(document.querySelector('.top')).display === 'none'")
+            await pg.screenshot(path=str(HERE / f"s-{name}-ochag.png"))
             o["frame_h"] = await pg.evaluate("document.getElementById('frame').getBoundingClientRect().height")
             await pg.screenshot(path=str(HERE / f"s-{name}-module.png"))
             o["errors"] = await pg.evaluate("window.__errs || []")

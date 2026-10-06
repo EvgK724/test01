@@ -280,7 +280,21 @@ function statsAtt(a){
   });
   return { total: a.ids.length, seen: seen, due: due, known: known };
 }
-const statsOf = a => a.kind === "att" ? statsAtt(a) : statsGen(a);
+// «Где очаг»: карточек к повторению нет; прогресс — какие синдромы открыты ({ seen: [id] } в localStorage).
+// total 0 — чтобы не входить в счёт карточек на главной; своя строка прогресса — studied из of.
+function statsOchag(a){
+  const l = readJSON(a.ls) || {};
+  const seen = new Set(Array.isArray(l.seen) ? l.seen : []);
+  const studied = a.ids.filter(id => seen.has(id)).length;
+  return { total: 0, seen: 0, due: 0, known: 0, studied: studied, of: a.ids.length, best: typeof l.best === "number" ? l.best : null };
+}
+const statsOf = a => a.kind === "att" ? statsAtt(a) : a.kind === "ochag" ? statsOchag(a) : statsGen(a);
+const syndr = n => n + "\u00a0" + plural(n, "синдром", "синдрома", "синдромов");
+// Строка прогресса модуля: карточки или, у «Где очаг», разобранные синдромы
+function progText(a, s){
+  if (a.kind === "ochag") return s.studied ? "разобрано " + s.studied + " из " + s.of + (s.best !== null ? " · тест " + s.best + "/10" : "") : syndr(s.of);
+  return s.due ? cards(s.due) + " к\u00a0повторению" : "изучено " + s.known + " из " + s.total;
+}
 async function loadCloud(onlyKey){
   const db = await getDb(), uid = await getUid();
   if (!db || !uid) return false;
@@ -342,7 +356,7 @@ function renderToday(){
     c1.classList.remove("is-due");
     const started = CAT.apps.some(a => STATS[a.key].seen > 0);
     c1.append(el("p", "term", started ? "Всё повторено" : "Пока пусто"));
-    const next = CAT.apps.filter(a => STATS[a.key].seen > 0 && STATS[a.key].seen < STATS[a.key].total)[0] || CAT.apps.filter(a => STATS[a.key].seen === 0)[0];
+    const next = CAT.apps.filter(a => STATS[a.key].seen > 0 && STATS[a.key].seen < STATS[a.key].total)[0] || CAT.apps.filter(a => STATS[a.key].total > 0 && STATS[a.key].seen === 0)[0];
     if (next){
       c1.append(el("p", "tsub", started ? "Можно взять новые карточки:" : "Здесь появятся карточки, которые пора повторить. Начать можно отсюда:"));
       const chips = el("div", "chips");
@@ -360,7 +374,7 @@ function renderToday(){
     const card = el("button", "tcard"); card.type = "button";
     const top = el("span", "t-top"); top.append(iconImg(last, "t-ic"), el("span", "term", a.title));
     card.append(el("p", "lbl", "Продолжить"), top);
-    card.append(el("p", "ru", s.due ? cards(s.due) + " к\u00a0повторению" : "изучено " + s.known + " из " + s.total));
+    card.append(el("p", "ru", progText(a, s)));
     box.append(openBtn(card, last));
   }
 }
@@ -368,6 +382,12 @@ const TILES = {};
 function tileFoot(t, a){
   const s = STATS[a.key];
   t.due.hidden = !s.due; t.due.textContent = String(s.due);
+  if (a.kind === "ochag"){
+    t.fill.style.width = Math.round(100 * s.studied / s.of) + "%";
+    t.cnt.textContent = progText(a, s);
+    t.btn.setAttribute("aria-label", a.title + ". " + a.desc + ". " + progText(a, s));
+    return;
+  }
   t.fill.style.width = (s.total ? Math.round(100 * s.known / s.total) : 0) + "%";
   t.cnt.textContent = s.seen ? "изучено " + s.known + " из " + s.total : cards(s.total);
   t.btn.setAttribute("aria-label", a.title + ". " + a.desc + ". " + (s.due ? s.due + " к повторению, " : "") + "изучено " + s.known + " из " + s.total);
