@@ -9,6 +9,10 @@ tpl = tpl[:_a] + "function stopAudio(){}   // озвучки в этом при�
 tpl = tpl.replace('const LS_SPEAK = "ctp:autospeak";\n', "")
 tpl = re.sub(r"  \.(?:say|mm-play)(?: svg)?\{[^}]*\}\n", "", tpl)
 assert not re.search(r"speechSynthesis|playClip|preloadClip|LS_SPEAK|mm-play|\.say\{|new Audio", tpl)
+# Вторая вкладка — «Справочник», как в остальных модулях (в общем шаблоне она «Правила»)
+for _a in ('aria-controls="rule">Правила</button>', 'id="toRule" type="button">Правила</button>'):
+    assert tpl.count(_a) == 1, _a
+    tpl = tpl.replace(_a, _a.replace("Правила", "Справочник"))
 esc = html.escape
 NB = "\u00a0"
 def typo(s):

@@ -109,7 +109,13 @@ catalog = {"groups": [[k, v] for k, v in CAT["groups"].items()], "apps": apps,
 shell = (HERE / "shell.html").read_text().replace("/*__CATALOG__*/", json.dumps(catalog, ensure_ascii=False, separators=(",", ":")))
 assert "/*__" not in shell
 (OUT / "shell.html").write_text(shell)
-(OUT / "index.html").write_text(SK_HEAD + "\n" + shell + "\n</body></html>\n")
+# index.html — для локального просмотра и GitHub Pages: плюс иконка и подпись «ПСО» для экрана «Домой»
+Image.open(HERE / "tile" / "icon-180.png").save(OUT / "apps" / "icons" / "pso-180.png", optimize=True)
+HOME = ('<link rel="apple-touch-icon" href="apps/icons/pso-180.png"><meta name="apple-mobile-web-app-capable" content="yes">'
+        '<meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="apple-mobile-web-app-title" content="ПСО">'
+        '<meta name="theme-color" content="#0e1113">')
+assert SK_HEAD.count("</head>") == 1
+(OUT / "index.html").write_text(SK_HEAD.replace("</head>", HOME + "</head>") + "\n" + shell + "\n</body></html>\n")
 for line in report: print(line)
 sizes = {p.name: p.stat().st_size for p in sorted((OUT / "apps").glob("*.*"))}
 print("shell.html", (OUT / "shell.html").stat().st_size, "· search.json", sizes["search.json"],
