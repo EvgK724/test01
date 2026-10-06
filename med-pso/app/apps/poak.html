@@ -1,0 +1,2704 @@
+<script>try{parent.__pso.attach("poak",window)}catch(e){}</script>
+<title>Ранняя антикоагуляция</title>
+<style>
+  :root{
+    --k:1;
+    color-scheme:dark;
+    --bg:#0e1113;
+    --surface:#171c1f;
+    --raise:#1f262a;
+    --line:#252c30;
+    --line-2:#343d42;
+    --text:#e8e8e8;
+    --soft:#c3cbcf;
+    --muted:#939ea3;
+    --accent:#d97757;
+    --on-accent:#14181a;
+    --blue:#7cc0dd;
+    --blue-soft:rgba(124,192,221,.13);
+    --no:#b4544a;
+    --no-text:#e9a7a0;
+    --no-soft:rgba(180,84,74,.10);
+    --yes:#4e8767;
+    --yes-text:#9ad0b4;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  [hidden]{display:none!important}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);overflow-x:hidden}
+  body{font-family:var(--sans);font-size:calc(17px*var(--k));line-height:1.5;display:flex;justify-content:center}
+  button{font:inherit;color:inherit}
+  .app{width:100%;max-width:calc(440px*var(--k));height:100%;display:flex;flex-direction:column;gap:calc(10px*var(--k));padding:calc(10px*var(--k)) calc(16px*var(--k)) calc(14px*var(--k))}
+  .nw{white-space:nowrap}
+  .sr{position:absolute;width:calc(1px*var(--k));height:calc(1px*var(--k));overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+  .top{display:flex;align-items:center;gap:calc(10px*var(--k))}
+  .tabs{flex:1;display:flex;gap:calc(4px*var(--k));padding:calc(4px*var(--k));border:calc(1px*var(--k)) solid var(--line);border-radius:calc(14px*var(--k))}
+  .tab{flex:1;min-height:calc(44px*var(--k));border:0;border-radius:calc(10px*var(--k));background:transparent;color:var(--muted);font-size:calc(16px*var(--k));cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--raise);color:var(--text)}
+  .icon{width:calc(52px*var(--k));height:calc(52px*var(--k));flex:0 0 calc(52px*var(--k));display:grid;place-items:center;border:calc(1px*var(--k)) solid var(--line);border-radius:calc(14px*var(--k));background:transparent;color:var(--muted);cursor:pointer}
+  .icon[aria-pressed="true"]{color:var(--accent);border-color:var(--accent)}
+  .icon svg{width:calc(22px*var(--k));height:calc(22px*var(--k))}
+  .icon .sl{display:none}
+  .icon[aria-pressed="false"] .sl{display:inline}
+  .icon[aria-pressed="false"] .wv{display:none}
+
+  .meta{font-size:calc(15px*var(--k));color:var(--muted);font-variant-numeric:tabular-nums;line-height:1.3}
+  .bar{height:calc(3px*var(--k));border-radius:calc(2px*var(--k));background:var(--line);overflow:hidden;margin-top:-4px}
+  .bar-fill{display:block;height:100%;width:0;background:var(--accent);transition:width .25s ease}
+
+  .st{color:var(--blue)}
+  .pr{color:var(--accent)}
+  .good{color:var(--yes-text)}
+
+  .view{flex:1;min-height:0;display:flex;flex-direction:column;gap:calc(12px*var(--k))}
+  .card{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:calc(22px*var(--k)) calc(20px*var(--k));background:var(--surface);border:calc(1px*var(--k)) solid var(--line);border-radius:calc(20px*var(--k));display:flex;flex-direction:column;gap:calc(16px*var(--k))}
+  .kind{align-self:flex-start;font-size:calc(14px*var(--k));letter-spacing:.02em;color:var(--blue);padding:calc(5px*var(--k)) calc(11px*var(--k));border-radius:calc(999px*var(--k));border:calc(1px*var(--k)) solid currentColor;background:var(--blue-soft)}
+  .q{margin:0;font-family:var(--serif);font-size:calc(30px*var(--k));line-height:1.32;text-wrap:pretty}
+  .gap{display:inline-block;min-width:3em;height:.95em;border-bottom:calc(3px*var(--k)) solid var(--accent);margin:0 .08em;vertical-align:-.05em}
+  .hint{margin:0;font-size:calc(17px*var(--k));color:var(--muted)}
+  .back{display:flex;flex-direction:column;gap:calc(12px*var(--k));padding-top:calc(14px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .verdict{margin:0;font-size:calc(18px*var(--k));line-height:1.45}
+  .verdict.ok{color:var(--yes-text)}
+  .verdict.bad{color:var(--no-text)}
+  .verdict b{font-family:var(--serif);font-weight:400;font-size:calc(21px*var(--k))}
+  .why{margin:0;font-size:calc(18px*var(--k));line-height:1.5;color:var(--soft)}
+
+  .opts{display:grid;gap:calc(10px*var(--k))}
+  .opts.c1{grid-template-columns:minmax(0,1fr)}
+  .opts.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .opts.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .opt{min-height:calc(64px*var(--k));padding:calc(6px*var(--k)) calc(10px*var(--k));border-radius:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:var(--surface);font-family:var(--serif);font-size:calc(25px*var(--k));line-height:1.15;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(2px*var(--k))}
+  .opt.long{font-size:calc(22px*var(--k))}
+  .opt:active{background:var(--raise)}
+
+  .actions{display:flex;gap:calc(10px*var(--k))}
+  .big{flex:1;min-height:calc(58px*var(--k));border-radius:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:transparent;font-size:calc(19px*var(--k));cursor:pointer}
+  .primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+  .big:active,.opt:active{transform:scale(.985)}
+  .say{width:calc(58px*var(--k));height:calc(58px*var(--k));flex:0 0 calc(58px*var(--k));border-radius:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--accent);background:transparent;color:var(--accent);display:grid;place-items:center;cursor:pointer}
+  .say svg{width:calc(24px*var(--k));height:calc(24px*var(--k))}
+
+  /* ——— Правила */
+  .rule{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:calc(4px*var(--k)) calc(2px*var(--k)) calc(12px*var(--k))}
+  .r-title{margin:calc(8px*var(--k)) 0 calc(4px*var(--k));font-family:var(--serif);font-weight:400;font-size:calc(40px*var(--k));line-height:1.1;text-wrap:balance}
+  .r-sub{margin:0 0 calc(14px*var(--k));font-size:calc(17px*var(--k));line-height:1.45;color:var(--soft);text-wrap:pretty}
+  .r-sub b{color:var(--text)}
+  .r-sub i{font-family:var(--serif);font-style:normal;color:var(--text)}
+  .algo{background:var(--surface);border:calc(1px*var(--k)) solid var(--line);border-radius:calc(18px*var(--k));padding:calc(16px*var(--k)) calc(16px*var(--k)) calc(14px*var(--k))}
+  .algo-h{margin:0 0 calc(4px*var(--k));font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+  .steps{list-style:none;margin:0;padding:0}
+  .steps li{display:grid;grid-template-columns:calc(26px*var(--k)) minmax(0,1fr);gap:calc(8px*var(--k));padding:calc(10px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .steps li:first-child{border-top:0}
+  .sn{font-size:calc(15px*var(--k));line-height:1.45;color:var(--blue);font-variant-numeric:tabular-nums}
+  .s-t{margin:0;font-size:calc(17px*var(--k));line-height:1.4}
+  .s-f{margin:calc(3px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.3}
+  .s-f i{font-style:normal;color:var(--soft)}
+  .algo-m{margin:calc(4px*var(--k)) 0 0;padding-top:calc(12px*var(--k));border-top:calc(1px*var(--k)) solid var(--line);font-size:calc(18px*var(--k));color:var(--text)}
+  .algo-m b{font-family:var(--serif);font-weight:400;font-size:calc(26px*var(--k))}
+  .algo-note{margin:calc(8px*var(--k)) 0 0;font-size:calc(15px*var(--k));line-height:1.45;color:var(--muted)}
+  .algo-note i{font-family:var(--serif);font-style:normal;color:var(--soft)}
+  .go-wrap{display:flex;margin:calc(14px*var(--k)) 0 calc(4px*var(--k))}
+
+  .lbl{margin:calc(26px*var(--k)) 0 calc(8px*var(--k));font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+  .mx-wrap{overflow-x:auto;border:calc(1px*var(--k)) solid var(--line);border-radius:calc(16px*var(--k));background:var(--surface)}
+  .mx-note{margin:calc(10px*var(--k)) calc(2px*var(--k)) 0;font-size:calc(16px*var(--k));line-height:1.5;color:var(--soft)}
+  .mx-note i{font-family:var(--serif);font-style:normal;color:var(--text)}
+
+  .mm{margin-top:calc(10px*var(--k));padding:calc(12px*var(--k)) calc(14px*var(--k)) calc(12px*var(--k));background:var(--surface);border:calc(1px*var(--k)) solid var(--line);border-radius:calc(16px*var(--k))}
+  .mm:first-of-type{margin-top:0}
+  .mm-h{margin:0 0 calc(6px*var(--k));font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
+  .mm-n{display:inline-block;min-width:1.6em;color:var(--accent)}
+  .mm-grid{display:grid;grid-template-columns:1fr 1fr;gap:calc(2px*var(--k)) calc(12px*var(--k))}
+  .mm-w{margin:0;padding:calc(5px*var(--k)) 0}
+  .mm-w span{display:block;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2}
+  .mm-w small{display:block;font-size:calc(13px*var(--k));line-height:1.3;color:var(--muted)}
+  .mm-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) calc(44px*var(--k));column-gap:calc(10px*var(--k));align-items:center;padding:calc(6px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .mm-pair:first-of-type{border-top:0}
+  .mm-pair p{margin:0}
+  .mm-pair span{display:block;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2}
+  .mm-pair small{display:block;font-size:calc(13px*var(--k));line-height:1.3;color:var(--muted)}
+  .mm-play{width:calc(44px*var(--k));height:calc(44px*var(--k));border-radius:50%;border:calc(1px*var(--k)) solid var(--line-2);background:transparent;color:var(--accent);display:grid;place-items:center;cursor:pointer}
+  .mm-play svg{width:calc(18px*var(--k));height:calc(18px*var(--k))}
+  .mm-note{margin:calc(8px*var(--k)) 0 0;padding-top:calc(8px*var(--k));border-top:calc(1px*var(--k)) solid var(--line);font-size:calc(14px*var(--k));line-height:1.45;color:var(--soft)}
+  .legend{margin:0 calc(2px*var(--k)) calc(10px*var(--k));font-size:calc(15px*var(--k));line-height:1.45;color:var(--soft)}
+  .hl{color:var(--text);text-decoration:underline;text-decoration-thickness:calc(1.5px*var(--k));text-underline-offset:calc(3px*var(--k))}
+  .algo-m i{font-family:var(--serif);font-style:normal;font-size:calc(18px*var(--k))}
+  .md{display:grid;grid-template-columns:minmax(0,1fr) calc(48px*var(--k));column-gap:calc(10px*var(--k));align-items:center;padding:calc(8px*var(--k)) calc(10px*var(--k)) calc(8px*var(--k)) calc(14px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .md:first-child{border-top:0}
+  .s-f .sep{color:var(--muted)}
+  .pw{margin:0;line-height:1.35}
+  .pw + .pw{margin-top:calc(3px*var(--k))}
+  .pw-w{margin-right:calc(6px*var(--k));font-family:var(--serif);font-size:calc(22px*var(--k))}
+  .ipa{margin-right:calc(6px*var(--k));font-size:calc(14px*var(--k));color:var(--muted);white-space:nowrap}
+  .pw-ru{font-size:calc(15px*var(--k));color:var(--soft)}
+  .pw-tip{margin:calc(8px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.45;color:var(--muted)}
+  .snd-ex{margin:calc(4px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(18px*var(--k));line-height:1.35;color:var(--soft)}
+  .algo-m b.pr{color:var(--accent)}
+  .s-t b{margin-right:calc(4px*var(--k));font-family:var(--serif);font-weight:400;font-size:calc(21px*var(--k));color:var(--accent)}
+  .s-t .ipa{margin-right:calc(4px*var(--k))}
+  .algo-m b.st{color:var(--blue)}
+  .algo-m b.good{color:var(--yes-text)}
+  .mt{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(6px*var(--k))}
+  .mt col.rh{width:calc(92px*var(--k))}
+  .mt thead th{padding:calc(2px*var(--k)) calc(6px*var(--k)) calc(8px*var(--k));font-size:calc(12px*var(--k));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left}
+  .mt tbody th{padding:calc(12px*var(--k)) calc(6px*var(--k)) calc(12px*var(--k)) 0;text-align:left;vertical-align:top;font-family:var(--serif);font-weight:400;font-size:calc(24px*var(--k));line-height:1.15;border-top:calc(1px*var(--k)) solid var(--line)}
+  .mt td{padding:calc(12px*var(--k)) calc(6px*var(--k));vertical-align:top;font-size:calc(15px*var(--k));line-height:1.4;color:var(--soft);border-top:calc(1px*var(--k)) solid var(--line)}
+  .mt td .f{display:block;margin-bottom:calc(2px*var(--k));font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.2}
+  .mt td b{color:var(--text);font-weight:600}
+  .mt td b.h{display:block;margin-bottom:calc(2px*var(--k))}
+  .mt thead td{border-top:0}
+  .mt tbody th small{display:block;margin-top:calc(3px*var(--k));font-family:var(--sans);font-size:calc(12px*var(--k));line-height:1.2;color:var(--muted)}
+  .mt.wx col.rh{width:calc(78px*var(--k))}
+  .mt.wx td .f{font-size:calc(18px*var(--k))}
+  .mt td i{display:block;font-family:var(--serif);font-style:normal;font-size:calc(15px*var(--k));line-height:1.3;color:var(--soft)}
+  .mt td small{display:block;margin-top:calc(2px*var(--k));font-size:calc(13px*var(--k));line-height:1.3;color:var(--muted)}
+  .mt td small i{display:inline;font-size:calc(13px*var(--k));color:var(--soft)}
+  .cp-en + .cp-ru + .cp-en{margin-top:calc(8px*var(--k))}
+  .algo-2{margin-top:calc(12px*var(--k))}
+  .ct{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(4px*var(--k))}
+  .ct col.sit{width:46%}
+  .ct th{padding:calc(11px*var(--k)) calc(10px*var(--k)) calc(11px*var(--k)) 0;text-align:left;vertical-align:top;font-size:calc(15px*var(--k));font-weight:600;line-height:1.35;color:var(--text);border-top:calc(1px*var(--k)) solid var(--line)}
+  .ct td{padding:calc(11px*var(--k)) 0;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .ct tr:first-child th,.ct tr:first-child td{border-top:0}
+  .ct .f{display:block;font-family:var(--serif);font-size:calc(21px*var(--k));line-height:1.2}
+  .ct .e{display:block;margin-top:calc(2px*var(--k));font-family:var(--serif);font-size:calc(15px*var(--k));line-height:1.3;color:var(--soft)}
+  .vt{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(4px*var(--k))}
+  .vt col.v{width:46%}
+  .vt th{padding:calc(10px*var(--k)) calc(10px*var(--k)) calc(10px*var(--k)) 0;text-align:left;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .vt td{padding:calc(10px*var(--k)) 0;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .vt tr:first-child th,.vt tr:first-child td{border-top:0}
+  .vt .w{display:block;font-family:var(--serif);font-weight:400;font-size:calc(21px*var(--k));line-height:1.15;color:var(--accent)}
+  .vt .w.st{color:var(--blue)}
+  .vt .w.hl{color:var(--text)}
+  .vt tr.pb th,.vt tr.pb td{border-top:0;padding-top:0}
+  .vt .w.good{color:var(--yes-text)}
+  .wd-w{margin:0;line-height:1.3}
+  .wd-w .ph{margin-right:calc(6px*var(--k));font-family:var(--serif);font-size:calc(21px*var(--k))}
+  .wd-ru{font-size:calc(15px*var(--k));color:var(--muted)}
+  .wd-p{margin:calc(3px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(17px*var(--k));line-height:1.35;color:var(--soft)}
+  .vt .p{display:block;margin-top:calc(2px*var(--k));font-size:calc(13px*var(--k));font-weight:600;line-height:1.3;color:var(--blue)}
+  .vt .e{display:block;font-family:var(--serif);font-size:calc(16px*var(--k));line-height:1.3;color:var(--text)}
+  .vt .r{display:block;margin-top:calc(2px*var(--k));font-size:calc(13px*var(--k));line-height:1.35;color:var(--muted)}
+  .mt.af thead th{padding:calc(2px*var(--k)) calc(8px*var(--k)) calc(8px*var(--k)) 0}
+  .mt.af td{padding:calc(12px*var(--k)) calc(8px*var(--k)) calc(12px*var(--k)) 0}
+  .mt.af td .f{font-size:calc(20px*var(--k))}
+  .mt.af td small{margin-top:calc(4px*var(--k))}
+  .vt.sv col.v{width:40%}
+  .q{font-size:calc(26px*var(--k))}
+  .md{grid-template-columns:minmax(0,1fr)}
+  .ex{grid-template-columns:minmax(0,1fr)}
+  .mt.cp col.rh{width:calc(64px*var(--k))}
+  .mt.cp thead th{padding:calc(2px*var(--k)) calc(4px*var(--k)) calc(8px*var(--k));font-size:calc(13px*var(--k));letter-spacing:0;text-transform:none}
+  .mt.cp tbody th{font-size:calc(20px*var(--k))}
+  .mt.cp td{padding:calc(12px*var(--k)) calc(4px*var(--k))}
+  .mt.cp td .f{font-size:calc(20px*var(--k))}
+  .mt.cp .c-core{color:var(--accent)}
+  .mt.cp .c-pen{color:var(--yes-text)}
+  .mt.cp .c-olig{color:var(--blue)}
+  .algo-note b{color:var(--text);font-weight:600}
+  .mt.af .sep{color:var(--muted)}
+  .g4{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(6px*var(--k))}
+  .g4 col.rh{width:calc(76px*var(--k))}
+  .g4 thead th{padding:calc(4px*var(--k)) calc(4px*var(--k)) calc(8px*var(--k));font-size:calc(14px*var(--k));font-weight:600;color:var(--soft);text-align:center;vertical-align:bottom}
+  .g4 thead th small{display:block;font-weight:400;font-size:calc(12px*var(--k));color:var(--muted)}
+  .g4 tbody th{padding:calc(12px*var(--k)) 0;text-align:left;vertical-align:middle;font-size:calc(13px*var(--k));font-weight:600;line-height:1.3;color:var(--soft);border-top:calc(1px*var(--k)) solid var(--line)}
+  .g4 td{padding:calc(12px*var(--k)) calc(4px*var(--k)) calc(10px*var(--k));text-align:center;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .g4 thead td{border-top:0}
+  .g4 svg{display:block;width:calc(40px*var(--k));height:calc(40px*var(--k));margin:0 auto calc(4px*var(--k))}
+  .g4 .w{display:block;font-family:var(--serif);font-size:calc(28px*var(--k));line-height:1.1}
+  .g4 .e{display:block;margin-top:calc(4px*var(--k));font-family:var(--serif);font-size:calc(15px*var(--k));line-height:1.3;color:var(--soft)}
+  .cp-en{margin:0;font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.3}
+  .cp-ru{margin:calc(1px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.35;color:var(--muted)}
+  .cp-ru + .cp-en{margin-top:calc(8px*var(--k))}
+  .md .ex-play{grid-row:1}
+  .t-group{margin:calc(22px*var(--k)) 0 0;padding:0 calc(2px*var(--k)) calc(7px*var(--k));border-bottom:calc(1px*var(--k)) solid var(--line);font-size:calc(14px*var(--k));font-weight:600;color:var(--soft)}
+  .t-group:first-child{margin-top:calc(4px*var(--k))}
+  .wb{display:grid;grid-template-columns:minmax(0,1fr) calc(48px*var(--k));column-gap:calc(10px*var(--k));align-items:start}
+  .wb-h{margin:0;display:flex;align-items:baseline;flex-wrap:wrap;gap:calc(4px*var(--k)) calc(12px*var(--k))}
+  .wb-w{font-family:var(--serif);font-size:calc(38px*var(--k));line-height:1.05}
+  .wb-s{font-size:calc(15px*var(--k));color:var(--soft)}
+  .wb-ex{margin:calc(6px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.4}
+  .wb .ex-play{grid-column:2;grid-row:1 / span 2;align-self:center}
+  .zero{font-family:var(--sans);font-size:.55em;line-height:1;color:var(--yes-text);border:calc(1px*var(--k)) solid rgba(78,135,103,.65);border-radius:calc(999px*var(--k));padding:.12em .45em;margin:0 .35em 0 .05em;vertical-align:.25em}
+  .opt small{font-family:var(--sans);font-size:calc(13px*var(--k));color:var(--muted)}
+  .errs{list-style:none;margin:0;padding:0}
+  .err{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:baseline;gap:calc(10px*var(--k));padding:calc(11px*var(--k)) calc(14px*var(--k));border-top:calc(1px*var(--k)) solid var(--line);font-family:var(--serif);font-size:calc(17px*var(--k));line-height:1.35}
+  .err:first-child{border-top:0}
+  .err s{color:var(--no-text);text-decoration-thickness:calc(1.5px*var(--k))}
+  .err .arr{font-family:var(--sans);color:var(--muted)}
+  .err-note{grid-column:1 / -1;margin-top:-4px;font-family:var(--sans);font-size:calc(13px*var(--k));line-height:1.35;color:var(--muted)}
+
+  .topics{border-top:0}
+  .t-item{border-bottom:calc(1px*var(--k)) solid var(--line)}
+  .t-head{width:100%;min-height:calc(60px*var(--k));display:grid;grid-template-columns:calc(34px*var(--k)) minmax(0,1fr) auto calc(20px*var(--k));align-items:center;gap:calc(8px*var(--k));padding:calc(8px*var(--k)) calc(2px*var(--k));border:0;background:transparent;text-align:left;cursor:pointer}
+  .t-n{font-size:calc(15px*var(--k));color:var(--blue);font-variant-numeric:tabular-nums}
+  .t-txt{display:flex;flex-direction:column;min-width:0}
+  .t-title{font-size:calc(18px*var(--k));line-height:1.3}
+  .t-sub{font-size:calc(14px*var(--k));line-height:1.3;color:var(--muted)}
+  .t-count{font-size:calc(14px*var(--k));color:var(--muted);font-variant-numeric:tabular-nums}
+  .t-chev{color:var(--muted);transition:transform .2s ease}
+  .t-head[aria-expanded="true"] .t-chev{transform:rotate(90deg)}
+  .t-body{padding:calc(2px*var(--k)) calc(2px*var(--k)) calc(18px*var(--k)) calc(44px*var(--k));display:flex;flex-direction:column;gap:calc(12px*var(--k))}
+  .t-rule{margin:0;font-size:calc(17px*var(--k));line-height:1.5;color:var(--soft)}
+  .ex{display:grid;grid-template-columns:1fr calc(48px*var(--k));gap:calc(4px*var(--k)) calc(10px*var(--k));align-items:start}
+  .ex-en{margin:0;grid-column:1;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.4}
+  .ex-ru{margin:0;grid-column:1;font-size:calc(15px*var(--k));line-height:1.4;color:var(--muted)}
+  .ex-play{grid-column:2;grid-row:1 / span 2;width:calc(48px*var(--k));height:calc(48px*var(--k));border-radius:50%;border:calc(1px*var(--k)) solid var(--accent);background:transparent;color:var(--accent);display:grid;place-items:center;cursor:pointer}
+  .ex-play svg{width:calc(20px*var(--k));height:calc(20px*var(--k))}
+  .t-train{min-height:calc(50px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--accent);background:transparent;color:var(--accent);font-size:calc(17px*var(--k));cursor:pointer}
+
+  :focus-visible{outline:calc(2px*var(--k)) solid var(--accent);outline-offset:calc(2px*var(--k))}
+  @media (prefers-reduced-motion:reduce){.bar-fill,.t-chev{transition:none}.big:active,.opt:active{transform:none}}
+
+
+  /* ——— Справочник: разделы, таблицы, калькуляторы */
+  h2.algo-h{line-height:1.35}
+  .algo,.lbl{scroll-margin-top:calc(8px*var(--k))}
+  .jump{display:flex;flex-wrap:wrap;gap:calc(6px*var(--k));margin:0 0 calc(14px*var(--k))}
+  .jump button{min-height:calc(44px*var(--k));padding:0 calc(14px*var(--k));border-radius:calc(999px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:transparent;color:var(--soft);font-size:calc(15px*var(--k));cursor:pointer}
+  .jump button:active{background:var(--raise)}
+  .tt,.dz{margin-top:calc(2px*var(--k))}
+  .tr,.dr{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:calc(12px*var(--k));row-gap:calc(2px*var(--k));padding:calc(10px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .tr:first-child,.dr:first-child{border-top:0}
+  .tk,.dk{flex:0 1 auto;min-width:0;overflow-wrap:break-word;font-family:var(--serif);font-size:calc(21px*var(--k));line-height:1.2;color:var(--accent)}
+  .tv{flex:0 1 auto;margin-left:auto;min-width:0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2;color:var(--yes-text);text-align:right}
+  .dv{flex:0 1 auto;margin-left:auto;min-width:0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2;color:var(--text);text-align:right}
+  .td,.dd{flex:1 0 100%;margin-top:calc(1px*var(--k));font-size:calc(14px*var(--k));line-height:1.45;color:var(--soft)}
+  .algo-note + .algo-note{margin-top:calc(6px*var(--k))}
+
+  .calc{margin-top:calc(14px*var(--k));padding:calc(12px*var(--k)) calc(14px*var(--k)) calc(14px*var(--k));border-radius:calc(16px*var(--k));background:var(--bg);border:calc(1px*var(--k)) solid var(--line);display:flex;flex-direction:column;gap:calc(6px*var(--k))}
+  .calc-h{margin:0 0 calc(2px*var(--k));font-size:calc(15px*var(--k));font-weight:600;color:var(--text)}
+  .calc-h small{display:block;margin-top:calc(1px*var(--k));font-size:calc(13px*var(--k));font-weight:400;color:var(--muted)}
+  .fl{margin:calc(6px*var(--k)) 0 0;font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.03em;color:var(--muted)}
+  .fl small{margin-left:calc(5px*var(--k));font-size:calc(12px*var(--k));font-weight:400;letter-spacing:0}
+  .inp{display:block;width:100%;min-height:calc(48px*var(--k));padding:0 calc(12px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:var(--surface);color:var(--text);font:inherit;font-size:calc(17px*var(--k));font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none}
+  .inp::placeholder{color:var(--muted)}
+  .inp:focus{outline:calc(2px*var(--k)) solid var(--accent);outline-offset:calc(1px*var(--k))}
+  .inp-row{display:grid;grid-template-columns:minmax(0,1fr);gap:calc(6px*var(--k))}
+  .inp-row.has-x{grid-template-columns:minmax(0,1fr) calc(48px*var(--k))}
+  .x{min-height:calc(48px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:transparent;color:var(--muted);font-size:calc(20px*var(--k));line-height:1;cursor:pointer}
+  .seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:calc(6px*var(--k))}
+  .seg.s3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .seg.s4{grid-template-columns:repeat(auto-fit,minmax(calc(64px*var(--k)),1fr))}
+  .seg.s4 .chip{font-size:calc(14px*var(--k))}
+  .chip{overflow-wrap:break-word}
+  .err s,.err .good{min-width:0;overflow-wrap:break-word}
+  .seg.s2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chip{min-height:calc(44px*var(--k));padding:0 calc(2px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:transparent;color:var(--soft);font-size:calc(15px*var(--k));line-height:1.2;cursor:pointer}
+  .chip[aria-pressed="true"]{background:var(--raise);color:var(--text);border-color:var(--accent)}
+  .flags{display:flex;flex-wrap:wrap;gap:calc(6px*var(--k));margin-top:calc(6px*var(--k))}
+  .flags .chip{padding:calc(6px*var(--k)) calc(12px*var(--k));text-align:left}
+  .g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 calc(8px*var(--k))}
+  .res{margin-top:calc(8px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .rl{padding:calc(10px*var(--k)) 0;border-bottom:calc(1px*var(--k)) solid var(--line)}
+  .rl:last-child{border-bottom:0;padding-bottom:0}
+  .rk{margin:0;font-size:calc(12px*var(--k));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
+  .rv{margin:calc(2px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(22px*var(--k));line-height:1.25;color:var(--text);text-wrap:balance}
+  .rn{margin:calc(3px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.45;color:var(--muted)}
+  .rl.warn .rv{color:var(--no-text)}
+  .rl.ok .rv{color:var(--yes-text)}
+  .pill{display:inline-block;margin-left:calc(4px*var(--k));padding:0 calc(9px*var(--k));border-radius:calc(999px*var(--k));font-size:calc(12px*var(--k));font-weight:600;line-height:calc(20px*var(--k));border:calc(1px*var(--k)) solid currentColor;white-space:nowrap;vertical-align:calc(1px*var(--k))}
+  .p-now{color:var(--yes-text);background:rgba(78,135,103,.14)}
+  .p-wait{color:var(--blue);background:var(--blue-soft)}
+  .p-late{color:var(--muted)}
+  .crcl{margin:calc(10px*var(--k)) 0 0;font-size:calc(15px*var(--k));color:var(--soft)}
+  .crcl b{margin:0 calc(4px*var(--k));font-family:var(--serif);font-weight:400;font-size:calc(30px*var(--k));line-height:1;color:var(--text);font-variant-numeric:tabular-nums}
+  .dzr{list-style:none;margin:calc(6px*var(--k)) 0 0;padding:0}
+  .dzr li{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:calc(10px*var(--k));row-gap:calc(2px*var(--k));padding:calc(9px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .dzr .n{flex:0 1 auto;min-width:0;font-size:calc(15px*var(--k));font-weight:600;color:var(--soft)}
+  .dzr .d{flex:0 1 auto;margin-left:auto;min-width:0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2;color:var(--text);text-align:right}
+  .dzr .d.low{color:var(--accent)}
+  .dzr .d.no{color:var(--no-text)}
+  .dzr .w{flex:1 0 100%;margin-top:0;font-size:calc(13px*var(--k));line-height:1.4;color:var(--muted)}
+  .res-note{margin:calc(8px*var(--k)) 0 0;font-size:calc(13px*var(--k));line-height:1.45;color:var(--muted)}
+  .q{overflow-wrap:break-word}
+  .t-rule + .t-rule{margin-top:-4px}
+
+  .lst{list-style:none;margin:0;padding:0}
+  .lst li{padding:calc(11px*var(--k)) calc(14px*var(--k)) calc(12px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .lst li:first-child{border-top:0}
+  .sw-k{margin:0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.25;color:var(--accent)}
+  .sw-v{margin:calc(3px*var(--k)) 0 0;font-size:calc(16px*var(--k));line-height:1.45;color:var(--text)}
+  .sw-s{margin:calc(3px*var(--k)) 0 0;font-size:calc(12px*var(--k));font-weight:600;letter-spacing:.03em;color:var(--muted)}
+  .ad-k{margin:0;font-size:calc(14px*var(--k));font-weight:600;line-height:1.35;color:var(--soft)}
+  .ad-v{margin:calc(2px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(21px*var(--k));line-height:1.25;color:var(--accent)}
+  .ad-n{margin:calc(3px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.45;color:var(--muted)}
+  .iv-k{margin:0;font-size:calc(14px*var(--k));font-weight:600;line-height:1.35;color:var(--soft)}
+  .iv-k span{font-weight:400;color:var(--muted)}
+  .iv-v{margin:calc(3px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.3}
+  .iv-v::before{content:"";display:inline-block;width:calc(9px*var(--k));height:calc(9px*var(--k));margin-right:calc(8px*var(--k));border-radius:50%;background:currentColor;vertical-align:calc(2px*var(--k))}
+  .v-yes{color:var(--yes-text)}
+  .v-maybe{color:#e5c07b}
+  .v-no{color:var(--no-text)}
+  .src{margin:0;padding:0 0 0 calc(22px*var(--k));font-size:calc(13px*var(--k));line-height:1.45;color:var(--soft)}
+  .src li{margin:0 0 calc(7px*var(--k));padding-left:calc(2px*var(--k))}
+  .src a{color:var(--blue);text-decoration:underline;text-decoration-thickness:calc(1px*var(--k));text-underline-offset:calc(2px*var(--k));overflow-wrap:anywhere}
+  .foot{margin:calc(14px*var(--k)) 0 calc(6px*var(--k));font-size:calc(13px*var(--k));line-height:1.45;color:var(--muted)}
+  .r-title{font-size:min(calc(40px*var(--k)),10vw);overflow-wrap:break-word;hyphens:auto}
+  .t-title,.t-sub{overflow-wrap:break-word;hyphens:auto}
+  .opt{min-width:0;overflow-wrap:break-word;hyphens:auto}
+  label.fl{display:block}
+  .fl small{margin-left:0}
+  .abbr{margin:0 0 calc(14px*var(--k));padding:calc(12px*var(--k)) calc(14px*var(--k)) calc(10px*var(--k));border:calc(1px*var(--k)) solid var(--line);border-radius:calc(16px*var(--k))}
+  .abbr dl{margin:calc(4px*var(--k)) 0 0}
+  .abbr dl div{display:grid;grid-template-columns:minmax(0,7.5em) minmax(0,1fr);column-gap:calc(10px*var(--k));padding:calc(5px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .abbr dl div:first-child{border-top:0}
+  .abbr dt{font-size:calc(14px*var(--k));font-weight:600;line-height:1.4;color:var(--text);overflow-wrap:break-word}
+  .abbr dd{margin:0;font-size:calc(14px*var(--k));line-height:1.4;color:var(--soft);overflow-wrap:break-word}
+  .mx-note{font-size:calc(14px*var(--k));color:var(--muted)}
+
+  /* ——— Планшет */
+  body.tab .app{max-width:calc(600px*var(--k))}
+  body.wide .app{max-width:none;padding-left:calc(28px*var(--k));padding-right:calc(28px*var(--k))}
+  body.wide #drill{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;gap:calc(16px*var(--k))}
+  body.wide #drill .card{grid-column:1;grid-row:1 / span 2}
+  body.wide #drill .opts{grid-column:2;grid-row:1;align-content:end}
+  body.wide #drill .opts.c2,body.wide #drill .opts.c3{grid-template-columns:minmax(0,1fr)}
+  body.wide #drill .opt{min-height:calc(76px*var(--k))}
+  body.wide #drill .actions{grid-column:2;grid-row:2}
+  body.wide #rule{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:calc(36px*var(--k));align-items:start}
+  body.wide .r-left{position:static}
+  body.wide .r-right .lbl:first-child{margin-top:calc(14px*var(--k))}
+</style>
+<script>
+// Масштаб под размер экрана: телефон — как есть, планшет — крупнее, альбомная ориентация — две колонки
+(function(){
+  function fit(){
+    var w = window.innerWidth || 390, h = window.innerHeight || 760;
+    var wide = w >= 900 && w / h > 1.15;
+    var tab = !wide && w >= 600;
+    var k = wide ? h / 600 : Math.min(w / 440, h / 780);
+    if (w < 600) k = 1;
+    k = Math.max(1, Math.min(k, 1.9));
+    document.documentElement.style.setProperty("--k", k.toFixed(3));
+    document.body.classList.toggle("wide", wide);
+    document.body.classList.toggle("tab", tab);
+  }
+  fit();
+  window.addEventListener("resize", fit);
+  window.addEventListener("orientationchange", function(){ setTimeout(fit, 150); });
+})();
+</script>
+
+<div class="app" role="main">
+  <div class="top">
+    <div class="tabs" role="tablist" aria-label="Режим">
+      <button class="tab" id="tabDrill" role="tab" type="button" aria-selected="false" aria-controls="drill">Тренировка</button>
+      <button class="tab" id="tabRule" role="tab" type="button" aria-selected="true" aria-controls="rule">Справочник</button>
+    </div>
+  </div>
+  <div class="meta" id="meta" hidden><span id="status">Карточка 1 из 10</span></div>
+  <div class="bar" id="barWrap" hidden><span class="bar-fill" id="barFill"></span></div>
+
+  <section class="view" id="drill" role="tabpanel" aria-labelledby="tabDrill" hidden>
+    <article class="card" id="card">
+      <span class="kind" id="kind">Тема 1</span>
+      <p class="q" id="q"></p>
+      <p class="hint" id="hint">Выбери вариант</p>
+      <div class="back" id="back" aria-live="polite" hidden>
+        <p class="verdict" id="verdict"></p>
+        <p class="why" id="why"></p>
+      </div>
+    </article>
+    <div class="opts c2" id="opts"></div>
+    <div class="actions" id="actNext" hidden>
+      <button class="big primary" id="next" type="button">Дальше</button>
+    </div>
+    <div class="actions" id="actDone" hidden>
+      <button class="big primary" id="more" type="button">Ещё 10 новых</button>
+      <button class="big" id="toRule" type="button">Справочник</button>
+    </div>
+  </section>
+
+  <section class="rule" id="rule" role="tabpanel" aria-labelledby="tabRule">
+    <div class="r-left">
+      <h1 class="r-title">Ранняя антикоагуляция</h1>
+      <p class="r-sub">ПОАК и&nbsp;варфарин после ишемического инсульта при&nbsp;ФП: когда начинать, в&nbsp;какой дозе, как переходить с&nbsp;препарата на&nbsp;препарат и&nbsp;чем нейтрализовать. Сроки&nbsp;— по&nbsp;<b>ELAN</b>; в&nbsp;мета‑анализе <b>CATALYST</b> старт в&nbsp;первые 4&nbsp;дня снизил риск повторного инсульта без прибавки кровоизлияний.</p>
+      <section class="abbr" aria-labelledby="h-abbr">
+        <h2 class="algo-h" id="h-abbr">Сокращения</h2>
+        <dl>
+          <div><dt>КПК</dt><dd>концентрат протромбинового комплекса: факторы свёртывания II, VII, IX и&nbsp;X (например, Протромплекс&nbsp;600)</dd></div>
+          <div><dt>аКПК</dt><dd>активированный КПК</dd></div>
+          <div><dt>сВЧК</dt><dd>симптомное внутричерепное кровоизлияние</dd></div>
+          <div><dt>ГТ</dt><dd>геморрагическая трансформация: HI&nbsp;— геморрагический инфаркт, PH&nbsp;— паренхиматозная гематома</dd></div>
+          <div><dt>КК</dt><dd>клиренс креатинина по&nbsp;Кокрофту–Голту</dd></div>
+          <div><dt>КР по&nbsp;ИИ&nbsp;2024</dt><dd>клинические рекомендации «Ишемический инсульт и&nbsp;транзиторная ишемическая атака»</dd></div>
+          <div><dt>КР по&nbsp;ФП&nbsp;2025</dt><dd>клинические рекомендации «Фибрилляция и&nbsp;трепетание предсердий»</dd></div>
+        </dl>
+      </section>
+      <nav class="jump" aria-label="Разделы справочника">
+        <button type="button" data-to="s-when">Сроки</button>
+        <button type="button" data-to="s-dose">Дозы</button>
+        <button type="button" data-to="s-switch">Переходы</button>
+        <button type="button" data-to="s-anti">Антидоты</button>
+        <button type="button" data-to="s-ivt">Тромболизис</button>
+        <button type="button" data-to="s-topics">Темы</button>
+      </nav>
+      <section class="algo" id="s-when" aria-labelledby="h-when">
+        <h2 class="algo-h" id="h-when">Когда начинать</h2>
+        <div class="tt">
+          <div class="tr"><span class="tk">ТИА</span><span class="tv">в первые сутки</span><span class="td">симптомы прошли, инфаркта нет · КР по ИИ 2024: в течение суток, в алгоритме — «ПОАК сразу же»</span></div>
+          <div class="tr"><span class="tk">Малый</span><span class="tv">≤ 48 ч</span><span class="td">очаг до 1,5 см в любом бассейне</span></div>
+          <div class="tr"><span class="tk">Средний</span><span class="tv">≤ 48 ч</span><span class="td">корковая ветвь СМА, ПМА или ЗМА · глубокая ветвь СМА · внутренняя зона смежного кровоснабжения</span></div>
+          <div class="tr"><span class="tk">Большой</span><span class="tv">6–⁠7-й день</span><span class="td">весь бассейн СМА, ПМА или ЗМА · две корковые ветви СМА · корковая и глубокая ветви СМА · больше одного бассейна · ствол или мозжечок больше 1,5 см</span></div>
+        </div>
+        <p class="algo-note">Малый, средний и&nbsp;большой&nbsp;— по&nbsp;ELAN. Отсчёт&nbsp;— от&nbsp;начала симптомов. После тромболизиса&nbsp;— не&nbsp;раньше 24&nbsp;ч и&nbsp;после контрольной КТ/МРТ. Россыпь мелких очагов&nbsp;— малый инсульт, два малых&nbsp;— средний, два средних&nbsp;— большой.</p>
+        <p class="algo-note"><b>Кровоизлияние.</b> HI1–HI2 без ухудшения&nbsp;— по&nbsp;схеме (ELAN, КР по&nbsp;ФП&nbsp;2025; КР по&nbsp;ИИ&nbsp;2024 без отсрочки допускают только ГТ 1‑го типа). PH1–PH2&nbsp;— срок индивидуально, КТ в&nbsp;динамике; КР по&nbsp;ИИ&nbsp;2024&nbsp;— через 4–&#8288;8&nbsp;недель.</p>
+        <p class="algo-note"><b>КР по&nbsp;ИИ&nbsp;2024.</b> Низкий риск геморрагической трансформации&nbsp;— старт на&nbsp;3–&#8288;14‑е&nbsp;сутки; большой инфаркт (<span class="nw">NIHSS&nbsp;&gt;&nbsp;15</span> или весь бассейн)&nbsp;— через 14&nbsp;дней. Схема из&nbsp;комментария: ТИА&nbsp;— в&nbsp;течение суток; <span class="nw">NIHSS&nbsp;&lt;&nbsp;8</span>&nbsp;— через 3&nbsp;дня; 8–&#8288;16&nbsp;— через 6–&#8288;8&nbsp;дней; <span class="nw">&gt;&nbsp;16</span>&nbsp;— через 12–&#8288;14&nbsp;дней, перед стартом КТ/МРТ.</p>
+        <p class="algo-note"><b>До&nbsp;старта ПОАК.</b> АСК (КР по&nbsp;ИИ&nbsp;2024, УУР&nbsp;C; в&nbsp;их алгоритме&nbsp;— АСК или клопидогрел). Лечебный гепарин «мостом» не&nbsp;назначают (КР по&nbsp;ФП&nbsp;2025, ЕОК&nbsp;IIIB); профилактические дозы НМГ или НФГ у&nbsp;обездвиженных&nbsp;— можно (КР по&nbsp;ИИ&nbsp;2024, УУР&nbsp;A).</p>
+        <p class="algo-note"><b>Почему по&nbsp;ELAN.</b> КР по&nbsp;ФП&nbsp;2025 уже ссылаются на&nbsp;ELAN, TIMING, START и&nbsp;OPTIMAS и&nbsp;советуют решать индивидуально; ESO&nbsp;2025 и&nbsp;AHA/ASA&nbsp;2026 поддерживают ранний старт.</p>
+        <div class="calc" id="tcalc">
+          <p class="calc-h">Посчитать даты<small>Пример&nbsp;— укажите время пациента</small></p>
+          <label class="fl" for="onset">Начало симптомов <small>или когда видели здоровым</small></label>
+          <input class="inp" id="onset" type="datetime-local">
+          <p class="fl" id="sizeLbl">Размер инфаркта по КТ/МРТ</p>
+          <div class="seg s4" role="group" aria-labelledby="sizeLbl">
+            <button type="button" class="chip" data-size="tia" aria-pressed="false">ТИА</button>
+            <button type="button" class="chip" data-size="minor" aria-pressed="true">Малый</button>
+            <button type="button" class="chip" data-size="moderate" aria-pressed="false">Средний</button>
+            <button type="button" class="chip" data-size="major" aria-pressed="false">Большой</button>
+          </div>
+          <p class="fl" id="htLbl">Геморрагическая трансформация</p>
+          <div class="seg s3" role="group" aria-labelledby="htLbl">
+            <button type="button" class="chip" data-ht="none" aria-pressed="true">Нет</button>
+            <button type="button" class="chip" data-ht="hi" aria-pressed="false">HI1–HI2</button>
+            <button type="button" class="chip" data-ht="ph" aria-pressed="false">PH1–PH2</button>
+          </div>
+          <label class="fl" for="nihss">NIHSS <small>для схемы КР по&nbsp;ИИ&nbsp;2024</small></label>
+          <input class="inp" id="nihss" type="number" inputmode="numeric" min="0" max="42" step="1" placeholder="не указан">
+          <label class="fl" for="ivt">Тромболизис <small>время, если был</small></label>
+          <div class="inp-row">
+            <input class="inp" id="ivt" type="datetime-local">
+            <button type="button" class="x" id="ivtClear" aria-label="Тромболизиса не было" hidden>×</button>
+          </div>
+          <div class="res" id="tres" aria-live="polite"></div>
+        </div>
+      </section>
+      <section class="algo algo-2" id="s-dose" aria-labelledby="h-dose">
+        <h2 class="algo-h" id="h-dose">Дозы ПОАК</h2>
+        <div class="dz">
+          <div class="dr"><span class="dk">Апиксабан</span><span class="dv">5 мг × 2</span><span class="dd">2,5 мг × 2 — два признака из трёх: 80 лет и старше, масса ≤ 60 кг, креатинин ≥ 133 мкмоль/л; или КК 15–⁠29</span></div>
+          <div class="dr"><span class="dk">Дабигатран</span><span class="dv">150 мг × 2</span><span class="dd">110 мг × 2 — 80 лет и старше, верапамил; обсудить при 75–⁠80 годах, КК 30–⁠50, риске ЖКК · КК &lt; 30 — противопоказан</span></div>
+          <div class="dr"><span class="dk">Ривароксабан</span><span class="dv">20 мг × 1</span><span class="dd">15 мг — КК 15–⁠49 · во время еды</span></div>
+          <div class="dr"><span class="dk">Эдоксабан</span><span class="dv">60 мг × 1</span><span class="dd">30 мг — КК 15–⁠49, масса ≤ 60 кг, циклоспорин, эритромицин, кетоконазол</span></div>
+          <div class="dr"><span class="dk">Варфарин</span><span class="dv">МНО 2,0–⁠3,0</span><span class="dd">при КК &lt; 15 и на диализе — единственный ОАК, одобренный в РФ</span></div>
+        </div>
+        <p class="algo-note">КК&nbsp;— по&nbsp;Кокрофту–Голту. Сниженная доза без критериев хуже защищает от&nbsp;инсульта.</p>
+        <div class="calc" id="dcalc">
+          <p class="calc-h">Подобрать дозу<small>Пример&nbsp;— замените данными пациента</small></p>
+          <div class="g2">
+            <div><label class="fl" for="age">Возраст, лет</label><input class="inp" id="age" type="number" inputmode="numeric" min="18" max="110" step="1" value="78"></div>
+            <div><label class="fl" for="wt">Масса, кг</label><input class="inp" id="wt" type="number" inputmode="decimal" min="30" max="250" step="0.1" value="62"></div>
+            <div><label class="fl" for="cr">Креатинин <small>мкмоль/л</small></label><input class="inp" id="cr" type="number" inputmode="decimal" min="20" max="2000" step="1" value="105"></div>
+            <div><p class="fl" id="sexLbl">Пол</p><div class="seg s2" role="group" aria-labelledby="sexLbl"><button type="button" class="chip" data-sex="f" aria-pressed="true">Жен</button><button type="button" class="chip" data-sex="m" aria-pressed="false">Муж</button></div></div>
+          </div>
+          <div class="flags" role="group" aria-label="Что ещё учесть">
+            <button type="button" class="chip" data-flag="verap" aria-pressed="false">Верапамил</button>
+            <button type="button" class="chip" data-flag="pgp" aria-pressed="false">Циклоспорин, эритромицин или кетоконазол</button>
+            <button type="button" class="chip" data-flag="gi" aria-pressed="false">Высокий риск ЖКК</button>
+          </div>
+          <div class="res" id="dres" aria-live="polite"></div>
+        </div>
+      </section>
+      <div class="go-wrap"><button class="big primary" id="go" type="button">Начать тренировку</button></div>
+    </div>
+    <div class="r-right">
+      <h2 class="lbl" id="s-switch">Переходы</h2>
+      <div class="mx-wrap">
+        <ul class="lst">
+          <li><p class="sw-k">Аспирин → ПОАК</p><p class="sw-v">аспирин отменить в день первой дозы ПОАК: сочетание не рекомендовано</p><p class="sw-s">КР по ИИ 2024, КР по ФП 2025</p></li>
+          <li><p class="sw-k">НМГ → ПОАК</p><p class="sw-v">первая доза ПОАК — вместо очередной инъекции, за 0–⁠2 ч до неё</p><p class="sw-s">инструкции ПОАК</p></li>
+          <li><p class="sw-k">НФГ в/в → ПОАК</p><p class="sw-v">первая доза — при остановке инфузии</p><p class="sw-s">инструкции ривароксабана и дабигатрана</p></li>
+          <li><p class="sw-k">Варфарин → ПОАК</p><p class="sw-v">варфарин отменить, МНО: &lt; 2,0 — ПОАК сегодня · 2,0–⁠2,5 — завтра · &gt; 2,5 — повторить МНО через 1–⁠3 дня</p><p class="sw-s">КР по ФП 2025</p></li>
+          <li><p class="sw-k">ПОАК → варфарин</p><p class="sw-v">варфарин поверх ПОАК · МНО через 3–⁠4 дня утром до дозы ПОАК · при МНО ≥ 2,0 ПОАК отменить · эдоксабан на это время — половина дозы</p><p class="sw-s">КР по ФП 2025; эдоксабан — инструкция</p></li>
+          <li><p class="sw-k">ПОАК → ПОАК</p><p class="sw-v">новый препарат — в час очередной дозы прежнего</p><p class="sw-s">EHRA 2021</p></li>
+          <li><p class="sw-k">ПОАК → гепарин</p><p class="sw-v">первая доза гепарина — в час очередной дозы ПОАК</p><p class="sw-s">инструкции, EHRA 2021</p></li>
+        </ul>
+      </div>
+      <h2 class="lbl" id="s-anti">Антидоты</h2>
+      <div class="mx-wrap">
+        <ul class="lst">
+          <li><p class="ad-k">Дабигатран</p><p class="ad-v">идаруцизумаб 5 г в/в</p><p class="ad-n">два флакона по 2,5 г: две инфузии по 5–⁠10 мин или болюс · дабигатран снова — через 24 ч · нет антидота — гемодиализ или КПК</p></li>
+          <li><p class="ad-k">Апиксабан, ривароксабан, эдоксабан</p><p class="ad-v">КПК 50 МЕ/кг</p><p class="ad-n">специфического антидота в РФ нет (КР по ИИ 2024) · КР по ФП 2025: КПК, предпочтительно активированный · доза — NCS/SCCM</p></li>
+          <li><p class="ad-k">Варфарин</p><p class="ad-v">КПК 25–⁠50 МЕ/кг и фитоменадион 10 мг в/в</p><p class="ad-n">фитоменадион — витамин K1 (Канеовит), вводить медленно · доза КПК — по МНО и инструкции · нет КПК — СЗП 10–⁠15 мл/кг</p></li>
+          <li><p class="ad-k">Гепарин (НФГ)</p><p class="ad-v">протамин 1 мг на 100 ЕД</p><p class="ad-n">на гепарин за последние 2–⁠3 ч · не больше 50 мг · NCS/SCCM</p></li>
+          <li><p class="ad-k">Эноксапарин</p><p class="ad-v">протамин 1 мг на 1 мг</p><p class="ad-n">если прошло ≤ 8 ч; через 8–⁠12 ч — 0,5 мг на 1 мг · нейтрализация неполная · NCS/SCCM</p></li>
+          <li><p class="ad-k">Любой ПОАК ≤ 2 ч назад</p><p class="ad-v">активированный уголь 50 г</p><p class="ad-n">если нет риска аспирации; при дисфагии — только через зонд у интубированного</p></li>
+        </ul>
+      </div>
+      <h2 class="lbl" id="s-ivt">Тромболизис на&nbsp;антикоагулянте</h2>
+      <div class="mx-wrap">
+        <ul class="lst">
+          <li><p class="iv-k">Варфарин <span>· МНО ≤ 1,3</span></p><p class="iv-v v-yes"><span class="sr">можно: </span>тромболизис возможен; при МНО &gt; 1,3 — противопоказание по инструкциям алтеплазы и неиммуногенной стафилокиназы</p></li>
+          <li><p class="iv-k">Любой ПОАК <span>· последний приём &gt; 48 ч, КК &gt; 80</span></p><p class="iv-v v-yes"><span class="sr">можно: </span>тромболизис возможен</p></li>
+          <li><p class="iv-k">Дабигатран <span>· &lt; 12 ч</span></p><p class="iv-v v-maybe"><span class="sr">с условием: </span>идаруцизумаб 5 г, сразу за ним тромболизис</p></li>
+          <li><p class="iv-k">Дабигатран <span>· 12–⁠48 ч, КК &lt; 80 или время неизвестно</span></p><p class="iv-v v-maybe"><span class="sr">с условием: </span>тромбиновое время в норме — тромболизис; удлинено — сначала идаруцизумаб</p></li>
+          <li><p class="iv-k">Апиксабан, ривароксабан <span>· 12–⁠48 ч, КК &lt; 80 или время неизвестно</span></p><p class="iv-v v-maybe"><span class="sr">с условием: </span>тромболизис, только если анти-Ха активность не определяется</p></li>
+          <li><p class="iv-k">Апиксабан, ривароксабан <span>· &lt; 12 ч</span></p><p class="iv-v v-no"><span class="sr">нельзя: </span>тромболизис не рекомендован</p></li>
+          <li><p class="iv-k">Гепарин, НМГ <span>· последние 48 ч, АЧТВ выше нормы</span></p><p class="iv-v v-no"><span class="sr">нельзя: </span>тромболизис противопоказан по инструкциям алтеплазы и неиммуногенной стафилокиназы</p></li>
+          <li><p class="iv-k">ПОАК <span>· окклюзия крупной артерии</span></p><p class="iv-v v-yes"><span class="sr">можно: </span>тромбэктомию проводят: сВЧК не чаще</p></li>
+          <li><p class="iv-k">Варфарин <span>· окклюзия крупной артерии</span></p><p class="iv-v v-maybe"><span class="sr">с условием: </span>тромбэктомия возможна, но сВЧК чаще (ОШ 1,92) — решение индивидуально</p></li>
+        </ul>
+      </div>
+      <p class="mx-note">КР по&nbsp;ИИ&nbsp;2024 требуют определить МНО у&nbsp;принимающих варфарин, но&nbsp;порога не&nbsp;называют; <span class="nw">МНО&nbsp;&gt;&nbsp;1,3</span>&nbsp;— противопоказание в&nbsp;инструкциях алтеплазы и&nbsp;неиммуногенной стафилокиназы. КР по&nbsp;ФП&nbsp;2025 формально не&nbsp;рекомендуют тромболизис на&nbsp;фоне антикоагулянта (ЕОК&nbsp;IIIC), но&nbsp;допускают его при&nbsp;<span class="nw">МНО&nbsp;≤&nbsp;1,7</span> (выше порога инструкций), приёме ПОАК больше 48&nbsp;ч назад при&nbsp;сохранной функции почек или если препарат не&nbsp;определяется.</p>
+      <h2 class="lbl">Одна ситуация&nbsp;— разное решение</h2>
+      <div class="mx-wrap">
+        <div class="md"><div><p class="cp-en">Лакуна <span class="pr">1 см</span> в лучистом венце</p><p class="cp-ru">малый инфаркт — ПОАК в первые 48 ч</p><p class="cp-en">Инфаркт <span class="pr">всего бассейна</span> СМА</p><p class="cp-ru">большой — ПОАК на 6–⁠7-й день</p></div></div>
+        <div class="md"><div><p class="cp-en">Большой инфаркт · <span class="pr">КР по ИИ 2024</span></p><p class="cp-ru">через 14 дней; в схеме по NIHSS — 12–⁠14</p><p class="cp-en">Большой инфаркт · <span class="pr">ELAN</span></p><p class="cp-ru">6–⁠7-й день; в OPTIMAS — первые 4 дня</p></div></div>
+        <div class="md"><div><p class="cp-en"><span class="pr">HI1</span> без ухудшения</p><p class="cp-ru">старт по схеме ELAN</p><p class="cp-en"><span class="pr">PH2</span> — гематома</p><p class="cp-ru">срок индивидуально, КТ в динамике</p></div></div>
+        <div class="md"><div><p class="cp-en">Варфарин → ПОАК, МНО <span class="pr">1,8</span></p><p class="cp-ru">ПОАК в тот же день</p><p class="cp-en">Варфарин → ПОАК, МНО <span class="pr">2,3</span></p><p class="cp-ru">ПОАК на следующий день</p></div></div>
+        <div class="md"><div><p class="cp-en">Апиксабан: 82 года, <span class="pr">58 кг</span></p><p class="cp-ru">2,5 мг × 2 — два признака из трёх</p><p class="cp-en">Апиксабан: 82 года, <span class="pr">70 кг</span>, креатинин 100</p><p class="cp-ru">5 мг × 2 — признак один</p></div></div>
+        <div class="md"><div><p class="cp-en">Дабигатран <span class="pr">5 ч</span> назад, нужен тромболизис</p><p class="cp-ru">идаруцизумаб 5 г, затем сразу тромболизис</p><p class="cp-en">Ривароксабан <span class="pr">5 ч</span> назад</p><p class="cp-ru">тромболизис не рекомендован, тромбэктомия — да</p></div></div>
+        <div class="md"><div><p class="cp-en">Кровотечение на <span class="pr">дабигатране</span></p><p class="cp-ru">идаруцизумаб 5 г</p><p class="cp-en">Кровотечение на <span class="pr">апиксабане</span></p><p class="cp-ru">КПК 50 МЕ/кг</p></div></div>
+      </div>
+      <h2 class="lbl">Ловушки</h2>
+      <div class="mx-wrap">
+        <ul class="errs">
+          <li class="err"><span class="sr">Неверно:</span> <s>После отмены варфарина ждать нормального МНО</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">ПОАК при МНО &lt; 2,0</span><span class="err-note">при 2,0–⁠2,5 — на следующий день (КР по ФП 2025)</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Лечебный гепарин «мостом» до ПОАК</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">До старта — АСК</span><span class="err-note">КР по ФП 2025, ЕОК IIIB; профилактические дозы НМГ — можно (КР по ИИ 2024)</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Аспирин вместе с ПОАК</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Аспирин отменить в день старта</span><span class="err-note">комбинация — только по особым показаниям, например стент</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Сниженная доза «для безопасности»</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Полная доза, снижение — по критериям</span><span class="err-note">полная доза лучше защищает от инсульта (КР по ФП 2025)</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Инсульт на ПОАК — сменить препарат</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Проверить приверженность и дозу</span><span class="err-note">замена ПОАК пользы не доказала (КР по ФП 2025)</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Только витамин K при жизнеугрожающем кровотечении на варфарине</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">КПК и фитоменадион (Канеовит)</span><span class="err-note">витамин K снижает МНО за часы, КПК — за минуты (NCS/SCCM)</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Вскрыть капсулу дабигатрана для зонда</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Апиксабан или ривароксабан измельчить</span><span class="err-note">без оболочки дабигатрана всасывается на 75% больше</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>КК по CKD-EPI</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">КК по Кокрофту–⁠Голту</span><span class="err-note">по нему подбирали дозы в РКИ и инструкциях</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>ПОАК при механическом клапане</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Только варфарин</span><span class="err-note">ПОАК не рекомендованы (КР по ФП 2025)</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>ПОАК в первые часы после тромболизиса</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Через 24 ч, после контрольной КТ</span><span class="err-note">КР по ИИ 2024</span></li>
+        </ul>
+      </div>
+      <h2 class="lbl" id="s-topics">Темы</h2>
+      <div class="topics" id="topics"></div>
+      <h2 class="lbl">Источники</h2>
+      <ol class="src">
+        <li><a href="https://doi.org/10.1056/NEJMoa2303048" target="_blank" rel="noopener">Fischer U, et al. Early versus later anticoagulation for stroke with atrial fibrillation (ELAN). N Engl J Med 2023;388:2411–&#8288;21</a></li>
+        <li><a href="https://doi.org/10.1001/jamaneurol.2024.1450" target="_blank" rel="noopener">Goeldlin MB, et al. ELAN: minor, moderate and major stroke. JAMA Neurol 2024;81:693–&#8288;702</a></li>
+        <li><a href="https://doi.org/10.1161/CIRCULATIONAHA.124.069324" target="_blank" rel="noopener">Rohner R, et al. ELAN: haemorrhagic transformation. Circulation 2024;150:19–&#8288;29</a></li>
+        <li><a href="https://doi.org/10.1161/STROKEAHA.125.050646" target="_blank" rel="noopener">Wouters A, et al. ELAN: prior reperfusion therapy. Stroke 2025;56:2000–&#8288;08</a></li>
+        <li><a href="https://doi.org/10.1016/S0140-6736(24)02197-4" target="_blank" rel="noopener">Werring DJ, et al. OPTIMAS. Lancet 2024</a></li>
+        <li><a href="https://doi.org/10.1177/17474930261441297" target="_blank" rel="noopener">Nash PS, et al. OPTIMAS: infarct volume and location. Int J Stroke 2026;21:956–&#8288;67</a></li>
+        <li><a href="https://doi.org/10.1161/STROKEAHA.125.051457" target="_blank" rel="noopener">Nash PS, et al. OPTIMAS: chronic kidney disease. Stroke 2025;56:1970–&#8288;79</a></li>
+        <li><a href="https://doi.org/10.1161/CIRCULATIONAHA.122.060666" target="_blank" rel="noopener">Oldgren J, et al. TIMING. Circulation 2022;146:1056–&#8288;66</a></li>
+        <li><a href="https://doi.org/10.1001/jamaneurol.2025.0285" target="_blank" rel="noopener">Warach SJ, et al. START. JAMA Neurol 2025;82:470–&#8288;76</a></li>
+        <li><a href="https://doi.org/10.1016/S0140-6736(25)00439-8" target="_blank" rel="noopener">Dehbi HM, et al. CATALYST: IPD meta-analysis. Lancet 2025;406:43–&#8288;51</a></li>
+        <li><a href="https://cr.minzdrav.gov.ru/preview-cr/814_1" target="_blank" rel="noopener">КР «Ишемический инсульт и транзиторная ишемическая атака», Минздрав РФ, 2024 (814_1)</a></li>
+        <li><a href="https://cr.minzdrav.gov.ru/preview-cr/382_2" target="_blank" rel="noopener">КР «Фибрилляция и трепетание предсердий», Минздрав РФ, 2025 (382_2)</a></li>
+        <li><a href="https://doi.org/10.1161/STR.0000000000000513" target="_blank" rel="noopener">Prabhakaran S, et al. 2026 AHA/ASA Guideline for the early management of acute ischemic stroke. Stroke 2026</a></li>
+        <li><a href="https://doi.org/10.1093/esj/aakag009" target="_blank" rel="noopener">ESO annual stroke evidence update 2025. Eur Stroke J 2026</a></li>
+        <li><a href="https://doi.org/10.1093/europace/euab065" target="_blank" rel="noopener">Steffel J, et al. 2021 EHRA practical guide on NOAC. Europace 2021;23:1612–&#8288;76</a></li>
+        <li><a href="https://doi.org/10.1161/01.STR.0000254600.92975.1f" target="_blank" rel="noopener">Paciaroni M, et al. Anticoagulant treatment in acute cardioembolic stroke: meta-analysis of RCTs. Stroke 2007;38:423–&#8288;30</a></li>
+        <li><a href="https://www.rlsnet.ru/drugs/aktilize-7361" target="_blank" rel="noopener">Инструкция по применению алтеплазы (Актилизе), раздел «Противопоказания»</a></li>
+        <li><a href="https://www.vidal.ru/drugs/fortesilin__38617" target="_blank" rel="noopener">Инструкция по применению неиммуногенной стафилокиназы (Фортелизин), раздел «Противопоказания»</a></li>
+        <li><a href="https://doi.org/10.1007/s12028-015-0222-x" target="_blank" rel="noopener">Frontera JA, et al. Reversal of antithrombotics in intracranial hemorrhage (NCS/SCCM). Neurocrit Care 2016;24:6–&#8288;46</a></li>
+      </ol>
+      <p class="foot">Сверено 5&nbsp;октября 2026&nbsp;г. Справочник для&nbsp;врача: решение принимают по&nbsp;клинической ситуации и&nbsp;протоколу отделения.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+// ——— Темы по группам: правило и примеры. […] — главное в примере (оранжевый).
+const MIXED_TOPIC = 11;
+const GROUPS = {"when": "Когда начинать", "how": "Чем и в какой дозе", "switch": "Переходы и антидоты", "mix": "Итог"};
+const TOPICS = [
+ {
+  "n": 1,
+  "group": "when",
+  "title": "Доказательства",
+  "sub": "ELAN, OPTIMAS, TIMING, CATALYST",
+  "rule": "Четыре РКИ сравнили ранний и отсроченный старт ПОАК после ишемического инсульта при ФП. ELAN (2023, 2013 пациентов): ранний старт — в первые 48 ч при малом и среднем инфаркте, на 6–⁠7-й день при большом. За 30 дней комбинированная точка — 2,9% против 4,1%, повторный ИИ — 1,4% против 2,5%, симптомные внутричерепные кровоизлияния (сВЧК) — 0,2% в обеих группах.\n\nOPTIMAS (2024, 3648): старт в первые 4 дня не хуже старта на 7–⁠14-й день (3,3% и 3,3%), сВЧК 0,6% и 0,7%. TIMING (2022, 888): первые 4 дня не хуже 5–⁠10-го дня, сВЧК не было ни в одной группе.\n\nМета-анализ CATALYST (2025, 5441 пациент): старт в первые 4 дня снижает риск повторного ИИ, сВЧК или неуточнённого инсульта за 30 дней — 2,1% против 3,0% (ОШ 0,70), сВЧК 0,4% в обеих группах.",
+  "ex": [
+   {
+    "en": "ELAN: повторный ИИ за 30 дней — [1,4%] против 2,5%.",
+    "ru": "Ранний старт; сВЧК по 0,2% в обеих группах."
+   },
+   {
+    "en": "CATALYST: старт в первые 4 дня — ОШ [0,70].",
+    "ru": "Повторный ИИ, сВЧК или неуточнённый инсульт за 30 дней."
+   },
+   {
+    "en": "OPTIMAS: первые 4 дня [не хуже] 7–⁠14-го дня.",
+    "ru": "сВЧК 0,6% против 0,7%."
+   }
+  ]
+ },
+ {
+  "n": 2,
+  "group": "when",
+  "title": "Размер инфаркта",
+  "sub": "малый, средний, большой по ELAN",
+  "rule": "В ELAN тяжесть оценивают не по NIHSS, а по размеру инфаркта на КТ или МРТ. Малый — очаг до 1,5 см в любом бассейне.\n\nСредний — очаг в бассейне корковой ветви СМА, ПМА или ЗМА, глубокой ветви СМА или во внутренней зоне смежного кровоснабжения. Большой — весь бассейн СМА, ПМА или ЗМА, две корковые ветви СМА, корковая и глубокая ветви СМА вместе, больше одного бассейна; в стволе и мозжечке — очаг больше 1,5 см.\n\nРоссыпь мелких эмболических очагов — малый инсульт, два малых очага — средний, два средних — большой. Оценивают последнюю КТ или МРТ перед решением; после тромболизиса и тромбэктомии её лучше повторить.",
+  "ex": [
+   {
+    "en": "Лакуна [1 см] в лучистом венце — [малый].",
+    "ru": "ПОАК в первые 48 ч."
+   },
+   {
+    "en": "Бассейн [одной корковой ветви] СМА — [средний].",
+    "ru": "Тоже в первые 48 ч."
+   },
+   {
+    "en": "[Весь бассейн] СМА — [большой].",
+    "ru": "ПОАК на 6–⁠7-й день."
+   },
+   {
+    "en": "Очаг [2 см] в мозжечке — [большой].",
+    "ru": "В стволе и мозжечке порог — 1,5 см."
+   }
+  ]
+ },
+ {
+  "n": 3,
+  "group": "when",
+  "title": "Сроки старта",
+  "sub": "48 часов или 6–⁠7-й день",
+  "rule": "Малый и средний инфаркт — ПОАК в первые 48 ч от начала симптомов, большой — на 6–⁠7-й день (ELAN). ТИА — в первые сутки после КТ или МРТ без кровоизлияния (КР по ИИ 2024: в тексте — в течение суток, в алгоритме — «ПОАК сразу же»; КР по ФП 2025: при остром очаге на КТ/МРТ — через 1–⁠3 суток). После тромболизиса — не раньше чем через 24 ч и после контрольной КТ или МРТ.\n\nДо первой дозы ПОАК — антиагрегант: КР по ИИ 2024 предлагают АСК (УУР C), в их алгоритме — АСК или клопидогрел: без реперфузии — в первые 24 ч, после неё — через 24 ч; в день старта ПОАК антиагрегант отменяют. Лечебный гепарин как «мост» к ПОАК не назначают: это прямо сказано в КР по ФП 2025 (ЕОК IIIB) — в мета‑анализе 7 РКИ гепарины в первые 48 ч после кардиоэмболического инсульта давали сВЧК 2,5% против 0,7% без достоверного снижения повторных ИИ. В КР по ИИ 2024 отдельной рекомендации о лечебном гепарине при ФП нет. Профилактические дозы НМГ или НФГ у обездвиженных пациентов КР по ИИ 2024 рекомендуют (УУР A): с первых суток, после тромболизиса — не раньше чем через 24 ч.\n\nКР по ИИ 2024 сдержаннее: при низком риске геморрагической трансформации — старт на 3–⁠14-е сутки, при высоком (большой инфаркт: NIHSS > 15 или весь бассейн артерии) — через 14 дней; в комментарии — схема по NIHSS: меньше 8 — через 3 дня, 8–⁠16 — через 6–⁠8 дней, больше 16 — через 12–⁠14 дней.\n\nКР по ФП 2025 уже ссылаются на ELAN, TIMING, START и OPTIMAS и советуют выбирать срок индивидуально — по размеру инфаркта и геморрагической трансформации. ESO 2025: старт в первые 4 дня стоит рассмотреть. AHA/ASA 2026: у тщательно отобранных пациентов (например, с лёгким инсультом) ранний старт малорискован и разумен (класс 2a), хотя его польза для профилактики раннего повторного инсульта не доказана.",
+  "ex": [
+   {
+    "en": "ТИА — [в первые сутки].",
+    "ru": "КР по ИИ 2024; после КТ или МРТ без кровоизлияния."
+   },
+   {
+    "en": "Малый или средний инфаркт — [≤ 48 ч].",
+    "ru": "Ранняя группа ELAN."
+   },
+   {
+    "en": "Большой инфаркт — [6–⁠7-й день].",
+    "ru": "ELAN; КР по ИИ 2024 — через 14 дней."
+   },
+   {
+    "en": "После тромболизиса — [не раньше 24 ч].",
+    "ru": "И после контрольной КТ или МРТ."
+   }
+  ]
+ },
+ {
+  "n": 4,
+  "group": "when",
+  "title": "Особые ситуации",
+  "sub": "кровоизлияние, реперфузия, ХБП",
+  "rule": "Геморрагический инфаркт (HI1, HI2) без ухудшения в ELAN не мешал раннему старту; КР по ФП 2025 тоже считают, что он может не требовать отсрочки; КР по ИИ 2024 строже — без отсрочки только при ГТ 1-го типа.\n\nПаренхиматозную гематому (PH1, PH2) протокол ELAN исключал, но центральная лаборатория нашла её у 56 включённых — у них ранний старт мог ухудшать функциональный исход. При PH срок решают индивидуально, с КТ в динамике; КР по ИИ 2024 при кровоизлиянии (кроме ГТ 1-го типа) советуют ждать 4–⁠8 недель.\n\nТромболизис и тромбэктомия эффект раннего старта не меняют (ELAN), хроническая болезнь почек — тоже (OPTIMAS).\n\nИнсульт на фоне ПОАК: проверить приверженность, дозу и взаимодействия; замена одного ПОАК на другой пользы не доказала. ПОАК с антиагрегантом не сочетают, кроме особых показаний, например стента.",
+  "ex": [
+   {
+    "en": "HI1 без ухудшения — [не откладывать].",
+    "ru": "В ELAN такие пациенты получали ПОАК по схеме."
+   },
+   {
+    "en": "PH2 — [решение индивидуально].",
+    "ru": "Протокол ELAN её исключал; КТ в динамике."
+   },
+   {
+    "en": "Инсульт на ПОАК — сначала [приверженность и доза].",
+    "ru": "Смена препарата сама по себе не помогает."
+   }
+  ]
+ },
+ {
+  "n": 5,
+  "group": "how",
+  "title": "Дозы ПОАК",
+  "sub": "полная доза и когда снижать",
+  "rule": "Назначают полную дозу, сниженную — только по критериям инструкции. Апиксабан 5 мг × 2; 2,5 мг × 2 — при двух признаках из трёх (80 лет и старше, масса ≤ 60 кг, креатинин ≥ 133 мкмоль/л) или КК 15–⁠29 мл/мин.\n\nДабигатран 150 мг × 2; 110 мг × 2 — с 80 лет и при верапамиле, обсудить при 75–⁠80 годах, КК 30–⁠50 и высоком риске ЖКК; при КК < 30 противопоказан. Ривароксабан 20 мг × 1 во время еды; 15 мг — при КК 15–⁠49. Эдоксабан 60 мг × 1; 30 мг — при КК 15–⁠49, массе ≤ 60 кг или с циклоспорином, эритромицином, кетоконазолом.\n\nКК считают по Кокрофту–⁠Голту. При КК < 15 и на диализе в РФ одобрен только варфарин.",
+  "ex": [
+   {
+    "en": "Апиксабан: 82 года и [58 кг] — [2,5 мг × 2].",
+    "ru": "Два признака из трёх."
+   },
+   {
+    "en": "Апиксабан: 82 года, [70 кг], креатинин 100 — [5 мг × 2].",
+    "ru": "Признак один — доза полная."
+   },
+   {
+    "en": "Ривароксабан, КК [40] — [15 мг] в сутки.",
+    "ru": "Во время еды."
+   },
+   {
+    "en": "Дабигатран и [верапамил] — [110 мг × 2].",
+    "ru": "Верапамил повышает концентрацию дабигатрана."
+   }
+  ]
+ },
+ {
+  "n": 6,
+  "group": "how",
+  "title": "Зонд и взаимодействия",
+  "sub": "что важно в инсультном отделении",
+  "rule": "При дисфагии апиксабан и ривароксабан можно измельчить, развести водой и ввести через назогастральный зонд; после ривароксабана 15 или 20 мг сразу дают энтеральное питание. Капсулы дабигатрана вскрывать нельзя: без оболочки всасывается примерно на 75% больше.\n\nКарбамазепин, фенитоин, фенобарбитал и рифампицин — сильные индукторы: снижают концентрацию ПОАК, таких сочетаний избегают. Кетоконазол, итраконазол и другие сильные ингибиторы CYP3A4 и P‑gp повышают концентрацию: с дабигатраном, апиксабаном и ривароксабаном их не сочетают, эдоксабан при кетоконазоле — 30 мг. Верапамил — повод для дабигатрана 110 мг × 2. При высоком риске кровотечения из верхних отделов ЖКТ добавляют ингибитор протонной помпы.",
+  "ex": [
+   {
+    "en": "Зонд: апиксабан — [измельчить].",
+    "ru": "Развести водой и ввести сразу."
+   },
+   {
+    "en": "Дабигатран — капсулу [не вскрывать].",
+    "ru": "Без оболочки всасывается на 75% больше."
+   },
+   {
+    "en": "[Карбамазепин] снижает уровень ПОАК.",
+    "ru": "Как фенитоин, фенобарбитал и рифампицин."
+   }
+  ]
+ },
+ {
+  "n": 7,
+  "group": "how",
+  "title": "Варфарин",
+  "sub": "кому, как начать, МНО",
+  "rule": "Варфарин остаётся препаратом выбора при механическом протезе клапана, умеренном и тяжёлом митральном стенозе, доказанном АФС и тромбе ЛЖ после инфаркта миокарда, а в РФ — и при КК < 15 или диализе.\n\nРКИ по срокам старта проведены только с ПОАК; для варфарина срок выбирают по тем же принципам — по размеру инфаркта. При ФП «мост» лечебным гепарином не нужен — КР по ФП 2025 его не рекомендуют (ЕОК IIIB); при механическом клапане тактику решают с кардиологом.\n\nНачало: 5 мг (2 таблетки по 2,5 мг) в одно время 2–⁠3 дня, МНО на 3–⁠4-й день, дальше доза — по алгоритму КР. Цель — МНО 2,0–⁠3,0; механический протез митрального клапана, в том числе с ФП, — только варфарин, МНО 2,5–⁠3,5. Если ИИ случился на целевом МНО (≥ 2,5), КР по ИИ 2024 предлагают добавить АСК 75–⁠100 мг или держать МНО 3,0–⁠3,5 (УУР A). Если время МНО в целевом диапазоне ≤ 70%, переходят на ПОАК.",
+  "ex": [
+   {
+    "en": "Механический клапан — [только варфарин].",
+    "ru": "ПОАК не рекомендованы."
+   },
+   {
+    "en": "Старт — [5 мг] 2–⁠3 дня, МНО на [3–⁠4-й] день.",
+    "ru": "По 2 таблетки 2,5 мг в одно время."
+   },
+   {
+    "en": "МНО при ФП — [2,0–⁠3,0].",
+    "ru": "В диапазоне ≤ 70% времени — перейти на ПОАК."
+   }
+  ]
+ },
+ {
+  "n": 8,
+  "group": "switch",
+  "title": "Переходы",
+  "sub": "аспирин, гепарин, варфарин, ПОАК",
+  "rule": "Аспирин → ПОАК: в день первой дозы ПОАК аспирин отменяют. НМГ → ПОАК: первую дозу ПОАК дают вместо очередной инъекции; при инфузии НФГ — при её остановке.\n\nПОАК → гепарин: первая доза — в час очередного приёма ПОАК. ПОАК → ПОАК: новый препарат — в час очередной дозы прежнего.\n\nВарфарин → ПОАК: варфарин отменяют и смотрят МНО: меньше 2,0 — ПОАК в тот же день, 2,0–⁠2,5 — на следующий, больше 2,5 — повторить МНО через 1–⁠3 дня. ПОАК → варфарин: варфарин добавляют к ПОАК, МНО — через 3–⁠4 дня утром до очередной дозы ПОАК; ПОАК отменяют, когда МНО 2,0 и выше; эдоксабан на время перекрытия — половина дозы.",
+  "ex": [
+   {
+    "en": "Варфарин → ПОАК: МНО [1,8] — ПОАК [сегодня].",
+    "ru": "МНО < 2,0."
+   },
+   {
+    "en": "МНО [2,3] — ПОАК [завтра].",
+    "ru": "МНО 2,0–⁠2,5."
+   },
+   {
+    "en": "ПОАК → варфарин: ПОАК отменить при МНО [≥ 2,0].",
+    "ru": "МНО — утром до дозы ПОАК."
+   }
+  ]
+ },
+ {
+  "n": 9,
+  "group": "switch",
+  "title": "Антидоты",
+  "sub": "идаруцизумаб, КПК, протамин",
+  "rule": "Дабигатран: идаруцизумаб 5 г в/в — два флакона по 2,5 г, две инфузии по 5–⁠10 минут или болюс; дабигатран можно возобновить через 24 ч; без антидота — гемодиализ или КПК.\n\nАпиксабан, ривароксабан, эдоксабан: специфического антидота в РФ нет — концентрат протромбинового комплекса (КПК) 50 МЕ/кг; КР по ФП 2025 предпочитают активированный КПК. Варфарин: КПК 25–⁠50 МЕ/кг по МНО и инструкции и фитоменадион (витамин K1, Канеовит) 10 мг в/в медленно; нет КПК — СЗП 10–⁠15 мл/кг. Одного витамина K при жизнеугрожающем кровотечении мало: МНО он снижает за часы.\n\nГепарин (НФГ): протамин 1 мг на 100 ЕД, введённых за последние 2–⁠3 ч, не больше 50 мг. Эноксапарин: протамин 1 мг на 1 мг в первые 8 ч, 0,5 мг на 1 мг через 8–⁠12 ч; нейтрализация неполная. ПОАК приняли не больше 2 ч назад — активированный уголь 50 г, если нет риска аспирации.",
+  "ex": [
+   {
+    "en": "Дабигатран, кровотечение — [идаруцизумаб 5 г].",
+    "ru": "Дабигатран снова — через 24 ч."
+   },
+   {
+    "en": "Апиксабан, ВЧК — [КПК 50 МЕ/кг].",
+    "ru": "Специфического антидота в РФ нет."
+   },
+   {
+    "en": "Варфарин — [КПК и фитоменадион].",
+    "ru": "Фитоменадион — витамин K1 (Канеовит), 10 мг в/в."
+   }
+  ]
+ },
+ {
+  "n": 10,
+  "group": "switch",
+  "title": "Тромболизис на антикоагулянте",
+  "sub": "КР по ИИ 2024 и инструкции",
+  "rule": "Варфарин: тромболизис возможен при МНО ≤ 1,3 — при МНО > 1,3 его запрещают инструкции алтеплазы и неиммуногенной стафилокиназы. КР по ИИ 2024 требуют определить МНО, но порога не называют; КР по ФП 2025 допускают тромболизис при МНО ≤ 1,7, то есть выше порога инструкций. Гепарин или НМГ за последние 48 ч при АЧТВ выше нормы — тоже противопоказание по инструкциям.\n\nЛюбой ПОАК: если последний приём был больше 48 ч назад и КК > 80 мл/мин, тромболизис возможен.\n\nДабигатран: приём меньше 12 ч назад — идаруцизумаб 5 г и сразу тромболизис, не дожидаясь анализа; 12–⁠48 ч, КК < 80 или время неизвестно — тромбиновое время: в норме — тромболизис, удлинено — сначала идаруцизумаб.\n\nАпиксабан и ривароксабан: приём меньше 12 ч назад — тромболизис не рекомендован; 12–⁠48 ч, КК < 80 или время неизвестно — только если анти-Ха активность не определяется. От тромбэктомии из-за антикоагулянта не отказываются; на варфарине сВЧК после неё чаще (ОШ 1,92), на ПОАК — нет.\n\nКР по ФП 2025 формально не рекомендуют тромболизис на фоне антикоагулянта (ЕОК IIIC), но допускают его при МНО ≤ 1,7, приёме ПОАК больше 48 ч назад при сохранной функции почек или если препарат не определяется.",
+  "ex": [
+   {
+    "en": "Дабигатран 6 ч назад — [идаруцизумаб], затем тромболизис.",
+    "ru": "Тромбиновое время не ждут."
+   },
+   {
+    "en": "Ривароксабан 6 ч назад — тромболизис [не рекомендован].",
+    "ru": "Тромбэктомия — можно."
+   },
+   {
+    "en": "Варфарин, МНО [1,5] — тромболизис [противопоказан].",
+    "ru": "По инструкциям тромболитиков порог — 1,3."
+   }
+  ]
+ },
+ {
+  "n": 11,
+  "group": "mix",
+  "title": "Итог — всё вместе",
+  "sub": "",
+  "rule": "15 случайных карточек из всех тем вперемешку.",
+  "ex": []
+ }
+];
+
+// ——— Карточки. opts — варианты, a — правильный, why — пояснение.
+const CARDS = [
+ {
+  "id": "e-elan-early",
+  "t": 1,
+  "q": "ELAN: ранний старт при малом и среднем инфаркте — в первые ___ ч.",
+  "ru": "",
+  "opts": [
+   "48",
+   "24",
+   "72"
+  ],
+  "a": "48",
+  "why": "Ранняя группа ELAN: ≤ 48 ч при малом и среднем инфаркте, 6–⁠7-й день при большом."
+ },
+ {
+  "id": "e-elan-major",
+  "t": 1,
+  "q": "ELAN: ранний старт при большом инфаркте — на ___ день.",
+  "ru": "",
+  "opts": [
+   "6–⁠7-й",
+   "3–⁠4-й",
+   "12–⁠14-й"
+  ],
+  "a": "6–⁠7-й",
+  "why": "12–⁠14-й день — поздняя группа ELAN при большом инфаркте."
+ },
+ {
+  "id": "e-elan-is",
+  "t": 1,
+  "q": "ELAN: повторный ИИ за 30 дней — 1,4% при раннем старте против ___ при позднем.",
+  "ru": "",
+  "opts": [
+   "2,5%",
+   "1,4%",
+   "0,5%"
+  ],
+  "a": "2,5%",
+  "why": "ОШ 0,57 (95% ДИ 0,29–⁠1,07); к 90 дням — 1,9% против 3,1%."
+ },
+ {
+  "id": "e-elan-sich",
+  "t": 1,
+  "q": "ELAN: симптомные внутричерепные кровоизлияния при раннем старте — ___.",
+  "ru": "",
+  "opts": [
+   "0,2%, как при позднем",
+   "втрое чаще, чем при позднем"
+  ],
+  "a": "0,2%, как при позднем",
+  "why": "По 2 случая в каждой группе за 30 дней."
+ },
+ {
+  "id": "e-optimas",
+  "t": 1,
+  "q": "OPTIMAS: старт ПОАК в первые ___ дня не хуже старта на 7–⁠14-й день.",
+  "ru": "",
+  "opts": [
+   "4",
+   "2",
+   "10"
+  ],
+  "a": "4",
+  "why": "3648 пациентов; первичная точка — 3,3% в обеих группах, сВЧК 0,6% против 0,7%."
+ },
+ {
+  "id": "e-timing",
+  "t": 1,
+  "q": "TIMING: при старте в первые 4 дня симптомных внутричерепных кровоизлияний ___.",
+  "ru": "",
+  "opts": [
+   "не было",
+   "стало вдвое больше"
+  ],
+  "a": "не было",
+  "why": "Ни одного случая ни в ранней, ни в отсроченной группе (888 пациентов)."
+ },
+ {
+  "id": "e-catalyst",
+  "t": 1,
+  "q": "CATALYST: старт в первые 4 дня ___ риск повторного ИИ, сВЧК или неуточнённого инсульта за 30 дней.",
+  "ru": "",
+  "opts": [
+   "снижает",
+   "не меняет",
+   "повышает"
+  ],
+  "a": "снижает",
+  "why": "2,1% против 3,0%, ОШ 0,70 (0,50–⁠0,98); 5441 пациент из ELAN, OPTIMAS, TIMING и START."
+ },
+ {
+  "id": "e-catalyst-sich",
+  "t": 1,
+  "q": "CATALYST: частота сВЧК при раннем и позднем старте ___.",
+  "ru": "",
+  "opts": [
+   "одинакова",
+   "выше при раннем"
+  ],
+  "a": "одинакова",
+  "why": "По 0,4% в обеих группах, ОШ 1,02."
+ },
+ {
+  "id": "e-major",
+  "t": 1,
+  "q": "В подгруппе ELAN с большим инфарктом ранний старт осложнений ___.",
+  "ru": "",
+  "opts": [
+   "не прибавил",
+   "удвоил"
+  ],
+  "a": "не прибавил",
+  "why": "Первичная точка — 3,7% при раннем и 7,0% при позднем старте; размер инфаркта эффект не менял."
+ },
+ {
+  "id": "s-basis",
+  "t": 2,
+  "q": "В ELAN тяжесть инсульта оценивают по ___.",
+  "ru": "",
+  "opts": [
+   "размеру инфаркта на КТ/МРТ",
+   "баллу NIHSS",
+   "шкале Рэнкина"
+  ],
+  "a": "размеру инфаркта на КТ/МРТ",
+  "why": "Схема КР по ИИ 2024 опирается на NIHSS, ELAN — на нейровизуализацию."
+ },
+ {
+  "id": "s-minor",
+  "t": 2,
+  "q": "Малый инфаркт по ELAN — очаг до ___ см.",
+  "ru": "",
+  "opts": [
+   "1,5",
+   "3",
+   "0,5"
+  ],
+  "a": "1,5",
+  "why": "В любом бассейне — переднем или заднем."
+ },
+ {
+  "id": "s-branch",
+  "t": 2,
+  "q": "Инфаркт в бассейне одной корковой ветви СМА — ___ инсульт.",
+  "ru": "",
+  "opts": [
+   "средний",
+   "малый",
+   "большой"
+  ],
+  "a": "средний",
+  "why": "Средний: корковая ветвь СМА, ПМА или ЗМА, глубокая ветвь СМА, внутренняя зона смежного кровоснабжения."
+ },
+ {
+  "id": "s-deep",
+  "t": 2,
+  "q": "Инфаркт 2 см в бассейне глубокой ветви СМА — ___ инсульт.",
+  "ru": "",
+  "opts": [
+   "средний",
+   "малый",
+   "большой"
+  ],
+  "a": "средний",
+  "why": "Очаг больше 1,5 см в бассейне глубокой ветви СМА — средний."
+ },
+ {
+  "id": "s-mca",
+  "t": 2,
+  "q": "Инфаркт всего бассейна СМА — ___ инсульт.",
+  "ru": "",
+  "opts": [
+   "большой",
+   "средний"
+  ],
+  "a": "большой",
+  "why": "Большой: весь бассейн СМА, ПМА или ЗМА, две корковые ветви СМА, корковая и глубокая вместе, больше одного бассейна."
+ },
+ {
+  "id": "s-two-cort",
+  "t": 2,
+  "q": "Инфаркт в бассейнах двух корковых ветвей СМА — ___ инсульт.",
+  "ru": "",
+  "opts": [
+   "большой",
+   "средний"
+  ],
+  "a": "большой",
+  "why": "Одна корковая ветвь — средний, две — уже большой."
+ },
+ {
+  "id": "s-post",
+  "t": 2,
+  "q": "В стволе или мозжечке большой инсульт — очаг больше ___ см.",
+  "ru": "",
+  "opts": [
+   "1,5",
+   "3",
+   "5"
+  ],
+  "a": "1,5",
+  "why": "Для ствола и мозжечка порог тот же — 1,5 см."
+ },
+ {
+  "id": "s-shower",
+  "t": 2,
+  "q": "Россыпь мелких эмболических очагов по ELAN — ___ инсульт.",
+  "ru": "",
+  "opts": [
+   "малый",
+   "средний",
+   "большой"
+  ],
+  "a": "малый",
+  "why": "Два малых очага — средний, два средних — большой."
+ },
+ {
+  "id": "s-two-small",
+  "t": 2,
+  "q": "Два малых очага по ELAN — ___ инсульт.",
+  "ru": "",
+  "opts": [
+   "средний",
+   "малый",
+   "большой"
+  ],
+  "a": "средний",
+  "why": "А два средних — большой."
+ },
+ {
+  "id": "s-after-evt",
+  "t": 2,
+  "q": "Размер инфаркта для решения по ELAN оценивают по ___.",
+  "ru": "",
+  "opts": [
+   "последней КТ/МРТ",
+   "КТ при поступлении",
+   "КТ‑перфузии"
+  ],
+  "a": "последней КТ/МРТ",
+  "why": "Так в протоколе ELAN; после тромболизиса и тромбэктомии визуализацию лучше повторить."
+ },
+ {
+  "id": "t-tia",
+  "t": 3,
+  "q": "КР по ИИ 2024: при ТИА и ФП ПОАК начинают ___.",
+  "ru": "",
+  "opts": [
+   "в первые сутки",
+   "через 3 дня",
+   "через неделю"
+  ],
+  "a": "в первые сутки",
+  "why": "В тексте КР — в течение суток, в алгоритме — «ПОАК сразу же»; сначала КТ или МРТ без кровоизлияния."
+ },
+ {
+  "id": "t-minor",
+  "t": 3,
+  "q": "По ELAN при малом инфаркте ранний старт — в первые ___ ч.",
+  "ru": "",
+  "opts": [
+   "48",
+   "72",
+   "144"
+  ],
+  "a": "48",
+  "why": "Ранняя группа ELAN."
+ },
+ {
+  "id": "t-moderate",
+  "t": 3,
+  "q": "По ELAN при среднем инфаркте ранний старт — в первые ___ ч.",
+  "ru": "",
+  "opts": [
+   "48",
+   "144",
+   "288"
+  ],
+  "a": "48",
+  "why": "В ELAN средний инфаркт ведут так же, как малый."
+ },
+ {
+  "id": "t-major",
+  "t": 3,
+  "q": "По ELAN при большом инфаркте ранний старт — на ___ день.",
+  "ru": "",
+  "opts": [
+   "6–⁠7-й",
+   "3–⁠4-й",
+   "12–⁠14-й"
+  ],
+  "a": "6–⁠7-й",
+  "why": "12–⁠14-й день — поздняя группа ELAN; КР по ИИ 2024 при большом инфаркте — через 14 дней."
+ },
+ {
+  "id": "t-ivt",
+  "t": 3,
+  "q": "После тромболизиса ПОАК начинают не раньше чем через ___ ч.",
+  "ru": "",
+  "opts": [
+   "24",
+   "6",
+   "72"
+  ],
+  "a": "24",
+  "why": "И после контрольной КТ или МРТ: в первые 24 ч после тромболизиса антитромботики обычно не назначают (КР по ИИ 2024)."
+ },
+ {
+  "id": "t-asa",
+  "t": 3,
+  "q": "До первой дозы ПОАК при ФП КР по ИИ 2024 предлагают ___.",
+  "ru": "",
+  "opts": [
+   "ацетилсалициловую кислоту",
+   "лечебный гепарин",
+   "ничего"
+  ],
+  "a": "ацетилсалициловую кислоту",
+  "why": "УУР C; в алгоритме КР по ИИ 2024 — АСК или клопидогрел: без реперфузии — в первые 24 ч, после неё — через 24 ч. КР по ФП 2025 — тоже АСК."
+ },
+ {
+  "id": "t-asa-stop",
+  "t": 3,
+  "q": "В день первой дозы ПОАК аспирин ___.",
+  "ru": "",
+  "opts": [
+   "отменяют",
+   "продолжают ещё неделю"
+  ],
+  "a": "отменяют",
+  "why": "Сочетание ПОАК с антиагрегантом не рекомендовано, кроме особых показаний (КР по ИИ 2024, КР по ФП 2025)."
+ },
+ {
+  "id": "t-heparin",
+  "t": 3,
+  "q": "Лечебный гепарин как «мост» к ПОАК после ИИ при ФП ___.",
+  "ru": "",
+  "opts": [
+   "не рекомендован",
+   "обязателен"
+  ],
+  "a": "не рекомендован",
+  "why": "КР по ФП 2025 (ЕОК IIIB): в мета‑анализе 7 РКИ гепарины в первые 48 ч давали сВЧК 2,5% против 0,7% без достоверного снижения повторных ИИ. В КР по ИИ 2024 такой рекомендации нет."
+ },
+ {
+  "id": "t-proph",
+  "t": 3,
+  "q": "Профилактические дозы НМГ у обездвиженного пациента с ИИ и ФП до старта ПОАК ___.",
+  "ru": "",
+  "opts": [
+   "назначают",
+   "противопоказаны"
+  ],
+  "a": "назначают",
+  "why": "КР по ИИ 2024 (УУР A): с первых суток, после тромболизиса — не раньше чем через 24 ч; первую дозу ПОАК дают вместо очередной инъекции."
+ },
+ {
+  "id": "t-kr-minor",
+  "t": 3,
+  "q": "КР по ИИ 2024: при NIHSS < 8 старт ПОАК — через ___ дня.",
+  "ru": "",
+  "opts": [
+   "3",
+   "1",
+   "6"
+  ],
+  "a": "3",
+  "why": "Схема КР по ИИ 2024: < 8 — через 3 дня, 8–⁠16 — через 6–⁠8 дней, > 16 — через 12–⁠14 дней."
+ },
+ {
+  "id": "t-kr-severe",
+  "t": 3,
+  "q": "КР по ИИ 2024: при NIHSS > 16 — через ___ дней.",
+  "ru": "",
+  "opts": [
+   "12–⁠14",
+   "6–⁠8",
+   "3"
+  ],
+  "a": "12–⁠14",
+  "why": "Формальная рекомендация КР по ИИ 2024 при высоком риске ГТ — через 14 дней; ELAN при большом инфаркте — 6–⁠7-й день."
+ },
+ {
+  "id": "t-aha",
+  "t": 3,
+  "q": "AHA/ASA 2026: ранний старт ОАК у тщательно отобранных пациентов с ФП — класс ___.",
+  "ru": "",
+  "opts": [
+   "2a",
+   "3",
+   "2b"
+  ],
+  "a": "2a",
+  "why": "Уровень A; например, при лёгком инсульте. Польза раннего старта для профилактики раннего повтора, по AHA, не установлена."
+ },
+ {
+  "id": "t-kr25",
+  "t": 3,
+  "q": "КР по ФП 2025: срок старта ОАК после ИИ выбирают ___.",
+  "ru": "",
+  "opts": [
+   "индивидуально",
+   "строго на 14-й день"
+  ],
+  "a": "индивидуально",
+  "why": "По тяжести и стабильности состояния, размеру инфаркта и геморрагической трансформации; там же — ссылки на ELAN, TIMING, START и OPTIMAS."
+ },
+ {
+  "id": "x-hi",
+  "t": 4,
+  "q": "HI1 или HI2 без клинического ухудшения — ранний старт ПОАК ___.",
+  "ru": "",
+  "opts": [
+   "возможен",
+   "запрещён"
+  ],
+  "a": "возможен",
+  "why": "В ELAN такие пациенты получали ПОАК по схеме; КР по ФП 2025: геморрагический инфаркт может не требовать отсрочки. КР по ИИ 2024 без отсрочки допускают только ГТ 1-го типа."
+ },
+ {
+  "id": "x-ph",
+  "t": 4,
+  "q": "Паренхиматозная гематома (PH1, PH2) по протоколу ELAN — критерий ___.",
+  "ru": "",
+  "opts": [
+   "исключения",
+   "включения"
+  ],
+  "a": "исключения",
+  "why": "Центральная лаборатория всё же нашла PH у 56 включённых; при PH срок решают индивидуально, с КТ в динамике."
+ },
+ {
+  "id": "x-ph-outcome",
+  "t": 4,
+  "q": "В подгруппе ELAN с PH ранний старт функциональный исход ___.",
+  "ru": "",
+  "opts": [
+   "мог ухудшать",
+   "улучшал"
+  ],
+  "a": "мог ухудшать",
+  "why": "mRS 3–⁠6 — на 25 процентных пунктов чаще, но доверительный интервал широкий: 0,2–⁠50."
+ },
+ {
+  "id": "x-reperf",
+  "t": 4,
+  "q": "Тромболизис или тромбэктомия перед стартом эффект раннего старта ___.",
+  "ru": "",
+  "opts": [
+   "не меняют",
+   "отменяют"
+  ],
+  "a": "не меняют",
+  "why": "Подгруппы ELAN: 26% получили тромболизис, 10% — тромбэктомию, 13% — оба; взаимодействия нет."
+ },
+ {
+  "id": "x-ckd",
+  "t": 4,
+  "q": "Хроническая болезнь почек — ___ откладывать старт ПОАК.",
+  "ru": "",
+  "opts": [
+   "не повод",
+   "повод"
+  ],
+  "a": "не повод",
+  "why": "В OPTIMAS эффект раннего старта при ХБП тот же; доза — по КК."
+ },
+ {
+  "id": "x-volume",
+  "t": 4,
+  "q": "OPTIMAS: при инфарктах больше 25 мл ранний старт сВЧК ___.",
+  "ru": "",
+  "opts": [
+   "не прибавил",
+   "удвоил"
+  ],
+  "a": "не прибавил",
+  "why": "1,3% при раннем и 2,1% при отсроченном старте; при инфарктах больше 50 мл первичная точка — 1,1% против 7,4%."
+ },
+ {
+  "id": "x-break",
+  "t": 4,
+  "q": "Инсульт на фоне ПОАК: сначала проверяют ___.",
+  "ru": "",
+  "opts": [
+   "приверженность и дозу",
+   "другой ПОАК"
+  ],
+  "a": "приверженность и дозу",
+  "why": "Данных о пользе замены ПОАК на другой нет (КР по ФП 2025); ищут и другие причины инсульта."
+ },
+ {
+  "id": "x-combo",
+  "t": 4,
+  "q": "ПОАК вместе с антиагрегантом после ИИ при ФП ___.",
+  "ru": "",
+  "opts": [
+   "не назначают",
+   "назначают всем"
+  ],
+  "a": "не назначают",
+  "why": "Исключение — особые показания, например стентирование (КР по ИИ 2024)."
+ },
+ {
+  "id": "x-laao",
+  "t": 4,
+  "q": "Если пожизненная антикоагуляция противопоказана, обсуждают ___.",
+  "ru": "",
+  "opts": [
+   "окклюзию ушка ЛП",
+   "двойную антиагрегантную терапию"
+  ],
+  "a": "окклюзию ушка ЛП",
+  "why": "КР по ИИ 2024, уровень A. Антиагреганты для профилактики инсульта при ФП не рекомендованы (КР по ФП 2025)."
+ },
+ {
+  "id": "d-full",
+  "t": 5,
+  "q": "При ФП назначают ___ дозу ПОАК.",
+  "ru": "",
+  "opts": [
+   "полную",
+   "сниженную «для безопасности»"
+  ],
+  "a": "полную",
+  "why": "Сниженная — только по критериям инструкции; полная доза лучше защищает от инсульта (КР по ФП 2025)."
+ },
+ {
+  "id": "d-api",
+  "t": 5,
+  "q": "Апиксабан 2,5 мг × 2 — если есть ___ признака из трёх.",
+  "ru": "",
+  "opts": [
+   "два",
+   "один",
+   "три"
+  ],
+  "a": "два",
+  "why": "80 лет и старше, масса ≤ 60 кг, креатинин ≥ 133 мкмоль/л — любые два."
+ },
+ {
+  "id": "d-api-crcl",
+  "t": 5,
+  "q": "Апиксабан при КК 15–⁠29 мл/мин — ___.",
+  "ru": "",
+  "opts": [
+   "2,5 мг × 2",
+   "5 мг × 2",
+   "противопоказан"
+  ],
+  "a": "2,5 мг × 2",
+  "why": "При КК < 15 ПОАК не применяют."
+ },
+ {
+  "id": "d-riva",
+  "t": 5,
+  "q": "Ривароксабан при КК 15–⁠49 мл/мин — ___ в сутки.",
+  "ru": "",
+  "opts": [
+   "15 мг",
+   "20 мг",
+   "10 мг"
+  ],
+  "a": "15 мг",
+  "why": "Обычная доза — 20 мг один раз в день во время еды."
+ },
+ {
+  "id": "d-riva-food",
+  "t": 5,
+  "q": "Ривароксабан 15 и 20 мг принимают ___.",
+  "ru": "",
+  "opts": [
+   "во время еды",
+   "натощак"
+  ],
+  "a": "во время еды",
+  "why": "Натощак всасывается заметно хуже."
+ },
+ {
+  "id": "d-dabi-80",
+  "t": 5,
+  "q": "Дабигатран в 80 лет и старше — ___.",
+  "ru": "",
+  "opts": [
+   "110 мг × 2",
+   "150 мг × 2",
+   "75 мг × 2"
+  ],
+  "a": "110 мг × 2",
+  "why": "Та же доза при приёме верапамила."
+ },
+ {
+  "id": "d-dabi-30",
+  "t": 5,
+  "q": "Дабигатран при КК < 30 мл/мин ___.",
+  "ru": "",
+  "opts": [
+   "противопоказан",
+   "110 мг × 2"
+  ],
+  "a": "противопоказан",
+  "why": "Около 80% дабигатрана выводят почки."
+ },
+ {
+  "id": "d-edox",
+  "t": 5,
+  "q": "Эдоксабан при массе ≤ 60 кг — ___ в сутки.",
+  "ru": "",
+  "opts": [
+   "30 мг",
+   "60 мг",
+   "15 мг"
+  ],
+  "a": "30 мг",
+  "why": "Та же доза при КК 15–⁠49 и с циклоспорином, эритромицином, кетоконазолом."
+ },
+ {
+  "id": "d-cg",
+  "t": 5,
+  "q": "Дозу ПОАК подбирают по клиренсу креатинина по ___.",
+  "ru": "",
+  "opts": [
+   "Кокрофту–⁠Голту",
+   "CKD-EPI"
+  ],
+  "a": "Кокрофту–⁠Голту",
+  "why": "По этой формуле дозировали в РКИ и в инструкциях."
+ },
+ {
+  "id": "d-dialysis",
+  "t": 5,
+  "q": "При КК < 15 и на диализе в РФ одобрен только ___.",
+  "ru": "",
+  "opts": [
+   "варфарин",
+   "апиксабан",
+   "дабигатран"
+  ],
+  "a": "варфарин",
+  "why": "КР по ФП 2025; данных по апиксабану и ривароксабану при ХБП 5 пока немного."
+ },
+ {
+  "id": "p-crush",
+  "t": 6,
+  "q": "При дисфагии апиксабан можно ___ и ввести через зонд.",
+  "ru": "",
+  "opts": [
+   "измельчить",
+   "только проглотить целиком"
+  ],
+  "a": "измельчить",
+  "why": "Развести водой и ввести сразу — так разрешает инструкция."
+ },
+ {
+  "id": "p-dabi-caps",
+  "t": 6,
+  "q": "Капсулу дабигатрана ___.",
+  "ru": "",
+  "opts": [
+   "нельзя вскрывать",
+   "можно вскрыть и высыпать в зонд"
+  ],
+  "a": "нельзя вскрывать",
+  "why": "Без оболочки всасывается примерно на 75% больше — риск кровотечения."
+ },
+ {
+  "id": "p-riva-tube",
+  "t": 6,
+  "q": "Ривароксабан 20 мг ввели через зонд — сразу после него ___.",
+  "ru": "",
+  "opts": [
+   "энтеральное питание",
+   "4 часа без питания"
+  ],
+  "a": "энтеральное питание",
+  "why": "Дозы 15 и 20 мг полностью всасываются только с едой."
+ },
+ {
+  "id": "p-cbz",
+  "t": 6,
+  "q": "Карбамазепин концентрацию ПОАК ___.",
+  "ru": "",
+  "opts": [
+   "снижает",
+   "повышает",
+   "не меняет"
+  ],
+  "a": "снижает",
+  "why": "Сильный индуктор; так же действуют фенитоин, фенобарбитал и рифампицин — таких сочетаний избегают."
+ },
+ {
+  "id": "p-azole",
+  "t": 6,
+  "q": "Кетоконазол и итраконазол концентрацию ПОАК ___.",
+  "ru": "",
+  "opts": [
+   "повышают",
+   "снижают"
+  ],
+  "a": "повышают",
+  "why": "Сильные ингибиторы CYP3A4 и P‑gp: с дабигатраном, апиксабаном и ривароксабаном их не сочетают; эдоксабан — 30 мг."
+ },
+ {
+  "id": "p-verap",
+  "t": 6,
+  "q": "С верапамилом дабигатран назначают в дозе ___.",
+  "ru": "",
+  "opts": [
+   "110 мг × 2",
+   "150 мг × 2"
+  ],
+  "a": "110 мг × 2",
+  "why": "Верапамил тормозит P‑gp и повышает концентрацию дабигатрана."
+ },
+ {
+  "id": "p-ppi",
+  "t": 6,
+  "q": "При высоком риске кровотечения из ЖКТ к ОАК добавляют ___.",
+  "ru": "",
+  "opts": [
+   "ингибитор протонной помпы",
+   "антиагрегант"
+  ],
+  "a": "ингибитор протонной помпы",
+  "why": "ИПП снижают риск кровотечения из верхних отделов ЖКТ (КР по ФП 2025)."
+ },
+ {
+  "id": "w-mech",
+  "t": 7,
+  "q": "Механический протез клапана — ___.",
+  "ru": "",
+  "opts": [
+   "только варфарин",
+   "любой ПОАК",
+   "апиксабан"
+  ],
+  "a": "только варфарин",
+  "why": "ПОАК при механических клапанах не рекомендованы (КР по ФП 2025)."
+ },
+ {
+  "id": "w-ms",
+  "t": 7,
+  "q": "Умеренный или тяжёлый митральный стеноз с ФП — ___.",
+  "ru": "",
+  "opts": [
+   "варфарин",
+   "ривароксабан"
+  ],
+  "a": "варфарин",
+  "why": "Цель МНО 2,0–⁠3,0 (КР по ФП 2025)."
+ },
+ {
+  "id": "w-aps",
+  "t": 7,
+  "q": "Доказанный АФС после ИИ — ___.",
+  "ru": "",
+  "opts": [
+   "варфарин",
+   "ПОАК"
+  ],
+  "a": "варфарин",
+  "why": "МНО 2,5 (2,0–⁠3,0); ПОАК при АФС не рекомендованы (КР по ИИ 2024)."
+ },
+ {
+  "id": "w-lvt",
+  "t": 7,
+  "q": "Тромб ЛЖ после инфаркта миокарда и ИИ: варфарин не меньше ___ месяцев.",
+  "ru": "",
+  "opts": [
+   "3",
+   "1",
+   "12"
+  ],
+  "a": "3",
+  "why": "МНО 2,5 (2,0–⁠3,0); ПОАК при тромбе ЛЖ КР по ИИ 2024 не рекомендуют — данных мало."
+ },
+ {
+  "id": "w-start",
+  "t": 7,
+  "q": "Старт варфарина по КР — ___ в сутки первые 2–⁠3 дня.",
+  "ru": "",
+  "opts": [
+   "5 мг",
+   "10 мг",
+   "2,5 мг"
+  ],
+  "a": "5 мг",
+  "why": "2 таблетки по 2,5 мг в одно время, МНО на 3–⁠4-й день."
+ },
+ {
+  "id": "w-inr",
+  "t": 7,
+  "q": "Целевое МНО при ФП — ___.",
+  "ru": "",
+  "opts": [
+   "2,0–⁠3,0",
+   "1,5–⁠2,0",
+   "3,0–⁠4,0"
+  ],
+  "a": "2,0–⁠3,0",
+  "why": "Механический протез митрального клапана, в том числе с ФП, — только варфарин, МНО 2,5–⁠3,5."
+ },
+ {
+  "id": "w-ttr",
+  "t": 7,
+  "q": "МНО в целевом диапазоне ≤ 70% времени — повод ___.",
+  "ru": "",
+  "opts": [
+   "перейти на ПОАК",
+   "добавить аспирин"
+  ],
+  "a": "перейти на ПОАК",
+  "why": "КР по ИИ 2024 и КР по ФП 2025."
+ },
+ {
+  "id": "w-bridge",
+  "t": 7,
+  "q": "Старт варфарина после ИИ при ФП лечебным гепарином ___.",
+  "ru": "",
+  "opts": [
+   "не прикрывают",
+   "обязательно прикрывают"
+  ],
+  "a": "не прикрывают",
+  "why": "КР по ФП 2025 (ЕОК IIIB): гепарин сразу после ИИ при ФП не рекомендован."
+ },
+ {
+  "id": "w-mitral",
+  "t": 7,
+  "q": "Механический митральный протез, ИИ при МНО в цели: ___ или МНО 3,0–⁠3,5.",
+  "ru": "",
+  "opts": [
+   "добавить АСК 75–⁠100 мг",
+   "перейти на ПОАК"
+  ],
+  "a": "добавить АСК 75–⁠100 мг",
+  "why": "КР по ИИ 2024, УУР A; ПОАК при механическом клапане нельзя."
+ },
+ {
+  "id": "sw-asa",
+  "t": 8,
+  "q": "Аспирин → ПОАК: аспирин отменяют ___.",
+  "ru": "",
+  "opts": [
+   "в день первой дозы ПОАК",
+   "через неделю после старта"
+  ],
+  "a": "в день первой дозы ПОАК",
+  "why": "Сочетание ОАК с антиагрегантом не рекомендовано (КР по ИИ 2024, КР по ФП 2025)."
+ },
+ {
+  "id": "sw-lmwh",
+  "t": 8,
+  "q": "НМГ → ПОАК: первую дозу ПОАК дают ___.",
+  "ru": "",
+  "opts": [
+   "вместо очередной инъекции",
+   "через 48 ч после инъекции"
+  ],
+  "a": "вместо очередной инъекции",
+  "why": "Так указано в инструкциях ПОАК: за 0–⁠2 ч до очередной инъекции."
+ },
+ {
+  "id": "sw-ufh",
+  "t": 8,
+  "q": "Инфузия НФГ → ПОАК: первая доза — ___.",
+  "ru": "",
+  "opts": [
+   "при остановке инфузии",
+   "через 24 ч после остановки"
+  ],
+  "a": "при остановке инфузии",
+  "why": "Так в инструкциях ривароксабана и дабигатрана; период полувыведения НФГ в/в — около 1–⁠2 ч."
+ },
+ {
+  "id": "sw-w-lt2",
+  "t": 8,
+  "q": "Варфарин → ПОАК, МНО 1,8 (КР по ФП 2025): ПОАК начинают ___.",
+  "ru": "",
+  "opts": [
+   "в тот же день",
+   "на следующий день",
+   "через 3 дня"
+  ],
+  "a": "в тот же день",
+  "why": "МНО < 2,0 — сразу (КР по ФП 2025)."
+ },
+ {
+  "id": "sw-w-2",
+  "t": 8,
+  "q": "Варфарин → ПОАК, МНО 2,3 (КР по ФП 2025): ПОАК — ___.",
+  "ru": "",
+  "opts": [
+   "на следующий день",
+   "в тот же день"
+  ],
+  "a": "на следующий день",
+  "why": "МНО 2,0–⁠2,5 — назавтра; больше 2,5 — повторить МНО через 1–⁠3 дня (КР по ФП 2025)."
+ },
+ {
+  "id": "sw-w-3",
+  "t": 8,
+  "q": "Варфарин → ПОАК, МНО 3,1 (КР по ФП 2025): ___.",
+  "ru": "",
+  "opts": [
+   "повторить МНО через 1–⁠3 дня",
+   "начать ПОАК сегодня"
+  ],
+  "a": "повторить МНО через 1–⁠3 дня",
+  "why": "ПОАК — когда МНО станет < 2,0 (КР по ФП 2025)."
+ },
+ {
+  "id": "sw-to-w",
+  "t": 8,
+  "q": "ПОАК → варфарин: ПОАК отменяют, когда МНО ___.",
+  "ru": "",
+  "opts": [
+   "≥ 2,0",
+   "≥ 1,5",
+   "≥ 3,0"
+  ],
+  "a": "≥ 2,0",
+  "why": "Первое МНО — через 3–⁠4 дня, утром до очередной дозы ПОАК (КР по ФП 2025); эдоксабан на время перекрытия — половина дозы."
+ },
+ {
+  "id": "sw-inr-time",
+  "t": 8,
+  "q": "При переходе ПОАК → варфарин МНО берут ___ очередной дозы ПОАК.",
+  "ru": "",
+  "opts": [
+   "до",
+   "через 2 ч после"
+  ],
+  "a": "до",
+  "why": "ПОАК сами повышают МНО; на пике концентрации оно завышено."
+ },
+ {
+  "id": "sw-doac",
+  "t": 8,
+  "q": "ПОАК → другой ПОАК: новый препарат — ___.",
+  "ru": "",
+  "opts": [
+   "в час очередной дозы прежнего",
+   "через сутки после отмены"
+  ],
+  "a": "в час очередной дозы прежнего",
+  "why": "EHRA 2021; осторожнее при сниженной функции почек."
+ },
+ {
+  "id": "a-ida",
+  "t": 9,
+  "q": "Антидот дабигатрана — ___.",
+  "ru": "",
+  "opts": [
+   "идаруцизумаб",
+   "андексанет",
+   "протамин"
+  ],
+  "a": "идаруцизумаб",
+  "why": "5 г в/в: два флакона по 2,5 г."
+ },
+ {
+  "id": "a-ida-dose",
+  "t": 9,
+  "q": "Доза идаруцизумаба — ___ в/в.",
+  "ru": "",
+  "opts": [
+   "5 г",
+   "2,5 г",
+   "10 г"
+  ],
+  "a": "5 г",
+  "why": "Две инфузии по 2,5 г по 5–⁠10 минут или болюсом."
+ },
+ {
+  "id": "a-ida-restart",
+  "t": 9,
+  "q": "Дабигатран после идаруцизумаба можно возобновить через ___ ч.",
+  "ru": "",
+  "opts": [
+   "24",
+   "2",
+   "72"
+  ],
+  "a": "24",
+  "why": "Если позволяет клиническая ситуация (EHRA 2021)."
+ },
+ {
+  "id": "a-xa",
+  "t": 9,
+  "q": "Кровотечение на апиксабане или ривароксабане: в РФ — ___.",
+  "ru": "",
+  "opts": [
+   "КПК 50 МЕ/кг",
+   "идаруцизумаб",
+   "протамин"
+  ],
+  "a": "КПК 50 МЕ/кг",
+  "why": "Специфического антидота к ингибиторам Ха в РФ нет (КР по ИИ 2024); КР по ФП 2025 предпочитают активированный КПК, доза 50 МЕ/кг — по NCS/SCCM."
+ },
+ {
+  "id": "a-vka",
+  "t": 9,
+  "q": "Жизнеугрожающее кровотечение на варфарине: КПК и ___.",
+  "ru": "",
+  "opts": [
+   "фитоменадион (Канеовит) в/в",
+   "протамин",
+   "идаруцизумаб"
+  ],
+  "a": "фитоменадион (Канеовит) в/в",
+  "why": "Витамин K1, 10 мг в/в медленно; нет КПК — СЗП 10–⁠15 мл/кг."
+ },
+ {
+  "id": "a-ufh",
+  "t": 9,
+  "q": "Протамин: ___ на 100 ЕД НФГ, введённых за последние 2–⁠3 ч.",
+  "ru": "",
+  "opts": [
+   "1 мг",
+   "10 мг",
+   "0,1 мг"
+  ],
+  "a": "1 мг",
+  "why": "Разовая доза — не больше 50 мг."
+ },
+ {
+  "id": "a-enox",
+  "t": 9,
+  "q": "Эноксапарин ввели 10 ч назад: протамин ___ на 1 мг эноксапарина.",
+  "ru": "",
+  "opts": [
+   "0,5 мг",
+   "1 мг",
+   "2 мг"
+  ],
+  "a": "0,5 мг",
+  "why": "В первые 8 ч — 1 мг на 1 мг; нейтрализация неполная."
+ },
+ {
+  "id": "a-charcoal",
+  "t": 9,
+  "q": "ПОАК приняли меньше 2 ч назад, риска аспирации нет — дать ___.",
+  "ru": "",
+  "opts": [
+   "активированный уголь",
+   "витамин K"
+  ],
+  "a": "активированный уголь",
+  "why": "50 г: в алгоритме КР по ФП 2025 — для дабигатрана, у NCS/SCCM — для всех ПОАК; при дисфагии — только через зонд у интубированного."
+ },
+ {
+  "id": "a-dialysis",
+  "t": 9,
+  "q": "Гемодиализом можно удалить ___.",
+  "ru": "",
+  "opts": [
+   "дабигатран",
+   "апиксабан",
+   "ривароксабан"
+  ],
+  "a": "дабигатран",
+  "why": "Апиксабан и ривароксабан прочно связаны с белками плазмы — диализ их почти не выводит."
+ },
+ {
+  "id": "l-warf",
+  "t": 10,
+  "q": "По инструкциям алтеплазы и неиммуногенной стафилокиназы тромболизис на варфарине противопоказан при МНО выше ___.",
+  "ru": "",
+  "opts": [
+   "1,3",
+   "1,7",
+   "2,0"
+  ],
+  "a": "1,3",
+  "why": "КР по ИИ 2024 требуют определить МНО, но порога не называют; КР по ФП 2025 допускают МНО ≤ 1,7 — это выше порога инструкций."
+ },
+ {
+  "id": "l-hep",
+  "t": 10,
+  "q": "Эноксапарин в последние 48 ч и АЧТВ выше нормы — тромболизис ___.",
+  "ru": "",
+  "opts": [
+   "противопоказан",
+   "возможен"
+  ],
+  "a": "противопоказан",
+  "why": "Так в инструкциях алтеплазы и неиммуногенной стафилокиназы: прямые антикоагулянты за 48 ч до инсульта при АЧТВ выше нормы."
+ },
+ {
+  "id": "l-48",
+  "t": 10,
+  "q": "ПОАК больше 48 ч назад и КК > 80 мл/мин — тромболизис ___.",
+  "ru": "",
+  "opts": [
+   "возможен",
+   "противопоказан"
+  ],
+  "a": "возможен",
+  "why": "Действия препарата уже нет (КР по ИИ 2024)."
+ },
+ {
+  "id": "l-dabi-12",
+  "t": 10,
+  "q": "Дабигатран меньше 12 ч назад: сначала ___, затем тромболизис.",
+  "ru": "",
+  "opts": [
+   "идаруцизумаб",
+   "тромбиновое время",
+   "КПК"
+  ],
+  "a": "идаруцизумаб",
+  "why": "Тромболизис — сразу после инфузии 5 г, результат анализа не ждут (КР по ИИ 2024)."
+ },
+ {
+  "id": "l-dabi-tt",
+  "t": 10,
+  "q": "Дабигатран 12–⁠48 ч назад, тромбиновое время в норме — ___.",
+  "ru": "",
+  "opts": [
+   "тромболизис",
+   "идаруцизумаб"
+  ],
+  "a": "тромболизис",
+  "why": "Нормальное тромбиновое время исключает действие дабигатрана."
+ },
+ {
+  "id": "l-xa-12",
+  "t": 10,
+  "q": "Ривароксабан меньше 12 ч назад — тромболизис ___.",
+  "ru": "",
+  "opts": [
+   "не рекомендован",
+   "возможен после КПК"
+  ],
+  "a": "не рекомендован",
+  "why": "Антидота нет (КР по ИИ 2024); тромбэктомию проводят."
+ },
+ {
+  "id": "l-xa-anti",
+  "t": 10,
+  "q": "Апиксабан 12–⁠48 ч назад: тромболизис, только если анти-Ха активность ___.",
+  "ru": "",
+  "opts": [
+   "не определяется",
+   "ниже 100 нг/мл"
+  ],
+  "a": "не определяется",
+  "why": "КР по ИИ 2024."
+ },
+ {
+  "id": "l-evt",
+  "t": 10,
+  "q": "Из-за приёма антикоагулянта от тромбэктомии ___.",
+  "ru": "",
+  "opts": [
+   "не отказываются",
+   "отказываются"
+  ],
+  "a": "не отказываются",
+  "why": "КР по ИИ 2024: на ПОАК сВЧК после тромбэктомии не чаще; на варфарине чаще (ОШ 1,92) — решение индивидуально."
+ }
+];
+
+const NEW_PER_SESSION = 10;
+const MIXED_SIZE = 15;
+const INTERVALS = [1, 3, 7, 16];            // дни
+const DAY = 86400000;
+const LS_STATE = "oac:state";
+const LS_TAB = "oac:tab";
+const LS_OPEN = "oac:open";
+const TOPIC_BY = {};
+TOPICS.forEach(t => { TOPIC_BY[t.n] = t; });
+
+let progress = {};
+let queue = [];
+let index = 0;
+let answered = false;
+let autoSpeak = false;   // озвучки в этом приложении нет
+let mode = "main";          // main | topic | mixed
+let topicN = null;
+let lapsed = {};
+let seen = new Set();
+let stats = { first: 0, correct: 0 };
+let shownOpts = [];
+let cloudDoc = null;
+let writing = false, dirty = false, retried = false, pushTimer = null;
+
+const $ = id => document.getElementById(id);
+function el(tag, cls, text){
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+}
+try{ document.documentElement.lang = "ru"; }catch(e){}
+
+// Мета-теги для установки на домашний экран
+(function addMobileMeta(){
+  const metas = [
+    ["apple-mobile-web-app-capable", "yes"],
+    ["mobile-web-app-capable", "yes"],
+    ["apple-mobile-web-app-status-bar-style", "black-translucent"],
+    ["apple-mobile-web-app-title", "ПОАК"],
+    ["theme-color", "#0e1113"]
+  ];
+  for (const [name, content] of metas){
+    if (document.querySelector('meta[name="' + name + '"]')) continue;
+    const m = document.createElement("meta");
+    m.setAttribute("name", name);
+    m.setAttribute("content", content);
+    document.head.appendChild(m);
+  }
+  // Плитка для экрана «Домой» и значок вкладки
+  const links = [
+    ["apple-touch-icon", "180x180", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAMAAAAKE/YAAAABgFBMVEX8/Pn5+Pb09PLu7uzq6ujp6efJ2uCstrrKi3Z/io/ie1ndeVjZd1fVdVbLcFOjXklgbHJVUVFZQToyPkQzLi4oLjMnLzMnLTImLjIlKy4kKzAjKi4iKS0hKCwgJysgJikgIyceJSkeJCkeJCgeJCcdJCgeIycdIygdIycdIyYcIyceIiYdIiYcIiccIiYcIiUbIiYcISUbISYbISUbISQaISUbICQaICUaICQaICMaHyMZICQZHyQZHyMZHyIZHiEXHyQYHiIYHSAXHB8WGx4XGh0UHSIUGh0PHCIMGiEVGRsTGBwTFxoSGBwSFxoSFhkRFhgRFRcQFhkQFBcPExUMFRoMExcOEhQMEhcPERMOERQOERMOERINERQPEBENEBMNEBINEBENDxEMEBIMDxIMDxEMDxAJEBQMDhAMDg8LDhALDg8LDQ8LDQ4KDQ8KDQ4IDhMLDA4KDA4KDA0KCw0JDA0JCw0JCwwICwwJCgwICgwICgsICQsHCQoGCAkFBwhfiNHRAAAUyElEQVR42u3di1va2LYAcJQKH74AIxGR56CdVJkgE6sBD8pLUESRR9Fb6hnUgXIDylw8oAPF/utn7Z0QsO1ULJs5536fa76xSqn+srL2I9uwUeT/H4biBf2CfkG/oF/QL+gX9Av6Bf2CfkG/oF/QL+j/CLrwdfw3oAs/FH8PukA6RoYujDRGgX70A4rfiCdVv/12fn7e/XbnH/Bj5/kfYSueTy7+Zfz+u/iMru0cf3UBf1MqlyuVarVaq9VR1GrVaqVcuixVa0Lht2erFT+Q5asr2X519Tv+sywIQqV6g0iNRhP+a9wC7bpSLl4U8qfZVCqZiMcj4dCO1+N67bBZLeYlk8loNJlfx8uV/HPVimeZ8wXhBiULwa5Lpcr17S2WFT6cgiyZSCCYz+t5s9yDGWiaNqAPtMEITJNpaclssVptjp9WfnZaTQbjXv25FaJ4jrlSK6YS8b1IaNfnsRqBYVwSYQvIZZBcGGYWYc4VhmU5jud5r88vh8/n5VFs8rzfb6Ot/1skjZa/X7m6Z10w9BJmARa4HCvMKruOYX0ugGEXzz0VPr/RWCw9S60Y2FxLmWjzKt/HEtMFCeOGi6DJdHNBEt01f6iHaYvfz40kgjRz/xz1gOgP9V2aHREZgqczNamvJ4DuJvomTnP8yMycf8l23x2jiKGLBdo5QjPHsYYLQVIPje4muvHGuDNKM+enE61adzpABH1RvDCw30vTL7/Ch9Wh0KalcOLyZsC6Hghd36OlRri6svrr+iq3+kgY3ttc50J7QxZ1kl+J10oDqRUDmAtNl0lC76X2fLtxLp70rqMvN3kvx/1KUSs+H02tD4W2nqcOVzfKgjhdHBp9WWhaLT5x9KJ0eorSOXQaKgwFw8Y1uqRjT6fS7O3SujD742if2XKaTKb4FaFMBl0sNi1W3HesJvQq3Z5Ft6NRUfFVjt1dUqsdm7tmtUqXMlOhYdAW8+lJ8jjFrdeLT48xT6Mv+tBxSqXLhq1xnVpEUzqVPs7TerWa2tXvDlEfXsvSe0AfnjhidTLoy3upPDDap3ekdDjTHEMZ1Zo4lDOlVtPUUEOidQllOnEYt0mTp+HQl8Viy2YW0XuUWkPpzCJ6fZemIho1Haepf0JZ631DZJq3mU5TJ4A+YSN1QmjnEu49fkHof5qsWVQVK5thSg/1ocvS1G5co9IlhuipeQegk8fHh8dhd/XiKfVA6PYbCR0GdCLscAA6G6dWKG7PoVaHl6gw51NrkkOhjVnI9PHh4aEzXyaDdov9NBumVBqHRYfya6WgUEKrmxo19IGrcA6G6vJ4Zxd9vJKtXAyPLhXbGxI6ROl0FKWnoS4oioa2t7lisi6trLKbq7vxYQYX/mcZzaSql0TQPmlEXN9NxcPh+O5eYi+8Fw5FYEz0+Xyb6NJluLkHxxgy3UxnqkUC5VFq7RqlYZyFrLKr67+s/sKy7Dqqh/V1MnNTOpWR0KcVMuiw0c+NNmT04UpRKF4QQN9HRo7mDMkMGhIP40y1TAR9FzOMHn2M0ccRd6NEBp2gR43mDYksRoe8zSIRdPPvQMdFdDB0XyTSEBtJ2vc3oZN8hBQ6RfMjRvsMEYw+YRN3ZND1rGHUaD8topNMqkkIfTp6tCF8imt65bRBBl3L09zI0UGMTjiv6sXh5x4XgC6MHm3cwZcu8ZXqDRl0tbjAjhztRReJx7HVepUIulwtG0eP3sDo8MZdhUymK1Xj6qjRJjYP6GRwpyUUh79GROi68efNUaOZc0Cf+MOtJyd5g6GFW5OTHzXagdFcnFSmhabJQRLNvnY6GfiffbQCidGryXtC6HJraTA062LefNlkWQA+vrJyBtMfz9Lps1yox/abrRjNZJuk0G2zbQD0sjN4lD4OM/0Z5Fh/5uyo/wFnLLeg16DQGd7JV/A+s+X8BC5dVvINYmhpMU9M3DLDsLz/H1+kkGHToNHrDce5oLNnDi7odPrIm965yFGaiXE1XM7r1RNqqqv2Wcx5jC7VhMvh0QVAf7JavNIPDZ/l0unjiMNsC5+dHb6R2c7IoV6thvzBh8W0rHbmdAqFSr74ZbkjzSvFBPVHOhbLHakVujOnvJj3PnWSjK/WboZE57vojk1aoGbDIEOhwR+o2JH0Q51pSq1QO3K5nFWtUOnedQ+GOVKPT4zr08sS+lCjUCr1H20My9qOqHFND216n0qexDaaVWJoh7l76eLQKMbGFeo3liVKMw6nOceIZv2EQn0ccjgdMUY1NqZ755QO0jChnBhTS186cxoFfHVmE7/VHxr1R2ffCmTyJOxrCcTQy0vdhY8Iq1JCTca2/JGW/tXYuCYNaiZGTSjHdTkHPMN2phmb6Kqdad2E8pVywoBX3JlDSvnq1bj+SDoPwSV9t6bxCuRJKhSS0HkCaJeM5q0qON/qIMux1j+Ap9DknBwbU49NKKkYgwtCPz4hMyManfIVHEMOHYPzHTxtXGXxe7rfLMb2L+YlU/49QF+QQBfLnY3ub4o4nkVoFQu9yZsI5BclzpbWg1llCLJifwHnAh8LWrHUhPFBRtherRzJrZeVP+NXEDr9NnFPDu2T0RyP0TYeK6CVjaljjjTOoEvsFt1B1PZUVj+L+g7dZyjjV0oKpM53urEJeH7O+XUfv8kYUKbXU01S5SF0dmW0RyQtAUlsV6+U+rQB13lQ6jDQIcAJOGa45bSG+kgppcQ7z+Dp0jn4KlbpTCaZWj1tkEFfArq3mMdGAK1ULQS7aFC09EooE7X06y3pUVTGQYOGx6cDJ7779G+i8WLeyeplnUx5ALrdW8yDjnes286657ulH4dOQR1+hAYb806vObPC8DLxCnUn30Wv4xVItlITykTQxUp7r4dOi2gkfJ0WtX/oxtAfwX70GNjgM33aGaZw80sz3y0PtAKZim/Uq0K5QCTTlVZcXoFcFtEU6g5Q74a0Z/gPlfQU0YbQvE1j8/NcTvoXtpx4YtKvv4WmE5lUzNusCKUiIXRvMQ/3tcpXuE8GNBos1DkR7eTZHhoSCj2h5sxhW2CQVQGFIp2Yvl/tuvturjnMpiJobCkVh/o1cw+d7KFzMKIoldQhI2UaDcuov5Yap5xpXc5yplHjOagGdedQPf4l1Tg8bzHYm0Y/WszLhCKALhJBC5W7lLwC2e3m0AjBoNShnHJqwIgl030GGqz9Gmpx0cqwH6U+0Cb/Tbd96PVpppvpWDazEyeIbmblFUicR7EXFnsP+Dzyrh+D0eMqmNFRmjPe7+ed3WOz4SERCsUhN2pdTkL76Eg2w6fuCKJPv0Kj1iRN2iKM2EGIEwyOOYbEQjdtPdOJj7C8UyX27Y530P0pJxaCWMpEKKWcaT8dzmY24GKLGLqR76HxKR7ToXm+8xhPlo8YSZ8R+zJGpYRE886Ypr9g0MzPxqQ1Y8pxzUfe4XzttN1rFPpuV+I3hE5TG4W6UCaG7i3moUuRCXHq6UATUoWYzbBaoVSZtyFtNuhSxieoQ0fMoJGKF64QlBMwzp/FXMw7nWpMoeE+nuVy0FOqqNib7hLT7unJRrlGDl0v9tBp3Nnq0jYunQOpDp9f1s+qwfIQ8cOVNly6UGmHP6dRS1e0LA9XDmNjCjUVZJ3vFjSqsQmNTqfTqHVW+crWb/SdHm/AxRY5dFlegXR+xr2u7nPIqVePqamMmEzGf6hTKTTU0oJerdSYjhwhg0al0lj/gacrlAYhdTp0940zeMZROvQAFTnz9zo/4+Z53NeokkPXqsZfpG++rVeNKZXjanwFSx3HukMyy+bMOvHykcoFlzneYuD9DinTwTOohnfpMzznZ51cLPcR6iPG9i02+I3u32KhOzQgkkLfGqVGvsXoISgUpuOPMaZvEcHpz32M2Nj0xwi2+EM817fugIOV12sgGPbxutibq0ikLWD08PflFYXKTdO40gWk3x0dHcYOjyJB5oulI6DBBY28VsM+czFv+SoUb5FDC9W73goks8xAsCzrIXyPrOP3nRQeEEmh2z+2AulyPeceyCtv9o4AOi+VR7W9ZHsu2r229ja6PzjabL3yfmgSRFc6vcW8vwiPy/W4XqL7++75uWfcTmj5zVu+RT0eQbT3G6nsnn3PGjIG3H3VAGDt7OSsfXvA0vdazKfeep0Yugzo7mJenyqwvy+dfdf2QWAeIrovT+q37NqpyampwdG81ZzdaV6TQwuVB4fZ96V5fm5ubgubo/a5WS0kVjsX7bXBA+3kzLPQS6lQiyS6+rBs/vLmiYB2cnJ2G5vnZyfn9vcP5qcn56LdClnbn0NoG6DdrgHgvM10HGlXhRJBtLyYJ4X9AJtQPQcWoXYDW3b00NR8Vy2j17hANPB038c7TPF4pyoUiaCLGO0xPUJDdmdmpqdm196CTjs5pQWra39ualJ7sPYIvRhA5b4YjT6l5n8yxZJtsmjfY7Qnqp2bFduZJ6CdmtJuu9CBAHr/EXrGtg3Pm57Rzj+l5ldM4WyLLHr3EXrtYE5rR5m2bbvfukA1Nb9vd0Uh03NfoOe00EKnpidn5wPfL+wNxhjK34voPCH0ozvzXIH5WdsiQi8G3JBpVAfzB3Zgaj1vu89B6Okpre3gAPUjvVPwl7/OW9gtN6tlkui9fvTagXbuYB6ddsgfTunM5Oxc4GB2plcFCD09PQnHYt/H6ID7qdsJd2oNEU2qPOJ9aFQc+5xNRLtx7zEzA+Ws1bqia297TRX+HsrFhVoqnIq1rSeaIr1z1yCa6U6idzuhJ2CbnY9ydoyOunFPMjkNyZ6EwWXb/SV6TUI/Ncxs0jufaiND4+KwbyH0NC4H8MFAI7JdXRo8ON1Fy8PMd7sPOtQhiC5Vqp3eYh4YtAGYKwF6Zmo+YPdwri2oF5hqILZ2uzvMQ/4l9IHUY38f7aMjD7VqiRz6uof2bLu08wcwp8N9Any27YratDP2fci2VA/duckjNCr/J25yi0vowtANEb3ou3rdkdd6oUK1aKo0hwaNKWh88/s2mHoc2KP7c0ATpyO48qF7AfSBWB7TA6ATHaLoaicmod0B6J8ncUBJo8/mIOVTkFCX/VEZeLYXH6GnUZv9PjpFFl3rhGmvfNanZmZmIQCCM701Oy0WhWtb6rpFNCp6NKbIaNffjQ52VyDf2tF0f3HRhgZCSGQ0apPRUcj5rPst9y301NPoJFH0Ta29Q29I3/xtNBoNBAIcHufm0JQD+jvtgR3KHaZOvckHx2H0gdgQoaM5WHviHshEp0oOXa7Wmzt037qA2+3xrEnoNTReo6kH5zmAQUbr2vLIk1eo+NnFtx6XFjUB7fz3O2q/Mf5AFN2o7nz5glUZjWYZ0GnM2+1wAaO1B1xSdczD5RfEnD0wp8W9zRPzPL8xQhJdqjYvg/IKZG+MmZ6dFWt5H668MXB+Xx7G4UomEIhG9wPQ+R1Ar75/EPU8cQ9k+KFaKQ39clVAFzH67n/CRuaLH/LWvmi3i441YAXs9uhBtO9qcGsbrYWgBzxrONxPLeaFAF0mhS5XW6mIaeXL1ZrtwPaWvATi8mxvudYGXwX7Ftr3IK1Ok0G3E/Gv74H0QBC9B3KDMDqeIHsP5DdXIN1k0a3wyejR5tdk0XehzJJ15GgHSbRw3dg5HTnaZ7F1SKLrFd+52eIdLdprtRJF3xa9VxbLiF9UxFstRNHNU9/vVvOIX77F25ba1YF2FRgEXRLuUjtF69Ko0Y5Fguiy8GciWHSMHP2T6Z4k+i4eLjpNo0avmJpE0eHI1ZuRo382NYiiQ/GCe+Rop+mOLDpW2Bj1a4N5q7lTIYmORAq+UaP9Jk9HEARy6ETwt9CoX2bro1Mtkpm+LWycxkf8ilXeaurUKkK5QApdaQUP39MrI1WjtZoqOXQJ0KcbRdtIu48g7fpcvxaEEgF0Hs89KtedSCQzyld/Bo3mhzu5myaBLgvXzfudlJsOjqicdzgDXe806tIdvUOjxaKu1lvN3WOTiYx6E+9nKG8KyTMmeiNebTeuBWm/KxLoYrlSb7Rb8Qht2uV/yIXDi3eEZFlmxenAm3GiTS9NRiNtcGaESOO+3p1ND7khmlQfJbjganx6uIob6J92/Xy/i+d9/dtoYtc6u8qs/IRcMkzaKNRgoA0L0nacFqvD+ca94QsfF4RCKtL+V61SLhJEQ6qvG3d/Pjy09xZos/NX9Fu/VZwwUbYku2h5o1DRZXMsuza8O6FwJB5PJFOZ7Gm+cIX6o5ubmxoE/CH8/j6bjyU6tZtKiRRa3Cm2XK017lqdh88PCZtxATKG04X2MzWazFan27sbisSwC8HO4R8JQhVcdUl2UxHwzWt481lxy97379+fosii8Jbuxd9sDbR35dP7mha76ttmq93ufP78ud28+wR+iIfOXa304TSbSaXELCKs2JzO86Lpe5EVxZlsJNKpX5eL5NCFrvrm9l939+1WG3sfxPiM4+HTn/9XzmdTiXgstocSfgJH8P4cbYOc7+byLyKTyaSyx+66dCPQYPttDrDtbVFWQ7KBjeJTp9P51EEfUfT0nVa9/AHpI2EIqJhjOANZqQoyX0cKnaLj5Xy7im8yHWgHyMH26pXUpQoq0kajeXd392er1Wp/FZ8+oQMQ9e1b4UM2Cfjgzs4uNMTYIbTDjJRbiBMx4MGI47R9UxUTTQwtq9HUqXpdx9s142iKcdcX92Kg6u/gAuq0m5UC0od2vBvQkQTDMbG9psSIs+7LNvQcz0j0oFs5d5NdFoQKwFHUxMD9Q/2rI+kdxp9QS6K+gfXhXe+Gm3Vv+IOhcNDLsIl2q1aTE50nhc4X+tlof2wxKgLevVuO627gI8EHUr+t3zYat+LB3Ldx+XSgyymephKR0G4oftrqNJBZeIZ5wO3JH+1KXgI4ipIc5e5D8uFUpMPBY0i9JvFvG7fI37xrtUV9B9Jfr6GCLj3D/Mw91YtPhsgX+vWVLl7OPqT+ti4FpLkiCKWB6/kZ6EG3gv8uv5f7Ll/cEb47iyaP/va7BAyEf6zHfHwA6CygBng5oi33v+N+Un8FcXF5cXFxieKLv7y8vHj+uxs8+20kvveOCgO/+8KFdAgXF6N9R4YfiP+K974YIT7/X4d+iv/sb/Mfe+ecH38Lmpe3+3lBv6Bf0C/oF/QL+gX9gn4y/g2tREAzOiCoLgAAAABJRU5ErkJggg=="],
+    ["icon", "192x192", "data:image/png;base64,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"]
+  ];
+  for (const [rel, sizes, href] of links){
+    if (document.querySelector('link[rel="' + rel + '"]')) continue;
+    const l = document.createElement("link");
+    l.setAttribute("rel", rel);
+    l.setAttribute("sizes", sizes);
+    l.setAttribute("type", "image/png");
+    l.setAttribute("href", href);
+    document.head.appendChild(l);
+  }
+})();
+
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
+function loadLocal(){
+  try{
+    const raw = lsGet(LS_STATE);
+    const s = raw ? JSON.parse(raw) : null;
+    return (s && s.progress && typeof s.progress === "object") ? s.progress : {};
+  }catch(e){ return {}; }
+}
+function saveLocal(){ lsSet(LS_STATE, JSON.stringify({ progress: progress })); }
+function mergeProgress(a, b){
+  const out = {};
+  const keys = new Set(Object.keys(a || {}).concat(Object.keys(b || {})));
+  keys.forEach(k => {
+    const x = (a || {})[k], y = (b || {})[k];
+    if (!x){ if (y) out[k] = y; return; }
+    if (!y){ out[k] = x; return; }
+    out[k] = (y.ts || 0) > (x.ts || 0) ? y : x;
+  });
+  return out;
+}
+function dayStart(ts){ const d = new Date(ts); d.setHours(0, 0, 0, 0); return d.getTime(); }
+function shuffle(arr){
+  for (let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+  return arr;
+}
+function plural(n, one, few, many){
+  const a = n % 10, b = n % 100;
+  if (a === 1 && b !== 11) return one;
+  if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return few;
+  return many;
+}
+function unseenCount(){ return CARDS.filter(c => !progress[c.id]).length; }
+function topicLabel(n){ return n === MIXED_TOPIC ? "Всё вместе" : "Тема " + n + " · " + TOPIC_BY[n].title; }
+function label(a){ return a === "" ? "ничего" : a; }
+
+// ——— Предложение с пропуском
+function isStart(q, i){ const b = q.slice(0, i).trimEnd(); return b === "" || /[.!?]$/.test(b); }
+function cap(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+function split(card, word){
+  const i = card.q.indexOf("___");
+  const start = isStart(card.q, i);
+  const pre = card.q.slice(0, i);
+  let post = card.q.slice(i + 3);
+  if (word) return { pre: pre, word: start ? cap(word) : word, post: post };
+  post = post.replace(/^\s+/, "");                  // ответ «ничего»: слово после пропуска встаёт на его место
+  return { pre: pre, word: "", post: start ? cap(post) : post };
+}
+function fullText(card){ const p = split(card, card.a); return p.pre + p.word + p.post; }
+function exText(en){ return en.replace(/\|\w\]/g, "]").replace(/[\[\]]/g, ""); }
+function richText(s){
+  const f = document.createDocumentFragment();
+  String(s).replace(/ → /g, "\u00a0→\u00a0").split(/(-[a-z]+)/).forEach(part => { if (/^-[a-z]+$/.test(part)) f.append(el("span", "nw", part)); else if (part) f.append(part); });
+  return f;
+}
+// [текст|x] — форма в фокусе: без метки used to — оранжевый, |b be used to — зелёный, |g get used to — синий, |w would и |p пассив — подчёркнуты
+const MARK_CLS = { b: "good", g: "st", w: "hl", p: "hl" };
+function modalCls(t){ const i = t.lastIndexOf("|"); return i > 0 ? (MARK_CLS[t.slice(i + 1)] || "pr") : "pr"; }
+function markText(t){ const i = t.lastIndexOf("|"); return i > 0 ? t.slice(0, i) : t; }
+function marked(s){
+  const f = document.createDocumentFragment();
+  const re = /\[([^\]]+)\]/g;
+  let last = 0, m;
+  while ((m = re.exec(s))){
+    if (m.index > last) f.append(richText(s.slice(last, m.index)));
+    f.append(el("span", modalCls(m[1]), markText(m[1])));
+    last = re.lastIndex;
+  }
+  if (last < s.length) f.append(richText(s.slice(last)));
+  return f;
+}
+
+// ——— Синхронизация прогресса между устройствами (личная, у каждого зрителя своя)
+function schedulePush(){
+  if (!cloudDoc) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(pushCloud, 700);
+}
+async function pushCloud(){
+  if (!cloudDoc) return;
+  if (writing){ dirty = true; return; }
+  writing = true; dirty = false;
+  try{
+    await cloudDoc.set({ progress: progress, v: 1 });
+    retried = false;
+  }catch(e){
+    const c = e && e.code;
+    if (c === "unavailable" && !retried){ retried = true; setTimeout(pushCloud, 1200 + Math.random() * 1200); }
+    else if (c !== "unavailable" && c !== "resource_exhausted") cloudDoc = null;
+  }
+  writing = false;
+  if (dirty) pushCloud();
+}
+async function connectCloud(){
+  try{
+    if (!window.claude || typeof window.claude.use !== "function") return;
+    const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+    if (!db || !user) return;
+    const uid = await user.id();
+    if (!uid) return;
+    let ref;
+    try{ ref = db.doc("data/users/" + uid + "/progress"); }catch(e){ return; }
+    const snap = await ref.get();
+    const body = snap.exists ? (snap.data() || {}) : {};
+    const remote = (body.progress && typeof body.progress === "object") ? body.progress : {};
+    const before = JSON.stringify(progress);
+    progress = mergeProgress(progress, remote);
+    saveLocal();
+    cloudDoc = ref;
+    if (JSON.stringify(progress) !== JSON.stringify(remote)) schedulePush();
+    if (JSON.stringify(progress) !== before){
+      renderTopics();
+      if (mode === "main" && stats.first === 0 && !answered){ buildMain(); render(); }
+    }
+  }catch(e){ /* офлайн-режим */ }
+}
+
+function stopAudio(){}   // озвучки в этом приложении нет
+
+// ——— Очередь
+// Новые карточки идут вперемешку по темам: доказательства, размер, сроки, дозы, варфарин, переходы и антидоты чередуются.
+const FRESH_ORDER = (function(){
+  const pools = {};
+  CARDS.forEach(c => { const k = "t" + c.t; (pools[k] = pools[k] || []).push(c); });
+  // темы «сверх основы» (late) вступают позже
+  const late = {};
+  TOPICS.forEach(t => { if (t.late) late["t" + t.n] = t.late; });
+  const keys = Object.keys(pools), list = keys.map(k => pools[k]), used = list.map(() => 0), out = [];
+  while (out.length < CARDS.length){
+    let best = -1, bestR = 9;
+    list.forEach((p, i) => {
+      if (used[i] >= p.length) return;
+      const r = (used[i] + 0.5) / p.length + (late[keys[i]] || 0);
+      if (r < bestR){ bestR = r; best = i; }
+    });
+    out.push(list[best][used[best]++]);
+  }
+  return out;
+})();
+function resetSession(){ lapsed = {}; seen = new Set(); stats = { first: 0, correct: 0 }; index = 0; }
+function buildMain(){
+  const now = Date.now();
+  const due = CARDS.filter(c => progress[c.id] && progress[c.id].due <= now);
+  const fresh = FRESH_ORDER.filter(c => !progress[c.id]).slice(0, NEW_PER_SESSION);
+  queue = shuffle(due).concat(shuffle(fresh));
+  mode = "main"; topicN = null;
+  resetSession();
+}
+function buildTopic(n){
+  if (n === MIXED_TOPIC){
+    queue = shuffle(CARDS.slice()).slice(0, MIXED_SIZE);
+    mode = "mixed";
+  } else {
+    queue = shuffle(CARDS.filter(c => c.t === n));
+    mode = "topic";
+  }
+  topicN = n;
+  resetSession();
+}
+
+function setBar(done, total){
+  $("barFill").style.width = (total ? Math.min(100, Math.round(done / total * 100)) : 100) + "%";
+}
+function show(id, on){ $(id).hidden = !on; }
+
+function renderOpts(card){
+  const box = $("opts");
+  box.textContent = "";
+  shownOpts = shuffle(card.opts.slice());
+  const longest = Math.max.apply(null, shownOpts.map(o => o.length));
+  const n = shownOpts.length;
+  const cols = longest > 8 ? 1 : (n === 3 ? (longest <= 5 ? 3 : 1) : 2);   // три в ряд — только короткие: 48, 1,3, 6–7-й; два — до 8 знаков
+  box.className = "opts c" + cols;
+  shownOpts.forEach(o => {
+    const b = el("button", "opt" + (longest > 9 ? " long" : ""));
+    b.type = "button";
+    if (o === ""){
+      b.setAttribute("aria-label", "Ничего не нужно");
+      b.append(el("span", null, "—"), el("small", null, "ничего"));
+    } else {
+      if (!/[а-яё]/i.test(o)) b.lang = "en";
+      b.textContent = o;
+    }
+    b.addEventListener("click", () => choose(o));
+    box.append(b);
+  });
+}
+
+function render(){
+  stopAudio();
+  answered = false;
+  const card = queue[index];
+  $("card").scrollTop = 0;
+  if (!card){ renderDone(); return; }
+  show("kind", true);
+  $("kind").textContent = topicLabel(card.t);
+  const q = $("q");
+  q.textContent = "";
+  const i = card.q.indexOf("___");
+  // пропуск и знак препинания после него не разрываются переносом строки
+  const post = card.q.slice(i + 3), pm = post.match(/^[?.!,;:]+/);
+  const gapBox = el("span", "nw");
+  gapBox.append(el("span", "gap"));
+  if (pm) gapBox.append(pm[0]);
+  q.append(card.q.slice(0, i), gapBox, pm ? post.slice(pm[0].length) : post);
+  q.setAttribute("aria-label", card.q.replace("___", "пропуск"));
+  show("hint", true);
+  $("hint").textContent = card.ru ? card.ru : "Выбери вариант";
+  show("back", false);
+  renderOpts(card);
+  show("opts", true);
+  show("actNext", false);
+  show("actDone", false);
+  const prefix = mode === "topic" ? "Тема " + topicN + " · " : mode === "mixed" ? "Всё вместе · " : "";
+  $("status").textContent = prefix + "Карточка " + (index + 1) + " из " + queue.length;
+  setBar(index, queue.length);
+}
+
+function renderDone(){
+  show("kind", false);
+  const q = $("q");
+  q.removeAttribute("aria-label");
+  q.textContent = mode === "main" ? "На сегодня всё" : mode === "mixed" ? "Итог пройден" : "Тема " + topicN + " пройдена";
+  const left = unseenCount();
+  let text = stats.first ? "Верно с первого раза: " + stats.correct + " из " + stats.first + ". " : "";
+  if (mode === "main") text += left ? "Новых карточек в запасе: " + left + ". " : "Все карточки уже в работе. ";
+  text += "Повторы вернутся сами — завтра, через 3, 7 и 16 дней.";
+  $("hint").textContent = text;
+  show("hint", true);
+  show("back", false);
+  show("opts", false);
+  show("actNext", false);
+  const more = $("more");
+  if (mode === "main"){
+    more.hidden = !left;
+    const k = Math.min(NEW_PER_SESSION, left);
+    more.textContent = "Ещё " + k + " " + plural(k, "новая", "новых", "новых");
+  } else {
+    more.hidden = false;
+    more.textContent = "Обычная тренировка";
+  }
+  show("actDone", true);
+  $("status").textContent = "Готово";
+  setBar(1, 1);
+}
+
+function choose(opt){
+  if (answered) return;
+  const card = queue[index];
+  if (!card) return;
+  answered = true;
+  const exact = opt === card.a;
+  const alsoNote = !exact && card.also && Object.prototype.hasOwnProperty.call(card.also, opt) ? card.also[opt] : null;
+  const ok = exact || alsoNote !== null;
+
+  if (!seen.has(card.id)){
+    seen.add(card.id);
+    stats.first++;
+    if (ok) stats.correct++;
+  }
+  const prev = progress[card.id];
+  let step = prev ? prev.step : -1;
+  if (!ok){
+    step = 0;
+    lapsed[card.id] = true;
+    queue.splice(Math.min(queue.length, index + 4), 0, card);   // вернётся через несколько карточек
+  } else if (step < 0 || lapsed[card.id]){
+    step = 0;
+  } else {
+    step = Math.min(INTERVALS.length - 1, step + 1);
+  }
+  progress[card.id] = { step: step, due: dayStart(Date.now()) + INTERVALS[step] * DAY, ts: Date.now() };
+  saveLocal();
+  schedulePush();
+
+  const q = $("q");
+  q.textContent = "";
+  q.removeAttribute("aria-label");
+  const p = split(card, card.a);
+  if (p.word) q.append(p.pre, el("span", "good", p.word), p.post);
+  else q.append(p.pre, el("span", "zero", "∅"), p.post);
+
+  const v = $("verdict");
+  v.textContent = "";
+  if (exact){
+    v.className = "verdict ok";
+    v.append("Верно");
+  } else if (ok){
+    v.className = "verdict ok";
+    v.append("Тоже верно: ", el("b", null, opt), ". " + alsoNote.charAt(0).toUpperCase() + alsoNote.slice(1) + ".");
+  } else {
+    v.className = "verdict bad";
+    v.append("Нужно ", el("b", "good", label(card.a)), " · твой ответ: ", el("b", null, label(opt)));
+  }
+  const why = $("why"); why.textContent = ""; why.append(richText(card.why));
+  show("hint", false);
+  show("back", true);
+  show("opts", false);
+  show("actNext", true);
+}
+
+function next(){
+  if (!answered) return;
+  index++;
+  render();
+}
+
+// ——— Правила
+function learnedIn(n){
+  const cards = CARDS.filter(c => c.t === n);
+  const done = cards.filter(c => progress[c.id] && progress[c.id].step >= 1).length;
+  return done + "/" + cards.length;
+}
+const PLAY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>';
+let openTopic = null;
+function renderTopics(){
+  const box = $("topics");
+  box.textContent = "";
+  let group = null;
+  TOPICS.forEach(t => {
+    if (t.group !== group){
+      group = t.group;
+      box.append(el("p", "t-group", GROUPS[group]));
+    }
+    const item = el("div", "t-item");
+    const head = el("button", "t-head");
+    head.type = "button";
+    head.setAttribute("aria-expanded", String(openTopic === t.n));
+    const txt = el("span", "t-txt");
+    const title = el("span", "t-title", t.title);
+    if (/[a-z]/.test(t.title) && !/[а-я]/i.test(t.title)) title.lang = "en";
+    txt.append(title);
+    if (t.sub) txt.append(el("span", "t-sub", t.sub));
+    head.append(el("span", "t-n", String(t.n)), txt,
+                el("span", "t-count", t.n === MIXED_TOPIC ? "" : learnedIn(t.n)), el("span", "t-chev", "›"));
+    head.addEventListener("click", () => {
+      openTopic = openTopic === t.n ? null : t.n;
+      lsSet(LS_OPEN, openTopic ? String(openTopic) : "");
+      stopAudio();
+      renderTopics();
+    });
+    item.append(head);
+    if (openTopic === t.n){
+      const body = el("div", "t-body");
+      String(t.rule).split("\n\n").forEach(par => { const rule = el("p", "t-rule"); rule.append(richText(par)); body.append(rule); });
+      t.ex.forEach((ex, i) => {
+        const row = el("div", "ex");
+        const en = el("p", "ex-en"); en.append(marked(ex.en));
+        row.append(en, el("p", "ex-ru", ex.ru));
+        body.append(row);
+      });
+      const train = el("button", "t-train", t.n === MIXED_TOPIC ? "Начать итоговую тренировку" : "Потренировать эту тему");
+      train.type = "button";
+      train.addEventListener("click", () => { buildTopic(t.n); setTab("drill"); render(); });
+      body.append(train);
+      item.append(body);
+    }
+    box.append(item);
+  });
+}
+
+function setTab(name){
+  const drill = name === "drill";
+  $("drill").hidden = !drill;
+  $("rule").hidden = drill;
+  $("meta").hidden = !drill;
+  $("barWrap").hidden = !drill;
+  $("tabDrill").setAttribute("aria-selected", String(drill));
+  $("tabRule").setAttribute("aria-selected", String(!drill));
+  if (!drill){ stopAudio(); renderTopics(); }
+  lsSet(LS_TAB, name);
+}
+
+// ——— События
+$("tabDrill").addEventListener("click", () => setTab("drill"));
+$("tabRule").addEventListener("click", () => setTab("rule"));
+$("go").addEventListener("click", () => {
+  if (mode !== "main" || !queue[index]){ buildMain(); render(); }
+  setTab("drill");
+});
+$("toRule").addEventListener("click", () => setTab("rule"));
+$("more").addEventListener("click", () => { buildMain(); render(); });
+$("next").addEventListener("click", next);
+// Клавиатура на компьютере: 1, 2, 3 — варианты по порядку на экране; пробел или Enter — дальше
+document.addEventListener("keydown", e => {
+  if ($("drill").hidden || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (e.target && e.target.closest && e.target.closest("button")) return;
+  if (!answered){
+    const i = parseInt(e.key, 10) - 1;
+    if (i >= 0 && i < shownOpts.length && queue[index]) choose(shownOpts[i]);
+  } else if (e.key === " " || e.key === "Enter"){
+    e.preventDefault(); next();
+  }
+});
+
+
+// ——— Переход к разделам справочника
+document.querySelectorAll(".jump button").forEach(b => b.addEventListener("click", () => {
+  const t = document.getElementById(b.dataset.to);
+  if (!t) return;
+  const smooth = !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  try{ t.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" }); }catch(e){ t.scrollIntoView(); }
+}));
+
+// ——— Калькулятор дат старта (ELAN, OPTIMAS/CATALYST, КР по ИИ 2024)
+const NB = " ";
+const HOUR = 3600000;
+const calc = { size: "minor", ht: "none", sex: "f", verap: false, pgp: false, gi: false };
+const fmtD = new Intl.DateTimeFormat("ru-RU", { weekday: "short", day: "numeric", month: "long" });
+const fmtDM = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long" });
+function pad2(n){ return String(n).padStart(2, "0"); }
+function toInput(d){ return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()) + "T" + pad2(d.getHours()) + ":" + pad2(d.getMinutes()); }
+function fromInput(v){
+  const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(v || "");
+  return m ? new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]) : null;
+}
+function hm(d){ return pad2(d.getHours()) + ":" + pad2(d.getMinutes()); }
+function whenT(d){ return fmtD.format(d) + ", " + hm(d); }
+function dayOf(onset, n){ return new Date(onset.getFullYear(), onset.getMonth(), onset.getDate() + n); }
+function dayEnd(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1); }
+function span(a, b){
+  const x = fmtDM.format(a), y = fmtDM.format(b);
+  if (a.getMonth() === b.getMonth()) return a.getDate() + "–" + y;
+  return x + " – " + y;
+}
+// неразрывные пробелы и тире в строках калькуляторов: «75–80 лет», «КК 30–50», «3–4 октября» не рвутся
+function tp(s){
+  return String(s)
+    .replace(/(\d)–(\d)/g, "$1–\u2060$2")
+    .replace(/(\d) (?=(?:мг|мл|мин|лет|ч(?![а-яё])|дн|сут|кг|мкмоль|недел|янв|фев|мар|апр|ма[яй]|июн|июл|авг|сен|окт|ноя|дек))/g, "$1\u00a0")
+    .replace(/ ([×<>≤≥=+]) /g, "\u00a0$1\u00a0")
+    .replace(/(КК|NIHSS|МНО|ОШ|день) (?=[\d<>≤≥=])/g, "$1\u00a0")
+    .replace(/(^|[\s(«])(не|в|с|к|и|а|о|у|на|по|за|из|от|до|со|но|же|ли|при|без|для) /g, "$1$2\u00a0")
+    .replace(/ — /g, "\u00a0— ");
+}
+function pill(now, from, to){
+  if (now < from) return ["ещё рано", "p-wait"];
+  if (to && now >= to) return ["срок прошёл", "p-late"];
+  return ["сейчас", "p-now"];
+}
+function line(k, v, n, cls, p){
+  const box = el("div", "rl" + (cls ? " " + cls : ""));
+  box.append(el("p", "rk", tp(k)));
+  const vv = el("p", "rv", tp(v));
+  box.append(vv);
+  if (n || p){
+    const nn = el("p", "rn", tp(n || ""));
+    if (p) nn.append(n ? " " : "", el("span", "pill " + p[1], p[0]));
+    box.append(nn);
+  }
+  return box;
+}
+function ago(ms){
+  const h = Math.floor(ms / HOUR);
+  if (h < 1) return "меньше часа";
+  if (h < 48) return h + NB + "ч";
+  return Math.floor(h / 24) + NB + "сут " + (h % 24) + NB + "ч";
+}
+function renderTiming(){
+  const box = $("tres");
+  box.textContent = "";
+  const onset = fromInput($("onset").value);
+  if (!onset){ box.append(line("Даты", "Укажите начало симптомов", "")); return; }
+  const now = new Date();
+  if (onset - now > 5 * 60000){ box.append(line("Даты", "Время начала позже текущего", "Проверьте дату и время.", "warn")); return; }
+  const ivt = fromInput($("ivt").value);
+  $("ivtClear").hidden = !$("ivt").value;
+  $("ivt").parentElement.classList.toggle("has-x", !!$("ivt").value);
+  const after = ivt && ivt >= onset ? new Date(ivt.getTime() + 24 * HOUR) : null;
+  const size = calc.size, ht = calc.ht;
+  const nihssRaw = $("nihss").value.trim();
+  const nihss = nihssRaw === "" ? null : Number(nihssRaw);
+
+  // ELAN
+  if (ht === "ph"){
+    const w4 = dayOf(onset, 28), w8 = dayOf(onset, 56);
+    box.append(line("Гематома PH1–PH2", "Срок индивидуально, КТ в динамике",
+      "Протокол ELAN PH исключал; у 56 включённых её всё же нашли — у них ранний старт мог ухудшать исход. КР по ИИ 2024: 4–8 недель — " + span(w4, w8) + ".", "warn"));
+  } else if (size === "tia"){
+    const end = new Date(onset.getTime() + 24 * HOUR);
+    box.append(line("ТИА · КР по ИИ 2024", "до " + whenT(end), "в первые сутки, после КТ/МРТ без кровоизлияния; в алгоритме КР по ИИ 2024 — «ПОАК сразу же»; КР по ФП 2025: при остром очаге — через 1–3 суток", "", pill(now, onset, end)));
+  } else if (size === "major"){
+    const d6 = dayOf(onset, 6), d7 = dayOf(onset, 7);
+    box.append(line("ELAN · большой инфаркт", "6–7-й день: " + span(d6, d7), "день 6 = дата начала + 6 суток", "", pill(now, d6, dayEnd(d7))));
+  } else {
+    const end = new Date(onset.getTime() + 48 * HOUR);
+    const from = after && after > onset ? after : onset;
+    if (after && after >= end){
+      box.append(line("ELAN · " + (size === "minor" ? "малый" : "средний") + " инфаркт", "после " + whenT(after),
+        "48 ч закончатся раньше, чем пройдут 24 ч после тромболизиса: старт — после контрольной КТ/МРТ", "", pill(now, after, null)));
+    } else {
+      box.append(line("ELAN · " + (size === "minor" ? "малый" : "средний") + " инфаркт", "до " + whenT(end),
+        after ? "не раньше " + whenT(after) + " — 24 ч после тромболизиса и контрольная КТ/МРТ" : "первые 48 ч от начала симптомов", "", pill(now, from, end)));
+    }
+  }
+  if (ht === "hi" && size !== "tia") box.append(line("HI1–HI2", "Без ухудшения — по схеме", "ELAN и КР по ФП 2025. КР по ИИ 2024 без отсрочки допускают только ГТ 1-го типа.", "ok"));
+
+  // OPTIMAS · CATALYST: первые 4 суток при любом размере
+  if (size !== "tia" && ht !== "ph"){
+    const end4 = new Date(onset.getTime() + 96 * HOUR);
+    const from4 = after && after > onset ? after : onset;
+    box.append(line("OPTIMAS · CATALYST", "до " + whenT(end4), "первые 4 суток; в OPTIMAS эффект не зависел от объёма инфаркта (инфарктов > 50 мл — 187)", "", pill(now, from4, end4)));
+  }
+
+  // КР по ИИ 2024: формальная рекомендация при высоком риске ГТ — 14 дней
+  if (size !== "tia" && ht !== "ph" && (size === "major" || (nihss !== null && nihss > 15 && nihss <= 42))){
+    const d14 = dayOf(onset, 14);
+    box.append(line("КР по ИИ 2024 · высокий риск ГТ", "через 14 дней: " + fmtD.format(d14), "большой инфаркт: NIHSS > 15 или весь бассейн артерии", "", pill(now, d14, null)));
+  }
+  // КР по ИИ 2024: схема по NIHSS из комментария (при гематоме не применяется)
+  if (size === "tia" || ht === "ph"){
+    // для ТИА КР по ИИ 2024 уже показаны выше, при PH — 4–8 недель
+  } else if (nihss === null || !isFinite(nihss) || nihss < 0 || nihss > 42){
+    box.append(line("КР по ИИ 2024 · схема по NIHSS", nihss === null ? "Введите NIHSS" : "NIHSS — от 0 до 42", "< 8 — через 3 дня · 8–16 — через 6–8 дней · > 16 — через 12–14 дней"));
+  } else if (nihss < 8){
+    const d3 = dayOf(onset, 3);
+    box.append(line("КР по ИИ 2024 · схема, NIHSS " + nihss, "через 3 дня: " + fmtD.format(d3), "лёгкий инсульт", "", pill(now, d3, null)));
+  } else if (nihss <= 16){
+    const a6 = dayOf(onset, 6), a8 = dayOf(onset, 8);
+    box.append(line("КР по ИИ 2024 · схема, NIHSS " + nihss, "6–8 дней: " + span(a6, a8), "средний инсульт; перед стартом КТ/МРТ", "", pill(now, a6, dayEnd(a8))));
+  } else {
+    const a12 = dayOf(onset, 12), a14 = dayOf(onset, 14);
+    box.append(line("КР по ИИ 2024 · схема, NIHSS " + nihss, "12–14 дней: " + span(a12, a14), "тяжёлый инсульт; перед стартом КТ/МРТ", "", pill(now, a12, dayEnd(a14))));
+  }
+  box.append(el("p", "res-note", tp("Прошло от начала: " + ago(now - onset) + ".")));
+}
+
+// ——— Калькулятор дозы: КК по Кокрофту–Голту и дозы ПОАК по КР по ФП 2025
+function num(id){ const v = String($(id).value).replace(",", ".").trim(); return v === "" ? NaN : Number(v); }
+function doseRow(name, dose, cls, why){
+  const li = el("li");
+  li.append(el("span", "n", tp(name)), el("span", "d" + (cls ? " " + cls : ""), tp(dose)));
+  if (why) li.append(el("span", "w", tp(why)));
+  return li;
+}
+function joinRu(a){ return a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " и " + a[a.length - 1]; }
+function renderDose(){
+  const box = $("dres");
+  box.textContent = "";
+  const age = num("age"), kg = num("wt"), cr = num("cr");
+  if (!(age >= 18 && age <= 110) || !(kg >= 30 && kg <= 250) || !(cr >= 20 && cr <= 2000)){
+    box.append(el("p", "res-note", "Введите возраст (18–110 лет), массу (30–250 кг) и креатинин (20–2000 мкмоль/л)."));
+    return;
+  }
+  const male = calc.sex === "m";
+  const cl = Math.round((140 - age) * kg * (male ? 1.23 : 1.04) / cr);
+  const p = el("p", "crcl");
+  p.append("КК", el("b", null, String(Math.max(cl, 0))), "мл/мин · Кокрофт–Голт");
+  box.append(p);
+  const ul = el("ul", "dzr");
+
+  // апиксабан
+  const apiSigns = [];
+  if (age >= 80) apiSigns.push("80 лет и старше");
+  if (kg <= 60) apiSigns.push("масса ≤ 60 кг");
+  if (cr >= 133) apiSigns.push("креатинин ≥ 133");
+  if (cl < 15) ul.append(doseRow("Апиксабан", "не применять", "no", "КК < 15"));
+  else if (cl < 30) ul.append(doseRow("Апиксабан", "2,5 мг × 2", "low", "КК 15–29"));
+  else if (apiSigns.length >= 2) ul.append(doseRow("Апиксабан", "2,5 мг × 2", "low", "признаки: " + joinRu(apiSigns)));
+  else ul.append(doseRow("Апиксабан", "5 мг × 2", "", apiSigns.length ? "признак один (" + apiSigns[0] + ") — доза полная" : "признаков для снижения нет"));
+
+  // дабигатран
+  if (cl < 30) ul.append(doseRow("Дабигатран", "противопоказан", "no", "КК < 30"));
+  else {
+    const must = [];
+    if (age >= 80) must.push("80 лет и старше");
+    if (calc.verap) must.push("верапамил");
+    const may = [];
+    if (age >= 75 && age < 80) may.push("75–80 лет");
+    if (cl <= 50) may.push("КК 30–50");
+    if (calc.gi) may.push("риск ЖКК");
+    if (must.length) ul.append(doseRow("Дабигатран", "110 мг × 2", "low", joinRu(must)));
+    else if (may.length) ul.append(doseRow("Дабигатран", "150 мг × 2", "", "или 110 мг × 2 — на усмотрение врача: " + joinRu(may)));
+    else ul.append(doseRow("Дабигатран", "150 мг × 2", "", "критериев для снижения нет"));
+  }
+
+  // ривароксабан
+  if (cl < 15) ul.append(doseRow("Ривароксабан", "не применять", "no", "КК < 15"));
+  else if (cl < 50) ul.append(doseRow("Ривароксабан", "15 мг × 1", "low", "КК 15–49 · во время еды"));
+  else ul.append(doseRow("Ривароксабан", "20 мг × 1", "", "во время еды"));
+
+  // эдоксабан
+  if (cl < 15) ul.append(doseRow("Эдоксабан", "не применять", "no", "КК < 15"));
+  else {
+    const e = [];
+    if (cl < 50) e.push("КК 15–49");
+    if (kg <= 60) e.push("масса ≤ 60 кг");
+    if (calc.pgp) e.push("ингибитор P-gp");
+    const hi = cl > 95 ? "КК > 95: эффективность эдоксабана ниже" : "";
+    if (e.length) ul.append(doseRow("Эдоксабан", "30 мг × 1", "low", joinRu(e) + (hi ? " · " + hi : "")));
+    else ul.append(doseRow("Эдоксабан", "60 мг × 1", "", hi || "критериев для снижения нет"));
+  }
+
+  // варфарин
+  ul.append(doseRow("Варфарин", "МНО 2,0–3,0", "", cl < 15 ? "при КК < 15 — единственный ОАК, одобренный в РФ" : "если ПОАК противопоказаны"));
+  box.append(ul);
+  if (calc.pgp) box.append(el("p", "res-note", tp("Эти препараты важны и для остальных ПОАК: с кетоконазолом и циклоспорином дабигатран противопоказан — сверьтесь с инструкцией.")));
+  box.append(el("p", "res-note", tp("Масса — фактическая. Креатинин в мг/дл × 88,4 = мкмоль/л.")));
+}
+
+function pressOne(sel, attr, val){
+  document.querySelectorAll(sel).forEach(b => b.setAttribute("aria-pressed", String(b.dataset[attr] === val)));
+}
+function initCalc(){
+  const d = new Date(Date.now() - 6 * HOUR);
+  d.setMinutes(Math.floor(d.getMinutes() / 5) * 5, 0, 0);
+  $("onset").value = toInput(d);
+  document.querySelectorAll("[data-size]").forEach(b => b.addEventListener("click", () => { calc.size = b.dataset.size; pressOne("[data-size]", "size", calc.size); renderTiming(); }));
+  document.querySelectorAll("[data-ht]").forEach(b => b.addEventListener("click", () => { calc.ht = b.dataset.ht; pressOne("[data-ht]", "ht", calc.ht); renderTiming(); }));
+  ["onset", "ivt", "nihss"].forEach(id => { $(id).addEventListener("input", renderTiming); $(id).addEventListener("change", renderTiming); });
+  $("ivtClear").addEventListener("click", () => { $("ivt").value = ""; renderTiming(); });
+  document.querySelectorAll("[data-sex]").forEach(b => b.addEventListener("click", () => { calc.sex = b.dataset.sex; pressOne("[data-sex]", "sex", calc.sex); renderDose(); }));
+  document.querySelectorAll("[data-flag]").forEach(b => b.addEventListener("click", () => {
+    const k = b.dataset.flag; calc[k] = !calc[k]; b.setAttribute("aria-pressed", String(calc[k])); renderDose();
+  }));
+  ["age", "wt", "cr"].forEach(id => { $(id).addEventListener("input", renderDose); $(id).addEventListener("change", renderDose); });
+  renderTiming();
+  renderDose();
+  setInterval(() => { if (!$("rule").hidden) renderTiming(); }, 60000);
+}
+
+function boot(){
+  progress = loadLocal();
+  const o = parseInt(lsGet(LS_OPEN) || "", 10);
+  openTopic = TOPIC_BY[o] ? o : null;
+  buildMain();
+  render();
+  const saved = lsGet(LS_TAB);
+  setTab(saved === "drill" || saved === "rule" ? saved : (Object.keys(progress).length ? "drill" : "rule"));
+  renderTopics();
+  initCalc();
+  connectCloud();
+}
+boot();
+</script>

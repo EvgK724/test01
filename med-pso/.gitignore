@@ -1,0 +1,21 @@
+__pycache__/
+sources/*/preview.html
+sources/*/template.html
+!sources/ctp/template.html
+sources/*/s-*.png
+sources/*/x-*.png
+sources/*/test-out.json
+sources/*/overlap-report.json
+# первоисточники для сверки (архивы «источники») — не в репозиторий
+sources/kr/
+sources/factcheck/
+sources/vits/src/
+sources/oac/src/
+sources/dapt/research/
+sources/thrombo/research/
+sources/*.pdf
+sources/*.txt
+sources/*.xml
+# служебное оболочки
+sources/shell/s-*.png
+sources/shell/test-out.json

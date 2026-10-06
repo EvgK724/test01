@@ -1,0 +1,1796 @@
+<script>try{parent.__pso.attach("perfuziya",window)}catch(e){}</script>
+<title>КТ-перфузия</title>
+<style>
+  :root{
+    --k:1;
+    color-scheme:dark;
+    --bg:#0e1113;
+    --surface:#171c1f;
+    --raise:#1f262a;
+    --line:#252c30;
+    --line-2:#343d42;
+    --text:#e8e8e8;
+    --soft:#c3cbcf;
+    --muted:#939ea3;
+    --accent:#d97757;
+    --on-accent:#14181a;
+    --blue:#7cc0dd;
+    --blue-soft:rgba(124,192,221,.13);
+    --no:#b4544a;
+    --no-text:#e9a7a0;
+    --no-soft:rgba(180,84,74,.10);
+    --yes:#4e8767;
+    --yes-text:#9ad0b4;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);overflow-x:hidden}
+  body{font-family:var(--sans);font-size:calc(17px*var(--k));line-height:1.5;display:flex;justify-content:center}
+  button{font:inherit;color:inherit}
+  .app{width:100%;max-width:calc(440px*var(--k));height:100%;display:flex;flex-direction:column;gap:calc(10px*var(--k));padding:calc(10px*var(--k)) calc(16px*var(--k)) calc(14px*var(--k))}
+  .nw{white-space:nowrap}
+  .sr{position:absolute;width:calc(1px*var(--k));height:calc(1px*var(--k));overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+  .top{display:flex;align-items:center;gap:calc(10px*var(--k))}
+  .tabs{flex:1;display:flex;gap:calc(4px*var(--k));padding:calc(4px*var(--k));border:calc(1px*var(--k)) solid var(--line);border-radius:calc(14px*var(--k))}
+  .tab{flex:1;min-height:calc(44px*var(--k));border:0;border-radius:calc(10px*var(--k));background:transparent;color:var(--muted);font-size:calc(16px*var(--k));cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--raise);color:var(--text)}
+  .icon{width:calc(52px*var(--k));height:calc(52px*var(--k));flex:0 0 calc(52px*var(--k));display:grid;place-items:center;border:calc(1px*var(--k)) solid var(--line);border-radius:calc(14px*var(--k));background:transparent;color:var(--muted);cursor:pointer}
+  .icon[aria-pressed="true"]{color:var(--accent);border-color:var(--accent)}
+  .icon svg{width:calc(22px*var(--k));height:calc(22px*var(--k))}
+  .icon .sl{display:none}
+  .icon[aria-pressed="false"] .sl{display:inline}
+  .icon[aria-pressed="false"] .wv{display:none}
+
+  .meta{font-size:calc(15px*var(--k));color:var(--muted);font-variant-numeric:tabular-nums;line-height:1.3}
+  .bar{height:calc(3px*var(--k));border-radius:calc(2px*var(--k));background:var(--line);overflow:hidden;margin-top:-4px}
+  .bar-fill{display:block;height:100%;width:0;background:var(--accent);transition:width .25s ease}
+
+  .st{color:var(--blue)}
+  .pr{color:var(--accent)}
+  .good{color:var(--yes-text)}
+
+  .view{flex:1;min-height:0;display:flex;flex-direction:column;gap:calc(12px*var(--k))}
+  .card{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:calc(22px*var(--k)) calc(20px*var(--k));background:var(--surface);border:calc(1px*var(--k)) solid var(--line);border-radius:calc(20px*var(--k));display:flex;flex-direction:column;gap:calc(16px*var(--k))}
+  .kind{align-self:flex-start;font-size:calc(14px*var(--k));letter-spacing:.02em;color:var(--blue);padding:calc(5px*var(--k)) calc(11px*var(--k));border-radius:calc(999px*var(--k));border:calc(1px*var(--k)) solid currentColor;background:var(--blue-soft)}
+  .q{margin:0;font-family:var(--serif);font-size:calc(30px*var(--k));line-height:1.32;text-wrap:pretty}
+  .gap{display:inline-block;min-width:3em;height:.95em;border-bottom:calc(3px*var(--k)) solid var(--accent);margin:0 .08em;vertical-align:-.05em}
+  .hint{margin:0;font-size:calc(17px*var(--k));color:var(--muted)}
+  .back{display:flex;flex-direction:column;gap:calc(12px*var(--k));padding-top:calc(14px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .verdict{margin:0;font-size:calc(18px*var(--k));line-height:1.45}
+  .verdict.ok{color:var(--yes-text)}
+  .verdict.bad{color:var(--no-text)}
+  .verdict b{font-family:var(--serif);font-weight:400;font-size:calc(21px*var(--k))}
+  .why{margin:0;font-size:calc(18px*var(--k));line-height:1.5;color:var(--soft)}
+
+  .opts{display:grid;gap:calc(10px*var(--k))}
+  .opts.c1{grid-template-columns:1fr}
+  .opts.c2{grid-template-columns:1fr 1fr}
+  .opts.c3{grid-template-columns:repeat(3,1fr)}
+  .opt{min-height:calc(64px*var(--k));padding:calc(6px*var(--k)) calc(10px*var(--k));border-radius:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:var(--surface);font-family:var(--serif);font-size:calc(25px*var(--k));line-height:1.15;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(2px*var(--k))}
+  .opt.long{font-size:calc(22px*var(--k))}
+  .opt:active{background:var(--raise)}
+
+  .actions{display:flex;gap:calc(10px*var(--k))}
+  .big{flex:1;min-height:calc(58px*var(--k));border-radius:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:transparent;font-size:calc(19px*var(--k));cursor:pointer}
+  .primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+  .big:active,.opt:active{transform:scale(.985)}
+
+  /* ——— Правила */
+  .rule{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:calc(4px*var(--k)) calc(2px*var(--k)) calc(12px*var(--k))}
+  .r-title{margin:calc(8px*var(--k)) 0 calc(4px*var(--k));font-family:var(--serif);font-weight:400;font-size:calc(40px*var(--k));line-height:1.1;text-wrap:balance}
+  .r-sub{margin:0 0 calc(14px*var(--k));font-size:calc(17px*var(--k));line-height:1.45;color:var(--soft);text-wrap:pretty}
+  .r-sub b{color:var(--text)}
+  .r-sub i{font-family:var(--serif);font-style:normal;color:var(--text)}
+  .algo{background:var(--surface);border:calc(1px*var(--k)) solid var(--line);border-radius:calc(18px*var(--k));padding:calc(16px*var(--k)) calc(16px*var(--k)) calc(14px*var(--k))}
+  .algo-h{margin:0 0 calc(4px*var(--k));font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+  .steps{list-style:none;margin:0;padding:0}
+  .steps li{display:grid;grid-template-columns:calc(26px*var(--k)) minmax(0,1fr);gap:calc(8px*var(--k));padding:calc(10px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .steps li:first-child{border-top:0}
+  .sn{font-size:calc(15px*var(--k));line-height:1.45;color:var(--blue);font-variant-numeric:tabular-nums}
+  .s-t{margin:0;font-size:calc(17px*var(--k));line-height:1.4}
+  .s-f{margin:calc(3px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.3}
+  .s-f i{font-style:normal;color:var(--soft)}
+  .algo-m{margin:calc(4px*var(--k)) 0 0;padding-top:calc(12px*var(--k));border-top:calc(1px*var(--k)) solid var(--line);font-size:calc(18px*var(--k));color:var(--text)}
+  .algo-m b{font-family:var(--serif);font-weight:400;font-size:calc(26px*var(--k))}
+  .algo-note{margin:calc(8px*var(--k)) 0 0;font-size:calc(15px*var(--k));line-height:1.45;color:var(--muted)}
+  .algo-note i{font-family:var(--serif);font-style:normal;color:var(--soft)}
+  .go-wrap{display:flex;margin:calc(14px*var(--k)) 0 calc(4px*var(--k))}
+
+  .lbl{margin:calc(26px*var(--k)) 0 calc(8px*var(--k));font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+  .mx-wrap{overflow-x:auto;border:calc(1px*var(--k)) solid var(--line);border-radius:calc(16px*var(--k));background:var(--surface)}
+  .mx-note{margin:calc(10px*var(--k)) calc(2px*var(--k)) 0;font-size:calc(16px*var(--k));line-height:1.5;color:var(--soft)}
+  .mx-note i{font-family:var(--serif);font-style:normal;color:var(--text)}
+
+  .mm{margin-top:calc(10px*var(--k));padding:calc(12px*var(--k)) calc(14px*var(--k)) calc(12px*var(--k));background:var(--surface);border:calc(1px*var(--k)) solid var(--line);border-radius:calc(16px*var(--k))}
+  .mm:first-of-type{margin-top:0}
+  .mm-h{margin:0 0 calc(6px*var(--k));font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
+  .mm-n{display:inline-block;min-width:1.6em;color:var(--accent)}
+  .mm-grid{display:grid;grid-template-columns:1fr 1fr;gap:calc(2px*var(--k)) calc(12px*var(--k))}
+  .mm-w{margin:0;padding:calc(5px*var(--k)) 0}
+  .mm-w span{display:block;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2}
+  .mm-w small{display:block;font-size:calc(13px*var(--k));line-height:1.3;color:var(--muted)}
+  .mm-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) calc(44px*var(--k));column-gap:calc(10px*var(--k));align-items:center;padding:calc(6px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .mm-pair:first-of-type{border-top:0}
+  .mm-pair p{margin:0}
+  .mm-pair span{display:block;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2}
+  .mm-pair small{display:block;font-size:calc(13px*var(--k));line-height:1.3;color:var(--muted)}
+  .mm-note{margin:calc(8px*var(--k)) 0 0;padding-top:calc(8px*var(--k));border-top:calc(1px*var(--k)) solid var(--line);font-size:calc(14px*var(--k));line-height:1.45;color:var(--soft)}
+  .legend{margin:0 calc(2px*var(--k)) calc(10px*var(--k));font-size:calc(15px*var(--k));line-height:1.45;color:var(--soft)}
+  .hl{color:var(--text);text-decoration:underline;text-decoration-thickness:calc(1.5px*var(--k));text-underline-offset:calc(3px*var(--k))}
+  .algo-m i{font-family:var(--serif);font-style:normal;font-size:calc(18px*var(--k))}
+  .md{display:grid;grid-template-columns:minmax(0,1fr) calc(48px*var(--k));column-gap:calc(10px*var(--k));align-items:center;padding:calc(8px*var(--k)) calc(10px*var(--k)) calc(8px*var(--k)) calc(14px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .md:first-child{border-top:0}
+  .s-f .sep{color:var(--muted)}
+  .pw{margin:0;line-height:1.35}
+  .pw + .pw{margin-top:calc(3px*var(--k))}
+  .pw-w{margin-right:calc(6px*var(--k));font-family:var(--serif);font-size:calc(22px*var(--k))}
+  .ipa{margin-right:calc(6px*var(--k));font-size:calc(14px*var(--k));color:var(--muted);white-space:nowrap}
+  .pw-ru{font-size:calc(15px*var(--k));color:var(--soft)}
+  .pw-tip{margin:calc(8px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.45;color:var(--muted)}
+  .snd-ex{margin:calc(4px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(18px*var(--k));line-height:1.35;color:var(--soft)}
+  .algo-m b.pr{color:var(--accent)}
+  .s-t b{margin-right:calc(4px*var(--k));font-family:var(--serif);font-weight:400;font-size:calc(21px*var(--k));color:var(--accent)}
+  .s-t .ipa{margin-right:calc(4px*var(--k))}
+  .algo-m b.st{color:var(--blue)}
+  .algo-m b.good{color:var(--yes-text)}
+  .mt{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(6px*var(--k))}
+  .mt col.rh{width:calc(92px*var(--k))}
+  .mt thead th{padding:calc(2px*var(--k)) calc(6px*var(--k)) calc(8px*var(--k));font-size:calc(12px*var(--k));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left}
+  .mt tbody th{padding:calc(12px*var(--k)) calc(6px*var(--k)) calc(12px*var(--k)) 0;text-align:left;vertical-align:top;font-family:var(--serif);font-weight:400;font-size:calc(24px*var(--k));line-height:1.15;border-top:calc(1px*var(--k)) solid var(--line)}
+  .mt td{padding:calc(12px*var(--k)) calc(6px*var(--k));vertical-align:top;font-size:calc(15px*var(--k));line-height:1.4;color:var(--soft);border-top:calc(1px*var(--k)) solid var(--line)}
+  .mt td .f{display:block;margin-bottom:calc(2px*var(--k));font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.2}
+  .mt td b{color:var(--text);font-weight:600}
+  .mt td b.h{display:block;margin-bottom:calc(2px*var(--k))}
+  .mt thead td{border-top:0}
+  .mt tbody th small{display:block;margin-top:calc(3px*var(--k));font-family:var(--sans);font-size:calc(12px*var(--k));line-height:1.2;color:var(--muted)}
+  .mt.wx col.rh{width:calc(78px*var(--k))}
+  .mt.wx td .f{font-size:calc(18px*var(--k))}
+  .mt td i{display:block;font-family:var(--serif);font-style:normal;font-size:calc(15px*var(--k));line-height:1.3;color:var(--soft)}
+  .mt td small{display:block;margin-top:calc(2px*var(--k));font-size:calc(13px*var(--k));line-height:1.3;color:var(--muted)}
+  .mt td small i{display:inline;font-size:calc(13px*var(--k));color:var(--soft)}
+  .cp-en + .cp-ru + .cp-en{margin-top:calc(8px*var(--k))}
+  .algo-2{margin-top:calc(12px*var(--k))}
+  .ct{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(4px*var(--k))}
+  .ct col.sit{width:46%}
+  .ct th{padding:calc(11px*var(--k)) calc(10px*var(--k)) calc(11px*var(--k)) 0;text-align:left;vertical-align:top;font-size:calc(15px*var(--k));font-weight:600;line-height:1.35;color:var(--text);border-top:calc(1px*var(--k)) solid var(--line)}
+  .ct td{padding:calc(11px*var(--k)) 0;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .ct tr:first-child th,.ct tr:first-child td{border-top:0}
+  .ct .f{display:block;font-family:var(--serif);font-size:calc(21px*var(--k));line-height:1.2}
+  .ct .e{display:block;margin-top:calc(2px*var(--k));font-family:var(--serif);font-size:calc(15px*var(--k));line-height:1.3;color:var(--soft)}
+  .vt{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(4px*var(--k))}
+  .vt col.v{width:46%}
+  .vt th{padding:calc(10px*var(--k)) calc(10px*var(--k)) calc(10px*var(--k)) 0;text-align:left;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .vt td{padding:calc(10px*var(--k)) 0;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .vt tr:first-child th,.vt tr:first-child td{border-top:0}
+  .vt .w{display:block;font-family:var(--serif);font-weight:400;font-size:calc(21px*var(--k));line-height:1.15;color:var(--accent)}
+  .vt .w.st{color:var(--blue)}
+  .vt .w.hl{color:var(--text)}
+  .vt tr.pb th,.vt tr.pb td{border-top:0;padding-top:0}
+  .vt .w.good{color:var(--yes-text)}
+  .wd-w{margin:0;line-height:1.3}
+  .wd-w .ph{margin-right:calc(6px*var(--k));font-family:var(--serif);font-size:calc(21px*var(--k))}
+  .wd-ru{font-size:calc(15px*var(--k));color:var(--muted)}
+  .wd-p{margin:calc(3px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(17px*var(--k));line-height:1.35;color:var(--soft)}
+  .vt .p{display:block;margin-top:calc(2px*var(--k));font-size:calc(13px*var(--k));font-weight:600;line-height:1.3;color:var(--blue)}
+  .vt .e{display:block;font-family:var(--serif);font-size:calc(16px*var(--k));line-height:1.3;color:var(--text)}
+  .vt .r{display:block;margin-top:calc(2px*var(--k));font-size:calc(13px*var(--k));line-height:1.35;color:var(--muted)}
+  .mt.af thead th{padding:calc(2px*var(--k)) calc(8px*var(--k)) calc(8px*var(--k)) 0}
+  .mt.af td{padding:calc(12px*var(--k)) calc(8px*var(--k)) calc(12px*var(--k)) 0}
+  .mt.af td .f{font-size:calc(20px*var(--k))}
+  .mt.af td small{margin-top:calc(4px*var(--k))}
+  .vt.sv col.v{width:40%}
+  .q{font-size:calc(26px*var(--k))}
+  .md{grid-template-columns:minmax(0,1fr)}
+  .ex{grid-template-columns:minmax(0,1fr)}
+  .mt.cp col.rh{width:calc(64px*var(--k))}
+  .mt.cp thead th{padding:calc(2px*var(--k)) calc(4px*var(--k)) calc(8px*var(--k));font-size:calc(13px*var(--k));letter-spacing:0;text-transform:none}
+  .mt.cp tbody th{font-size:calc(20px*var(--k))}
+  .mt.cp td{padding:calc(12px*var(--k)) calc(4px*var(--k))}
+  .mt.cp td .f{font-size:calc(20px*var(--k))}
+  .mt.cp .c-core{color:var(--accent)}
+  .mt.cp .c-pen{color:var(--yes-text)}
+  .mt.cp .c-olig{color:var(--blue)}
+  .algo-note b{color:var(--text);font-weight:600}
+  .mt.af .sep{color:var(--muted)}
+  .g4{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(6px*var(--k))}
+  .g4 col.rh{width:calc(76px*var(--k))}
+  .g4 thead th{padding:calc(4px*var(--k)) calc(4px*var(--k)) calc(8px*var(--k));font-size:calc(14px*var(--k));font-weight:600;color:var(--soft);text-align:center;vertical-align:bottom}
+  .g4 thead th small{display:block;font-weight:400;font-size:calc(12px*var(--k));color:var(--muted)}
+  .g4 tbody th{padding:calc(12px*var(--k)) 0;text-align:left;vertical-align:middle;font-size:calc(13px*var(--k));font-weight:600;line-height:1.3;color:var(--soft);border-top:calc(1px*var(--k)) solid var(--line)}
+  .g4 td{padding:calc(12px*var(--k)) calc(4px*var(--k)) calc(10px*var(--k));text-align:center;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .g4 thead td{border-top:0}
+  .g4 svg{display:block;width:calc(40px*var(--k));height:calc(40px*var(--k));margin:0 auto calc(4px*var(--k))}
+  .g4 .w{display:block;font-family:var(--serif);font-size:calc(28px*var(--k));line-height:1.1}
+  .g4 .e{display:block;margin-top:calc(4px*var(--k));font-family:var(--serif);font-size:calc(15px*var(--k));line-height:1.3;color:var(--soft)}
+  .cp-en{margin:0;font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.3}
+  .cp-ru{margin:calc(1px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.35;color:var(--muted)}
+  .cp-ru + .cp-en{margin-top:calc(8px*var(--k))}
+  .md .ex-play{grid-row:1}
+  .t-group{margin:calc(22px*var(--k)) 0 0;padding:0 calc(2px*var(--k)) calc(7px*var(--k));border-bottom:calc(1px*var(--k)) solid var(--line);font-size:calc(14px*var(--k));font-weight:600;color:var(--soft)}
+  .t-group:first-child{margin-top:calc(4px*var(--k))}
+  .wb{display:grid;grid-template-columns:minmax(0,1fr) calc(48px*var(--k));column-gap:calc(10px*var(--k));align-items:start}
+  .wb-h{margin:0;display:flex;align-items:baseline;flex-wrap:wrap;gap:calc(4px*var(--k)) calc(12px*var(--k))}
+  .wb-w{font-family:var(--serif);font-size:calc(38px*var(--k));line-height:1.05}
+  .wb-s{font-size:calc(15px*var(--k));color:var(--soft)}
+  .wb-ex{margin:calc(6px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.4}
+  .wb .ex-play{grid-column:2;grid-row:1 / span 2;align-self:center}
+  .zero{font-family:var(--sans);font-size:.55em;line-height:1;color:var(--yes-text);border:calc(1px*var(--k)) solid rgba(78,135,103,.65);border-radius:calc(999px*var(--k));padding:.12em .45em;margin:0 .35em 0 .05em;vertical-align:.25em}
+  .opt small{font-family:var(--sans);font-size:calc(13px*var(--k));color:var(--muted)}
+  .errs{list-style:none;margin:0;padding:0}
+  .err{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:baseline;gap:calc(10px*var(--k));padding:calc(11px*var(--k)) calc(14px*var(--k));border-top:calc(1px*var(--k)) solid var(--line);font-family:var(--serif);font-size:calc(17px*var(--k));line-height:1.35}
+  .err:first-child{border-top:0}
+  .err s{color:var(--no-text);text-decoration-thickness:calc(1.5px*var(--k))}
+  .err .arr{font-family:var(--sans);color:var(--muted)}
+  .err-note{grid-column:1 / -1;margin-top:-4px;font-family:var(--sans);font-size:calc(13px*var(--k));line-height:1.35;color:var(--muted)}
+
+  .topics{border-top:0}
+  .t-item{border-bottom:calc(1px*var(--k)) solid var(--line)}
+  .t-head{width:100%;min-height:calc(60px*var(--k));display:grid;grid-template-columns:calc(34px*var(--k)) minmax(0,1fr) auto calc(20px*var(--k));align-items:center;gap:calc(8px*var(--k));padding:calc(8px*var(--k)) calc(2px*var(--k));border:0;background:transparent;text-align:left;cursor:pointer}
+  .t-n{font-size:calc(15px*var(--k));color:var(--blue);font-variant-numeric:tabular-nums}
+  .t-txt{display:flex;flex-direction:column;min-width:0}
+  .t-title{font-size:calc(18px*var(--k));line-height:1.3}
+  .t-sub{font-size:calc(14px*var(--k));line-height:1.3;color:var(--muted)}
+  .t-count{font-size:calc(14px*var(--k));color:var(--muted);font-variant-numeric:tabular-nums}
+  .t-chev{color:var(--muted);transition:transform .2s ease}
+  .t-head[aria-expanded="true"] .t-chev{transform:rotate(90deg)}
+  .t-body{padding:calc(2px*var(--k)) calc(2px*var(--k)) calc(18px*var(--k)) calc(44px*var(--k));display:flex;flex-direction:column;gap:calc(12px*var(--k))}
+  .t-rule{margin:0;font-size:calc(17px*var(--k));line-height:1.5;color:var(--soft)}
+  .ex{display:grid;grid-template-columns:1fr calc(48px*var(--k));gap:calc(4px*var(--k)) calc(10px*var(--k));align-items:start}
+  .ex-en{margin:0;grid-column:1;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.4}
+  .ex-ru{margin:0;grid-column:1;font-size:calc(15px*var(--k));line-height:1.4;color:var(--muted)}
+  .ex-play{grid-column:2;grid-row:1 / span 2;width:calc(48px*var(--k));height:calc(48px*var(--k));border-radius:50%;border:calc(1px*var(--k)) solid var(--accent);background:transparent;color:var(--accent);display:grid;place-items:center;cursor:pointer}
+  .ex-play svg{width:calc(20px*var(--k));height:calc(20px*var(--k))}
+  .t-train{min-height:calc(50px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--accent);background:transparent;color:var(--accent);font-size:calc(17px*var(--k));cursor:pointer}
+
+  :focus-visible{outline:calc(2px*var(--k)) solid var(--accent);outline-offset:calc(2px*var(--k))}
+  @media (prefers-reduced-motion:reduce){.bar-fill,.t-chev{transition:none}.big:active,.opt:active{transform:none}}
+
+  /* ——— Планшет */
+  body.tab .app{max-width:calc(600px*var(--k))}
+  body.wide .app{max-width:none;padding-left:calc(28px*var(--k));padding-right:calc(28px*var(--k))}
+  body.wide #drill{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;gap:calc(16px*var(--k))}
+  body.wide #drill .card{grid-column:1;grid-row:1 / span 2}
+  body.wide #drill .opts{grid-column:2;grid-row:1;align-content:end}
+  body.wide #drill .opts.c2,body.wide #drill .opts.c3{grid-template-columns:1fr}
+  body.wide #drill .opt{min-height:calc(76px*var(--k))}
+  body.wide #drill .actions{grid-column:2;grid-row:2}
+  body.wide #rule{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);column-gap:calc(36px*var(--k));align-items:start}
+  body.wide .r-left{position:static}
+  body.wide .r-right .lbl:first-child{margin-top:calc(14px*var(--k))}
+</style>
+<script>
+// Масштаб под размер экрана: телефон — как есть, планшет — крупнее, альбомная ориентация — две колонки
+(function(){
+  function fit(){
+    var w = window.innerWidth || 390, h = window.innerHeight || 760;
+    var wide = w >= 900 && w / h > 1.15;
+    var tab = !wide && w >= 600;
+    var k = wide ? h / 600 : Math.min(w / 440, h / 780);
+    if (w < 600) k = 1;
+    k = Math.max(1, Math.min(k, 1.9));
+    document.documentElement.style.setProperty("--k", k.toFixed(3));
+    document.body.classList.toggle("wide", wide);
+    document.body.classList.toggle("tab", tab);
+  }
+  fit();
+  window.addEventListener("resize", fit);
+  window.addEventListener("orientationchange", function(){ setTimeout(fit, 150); });
+})();
+</script>
+
+<div class="app" role="main">
+  <div class="top">
+    <div class="tabs" role="tablist" aria-label="Режим">
+      <button class="tab" id="tabDrill" role="tab" type="button" aria-selected="false" aria-controls="drill">Тренировка</button>
+      <button class="tab" id="tabRule" role="tab" type="button" aria-selected="true" aria-controls="rule">Справочник</button>
+    </div>
+  </div>
+  <div class="meta" id="meta" hidden><span id="status">Карточка 1 из 10</span></div>
+  <div class="bar" id="barWrap" hidden><span class="bar-fill" id="barFill"></span></div>
+
+  <section class="view" id="drill" role="tabpanel" aria-labelledby="tabDrill" hidden>
+    <article class="card" id="card">
+      <span class="kind" id="kind">Тема 1</span>
+      <p class="q" id="q"></p>
+      <p class="hint" id="hint">Выбери вариант</p>
+      <div class="back" id="back" aria-live="polite" hidden>
+        <p class="verdict" id="verdict"></p>
+        <p class="why" id="why"></p>
+      </div>
+    </article>
+    <div class="opts c2" id="opts"></div>
+    <div class="actions" id="actNext" hidden>
+      <button class="big primary" id="next" type="button">Дальше</button>
+    </div>
+    <div class="actions" id="actDone" hidden>
+      <button class="big primary" id="more" type="button">Ещё 10 новых</button>
+      <button class="big" id="toRule" type="button">Справочник</button>
+    </div>
+  </section>
+
+  <section class="rule" id="rule" role="tabpanel" aria-labelledby="tabRule">
+    <div class="r-left">
+      <h1 class="r-title">КТ-перфузия</h1>
+      <p class="r-sub">За&nbsp;1–1,5 минуты после болюса контраста КТ‑перфузия показывает, как кровь проходит через мозг. Главная задача&nbsp;— отличить <b>ядро</b> (ткань уже погибла) от&nbsp;<b>пенумбры</b> (ткань страдает, но&nbsp;её можно спасти) и&nbsp;понять, есть&nbsp;ли что спасать.</p>
+      <div class="algo">
+        <p class="algo-h">Четыре карты</p>
+        <table class="vt sv">
+          <colgroup><col class="v"><col></colgroup>
+          <tbody>
+            <tr><th scope="row"><span class="w pr" lang="en">CBF</span><span class="p">мозговой кровоток</span></th><td><span class="e">сколько крови проходит через 100 г ткани за минуту</span><span class="r">мл/100 г/мин · серое вещество ≈ 50–⁠60</span></td></tr>
+            <tr><th scope="row"><span class="w pr" lang="en">CBV</span><span class="p">объём крови</span></th><td><span class="e">сколько крови сейчас в 100 г ткани</span><span class="r">мл/100 г · серое вещество ≈ 4</span></td></tr>
+            <tr><th scope="row"><span class="w pr" lang="en">MTT</span><span class="p">время транзита</span></th><td><span class="e">сколько в среднем кровь идёт через ткань</span><span class="r">секунды · в норме несколько секунд</span></td></tr>
+            <tr><th scope="row"><span class="w pr" lang="en">Tmax</span><span class="p">время до максимума</span></th><td><span class="e">на сколько секунд опаздывает болюс</span><span class="r">секунды · в норме ≈ 0–⁠2</span></td></tr>
+          </tbody>
+        </table>
+        <p class="algo-note">CBF, CBV и&nbsp;MTT связаны формулой <b>CBF&nbsp;=&nbsp;CBV&nbsp;/&nbsp;MTT</b>. Абсолютные цифры у&nbsp;программ разные&nbsp;— сравнивают больную сторону со&nbsp;здоровой.</p>
+      </div>
+      <div class="algo algo-2">
+        <p class="algo-h">Ядро, пенумбра, олигемия</p>
+        <table class="mt cp">
+          <colgroup><col class="rh"><col><col><col></colgroup>
+          <thead><tr><td></td><th scope="col" class="c-core">Ядро</th><th scope="col" class="c-pen">Пенумбра</th><th scope="col" class="c-olig">Олигемия</th></tr></thead>
+          <tbody>
+            <tr><th scope="row" lang="en">CBF</th><td><span class="f">↓↓</span><small>&lt; 30%</small></td><td><span class="f">↓</span><small>но &gt; 30%</small></td><td><span class="f">≈</span><small>норма или чуть ↓</small></td></tr>
+            <tr><th scope="row" lang="en">CBV</th><td><span class="f">↓</span></td><td><span class="f">норма</span><small>или ↑</small></td><td><span class="f">норма</span></td></tr>
+            <tr><th scope="row" lang="en">Tmax</th><td><span class="f">↑</span><small>&gt; 6 с</small></td><td><span class="f">↑</span><small>&gt; 6 с</small></td><td><span class="f">↑</span><small>4–6 с</small></td></tr>
+          </tbody>
+        </table>
+        <p class="algo-m"><b class="pr">Ядро</b>&nbsp;— крови нет. <b class="good">Пенумбра</b>&nbsp;— кровь опаздывает.</p>
+        <p class="algo-note">Пороги&nbsp;— как в&nbsp;RAPID: ядро <b>rCBF&nbsp;&lt;&nbsp;30%</b>, вся гипоперфузия <b>Tmax&nbsp;&gt;&nbsp;6&nbsp;с</b>. У&nbsp;других программ пороги свои.</p>
+      </div>
+      <div class="algo algo-2">
+        <p class="algo-h">Как читать карту</p>
+        <ol class="steps">
+          <li><span class="sn">1</span><div><p class="s-t">Проверь качество</p><p class="s-f">движение <span class="sep">·</span> <span class="nw">кривые AIF и VOF</span></p></div></li>
+          <li><span class="sn">2</span><div><p class="s-t">Очерти зону риска</p><p class="s-f"><span class="nw"><span class="pr">Tmax&nbsp;>&nbsp;6&nbsp;с</span></span> <span class="sep">·</span> объём и&nbsp;бассейн</p></div></li>
+          <li><span class="sn">3</span><div><p class="s-t">Найди ядро</p><p class="s-f"><span class="nw"><span class="pr">rCBF&nbsp;<&nbsp;30%</span></span> <span class="sep">·</span> объём</p></div></li>
+          <li><span class="sn">4</span><div><p class="s-t">Посчитай mismatch</p><p class="s-f">пенумбра&nbsp;— разница <span class="sep">·</span> <span class="nw">ratio&nbsp;— отношение</span></p></div></li>
+          <li><span class="sn">5</span><div><p class="s-t">Сверь</p><p class="s-f">КТ, КТА, NIHSS, время</p></div></li>
+        </ol>
+      </div>
+      <div class="go-wrap"><button class="big primary" id="go" type="button">Начать тренировку</button></div>
+    </div>
+    <div class="r-right">
+      <h2 class="lbl">Одна картина&nbsp;— разный смысл</h2>
+      <div class="mx-wrap">
+        <div class="md"><div><p class="cp-en">Tmax &gt; 6 с, CBV <span class="pr">в норме</span></p><p class="cp-ru">пенумбра: сосуды расширены, ткань ещё жива</p><p class="cp-en">Tmax &gt; 6 с, CBF и CBV <span class="pr">резко снижены</span></p><p class="cp-ru">ядро: ткань уже не спасти</p></div></div>
+        <div class="md"><div><p class="cp-en">Tmax удлинён <span class="pr">в бассейне окклюзии</span> на КТА</p><p class="cp-ru">острая ишемия</p><p class="cp-en">Tmax удлинён <span class="pr">во всём полушарии</span>, окклюзии нет</p><p class="cp-ru">стеноз или хроническая окклюзия ВСА на этой стороне</p></div></div>
+        <div class="md"><div><p class="cp-en">Большое ядро <span class="pr">в первый час</span></p><p class="cp-ru">может быть завышено — «призрачное ядро»</p><p class="cp-en">Маленькое ядро <span class="pr">через 12 часов</span></p><p class="cp-ru">медленный прогрессор, хорошие коллатерали</p></div></div>
+        <div class="md"><div><p class="cp-en">CBF и CBV <span class="pr">повышены</span>, Tmax короткий</p><p class="cp-ru">гиперперфузия: судороги или реперфузия</p><p class="cp-en">Гипоперфузия <span class="pr">не по бассейну</span> артерии</p><p class="cp-ru">чаще мигрень с аурой или состояние после приступа</p></div></div>
+        <div class="md"><div><p class="cp-en">Ядро 20 мл, гипоперфузия 100 мл: ratio <span class="pr">5</span></p><p class="cp-ru">много ткани, которую можно спасти</p><p class="cp-en">Ядро 90 мл, гипоперфузия 100 мл: ratio <span class="pr">1,1</span></p><p class="cp-ru">почти вся зона риска — уже ядро</p></div></div>
+      </div>
+      <h2 class="lbl">Ловушки</h2>
+      <div class="mx-wrap">
+        <ul class="errs">
+          <li class="err"><span class="sr">Неверно:</span> <s>Сразу смотреть на цветные зоны</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Сначала проверить качество</span><span class="err-note">движение и плохие кривые дают ложные ядра</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Tmax &gt; 6 с — это инфаркт</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Tmax &gt; 6 с — ткань под угрозой</span><span class="err-note">ядро определяют по rCBF &lt; 30%</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Большое ядро — тромбэктомия не нужна</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Большое ядро само по себе не исключает тромбэктомию</span><span class="err-note">SELECT2, ANGEL-ASPECT и другие исследования</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Нормальная КТП — инсульта нет</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Лакунарные и стволовые инфаркты КТП часто не видит</span><span class="err-note">клиника важнее карты</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Ядро на КТП — окончательный инфаркт</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Рано ядро бывает завышено</span><span class="err-note">«призрачное ядро» при быстрой реперфузии</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Асимметрия Tmax — всегда острая окклюзия</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Сверить с КТА</span><span class="err-note">хронический стеноз ВСА даёт то же</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>AIF в артерии за тромбом</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">AIF — до тромба, обычно на здоровой стороне</span><span class="err-note">иначе гипоперфузия будет недооценена</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Ждать КТП перед тромболизисом в 0–⁠4,5 ч</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">В 0–⁠4,5 ч хватает бесконтрастной КТ</span><span class="err-note">перфузия не должна задерживать лечение</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>В позднем окне ядро всегда точное</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Поздно ядро бывает занижено</span><span class="err-note">спонтанная реперфузия маскирует инфаркт</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Пороги одинаковы во всех программах</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">У каждой программы свои пороги</span><span class="err-note">объёмы из разных программ напрямую не сравнивают</span></li>
+        </ul>
+      </div>
+      <h2 class="lbl">Темы</h2>
+      <div class="topics" id="topics"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+// ——— Темы по группам: правило и примеры. […] — главное в примере (оранжевый).
+const MIXED_TOPIC = 9;
+const GROUPS = {"basics": "Основы", "tissue": "Ткань", "select": "Кого лечить", "practice": "На практике", "mix": "Итог"};
+const TOPICS = [
+ {
+  "n": 1,
+  "group": "basics",
+  "title": "Как это работает",
+  "sub": "болюс, кривые, расчёт",
+  "rule": "В вену быстро вводят 40–⁠50 мл йодного контраста (4–⁠6 мл/с) и 60–⁠90 секунд каждые 1–⁠2 секунды снимают один и тот же объём мозга. Для каждой точки получается кривая «плотность — время». Программа сравнивает её с артериальной кривой (AIF, обычно ПМА или СМА здоровой стороны, но не дистальнее тромба) и венозной (VOF, верхний сагиттальный синус) и математически (деконволюцией) рассчитывает карты. CBF, CBV и MTT связывает формула CBF = CBV / MTT; Tmax и TTP в неё не входят.",
+  "ex": [
+   {
+    "en": "Болюс [40–⁠50 мл] вводят быстро — 4–⁠6 мл/с.",
+    "ru": "Медленное введение «размазывает» кривые и искажает карты."
+   },
+   {
+    "en": "[AIF] — в непоражённой артерии, [VOF] — в верхнем сагиттальном синусе.",
+    "ru": "По этим кривым программа «калибрует» все расчёты."
+   },
+   {
+    "en": "[CBF = CBV / MTT]",
+    "ru": "Кровоток падает, если в ткани меньше крови или она дольше идёт."
+   }
+  ]
+ },
+ {
+  "n": 2,
+  "group": "basics",
+  "title": "Карты",
+  "sub": "CBF, CBV, MTT, Tmax",
+  "rule": "CBF — мозговой кровоток: сколько крови проходит через 100 г ткани за минуту; в сером веществе около 50–⁠60 мл/100 г/мин, в белом — примерно вдвое меньше. CBV — объём крови в 100 г ткани, около 4 мл/100 г в сером веществе. MTT — среднее время прохождения крови через ткань, в норме несколько секунд. Tmax — задержка прихода болюса в ткань по сравнению с артерией; в норме близок к нулю. TTP — время до пика исходной кривой, сильно зависит от болюса. Абсолютные цифры разнятся между программами, поэтому сравнивают больную сторону со здоровой: rCBF, rCBV.",
+  "ex": [
+   {
+    "en": "[CBF] — сколько крови проходит через ткань за минуту.",
+    "ru": "Главная карта для ядра."
+   },
+   {
+    "en": "[CBV] — сколько крови сейчас находится в ткани.",
+    "ru": "В пенумбре держится за счёт расширения сосудов."
+   },
+   {
+    "en": "[Tmax] — на сколько секунд опаздывает болюс.",
+    "ru": "Главная карта для зоны гипоперфузии."
+   }
+  ]
+ },
+ {
+  "n": 3,
+  "group": "tissue",
+  "title": "Ядро и пенумбра",
+  "sub": "rCBF < 30%, Tmax > 6 с",
+  "rule": "Ядро — ткань, которая уже погибла или погибнет почти наверняка: крови почти нет, CBF и CBV снижены. Пенумбра — ткань страдает, но жива: кровоток снижен меньше, CBV в норме или повышен за счёт расширения сосудов, Tmax удлинён; её спасает реперфузия. Олигемия — лёгкая гипоперфузия, ткань обычно выживает и без лечения. В RAPID и похожих программах ядро — rCBF < 30% от здоровой стороны, вся гипоперфузия — Tmax > 6 с. Пенумбра = объём Tmax > 6 с минус ядро, mismatch ratio = гипоперфузия / ядро. У других программ пороги свои.",
+  "ex": [
+   {
+    "en": "Ядро — [rCBF < 30%] от здоровой стороны.",
+    "ru": "Розовая зона в отчёте RAPID."
+   },
+   {
+    "en": "Вся гипоперфузия — [Tmax > 6 с].",
+    "ru": "Зелёная зона: ядро вместе с пенумброй."
+   },
+   {
+    "en": "Tmax [4–⁠6 с] — чаще доброкачественная олигемия.",
+    "ru": "Эта ткань обычно выживает."
+   }
+  ]
+ },
+ {
+  "n": 4,
+  "group": "tissue",
+  "title": "Коллатерали",
+  "sub": "HIR, быстрые и медленные",
+  "rule": "От коллатералей зависит, как быстро пенумбра превращается в ядро. Hypoperfusion intensity ratio (HIR) = объём Tmax > 10 с / объём Tmax > 6 с — доля самой тяжёлой гипоперфузии в зоне риска. Чем выше HIR, тем хуже коллатерали и тем быстрее растёт ядро; HIR ≥ 0,4–⁠0,5 обычно означает плохие коллатерали. «Быстрый прогрессор» — ядро растёт быстро, «медленный» — ядро остаётся небольшим даже через много часов.",
+  "ex": [
+   {
+    "en": "HIR = [Tmax > 10 с] / [Tmax > 6 с]",
+    "ru": "Доля тяжёлой гипоперфузии в зоне риска."
+   },
+   {
+    "en": "Высокий HIR — [плохие] коллатерали.",
+    "ru": "Ядро будет расти быстро."
+   },
+   {
+    "en": "Маленькое ядро через 12 ч — [медленный] прогрессор.",
+    "ru": "Такие пациенты выигрывают от лечения в позднем окне."
+   }
+  ]
+ },
+ {
+  "n": 5,
+  "group": "select",
+  "title": "Отбор на тромбэктомию",
+  "sub": "DEFUSE 3, DAWN, большое ядро",
+  "rule": "DEFUSE 3 (6–⁠16 ч): окклюзия ВСА или М1, ядро < 70 мл, mismatch ratio ≥ 1,8, пенумбра ≥ 15 мл. DAWN (6–⁠24 ч): несоответствие тяжести и ядра — 80 лет и старше, NIHSS ≥ 10, ядро < 21 мл; до 80 лет, NIHSS ≥ 10, ядро < 31 мл; до 80 лет, NIHSS ≥ 20, ядро от 31 до < 51 мл. Оба исследования показали большую пользу тромбэктомии. Позже SELECT2, ANGEL-ASPECT, RESCUE-Japan LIMIT, TENSION и LASTE показали пользу и при большом ядре, поэтому большое ядро само по себе уже не исключает тромбэктомию. В окне 0–⁠6 ч для отбора обычно хватает КТ и КТА; перфузия не должна задерживать лечение.",
+  "ex": [
+   {
+    "en": "DEFUSE 3: ядро [< 70 мл], ratio [≥ 1,8], пенумбра [≥ 15 мл].",
+    "ru": "Окно 6–⁠16 часов."
+   },
+   {
+    "en": "DAWN: до 80 лет, NIHSS ≥ 10 — ядро [< 31 мл].",
+    "ru": "Тяжёлая клиника при маленьком ядре."
+   },
+   {
+    "en": "Большое ядро [само по себе] не исключает тромбэктомию.",
+    "ru": "SELECT2, ANGEL-ASPECT и другие исследования 2022–⁠2024 годов."
+   }
+  ]
+ },
+ {
+  "n": 6,
+  "group": "select",
+  "title": "Тромболизис в позднем окне",
+  "sub": "EXTEND, TRACE-III, HOPE",
+  "rule": "EXTEND: алтеплаза через 4,5–⁠9 ч от начала или при инсульте во сне (до 9 ч от середины сна), если ядро < 70 мл, mismatch ratio > 1,2 и разница > 10 мл. Больше пациентов восстановились до mRS 0–⁠1, но симптомных кровоизлияний стало больше. В рекомендациях AHA/ASA 2026 года тромболизис 4,5–⁠9 ч по автоматизированной перфузии — класс 2a. TRACE-III (тенектеплаза) и HOPE (алтеплаза) показали пользу в окне 4,5–⁠24 ч у пациентов с пенумброй, которым не проводили тромбэктомию; тромболизис при окклюзии крупной артерии, когда тромбэктомия недоступна, в рекомендациях 2026 года — класс 2b. TIMELESS — тенектеплаза в том же окне, но в основном перед тромбэктомией — пользы не показал.",
+  "ex": [
+   {
+    "en": "EXTEND: 4,5–⁠9 ч или [инсульт во сне], ratio [> 1,2].",
+    "ru": "Ядро < 70 мл, разница > 10 мл."
+   },
+   {
+    "en": "Цена — [больше симптомных кровоизлияний].",
+    "ru": "В EXTEND 6,2% против 0,9%."
+   },
+   {
+    "en": "TRACE-III: тенектеплаза [4,5–⁠24 ч] без тромбэктомии.",
+    "ru": "Окклюзия крупной артерии, тромбэктомия недоступна."
+   }
+  ]
+ },
+ {
+  "n": 7,
+  "group": "practice",
+  "title": "Ловушки",
+  "sub": "артефакты и имитаторы",
+  "rule": "Движение головы даёт ложные дефекты. Плохой болюс (низкий сердечный выброс, медленное введение) удлиняет Tmax в обоих полушариях. Короткое сканирование обрывает кривую — расчёт искажается. Хронический стеноз или окклюзия ВСА удлиняет Tmax в своём полушарии без острого инфаркта. Во время судорог бывает гиперперфузия, после приступа и при мигрени с аурой — гипоперфузия, которая обычно не совпадает с бассейном артерии; это подсказка, а не исключение инсульта. Лакунарные инфаркты и инфаркты ствола КТП часто не видит. В первые часы, особенно после быстрой реперфузии, ядро бывает завышено («призрачное ядро»), в позднем окне — занижено.",
+  "ex": [
+   {
+    "en": "Tmax удлинён [в обоих полушариях] — ищи плохой болюс или низкий сердечный выброс.",
+    "ru": "В одном полушарии без окклюзии — думай о стенозе ВСА."
+   },
+   {
+    "en": "[Гиперперфузия] коры без окклюзии — подумай о судорогах.",
+    "ru": "CBF и CBV повышены, Tmax короткий."
+   },
+   {
+    "en": "Нормальная КТП [не исключает] лакунарный инфаркт.",
+    "ru": "Мелкие и стволовые инфаркты часто не видны."
+   }
+  ]
+ },
+ {
+  "n": 8,
+  "group": "practice",
+  "title": "Как читать отчёт",
+  "sub": "по шагам",
+  "rule": "1. Качество: движение, кривые AIF и VOF — острый высокий пик и возврат к исходному уровню. 2. Tmax > 6 с — объём и бассейн. 3. rCBF < 30% — объём ядра. 4. Mismatch — разница и отношение. 5. Сверка с КТ (ASPECTS, старые инфаркты) и КТА (где окклюзия; нет совпадения — ищи дистальную окклюзию или реканализацию). 6. Сверка с клиникой: NIHSS, время, возраст. Цифры программы — подсказка, решение принимает врач.",
+  "ex": [
+   {
+    "en": "Сначала — [качество]: движение, AIF, VOF.",
+    "ru": "Плохие данные дают ложные ядра."
+   },
+   {
+    "en": "Потом объёмы: [Tmax > 6 с] и [rCBF < 30%].",
+    "ru": "Разница — пенумбра, отношение — mismatch ratio."
+   },
+   {
+    "en": "В конце — [сверка] с КТ, КТА и клиникой.",
+    "ru": "Зона риска должна совпадать с бассейном окклюзии."
+   }
+  ]
+ },
+ {
+  "n": 9,
+  "group": "mix",
+  "title": "Итог — всё вместе",
+  "sub": "",
+  "rule": "15 случайных карточек из всех тем вперемешку.",
+  "ex": []
+ }
+];
+
+// ——— Карточки. opts — варианты, a — правильный, why — пояснение.
+const CARDS = [
+ {
+  "id": "p1-bolus",
+  "t": 1,
+  "q": "Для КТ‑перфузии быстро вводят ___ мл контраста.",
+  "ru": "",
+  "opts": [
+   "40–⁠50",
+   "100–⁠120",
+   "10–⁠15"
+  ],
+  "a": "40–⁠50",
+  "why": "Небольшой компактный болюс: 40–⁠50 мл со скоростью 4–⁠6 мл/с."
+ },
+ {
+  "id": "p1-rate",
+  "t": 1,
+  "q": "Скорость введения контраста — ___ мл/с.",
+  "ru": "",
+  "opts": [
+   "4–⁠6",
+   "1–⁠2",
+   "15–⁠20"
+  ],
+  "a": "4–⁠6",
+  "why": "Нужен компактный болюс: 4–⁠6 мл/с через катетер 18G."
+ },
+ {
+  "id": "p1-time",
+  "t": 1,
+  "q": "Один и тот же объём мозга снимают не меньше ___ секунд.",
+  "ru": "",
+  "opts": [
+   "60",
+   "10",
+   "20"
+  ],
+  "a": "60",
+  "why": "Не меньше минуты, обычно 60–⁠90 с, а при низком выбросе дольше: кривая должна вернуться к исходному уровню."
+ },
+ {
+  "id": "p1-aif",
+  "t": 1,
+  "q": "Артериальную кривую (AIF) нельзя брать в артерии ___ тромба.",
+  "ru": "",
+  "opts": [
+   "дистальнее",
+   "проксимальнее"
+  ],
+  "a": "дистальнее",
+  "why": "За тромбом болюс запаздывает, и гипоперфузия будет недооценена. Обычно берут ПМА или СМА здоровой стороны."
+ },
+ {
+  "id": "p1-vof",
+  "t": 1,
+  "q": "Венозную кривую (VOF) обычно берут в верхнем сагиттальном ___.",
+  "ru": "",
+  "opts": [
+   "синусе",
+   "желудочке",
+   "стволе"
+  ],
+  "a": "синусе",
+  "why": "VOF — крупный венозный синус: верхний сагиттальный."
+ },
+ {
+  "id": "p1-formula",
+  "t": 1,
+  "q": "CBF = CBV / ___",
+  "ru": "",
+  "opts": [
+   "MTT",
+   "Tmax",
+   "TTP"
+  ],
+  "a": "MTT",
+  "why": "Принцип центрального объёма: кровоток = объём / время транзита."
+ },
+ {
+  "id": "p1-trunc",
+  "t": 1,
+  "q": "Если сканирование закончилось раньше, чем кривая вернулась к исходному уровню, расчёт карт ___.",
+  "ru": "",
+  "opts": [
+   "искажается",
+   "не меняется",
+   "уточняется"
+  ],
+  "a": "искажается",
+  "why": "Усечённая кривая искажает CBV и CBF — объёмы ядра и гипоперфузии становятся ненадёжными."
+ },
+ {
+  "id": "p2-cbf-units",
+  "t": 2,
+  "q": "CBF измеряют в ___.",
+  "ru": "",
+  "opts": [
+   "мл/100 г/мин",
+   "мл/100 г",
+   "секундах"
+  ],
+  "a": "мл/100 г/мин",
+  "why": "Кровоток — сколько крови за минуту проходит через 100 г ткани."
+ },
+ {
+  "id": "p2-cbv-units",
+  "t": 2,
+  "q": "CBV измеряют в ___.",
+  "ru": "",
+  "opts": [
+   "мл/100 г",
+   "мл/100 г/мин",
+   "секундах"
+  ],
+  "a": "мл/100 г",
+  "why": "Объём — сколько крови в 100 г ткани, без времени."
+ },
+ {
+  "id": "p2-norm",
+  "t": 2,
+  "q": "Нормальный CBF в сером веществе — около ___ мл/100 г/мин.",
+  "ru": "",
+  "opts": [
+   "50–⁠60",
+   "5–⁠10",
+   "200–⁠300"
+  ],
+  "a": "50–⁠60",
+  "why": "Серое вещество — около 50–⁠60, белое — примерно вдвое меньше."
+ },
+ {
+  "id": "p2-white",
+  "t": 2,
+  "q": "В белом веществе кровоток примерно ___, чем в сером.",
+  "ru": "",
+  "opts": [
+   "вдвое ниже",
+   "вдвое выше",
+   "такой же"
+  ],
+  "a": "вдвое ниже",
+  "why": "Поэтому сравнивают симметричные участки: серое с серым, белое с белым."
+ },
+ {
+  "id": "p2-tmax",
+  "t": 2,
+  "q": "Tmax показывает ___ прихода болюса в ткань.",
+  "ru": "",
+  "opts": [
+   "задержку",
+   "объём",
+   "скорость"
+  ],
+  "a": "задержку",
+  "why": "Tmax — на сколько секунд пик приходит позже, чем в артерии."
+ },
+ {
+  "id": "p2-relative",
+  "t": 2,
+  "q": "Абсолютные цифры зависят от программы, поэтому больную сторону сравнивают ___.",
+  "ru": "",
+  "opts": [
+   "со здоровой",
+   "с нормой из учебника"
+  ],
+  "a": "со здоровой",
+  "why": "Относительные значения (rCBF, rCBV) надёжнее абсолютных."
+ },
+ {
+  "id": "p2-mtt",
+  "t": 2,
+  "q": "При гипоперфузии Tmax и MTT ___.",
+  "ru": "",
+  "opts": [
+   "удлиняются",
+   "укорачиваются",
+   "не меняются"
+  ],
+  "a": "удлиняются",
+  "why": "Кровь приходит позже и идёт медленнее — время растёт."
+ },
+ {
+  "id": "p3-core",
+  "t": 3,
+  "q": "В RAPID ядро — зона, где rCBF ниже ___ от здоровой стороны.",
+  "ru": "",
+  "opts": [
+   "30%",
+   "70%",
+   "90%"
+  ],
+  "a": "30%",
+  "why": "Ядро — rCBF < 30%: кровоток меньше трети от нормы."
+ },
+ {
+  "id": "p3-tmax",
+  "t": 3,
+  "q": "Всю зону гипоперфузии очерчивают по Tmax больше ___ с.",
+  "ru": "",
+  "opts": [
+   "6",
+   "2",
+   "20"
+  ],
+  "a": "6",
+  "why": "Tmax > 6 с — ядро вместе с пенумброй."
+ },
+ {
+  "id": "p3-cbv-pen",
+  "t": 3,
+  "q": "В пенумбре CBV обычно ___.",
+  "ru": "",
+  "opts": [
+   "в норме или повышен",
+   "резко снижен"
+  ],
+  "a": "в норме или повышен",
+  "why": "Сосуды расширены (ауторегуляция): крови в ткани столько же или больше."
+ },
+ {
+  "id": "p3-cbv-core",
+  "t": 3,
+  "q": "В ядре CBV обычно ___.",
+  "ru": "",
+  "opts": [
+   "снижен",
+   "повышен"
+  ],
+  "a": "снижен",
+  "why": "Ауторегуляция исчерпана: крови в ткани мало. В раннем или частично реперфузированном ядре CBV бывает нормальным — поэтому ядро определяют по rCBF."
+ },
+ {
+  "id": "p3-pen-vol",
+  "t": 3,
+  "q": "Объём пенумбры = объём Tmax > 6 с ___ объём ядра.",
+  "ru": "",
+  "opts": [
+   "минус",
+   "плюс",
+   "умножить на"
+  ],
+  "a": "минус",
+  "why": "Пенумбра — это зона риска без ядра."
+ },
+ {
+  "id": "p3-ratio",
+  "t": 3,
+  "q": "Mismatch ratio = объём гипоперфузии ___ объём ядра.",
+  "ru": "",
+  "opts": [
+   "делить на",
+   "минус",
+   "плюс"
+  ],
+  "a": "делить на",
+  "why": "Ratio — отношение; разница — это объём пенумбры."
+ },
+ {
+  "id": "p3-olig",
+  "t": 3,
+  "q": "Ткань с Tmax 4–⁠6 с — чаще всего ___.",
+  "ru": "",
+  "opts": [
+   "олигемия",
+   "ядро"
+  ],
+  "a": "олигемия",
+  "why": "Лёгкая гипоперфузия: обычно выживает и без лечения."
+ },
+ {
+  "id": "p3-rescue",
+  "t": 3,
+  "q": "Пенумбру спасает ___.",
+  "ru": "",
+  "opts": [
+   "реперфузия",
+   "ожидание"
+  ],
+  "a": "реперфузия",
+  "why": "Без восстановления кровотока пенумбра со временем становится ядром."
+ },
+ {
+  "id": "p4-hir",
+  "t": 4,
+  "q": "HIR = объём Tmax > 10 с / объём Tmax > ___ с.",
+  "ru": "",
+  "opts": [
+   "6",
+   "2",
+   "20"
+  ],
+  "a": "6",
+  "why": "HIR — доля самой тяжёлой гипоперфузии (Tmax > 10 с) во всей зоне риска (Tmax > 6 с)."
+ },
+ {
+  "id": "p4-high",
+  "t": 4,
+  "q": "Высокий HIR говорит о ___ коллатералях.",
+  "ru": "",
+  "opts": [
+   "плохих",
+   "хороших"
+  ],
+  "a": "плохих",
+  "why": "Много тяжёлой гипоперфузии — коллатерали не справляются."
+ },
+ {
+  "id": "p4-growth",
+  "t": 4,
+  "q": "Чем хуже коллатерали, тем ___ растёт ядро.",
+  "ru": "",
+  "opts": [
+   "быстрее",
+   "медленнее"
+  ],
+  "a": "быстрее",
+  "why": "Плохие коллатерали — «быстрый прогрессор»."
+ },
+ {
+  "id": "p4-slow",
+  "t": 4,
+  "q": "Маленькое ядро через 12 ч от начала — признак ___ прогрессора.",
+  "ru": "",
+  "opts": [
+   "медленного",
+   "быстрого"
+  ],
+  "a": "медленного",
+  "why": "Хорошие коллатерали держат пенумбру живой много часов."
+ },
+ {
+  "id": "p4-window",
+  "t": 4,
+  "q": "Хорошие коллатерали ___ время, за которое можно спасти пенумбру.",
+  "ru": "",
+  "opts": [
+   "продлевают",
+   "сокращают"
+  ],
+  "a": "продлевают",
+  "why": "Поэтому время — ориентир, а решает состояние ткани."
+ },
+ {
+  "id": "p4-tmax10",
+  "t": 4,
+  "q": "Tmax > 10 с отражает ___ гипоперфузию.",
+  "ru": "",
+  "opts": [
+   "самую тяжёлую",
+   "лёгкую"
+  ],
+  "a": "самую тяжёлую",
+  "why": "Tmax > 10 с — ткань, которой грозит быстрый переход в ядро."
+ },
+ {
+  "id": "p5-core",
+  "t": 5,
+  "q": "DEFUSE 3: ядро меньше ___ мл.",
+  "ru": "",
+  "opts": [
+   "70",
+   "30",
+   "150"
+  ],
+  "a": "70",
+  "why": "DEFUSE 3: ядро < 70 мл, ratio ≥ 1,8, пенумбра ≥ 15 мл."
+ },
+ {
+  "id": "p5-ratio",
+  "t": 5,
+  "q": "DEFUSE 3: mismatch ratio не меньше ___.",
+  "ru": "",
+  "opts": [
+   "1,8",
+   "1,2",
+   "3"
+  ],
+  "a": "1,8",
+  "why": "1,8 — DEFUSE 3; 1,2 — порог EXTEND для тромболизиса."
+ },
+ {
+  "id": "p5-pen",
+  "t": 5,
+  "q": "DEFUSE 3: пенумбра не меньше ___ мл.",
+  "ru": "",
+  "opts": [
+   "15",
+   "5",
+   "50"
+  ],
+  "a": "15",
+  "why": "Разница между гипоперфузией и ядром — не меньше 15 мл."
+ },
+ {
+  "id": "p5-window",
+  "t": 5,
+  "q": "DEFUSE 3 включал пациентов через ___ ч от начала.",
+  "ru": "",
+  "opts": [
+   "6–⁠16",
+   "0–⁠6",
+   "16–⁠24"
+  ],
+  "a": "6–⁠16",
+  "why": "DEFUSE 3 — 6–⁠16 ч, DAWN — 6–⁠24 ч."
+ },
+ {
+  "id": "p5-dawn",
+  "t": 5,
+  "q": "DAWN сравнивал объём ядра с ___.",
+  "ru": "",
+  "opts": [
+   "тяжестью по NIHSS",
+   "объёмом пенумбры"
+  ],
+  "a": "тяжестью по NIHSS",
+  "why": "Несоответствие клиники и ядра: тяжёлый дефицит при маленьком ядре."
+ },
+ {
+  "id": "p5-dawn80",
+  "t": 5,
+  "q": "DAWN, 80 лет и старше, NIHSS ≥ 10: ядро меньше ___ мл.",
+  "ru": "",
+  "opts": [
+   "21",
+   "51",
+   "70"
+  ],
+  "a": "21",
+  "why": "80+: < 21 мл; до 80: < 31 мл, а при NIHSS ≥ 20 — меньше 51 мл."
+ },
+ {
+  "id": "p5-large",
+  "t": 5,
+  "q": "SELECT2 и ANGEL-ASPECT показали пользу тромбэктомии и при ___ ядре.",
+  "ru": "",
+  "opts": [
+   "большом",
+   "только маленьком"
+  ],
+  "a": "большом",
+  "why": "Большое ядро само по себе больше не исключает тромбэктомию."
+ },
+ {
+  "id": "p5-early",
+  "t": 5,
+  "q": "В окне 0–⁠6 ч для отбора на тромбэктомию обычно хватает бесконтрастной КТ и ___.",
+  "ru": "",
+  "opts": [
+   "КТА",
+   "КТП"
+  ],
+  "a": "КТА",
+  "why": "Решают ASPECTS и окклюзия на КТА; перфузия не должна задерживать лечение."
+ },
+ {
+  "id": "p6-window",
+  "t": 6,
+  "q": "EXTEND: алтеплаза через ___ ч от начала.",
+  "ru": "",
+  "opts": [
+   "4,5–⁠9",
+   "0–⁠4,5",
+   "9–⁠24"
+  ],
+  "a": "4,5–⁠9",
+  "why": "EXTEND — 4,5–⁠9 ч или инсульт во сне."
+ },
+ {
+  "id": "p6-wake",
+  "t": 6,
+  "q": "При инсульте во сне время в EXTEND считали от ___ сна.",
+  "ru": "",
+  "opts": [
+   "середины",
+   "начала",
+   "конца"
+  ],
+  "a": "середины",
+  "why": "До 9 ч от середины сна."
+ },
+ {
+  "id": "p6-ratio",
+  "t": 6,
+  "q": "EXTEND: mismatch ratio больше ___.",
+  "ru": "",
+  "opts": [
+   "1,2",
+   "1,8",
+   "3"
+  ],
+  "a": "1,2",
+  "why": "EXTEND: ratio > 1,2, разница > 10 мл, ядро < 70 мл."
+ },
+ {
+  "id": "p6-core",
+  "t": 6,
+  "q": "EXTEND: ядро меньше ___ мл.",
+  "ru": "",
+  "opts": [
+   "70",
+   "21",
+   "150"
+  ],
+  "a": "70",
+  "why": "Как и в DEFUSE 3 — меньше 70 мл."
+ },
+ {
+  "id": "p6-risk",
+  "t": 6,
+  "q": "Поздний тромболизис по перфузии чаще даёт ___.",
+  "ru": "",
+  "opts": [
+   "симптомные кровоизлияния",
+   "судороги"
+  ],
+  "a": "симптомные кровоизлияния",
+  "why": "В EXTEND 6,2% против 0,9% — цена большего числа хороших исходов."
+ },
+ {
+  "id": "p6-trace",
+  "t": 6,
+  "q": "TRACE-III: тенектеплаза через 4,5–⁠24 ч, если тромбэктомию ___.",
+  "ru": "",
+  "opts": [
+   "не проводят",
+   "проводят"
+  ],
+  "a": "не проводят",
+  "why": "Окклюзия крупной артерии и пенумбра, но тромбэктомия недоступна."
+ },
+ {
+  "id": "p6-timeless",
+  "t": 6,
+  "q": "TIMELESS (тенектеплаза в основном перед тромбэктомией) ___.",
+  "ru": "",
+  "opts": [
+   "пользы не показал",
+   "резко улучшил исходы"
+  ],
+  "a": "пользы не показал",
+  "why": "Если тромбэктомия и так будет, поздний тромболизис пользы не добавил."
+ },
+ {
+  "id": "p6-guideline",
+  "t": 6,
+  "q": "AHA/ASA 2026: тромболизис через 4,5–⁠9 ч при пенумбре на перфузии — рекомендация класса ___.",
+  "ru": "",
+  "opts": [
+   "2a",
+   "1",
+   "3"
+  ],
+  "a": "2a",
+  "why": "Класс 2a — «разумно»: польза есть, но меньше уверенности, чем в классе 1."
+ },
+ {
+  "id": "p7-output",
+  "t": 7,
+  "q": "Низкий сердечный выброс и плохой болюс ___ Tmax по всему мозгу.",
+  "ru": "",
+  "opts": [
+   "удлиняют",
+   "укорачивают"
+  ],
+  "a": "удлиняют",
+  "why": "Болюс приходит поздно везде — зона риска завышается."
+ },
+ {
+  "id": "p7-ica",
+  "t": 7,
+  "q": "Хронический стеноз ВСА может удлинять Tmax ___ острого инфаркта.",
+  "ru": "",
+  "opts": [
+   "без",
+   "только при"
+  ],
+  "a": "без",
+  "why": "Кровь идёт в обход по коллатералям — Tmax растёт, а ткань жива."
+ },
+ {
+  "id": "p7-seizure",
+  "t": 7,
+  "q": "Во время судорожного приступа в коре обычно видна ___.",
+  "ru": "",
+  "opts": [
+   "гиперперфузия",
+   "гипоперфузия"
+  ],
+  "a": "гиперперфузия",
+  "why": "CBF и CBV повышены, Tmax короткий, окклюзии нет."
+ },
+ {
+  "id": "p7-migraine",
+  "t": 7,
+  "q": "Гипоперфузия при мигрени с аурой обычно ___ сосудистые бассейны.",
+  "ru": "",
+  "opts": [
+   "пересекает",
+   "повторяет"
+  ],
+  "a": "пересекает",
+  "why": "Обычно не совпадает с бассейном артерии и выражена слабо. Это подсказка, а не исключение инсульта: решают клиника и DWI."
+ },
+ {
+  "id": "p7-lacune",
+  "t": 7,
+  "q": "Лакунарные инфаркты и инфаркты ствола КТП ___ пропускает.",
+  "ru": "",
+  "opts": [
+   "часто",
+   "никогда не"
+  ],
+  "a": "часто",
+  "why": "Мелкие очаги и задняя черепная ямка — слабые места КТП."
+ },
+ {
+  "id": "p7-ghost",
+  "t": 7,
+  "q": "В первые часы, особенно при быстрой реперфузии, ядро на КТП бывает ___.",
+  "ru": "",
+  "opts": [
+   "завышено",
+   "занижено"
+  ],
+  "a": "завышено",
+  "why": "«Призрачное ядро»: ткань с очень низким кровотоком ещё жива и может восстановиться."
+ },
+ {
+  "id": "p7-late",
+  "t": 7,
+  "q": "В позднем окне из-за спонтанной реперфузии ядро бывает ___.",
+  "ru": "",
+  "opts": [
+   "занижено",
+   "завышено"
+  ],
+  "a": "занижено",
+  "why": "Погибшая ткань снова кровоснабжается и не выглядит ядром."
+ },
+ {
+  "id": "p7-old",
+  "t": 7,
+  "q": "Старый инфаркт на КТП тоже выглядит как зона низкого CBF и CBV — сверяй с ___.",
+  "ru": "",
+  "opts": [
+   "бесконтрастной КТ",
+   "ЭКГ"
+  ],
+  "a": "бесконтрастной КТ",
+  "why": "На КТ старый инфаркт — чёткая гиподенсная зона с расширением борозд и желудочка."
+ },
+ {
+  "id": "p7-motion",
+  "t": 7,
+  "q": "Движение головы во время сканирования может дать ___ ядро.",
+  "ru": "",
+  "opts": [
+   "ложное",
+   "невидимое"
+  ],
+  "a": "ложное",
+  "why": "Движение ломает кривые — программа рисует ядро там, где его нет."
+ },
+ {
+  "id": "p8-first",
+  "t": 8,
+  "q": "Первым делом в отчёте проверяют ___.",
+  "ru": "",
+  "opts": [
+   "качество данных",
+   "объём ядра",
+   "mismatch ratio"
+  ],
+  "a": "качество данных",
+  "why": "Движение, AIF и VOF — без этого цифрам нельзя верить."
+ },
+ {
+  "id": "p8-aif",
+  "t": 8,
+  "q": "У хорошей артериальной кривой ___ высокий пик.",
+  "ru": "",
+  "opts": [
+   "острый",
+   "пологий"
+  ],
+  "a": "острый",
+  "why": "Пологий низкий пик — плохой болюс или неверно выбранная артерия."
+ },
+ {
+  "id": "p8-return",
+  "t": 8,
+  "q": "Кривая должна вернуться к ___ уровню.",
+  "ru": "",
+  "opts": [
+   "исходному",
+   "пиковому"
+  ],
+  "a": "исходному",
+  "why": "Иначе сканирование было слишком коротким."
+ },
+ {
+  "id": "p8-cta",
+  "t": 8,
+  "q": "Зона Tmax > 6 с должна совпадать с бассейном ___ на КТА.",
+  "ru": "",
+  "opts": [
+   "окклюзии",
+   "здоровой артерии"
+  ],
+  "a": "окклюзии",
+  "why": "Нет совпадения — перечитай КТА (дистальная окклюзия, реканализация), потом ищи артефакт или имитатор."
+ },
+ {
+  "id": "p8-mismatch",
+  "t": 8,
+  "q": "Маленькое ядро при тяжёлом дефиците — несоответствие ___ и ядра.",
+  "ru": "",
+  "opts": [
+   "клиники",
+   "пенумбры"
+  ],
+  "a": "клиники",
+  "why": "Clinical-core mismatch, как в DAWN."
+ },
+ {
+  "id": "p8-aspects",
+  "t": 8,
+  "q": "Ядро на КТП полезно сверить с ___ на бесконтрастной КТ.",
+  "ru": "",
+  "opts": [
+   "ASPECTS",
+   "NIHSS"
+  ],
+  "a": "ASPECTS",
+  "why": "Ранние изменения на КТ — независимая оценка ядра."
+ },
+ {
+  "id": "p8-doctor",
+  "t": 8,
+  "q": "Цифры программы — подсказка, решение принимает ___.",
+  "ru": "",
+  "opts": [
+   "врач",
+   "программа"
+  ],
+  "a": "врач",
+  "why": "Карты сверяют с КТ, КТА, временем и клиникой."
+ }
+];
+
+const NEW_PER_SESSION = 10;
+const MIXED_SIZE = 15;
+const INTERVALS = [1, 3, 7, 16];            // дни
+const DAY = 86400000;
+const LS_STATE = "ctp:state";
+const LS_TAB = "ctp:tab";
+const LS_OPEN = "ctp:open";
+const TOPIC_BY = {};
+TOPICS.forEach(t => { TOPIC_BY[t.n] = t; });
+
+let progress = {};
+let queue = [];
+let index = 0;
+let answered = false;
+let autoSpeak = false;   // озвучки в этом приложении нет
+let mode = "main";          // main | topic | mixed
+let topicN = null;
+let lapsed = {};
+let seen = new Set();
+let stats = { first: 0, correct: 0 };
+let shownOpts = [];
+let cloudDoc = null;
+let writing = false, dirty = false, retried = false, pushTimer = null;
+
+const $ = id => document.getElementById(id);
+function el(tag, cls, text){
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+}
+try{ document.documentElement.lang = "ru"; }catch(e){}
+
+// Мета-теги для установки на домашний экран
+(function addMobileMeta(){
+  const metas = [
+    ["apple-mobile-web-app-capable", "yes"],
+    ["mobile-web-app-capable", "yes"],
+    ["apple-mobile-web-app-status-bar-style", "black-translucent"],
+    ["apple-mobile-web-app-title", "Перфузия"],
+    ["theme-color", "#0e1113"]
+  ];
+  for (const [name, content] of metas){
+    if (document.querySelector('meta[name="' + name + '"]')) continue;
+    const m = document.createElement("meta");
+    m.setAttribute("name", name);
+    m.setAttribute("content", content);
+    document.head.appendChild(m);
+  }
+  // Плитка для экрана «Домой» и значок вкладки
+  const links = [
+    ["apple-touch-icon", "180x180", "data:image/png;base64,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"],
+    ["icon", "192x192", "data:image/png;base64,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"]
+  ];
+  for (const [rel, sizes, href] of links){
+    if (document.querySelector('link[rel="' + rel + '"]')) continue;
+    const l = document.createElement("link");
+    l.setAttribute("rel", rel);
+    l.setAttribute("sizes", sizes);
+    l.setAttribute("type", "image/png");
+    l.setAttribute("href", href);
+    document.head.appendChild(l);
+  }
+})();
+
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
+function loadLocal(){
+  try{
+    const raw = lsGet(LS_STATE);
+    const s = raw ? JSON.parse(raw) : null;
+    return (s && s.progress && typeof s.progress === "object") ? s.progress : {};
+  }catch(e){ return {}; }
+}
+function saveLocal(){ lsSet(LS_STATE, JSON.stringify({ progress: progress })); }
+function mergeProgress(a, b){
+  const out = {};
+  const keys = new Set(Object.keys(a || {}).concat(Object.keys(b || {})));
+  keys.forEach(k => {
+    const x = (a || {})[k], y = (b || {})[k];
+    if (!x){ if (y) out[k] = y; return; }
+    if (!y){ out[k] = x; return; }
+    out[k] = (y.ts || 0) > (x.ts || 0) ? y : x;
+  });
+  return out;
+}
+function dayStart(ts){ const d = new Date(ts); d.setHours(0, 0, 0, 0); return d.getTime(); }
+function shuffle(arr){
+  for (let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+  return arr;
+}
+function plural(n, one, few, many){
+  const a = n % 10, b = n % 100;
+  if (a === 1 && b !== 11) return one;
+  if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return few;
+  return many;
+}
+function unseenCount(){ return CARDS.filter(c => !progress[c.id]).length; }
+function topicLabel(n){ return n === MIXED_TOPIC ? "Всё вместе" : "Тема " + n + " · " + TOPIC_BY[n].title; }
+function label(a){ return a === "" ? "ничего" : a; }
+
+// ——— Предложение с пропуском
+function isStart(q, i){ const b = q.slice(0, i).trimEnd(); return b === "" || /[.!?]$/.test(b); }
+function cap(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+function split(card, word){
+  const i = card.q.indexOf("___");
+  const start = isStart(card.q, i);
+  const pre = card.q.slice(0, i);
+  let post = card.q.slice(i + 3);
+  if (word) return { pre: pre, word: start ? cap(word) : word, post: post };
+  post = post.replace(/^\s+/, "");                  // ответ «ничего»: слово после пропуска встаёт на его место
+  return { pre: pre, word: "", post: start ? cap(post) : post };
+}
+function fullText(card){ const p = split(card, card.a); return p.pre + p.word + p.post; }
+function exText(en){ return en.replace(/\|\w\]/g, "]").replace(/[\[\]]/g, ""); }
+function richText(s){
+  const f = document.createDocumentFragment();
+  String(s).replace(/ → /g, "\u00a0→\u00a0").split(/(-[a-z]+)/).forEach(part => { if (/^-[a-z]+$/.test(part)) f.append(el("span", "nw", part)); else if (part) f.append(part); });
+  return f;
+}
+// [текст|x] — форма в фокусе: без метки used to — оранжевый, |b be used to — зелёный, |g get used to — синий, |w would и |p пассив — подчёркнуты
+const MARK_CLS = { b: "good", g: "st", w: "hl", p: "hl" };
+function modalCls(t){ const i = t.lastIndexOf("|"); return i > 0 ? (MARK_CLS[t.slice(i + 1)] || "pr") : "pr"; }
+function markText(t){ const i = t.lastIndexOf("|"); return i > 0 ? t.slice(0, i) : t; }
+function marked(s){
+  const f = document.createDocumentFragment();
+  const re = /\[([^\]]+)\]/g;
+  let last = 0, m;
+  while ((m = re.exec(s))){
+    if (m.index > last) f.append(richText(s.slice(last, m.index)));
+    f.append(el("span", modalCls(m[1]), markText(m[1])));
+    last = re.lastIndex;
+  }
+  if (last < s.length) f.append(richText(s.slice(last)));
+  return f;
+}
+
+// ——— Синхронизация прогресса между устройствами (личная, у каждого зрителя своя)
+function schedulePush(){
+  if (!cloudDoc) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(pushCloud, 700);
+}
+async function pushCloud(){
+  if (!cloudDoc) return;
+  if (writing){ dirty = true; return; }
+  writing = true; dirty = false;
+  try{
+    await cloudDoc.set({ progress: progress, v: 1 });
+    retried = false;
+  }catch(e){
+    const c = e && e.code;
+    if (c === "unavailable" && !retried){ retried = true; setTimeout(pushCloud, 1200 + Math.random() * 1200); }
+    else if (c !== "unavailable" && c !== "resource_exhausted") cloudDoc = null;
+  }
+  writing = false;
+  if (dirty) pushCloud();
+}
+async function connectCloud(){
+  try{
+    if (!window.claude || typeof window.claude.use !== "function") return;
+    const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+    if (!db || !user) return;
+    const uid = await user.id();
+    if (!uid) return;
+    let ref;
+    try{ ref = db.doc("data/users/" + uid + "/progress"); }catch(e){ return; }
+    const snap = await ref.get();
+    const body = snap.exists ? (snap.data() || {}) : {};
+    const remote = (body.progress && typeof body.progress === "object") ? body.progress : {};
+    const before = JSON.stringify(progress);
+    progress = mergeProgress(progress, remote);
+    saveLocal();
+    cloudDoc = ref;
+    if (JSON.stringify(progress) !== JSON.stringify(remote)) schedulePush();
+    if (JSON.stringify(progress) !== before){
+      renderTopics();
+      if (mode === "main" && stats.first === 0 && !answered){ buildMain(); render(); }
+    }
+  }catch(e){ /* офлайн-режим */ }
+}
+
+function stopAudio(){}   // озвучки в этом приложении нет
+
+// ——— Очередь
+// Новые карточки идут вперемешку по темам: метод, карты, ядро и пенумбра, коллатерали, отбор, ловушки и отчёт чередуются.
+const FRESH_ORDER = (function(){
+  const pools = {};
+  CARDS.forEach(c => { const k = "t" + c.t; (pools[k] = pools[k] || []).push(c); });
+  // темы «сверх основы» (late) вступают позже
+  const late = {};
+  TOPICS.forEach(t => { if (t.late) late["t" + t.n] = t.late; });
+  const keys = Object.keys(pools), list = keys.map(k => pools[k]), used = list.map(() => 0), out = [];
+  while (out.length < CARDS.length){
+    let best = -1, bestR = 9;
+    list.forEach((p, i) => {
+      if (used[i] >= p.length) return;
+      const r = (used[i] + 0.5) / p.length + (late[keys[i]] || 0);
+      if (r < bestR){ bestR = r; best = i; }
+    });
+    out.push(list[best][used[best]++]);
+  }
+  return out;
+})();
+function resetSession(){ lapsed = {}; seen = new Set(); stats = { first: 0, correct: 0 }; index = 0; }
+function buildMain(){
+  const now = Date.now();
+  const due = CARDS.filter(c => progress[c.id] && progress[c.id].due <= now);
+  const fresh = FRESH_ORDER.filter(c => !progress[c.id]).slice(0, NEW_PER_SESSION);
+  queue = shuffle(due).concat(shuffle(fresh));
+  mode = "main"; topicN = null;
+  resetSession();
+}
+function buildTopic(n){
+  if (n === MIXED_TOPIC){
+    queue = shuffle(CARDS.slice()).slice(0, MIXED_SIZE);
+    mode = "mixed";
+  } else {
+    queue = shuffle(CARDS.filter(c => c.t === n));
+    mode = "topic";
+  }
+  topicN = n;
+  resetSession();
+}
+
+function setBar(done, total){
+  $("barFill").style.width = (total ? Math.min(100, Math.round(done / total * 100)) : 100) + "%";
+}
+function show(id, on){ $(id).hidden = !on; }
+
+function renderOpts(card){
+  const box = $("opts");
+  box.textContent = "";
+  shownOpts = shuffle(card.opts.slice());
+  const longest = Math.max.apply(null, shownOpts.map(o => o.length));
+  const n = shownOpts.length;
+  const cols = longest > 9 ? 1 : (n === 3 ? 3 : 2);
+  box.className = "opts c" + cols;
+  shownOpts.forEach(o => {
+    const b = el("button", "opt" + (longest > 9 ? " long" : ""));
+    b.type = "button";
+    if (o === ""){
+      b.setAttribute("aria-label", "Ничего не нужно");
+      b.append(el("span", null, "—"), el("small", null, "ничего"));
+    } else {
+      if (!/[а-яё]/i.test(o)) b.lang = "en";
+      b.textContent = o;
+    }
+    b.addEventListener("click", () => choose(o));
+    box.append(b);
+  });
+}
+
+function render(){
+  stopAudio();
+  answered = false;
+  const card = queue[index];
+  $("card").scrollTop = 0;
+  if (!card){ renderDone(); return; }
+  show("kind", true);
+  $("kind").textContent = topicLabel(card.t);
+  const q = $("q");
+  q.textContent = "";
+  const i = card.q.indexOf("___");
+  // пропуск и знак препинания после него не разрываются переносом строки
+  const post = card.q.slice(i + 3), pm = post.match(/^[?.!,;:]+/);
+  const gapBox = el("span", "nw");
+  gapBox.append(el("span", "gap"));
+  if (pm) gapBox.append(pm[0]);
+  q.append(card.q.slice(0, i), gapBox, pm ? post.slice(pm[0].length) : post);
+  q.setAttribute("aria-label", card.q.replace("___", "пропуск"));
+  show("hint", true);
+  $("hint").textContent = card.ru ? card.ru : "Выбери вариант";
+  show("back", false);
+  renderOpts(card);
+  show("opts", true);
+  show("actNext", false);
+  show("actDone", false);
+  const prefix = mode === "topic" ? "Тема " + topicN + " · " : mode === "mixed" ? "Всё вместе · " : "";
+  $("status").textContent = prefix + "Карточка " + (index + 1) + " из " + queue.length;
+  setBar(index, queue.length);
+}
+
+function renderDone(){
+  show("kind", false);
+  const q = $("q");
+  q.removeAttribute("aria-label");
+  q.textContent = mode === "main" ? "На сегодня всё" : mode === "mixed" ? "Итог пройден" : "Тема " + topicN + " пройдена";
+  const left = unseenCount();
+  let text = stats.first ? "Верно с первого раза: " + stats.correct + " из " + stats.first + ". " : "";
+  if (mode === "main") text += left ? "Новых карточек в запасе: " + left + ". " : "Все карточки уже в работе. ";
+  text += "Повторы вернутся сами — завтра, через 3, 7 и 16 дней.";
+  $("hint").textContent = text;
+  show("hint", true);
+  show("back", false);
+  show("opts", false);
+  show("actNext", false);
+  const more = $("more");
+  if (mode === "main"){
+    more.hidden = !left;
+    const k = Math.min(NEW_PER_SESSION, left);
+    more.textContent = "Ещё " + k + " " + plural(k, "новая", "новых", "новых");
+  } else {
+    more.hidden = false;
+    more.textContent = "Обычная тренировка";
+  }
+  show("actDone", true);
+  $("status").textContent = "Готово";
+  setBar(1, 1);
+}
+
+function choose(opt){
+  if (answered) return;
+  const card = queue[index];
+  if (!card) return;
+  answered = true;
+  const exact = opt === card.a;
+  const alsoNote = !exact && card.also && Object.prototype.hasOwnProperty.call(card.also, opt) ? card.also[opt] : null;
+  const ok = exact || alsoNote !== null;
+
+  if (!seen.has(card.id)){
+    seen.add(card.id);
+    stats.first++;
+    if (ok) stats.correct++;
+  }
+  const prev = progress[card.id];
+  let step = prev ? prev.step : -1;
+  if (!ok){
+    step = 0;
+    lapsed[card.id] = true;
+    queue.splice(Math.min(queue.length, index + 4), 0, card);   // вернётся через несколько карточек
+  } else if (step < 0 || lapsed[card.id]){
+    step = 0;
+  } else {
+    step = Math.min(INTERVALS.length - 1, step + 1);
+  }
+  progress[card.id] = { step: step, due: dayStart(Date.now()) + INTERVALS[step] * DAY, ts: Date.now() };
+  saveLocal();
+  schedulePush();
+
+  const q = $("q");
+  q.textContent = "";
+  q.removeAttribute("aria-label");
+  const p = split(card, card.a);
+  if (p.word) q.append(p.pre, el("span", "good", p.word), p.post);
+  else q.append(p.pre, el("span", "zero", "∅"), p.post);
+
+  const v = $("verdict");
+  v.textContent = "";
+  if (exact){
+    v.className = "verdict ok";
+    v.append("Верно");
+  } else if (ok){
+    v.className = "verdict ok";
+    v.append("Тоже верно: ", el("b", null, opt), ". " + alsoNote.charAt(0).toUpperCase() + alsoNote.slice(1) + ".");
+  } else {
+    v.className = "verdict bad";
+    v.append("Нужно ", el("b", "good", label(card.a)), " · твой ответ: ", el("b", null, label(opt)));
+  }
+  const why = $("why"); why.textContent = ""; why.append(richText(card.why));
+  show("hint", false);
+  show("back", true);
+  show("opts", false);
+  show("actNext", true);
+}
+
+function next(){
+  if (!answered) return;
+  index++;
+  render();
+}
+
+// ——— Правила
+function learnedIn(n){
+  const cards = CARDS.filter(c => c.t === n);
+  const done = cards.filter(c => progress[c.id] && progress[c.id].step >= 1).length;
+  return done + "/" + cards.length;
+}
+const PLAY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>';
+let openTopic = null;
+function renderTopics(){
+  const box = $("topics");
+  box.textContent = "";
+  let group = null;
+  TOPICS.forEach(t => {
+    if (t.group !== group){
+      group = t.group;
+      box.append(el("p", "t-group", GROUPS[group]));
+    }
+    const item = el("div", "t-item");
+    const head = el("button", "t-head");
+    head.type = "button";
+    head.setAttribute("aria-expanded", String(openTopic === t.n));
+    const txt = el("span", "t-txt");
+    const title = el("span", "t-title", t.title);
+    if (/[a-z]/.test(t.title) && !/[а-я]/i.test(t.title)) title.lang = "en";
+    txt.append(title);
+    if (t.sub) txt.append(el("span", "t-sub", t.sub));
+    head.append(el("span", "t-n", String(t.n)), txt,
+                el("span", "t-count", t.n === MIXED_TOPIC ? "" : learnedIn(t.n)), el("span", "t-chev", "›"));
+    head.addEventListener("click", () => {
+      openTopic = openTopic === t.n ? null : t.n;
+      lsSet(LS_OPEN, openTopic ? String(openTopic) : "");
+      stopAudio();
+      renderTopics();
+    });
+    item.append(head);
+    if (openTopic === t.n){
+      const body = el("div", "t-body");
+      const rule = el("p", "t-rule"); rule.append(richText(t.rule)); body.append(rule);
+      t.ex.forEach((ex, i) => {
+        const row = el("div", "ex");
+        const en = el("p", "ex-en"); en.append(marked(ex.en));
+        row.append(en, el("p", "ex-ru", ex.ru));
+        body.append(row);
+      });
+      const train = el("button", "t-train", t.n === MIXED_TOPIC ? "Начать итоговую тренировку" : "Потренировать эту тему");
+      train.type = "button";
+      train.addEventListener("click", () => { buildTopic(t.n); setTab("drill"); render(); });
+      body.append(train);
+      item.append(body);
+    }
+    box.append(item);
+  });
+}
+
+function setTab(name){
+  const drill = name === "drill";
+  $("drill").hidden = !drill;
+  $("rule").hidden = drill;
+  $("meta").hidden = !drill;
+  $("barWrap").hidden = !drill;
+  $("tabDrill").setAttribute("aria-selected", String(drill));
+  $("tabRule").setAttribute("aria-selected", String(!drill));
+  if (!drill){ stopAudio(); renderTopics(); }
+  lsSet(LS_TAB, name);
+}
+
+// ——— События
+$("tabDrill").addEventListener("click", () => setTab("drill"));
+$("tabRule").addEventListener("click", () => setTab("rule"));
+$("go").addEventListener("click", () => {
+  if (mode !== "main" || !queue[index]){ buildMain(); render(); }
+  setTab("drill");
+});
+$("toRule").addEventListener("click", () => setTab("rule"));
+$("more").addEventListener("click", () => { buildMain(); render(); });
+$("next").addEventListener("click", next);
+// Клавиатура на компьютере: 1, 2, 3 — варианты по порядку на экране; пробел или Enter — дальше
+document.addEventListener("keydown", e => {
+  if ($("drill").hidden || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (e.target && e.target.closest && e.target.closest("button")) return;
+  if (!answered){
+    const i = parseInt(e.key, 10) - 1;
+    if (i >= 0 && i < shownOpts.length && queue[index]) choose(shownOpts[i]);
+  } else if (e.key === " " || e.key === "Enter"){
+    e.preventDefault(); next();
+  }
+});
+
+function boot(){
+  progress = loadLocal();
+  const o = parseInt(lsGet(LS_OPEN) || "", 10);
+  openTopic = TOPIC_BY[o] ? o : null;
+  buildMain();
+  render();
+  const saved = lsGet(LS_TAB);
+  setTab(saved === "drill" || saved === "rule" ? saved : (Object.keys(progress).length ? "drill" : "rule"));
+  renderTopics();
+  connectCloud();
+}
+boot();
+</script>

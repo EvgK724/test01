@@ -1,0 +1,2870 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>ВИТС после инсульта</title>
+<style>
+  :root{
+    --k:1;
+    color-scheme:dark;
+    --bg:#0e1113;
+    --surface:#171c1f;
+    --raise:#1f262a;
+    --line:#252c30;
+    --line-2:#343d42;
+    --text:#e8e8e8;
+    --soft:#c3cbcf;
+    --muted:#939ea3;
+    --accent:#d97757;
+    --on-accent:#14181a;
+    --blue:#7cc0dd;
+    --blue-soft:rgba(124,192,221,.13);
+    --no:#b4544a;
+    --no-text:#e9a7a0;
+    --no-soft:rgba(180,84,74,.10);
+    --yes:#4e8767;
+    --yes-text:#9ad0b4;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  [hidden]{display:none!important}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);overflow-x:hidden}
+  body{font-family:var(--sans);font-size:calc(17px*var(--k));line-height:1.5;display:flex;justify-content:center}
+  button{font:inherit;color:inherit}
+  .app{width:100%;max-width:calc(440px*var(--k));height:100%;display:flex;flex-direction:column;gap:calc(10px*var(--k));padding:calc(10px*var(--k)) calc(16px*var(--k)) calc(14px*var(--k))}
+  .nw{white-space:nowrap}
+  .sr{position:absolute;width:calc(1px*var(--k));height:calc(1px*var(--k));overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+  .top{display:flex;align-items:center;gap:calc(10px*var(--k))}
+  .tabs{flex:1;display:flex;gap:calc(4px*var(--k));padding:calc(4px*var(--k));border:calc(1px*var(--k)) solid var(--line);border-radius:calc(14px*var(--k))}
+  .tab{flex:1;min-height:calc(44px*var(--k));border:0;border-radius:calc(10px*var(--k));background:transparent;color:var(--muted);font-size:calc(16px*var(--k));cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--raise);color:var(--text)}
+  .icon{width:calc(52px*var(--k));height:calc(52px*var(--k));flex:0 0 calc(52px*var(--k));display:grid;place-items:center;border:calc(1px*var(--k)) solid var(--line);border-radius:calc(14px*var(--k));background:transparent;color:var(--muted);cursor:pointer}
+  .icon[aria-pressed="true"]{color:var(--accent);border-color:var(--accent)}
+  .icon svg{width:calc(22px*var(--k));height:calc(22px*var(--k))}
+  .icon .sl{display:none}
+  .icon[aria-pressed="false"] .sl{display:inline}
+  .icon[aria-pressed="false"] .wv{display:none}
+
+  .meta{font-size:calc(15px*var(--k));color:var(--muted);font-variant-numeric:tabular-nums;line-height:1.3}
+  .bar{height:calc(3px*var(--k));border-radius:calc(2px*var(--k));background:var(--line);overflow:hidden;margin-top:-4px}
+  .bar-fill{display:block;height:100%;width:0;background:var(--accent);transition:width .25s ease}
+
+  .st{color:var(--blue)}
+  .pr{color:var(--accent)}
+  .good{color:var(--yes-text)}
+
+  .view{flex:1;min-height:0;display:flex;flex-direction:column;gap:calc(12px*var(--k))}
+  .card{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:calc(22px*var(--k)) calc(20px*var(--k));background:var(--surface);border:calc(1px*var(--k)) solid var(--line);border-radius:calc(20px*var(--k));display:flex;flex-direction:column;gap:calc(16px*var(--k))}
+  .kind{align-self:flex-start;font-size:calc(14px*var(--k));letter-spacing:.02em;color:var(--blue);padding:calc(5px*var(--k)) calc(11px*var(--k));border-radius:calc(999px*var(--k));border:calc(1px*var(--k)) solid currentColor;background:var(--blue-soft)}
+  .q{margin:0;font-family:var(--serif);font-size:calc(30px*var(--k));line-height:1.32;text-wrap:pretty}
+  .gap{display:inline-block;min-width:3em;height:.95em;border-bottom:calc(3px*var(--k)) solid var(--accent);margin:0 .08em;vertical-align:-.05em}
+  .hint{margin:0;font-size:calc(17px*var(--k));color:var(--muted)}
+  .back{display:flex;flex-direction:column;gap:calc(12px*var(--k));padding-top:calc(14px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .verdict{margin:0;font-size:calc(18px*var(--k));line-height:1.45}
+  .verdict.ok{color:var(--yes-text)}
+  .verdict.bad{color:var(--no-text)}
+  .verdict b{font-family:var(--serif);font-weight:400;font-size:calc(21px*var(--k))}
+  .why{margin:0;font-size:calc(18px*var(--k));line-height:1.5;color:var(--soft)}
+
+  .opts{display:grid;gap:calc(10px*var(--k))}
+  .opts.c1{grid-template-columns:minmax(0,1fr)}
+  .opts.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .opts.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .opt{min-height:calc(64px*var(--k));padding:calc(6px*var(--k)) calc(10px*var(--k));border-radius:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:var(--surface);font-family:var(--serif);font-size:calc(25px*var(--k));line-height:1.15;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(2px*var(--k))}
+  .opt.long{font-size:calc(22px*var(--k))}
+  .opt:active{background:var(--raise)}
+
+  .actions{display:flex;gap:calc(10px*var(--k))}
+  .big{flex:1;min-height:calc(58px*var(--k));border-radius:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:transparent;font-size:calc(19px*var(--k));cursor:pointer}
+  .primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+  .big:active,.opt:active{transform:scale(.985)}
+  .say{width:calc(58px*var(--k));height:calc(58px*var(--k));flex:0 0 calc(58px*var(--k));border-radius:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--accent);background:transparent;color:var(--accent);display:grid;place-items:center;cursor:pointer}
+  .say svg{width:calc(24px*var(--k));height:calc(24px*var(--k))}
+
+  /* ——— Правила */
+  .rule{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:calc(4px*var(--k)) calc(2px*var(--k)) calc(12px*var(--k))}
+  .r-title{margin:calc(8px*var(--k)) 0 calc(4px*var(--k));font-family:var(--serif);font-weight:400;font-size:calc(40px*var(--k));line-height:1.1;text-wrap:balance}
+  .r-sub{margin:0 0 calc(14px*var(--k));font-size:calc(17px*var(--k));line-height:1.45;color:var(--soft);text-wrap:pretty}
+  .r-sub b{color:var(--text)}
+  .r-sub i{font-family:var(--serif);font-style:normal;color:var(--text)}
+  .algo{background:var(--surface);border:calc(1px*var(--k)) solid var(--line);border-radius:calc(18px*var(--k));padding:calc(16px*var(--k)) calc(16px*var(--k)) calc(14px*var(--k))}
+  .algo-h{margin:0 0 calc(4px*var(--k));font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+  .steps{list-style:none;margin:0;padding:0}
+  .steps li{display:grid;grid-template-columns:calc(26px*var(--k)) minmax(0,1fr);gap:calc(8px*var(--k));padding:calc(10px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .steps li:first-child{border-top:0}
+  .sn{font-size:calc(15px*var(--k));line-height:1.45;color:var(--blue);font-variant-numeric:tabular-nums}
+  .s-t{margin:0;font-size:calc(17px*var(--k));line-height:1.4}
+  .s-f{margin:calc(3px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.3}
+  .s-f i{font-style:normal;color:var(--soft)}
+  .algo-m{margin:calc(4px*var(--k)) 0 0;padding-top:calc(12px*var(--k));border-top:calc(1px*var(--k)) solid var(--line);font-size:calc(18px*var(--k));color:var(--text)}
+  .algo-m b{font-family:var(--serif);font-weight:400;font-size:calc(26px*var(--k))}
+  .algo-note{margin:calc(8px*var(--k)) 0 0;font-size:calc(15px*var(--k));line-height:1.45;color:var(--muted)}
+  .algo-note i{font-family:var(--serif);font-style:normal;color:var(--soft)}
+  .go-wrap{display:flex;margin:calc(14px*var(--k)) 0 calc(4px*var(--k))}
+
+  .lbl{margin:calc(26px*var(--k)) 0 calc(8px*var(--k));font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+  .mx-wrap{overflow-x:auto;border:calc(1px*var(--k)) solid var(--line);border-radius:calc(16px*var(--k));background:var(--surface)}
+  .mx-note{margin:calc(10px*var(--k)) calc(2px*var(--k)) 0;font-size:calc(16px*var(--k));line-height:1.5;color:var(--soft)}
+  .mx-note i{font-family:var(--serif);font-style:normal;color:var(--text)}
+
+  .mm{margin-top:calc(10px*var(--k));padding:calc(12px*var(--k)) calc(14px*var(--k)) calc(12px*var(--k));background:var(--surface);border:calc(1px*var(--k)) solid var(--line);border-radius:calc(16px*var(--k))}
+  .mm:first-of-type{margin-top:0}
+  .mm-h{margin:0 0 calc(6px*var(--k));font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
+  .mm-n{display:inline-block;min-width:1.6em;color:var(--accent)}
+  .mm-grid{display:grid;grid-template-columns:1fr 1fr;gap:calc(2px*var(--k)) calc(12px*var(--k))}
+  .mm-w{margin:0;padding:calc(5px*var(--k)) 0}
+  .mm-w span{display:block;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2}
+  .mm-w small{display:block;font-size:calc(13px*var(--k));line-height:1.3;color:var(--muted)}
+  .mm-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) calc(44px*var(--k));column-gap:calc(10px*var(--k));align-items:center;padding:calc(6px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .mm-pair:first-of-type{border-top:0}
+  .mm-pair p{margin:0}
+  .mm-pair span{display:block;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2}
+  .mm-pair small{display:block;font-size:calc(13px*var(--k));line-height:1.3;color:var(--muted)}
+  .mm-play{width:calc(44px*var(--k));height:calc(44px*var(--k));border-radius:50%;border:calc(1px*var(--k)) solid var(--line-2);background:transparent;color:var(--accent);display:grid;place-items:center;cursor:pointer}
+  .mm-play svg{width:calc(18px*var(--k));height:calc(18px*var(--k))}
+  .mm-note{margin:calc(8px*var(--k)) 0 0;padding-top:calc(8px*var(--k));border-top:calc(1px*var(--k)) solid var(--line);font-size:calc(14px*var(--k));line-height:1.45;color:var(--soft)}
+  .legend{margin:0 calc(2px*var(--k)) calc(10px*var(--k));font-size:calc(15px*var(--k));line-height:1.45;color:var(--soft)}
+  .hl{color:var(--text);text-decoration:underline;text-decoration-thickness:calc(1.5px*var(--k));text-underline-offset:calc(3px*var(--k))}
+  .algo-m i{font-family:var(--serif);font-style:normal;font-size:calc(18px*var(--k))}
+  .md{display:grid;grid-template-columns:minmax(0,1fr) calc(48px*var(--k));column-gap:calc(10px*var(--k));align-items:center;padding:calc(8px*var(--k)) calc(10px*var(--k)) calc(8px*var(--k)) calc(14px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .md:first-child{border-top:0}
+  .s-f .sep{color:var(--muted)}
+  .pw{margin:0;line-height:1.35}
+  .pw + .pw{margin-top:calc(3px*var(--k))}
+  .pw-w{margin-right:calc(6px*var(--k));font-family:var(--serif);font-size:calc(22px*var(--k))}
+  .ipa{margin-right:calc(6px*var(--k));font-size:calc(14px*var(--k));color:var(--muted);white-space:nowrap}
+  .pw-ru{font-size:calc(15px*var(--k));color:var(--soft)}
+  .pw-tip{margin:calc(8px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.45;color:var(--muted)}
+  .snd-ex{margin:calc(4px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(18px*var(--k));line-height:1.35;color:var(--soft)}
+  .algo-m b.pr{color:var(--accent)}
+  .s-t b{margin-right:calc(4px*var(--k));font-family:var(--serif);font-weight:400;font-size:calc(21px*var(--k));color:var(--accent)}
+  .s-t .ipa{margin-right:calc(4px*var(--k))}
+  .algo-m b.st{color:var(--blue)}
+  .algo-m b.good{color:var(--yes-text)}
+  .mt{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(6px*var(--k))}
+  .mt col.rh{width:calc(92px*var(--k))}
+  .mt thead th{padding:calc(2px*var(--k)) calc(6px*var(--k)) calc(8px*var(--k));font-size:calc(12px*var(--k));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left}
+  .mt tbody th{padding:calc(12px*var(--k)) calc(6px*var(--k)) calc(12px*var(--k)) 0;text-align:left;vertical-align:top;font-family:var(--serif);font-weight:400;font-size:calc(24px*var(--k));line-height:1.15;border-top:calc(1px*var(--k)) solid var(--line)}
+  .mt td{padding:calc(12px*var(--k)) calc(6px*var(--k));vertical-align:top;font-size:calc(15px*var(--k));line-height:1.4;color:var(--soft);border-top:calc(1px*var(--k)) solid var(--line)}
+  .mt td .f{display:block;margin-bottom:calc(2px*var(--k));font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.2}
+  .mt td b{color:var(--text);font-weight:600}
+  .mt td b.h{display:block;margin-bottom:calc(2px*var(--k))}
+  .mt thead td{border-top:0}
+  .mt tbody th small{display:block;margin-top:calc(3px*var(--k));font-family:var(--sans);font-size:calc(12px*var(--k));line-height:1.2;color:var(--muted)}
+  .mt.wx col.rh{width:calc(78px*var(--k))}
+  .mt.wx td .f{font-size:calc(18px*var(--k))}
+  .mt td i{display:block;font-family:var(--serif);font-style:normal;font-size:calc(15px*var(--k));line-height:1.3;color:var(--soft)}
+  .mt td small{display:block;margin-top:calc(2px*var(--k));font-size:calc(13px*var(--k));line-height:1.3;color:var(--muted)}
+  .mt td small i{display:inline;font-size:calc(13px*var(--k));color:var(--soft)}
+  .cp-en + .cp-ru + .cp-en{margin-top:calc(8px*var(--k))}
+  .algo-2{margin-top:calc(12px*var(--k))}
+  .ct{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(4px*var(--k))}
+  .ct col.sit{width:46%}
+  .ct th{padding:calc(11px*var(--k)) calc(10px*var(--k)) calc(11px*var(--k)) 0;text-align:left;vertical-align:top;font-size:calc(15px*var(--k));font-weight:600;line-height:1.35;color:var(--text);border-top:calc(1px*var(--k)) solid var(--line)}
+  .ct td{padding:calc(11px*var(--k)) 0;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .ct tr:first-child th,.ct tr:first-child td{border-top:0}
+  .ct .f{display:block;font-family:var(--serif);font-size:calc(21px*var(--k));line-height:1.2}
+  .ct .e{display:block;margin-top:calc(2px*var(--k));font-family:var(--serif);font-size:calc(15px*var(--k));line-height:1.3;color:var(--soft)}
+  .vt{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(4px*var(--k))}
+  .vt col.v{width:46%}
+  .vt th{padding:calc(10px*var(--k)) calc(10px*var(--k)) calc(10px*var(--k)) 0;text-align:left;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .vt td{padding:calc(10px*var(--k)) 0;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .vt tr:first-child th,.vt tr:first-child td{border-top:0}
+  .vt .w{display:block;font-family:var(--serif);font-weight:400;font-size:calc(21px*var(--k));line-height:1.15;color:var(--accent)}
+  .vt .w.st{color:var(--blue)}
+  .vt .w.hl{color:var(--text)}
+  .vt tr.pb th,.vt tr.pb td{border-top:0;padding-top:0}
+  .vt .w.good{color:var(--yes-text)}
+  .wd-w{margin:0;line-height:1.3}
+  .wd-w .ph{margin-right:calc(6px*var(--k));font-family:var(--serif);font-size:calc(21px*var(--k))}
+  .wd-ru{font-size:calc(15px*var(--k));color:var(--muted)}
+  .wd-p{margin:calc(3px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(17px*var(--k));line-height:1.35;color:var(--soft)}
+  .vt .p{display:block;margin-top:calc(2px*var(--k));font-size:calc(13px*var(--k));font-weight:600;line-height:1.3;color:var(--blue)}
+  .vt .e{display:block;font-family:var(--serif);font-size:calc(16px*var(--k));line-height:1.3;color:var(--text)}
+  .vt .r{display:block;margin-top:calc(2px*var(--k));font-size:calc(13px*var(--k));line-height:1.35;color:var(--muted)}
+  .mt.af thead th{padding:calc(2px*var(--k)) calc(8px*var(--k)) calc(8px*var(--k)) 0}
+  .mt.af td{padding:calc(12px*var(--k)) calc(8px*var(--k)) calc(12px*var(--k)) 0}
+  .mt.af td .f{font-size:calc(20px*var(--k))}
+  .mt.af td small{margin-top:calc(4px*var(--k))}
+  .vt.sv col.v{width:40%}
+  .q{font-size:calc(26px*var(--k))}
+  .md{grid-template-columns:minmax(0,1fr)}
+  .ex{grid-template-columns:minmax(0,1fr)}
+  .mt.cp col.rh{width:calc(64px*var(--k))}
+  .mt.cp thead th{padding:calc(2px*var(--k)) calc(4px*var(--k)) calc(8px*var(--k));font-size:calc(13px*var(--k));letter-spacing:0;text-transform:none}
+  .mt.cp tbody th{font-size:calc(20px*var(--k))}
+  .mt.cp td{padding:calc(12px*var(--k)) calc(4px*var(--k))}
+  .mt.cp td .f{font-size:calc(20px*var(--k))}
+  .mt.cp .c-core{color:var(--accent)}
+  .mt.cp .c-pen{color:var(--yes-text)}
+  .mt.cp .c-olig{color:var(--blue)}
+  .algo-note b{color:var(--text);font-weight:600}
+  .mt.af .sep{color:var(--muted)}
+  .g4{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(6px*var(--k))}
+  .g4 col.rh{width:calc(76px*var(--k))}
+  .g4 thead th{padding:calc(4px*var(--k)) calc(4px*var(--k)) calc(8px*var(--k));font-size:calc(14px*var(--k));font-weight:600;color:var(--soft);text-align:center;vertical-align:bottom}
+  .g4 thead th small{display:block;font-weight:400;font-size:calc(12px*var(--k));color:var(--muted)}
+  .g4 tbody th{padding:calc(12px*var(--k)) 0;text-align:left;vertical-align:middle;font-size:calc(13px*var(--k));font-weight:600;line-height:1.3;color:var(--soft);border-top:calc(1px*var(--k)) solid var(--line)}
+  .g4 td{padding:calc(12px*var(--k)) calc(4px*var(--k)) calc(10px*var(--k));text-align:center;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .g4 thead td{border-top:0}
+  .g4 svg{display:block;width:calc(40px*var(--k));height:calc(40px*var(--k));margin:0 auto calc(4px*var(--k))}
+  .g4 .w{display:block;font-family:var(--serif);font-size:calc(28px*var(--k));line-height:1.1}
+  .g4 .e{display:block;margin-top:calc(4px*var(--k));font-family:var(--serif);font-size:calc(15px*var(--k));line-height:1.3;color:var(--soft)}
+  .cp-en{margin:0;font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.3}
+  .cp-ru{margin:calc(1px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.35;color:var(--muted)}
+  .cp-ru + .cp-en{margin-top:calc(8px*var(--k))}
+  .md .ex-play{grid-row:1}
+  .t-group{margin:calc(22px*var(--k)) 0 0;padding:0 calc(2px*var(--k)) calc(7px*var(--k));border-bottom:calc(1px*var(--k)) solid var(--line);font-size:calc(14px*var(--k));font-weight:600;color:var(--soft)}
+  .t-group:first-child{margin-top:calc(4px*var(--k))}
+  .wb{display:grid;grid-template-columns:minmax(0,1fr) calc(48px*var(--k));column-gap:calc(10px*var(--k));align-items:start}
+  .wb-h{margin:0;display:flex;align-items:baseline;flex-wrap:wrap;gap:calc(4px*var(--k)) calc(12px*var(--k))}
+  .wb-w{font-family:var(--serif);font-size:calc(38px*var(--k));line-height:1.05}
+  .wb-s{font-size:calc(15px*var(--k));color:var(--soft)}
+  .wb-ex{margin:calc(6px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.4}
+  .wb .ex-play{grid-column:2;grid-row:1 / span 2;align-self:center}
+  .zero{font-family:var(--sans);font-size:.55em;line-height:1;color:var(--yes-text);border:calc(1px*var(--k)) solid rgba(78,135,103,.65);border-radius:calc(999px*var(--k));padding:.12em .45em;margin:0 .35em 0 .05em;vertical-align:.25em}
+  .opt small{font-family:var(--sans);font-size:calc(13px*var(--k));color:var(--muted)}
+  .errs{list-style:none;margin:0;padding:0}
+  .err{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:baseline;gap:calc(10px*var(--k));padding:calc(11px*var(--k)) calc(14px*var(--k));border-top:calc(1px*var(--k)) solid var(--line);font-family:var(--serif);font-size:calc(17px*var(--k));line-height:1.35}
+  .err:first-child{border-top:0}
+  .err s{color:var(--no-text);text-decoration-thickness:calc(1.5px*var(--k))}
+  .err .arr{font-family:var(--sans);color:var(--muted)}
+  .err-note{grid-column:1 / -1;margin-top:-4px;font-family:var(--sans);font-size:calc(13px*var(--k));line-height:1.35;color:var(--muted)}
+
+  .topics{border-top:0}
+  .t-item{border-bottom:calc(1px*var(--k)) solid var(--line)}
+  .t-head{width:100%;min-height:calc(60px*var(--k));display:grid;grid-template-columns:calc(34px*var(--k)) minmax(0,1fr) auto calc(20px*var(--k));align-items:center;gap:calc(8px*var(--k));padding:calc(8px*var(--k)) calc(2px*var(--k));border:0;background:transparent;text-align:left;cursor:pointer}
+  .t-n{font-size:calc(15px*var(--k));color:var(--blue);font-variant-numeric:tabular-nums}
+  .t-txt{display:flex;flex-direction:column;min-width:0}
+  .t-title{font-size:calc(18px*var(--k));line-height:1.3}
+  .t-sub{font-size:calc(14px*var(--k));line-height:1.3;color:var(--muted)}
+  .t-count{font-size:calc(14px*var(--k));color:var(--muted);font-variant-numeric:tabular-nums}
+  .t-chev{color:var(--muted);transition:transform .2s ease}
+  .t-head[aria-expanded="true"] .t-chev{transform:rotate(90deg)}
+  .t-body{padding:calc(2px*var(--k)) calc(2px*var(--k)) calc(18px*var(--k)) calc(44px*var(--k));display:flex;flex-direction:column;gap:calc(12px*var(--k))}
+  .t-rule{margin:0;font-size:calc(17px*var(--k));line-height:1.5;color:var(--soft)}
+  .ex{display:grid;grid-template-columns:1fr calc(48px*var(--k));gap:calc(4px*var(--k)) calc(10px*var(--k));align-items:start}
+  .ex-en{margin:0;grid-column:1;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.4}
+  .ex-ru{margin:0;grid-column:1;font-size:calc(15px*var(--k));line-height:1.4;color:var(--muted)}
+  .ex-play{grid-column:2;grid-row:1 / span 2;width:calc(48px*var(--k));height:calc(48px*var(--k));border-radius:50%;border:calc(1px*var(--k)) solid var(--accent);background:transparent;color:var(--accent);display:grid;place-items:center;cursor:pointer}
+  .ex-play svg{width:calc(20px*var(--k));height:calc(20px*var(--k))}
+  .t-train{min-height:calc(50px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--accent);background:transparent;color:var(--accent);font-size:calc(17px*var(--k));cursor:pointer}
+
+  :focus-visible{outline:calc(2px*var(--k)) solid var(--accent);outline-offset:calc(2px*var(--k))}
+  @media (prefers-reduced-motion:reduce){.bar-fill,.t-chev{transition:none}.big:active,.opt:active{transform:none}}
+
+
+  /* ——— Справочник: разделы, таблицы, калькуляторы */
+  h2.algo-h{line-height:1.35}
+  .algo,.lbl{scroll-margin-top:calc(8px*var(--k))}
+  .jump{display:flex;flex-wrap:wrap;gap:calc(6px*var(--k));margin:0 0 calc(14px*var(--k))}
+  .jump button{min-height:calc(44px*var(--k));padding:0 calc(14px*var(--k));border-radius:calc(999px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:transparent;color:var(--soft);font-size:calc(15px*var(--k));cursor:pointer}
+  .jump button:active{background:var(--raise)}
+  .tt,.dz{margin-top:calc(2px*var(--k))}
+  .tr,.dr{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:calc(12px*var(--k));row-gap:calc(2px*var(--k));padding:calc(10px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .tr:first-child,.dr:first-child{border-top:0}
+  .tk,.dk{flex:0 1 auto;min-width:0;overflow-wrap:break-word;font-family:var(--serif);font-size:calc(21px*var(--k));line-height:1.2;color:var(--accent)}
+  .tv{flex:0 1 auto;margin-left:auto;min-width:0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2;color:var(--yes-text);text-align:right}
+  .dv{flex:0 1 auto;margin-left:auto;min-width:0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2;color:var(--text);text-align:right}
+  .td,.dd{flex:1 0 100%;margin-top:calc(1px*var(--k));font-size:calc(14px*var(--k));line-height:1.45;color:var(--soft)}
+  .algo-note + .algo-note{margin-top:calc(6px*var(--k))}
+
+  .calc{margin-top:calc(14px*var(--k));padding:calc(12px*var(--k)) calc(14px*var(--k)) calc(14px*var(--k));border-radius:calc(16px*var(--k));background:var(--bg);border:calc(1px*var(--k)) solid var(--line);display:flex;flex-direction:column;gap:calc(6px*var(--k))}
+  .calc-h{margin:0 0 calc(2px*var(--k));font-size:calc(15px*var(--k));font-weight:600;color:var(--text)}
+  .calc-h small{display:block;margin-top:calc(1px*var(--k));font-size:calc(13px*var(--k));font-weight:400;color:var(--muted)}
+  .fl{margin:calc(6px*var(--k)) 0 0;font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.03em;color:var(--muted)}
+  .fl small{margin-left:calc(5px*var(--k));font-size:calc(12px*var(--k));font-weight:400;letter-spacing:0}
+  .inp{display:block;width:100%;min-height:calc(48px*var(--k));padding:0 calc(12px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:var(--surface);color:var(--text);font:inherit;font-size:calc(17px*var(--k));font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none}
+  .inp::placeholder{color:var(--muted)}
+  .inp:focus{outline:calc(2px*var(--k)) solid var(--accent);outline-offset:calc(1px*var(--k))}
+  .inp-row{display:grid;grid-template-columns:minmax(0,1fr);gap:calc(6px*var(--k))}
+  .inp-row.has-x{grid-template-columns:minmax(0,1fr) calc(48px*var(--k))}
+  .x{min-height:calc(48px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:transparent;color:var(--muted);font-size:calc(20px*var(--k));line-height:1;cursor:pointer}
+  .seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:calc(6px*var(--k))}
+  .seg.s3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .seg.s4{grid-template-columns:repeat(auto-fit,minmax(calc(64px*var(--k)),1fr))}
+  .seg.s4 .chip{font-size:calc(14px*var(--k))}
+  .chip{overflow-wrap:break-word}
+  .err s,.err .good{min-width:0;overflow-wrap:break-word}
+  .seg.s2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chip{min-height:calc(44px*var(--k));padding:0 calc(2px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:transparent;color:var(--soft);font-size:calc(15px*var(--k));line-height:1.2;cursor:pointer}
+  .chip[aria-pressed="true"]{background:var(--raise);color:var(--text);border-color:var(--accent)}
+  .flags{display:flex;flex-wrap:wrap;gap:calc(6px*var(--k));margin-top:calc(6px*var(--k))}
+  .flags .chip{padding:calc(6px*var(--k)) calc(12px*var(--k));text-align:left}
+  .g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 calc(8px*var(--k))}
+  .res{margin-top:calc(8px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .rl{padding:calc(10px*var(--k)) 0;border-bottom:calc(1px*var(--k)) solid var(--line)}
+  .rl:last-child{border-bottom:0;padding-bottom:0}
+  .rk{margin:0;font-size:calc(12px*var(--k));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
+  .rv{margin:calc(2px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(22px*var(--k));line-height:1.25;color:var(--text);text-wrap:balance}
+  .rn{margin:calc(3px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.45;color:var(--muted)}
+  .rl.warn .rv{color:var(--no-text)}
+  .rl.ok .rv{color:var(--yes-text)}
+  .pill{display:inline-block;margin-left:calc(4px*var(--k));padding:0 calc(9px*var(--k));border-radius:calc(999px*var(--k));font-size:calc(12px*var(--k));font-weight:600;line-height:calc(20px*var(--k));border:calc(1px*var(--k)) solid currentColor;white-space:nowrap;vertical-align:calc(1px*var(--k))}
+  .p-now{color:var(--yes-text);background:rgba(78,135,103,.14)}
+  .p-wait{color:var(--blue);background:var(--blue-soft)}
+  .p-late{color:var(--muted)}
+  .crcl{margin:calc(10px*var(--k)) 0 0;font-size:calc(15px*var(--k));color:var(--soft)}
+  .crcl b{margin:0 calc(4px*var(--k));font-family:var(--serif);font-weight:400;font-size:calc(30px*var(--k));line-height:1;color:var(--text);font-variant-numeric:tabular-nums}
+  .dzr{list-style:none;margin:calc(6px*var(--k)) 0 0;padding:0}
+  .dzr li{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:calc(10px*var(--k));row-gap:calc(2px*var(--k));padding:calc(9px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .dzr .n{flex:0 1 auto;min-width:0;font-size:calc(15px*var(--k));font-weight:600;color:var(--soft)}
+  .dzr .d{flex:0 1 auto;margin-left:auto;min-width:0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2;color:var(--text);text-align:right}
+  .dzr .d.low{color:var(--accent)}
+  .dzr .d.no{color:var(--no-text)}
+  .dzr .w{flex:1 0 100%;margin-top:0;font-size:calc(13px*var(--k));line-height:1.4;color:var(--muted)}
+  .res-note{margin:calc(8px*var(--k)) 0 0;font-size:calc(13px*var(--k));line-height:1.45;color:var(--muted)}
+  .q{overflow-wrap:break-word}
+  .t-rule + .t-rule{margin-top:-4px}
+
+  .lst{list-style:none;margin:0;padding:0}
+  .lst li{padding:calc(11px*var(--k)) calc(14px*var(--k)) calc(12px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .lst li:first-child{border-top:0}
+  .sw-k{margin:0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.25;color:var(--accent)}
+  .sw-v{margin:calc(3px*var(--k)) 0 0;font-size:calc(16px*var(--k));line-height:1.45;color:var(--text)}
+  .sw-s{margin:calc(3px*var(--k)) 0 0;font-size:calc(12px*var(--k));font-weight:600;letter-spacing:.03em;color:var(--muted)}
+  .ad-k{margin:0;font-size:calc(14px*var(--k));font-weight:600;line-height:1.35;color:var(--soft)}
+  .ad-v{margin:calc(2px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(21px*var(--k));line-height:1.25;color:var(--accent)}
+  .ad-n{margin:calc(3px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.45;color:var(--muted)}
+  .iv-k{margin:0;font-size:calc(14px*var(--k));font-weight:600;line-height:1.35;color:var(--soft)}
+  .iv-k span{font-weight:400;color:var(--muted)}
+  .iv-v{margin:calc(3px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.3}
+  .iv-v::before{content:"";display:inline-block;width:calc(9px*var(--k));height:calc(9px*var(--k));margin-right:calc(8px*var(--k));border-radius:50%;background:currentColor;vertical-align:calc(2px*var(--k))}
+  .v-yes{color:var(--yes-text)}
+  .v-maybe{color:#e5c07b}
+  .v-no{color:var(--no-text)}
+  .src{margin:0;padding:0 0 0 calc(22px*var(--k));font-size:calc(13px*var(--k));line-height:1.45;color:var(--soft)}
+  .src li{margin:0 0 calc(7px*var(--k));padding-left:calc(2px*var(--k))}
+  .src a{color:var(--blue);text-decoration:underline;text-decoration-thickness:calc(1px*var(--k));text-underline-offset:calc(2px*var(--k));overflow-wrap:anywhere}
+  .foot{margin:calc(14px*var(--k)) 0 calc(6px*var(--k));font-size:calc(13px*var(--k));line-height:1.45;color:var(--muted)}
+  .r-title{font-size:min(calc(40px*var(--k)),10vw);overflow-wrap:break-word;hyphens:auto}
+  .t-title,.t-sub{overflow-wrap:break-word;hyphens:auto}
+  .opt{min-width:0;overflow-wrap:break-word;hyphens:auto}
+  label.fl{display:block}
+  .fl small{margin-left:0}
+  .abbr{margin:0 0 calc(14px*var(--k));padding:calc(12px*var(--k)) calc(14px*var(--k)) calc(10px*var(--k));border:calc(1px*var(--k)) solid var(--line);border-radius:calc(16px*var(--k))}
+  .abbr dl{margin:calc(4px*var(--k)) 0 0}
+  .abbr dl div{display:grid;grid-template-columns:minmax(0,7.5em) minmax(0,1fr);column-gap:calc(10px*var(--k));padding:calc(5px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .abbr dl div:first-child{border-top:0}
+  .abbr dt{font-size:calc(14px*var(--k));font-weight:600;line-height:1.4;color:var(--text);overflow-wrap:break-word}
+  .abbr dd{margin:0;font-size:calc(14px*var(--k));line-height:1.4;color:var(--soft);overflow-wrap:break-word}
+  .mx-note{font-size:calc(14px*var(--k));color:var(--muted)}
+
+  .mon{list-style:none;margin:calc(2px*var(--k)) 0 0;padding:0}
+  .mon li{padding:calc(10px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .mon li:first-child{border-top:0}
+  .mon .sw-k{font-size:calc(19px*var(--k))}
+  .mon .sw-v{font-size:calc(15px*var(--k))}
+  .dzr .d.ok{color:var(--yes-text)}
+  .dzr .d.now{color:var(--text)}
+  .rk + .dzr{margin-top:calc(2px*var(--k))}
+  .tv{text-wrap:balance}
+  .q,.err s,.err .good,.err-note,.rv,.rn,.dv,.dk,.tv,.tk,.ad-v,.iv-v,.sw-k,.sw-v,.cp-en,.cp-ru,.t-rule,.ex-en,.ex-ru,.why,.dzr .n,.dzr .d,.abbr dd,.algo-note{hyphens:auto;-webkit-hyphens:auto}
+
+  /* ——— Планшет */
+  body.tab .app{max-width:calc(600px*var(--k))}
+  body.wide .app{max-width:none;padding-left:calc(28px*var(--k));padding-right:calc(28px*var(--k))}
+  body.wide #drill{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;gap:calc(16px*var(--k))}
+  body.wide #drill .card{grid-column:1;grid-row:1 / span 2}
+  body.wide #drill .opts{grid-column:2;grid-row:1;align-content:end}
+  body.wide #drill .opts.c2,body.wide #drill .opts.c3{grid-template-columns:minmax(0,1fr)}
+  body.wide #drill .opt{min-height:calc(76px*var(--k))}
+  body.wide #drill .actions{grid-column:2;grid-row:2}
+  body.wide #rule{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:calc(36px*var(--k));align-items:start}
+  body.wide .r-left{position:static}
+  body.wide .r-right .lbl:first-child{margin-top:calc(14px*var(--k))}
+</style>
+<script>
+// Масштаб под размер экрана: телефон — как есть, планшет — крупнее, альбомная ориентация — две колонки
+(function(){
+  function fit(){
+    var w = window.innerWidth || 390, h = window.innerHeight || 760;
+    var wide = w >= 900 && w / h > 1.15;
+    var tab = !wide && w >= 600;
+    var k = wide ? h / 600 : Math.min(w / 440, h / 780);
+    if (w < 600) k = 1;
+    k = Math.max(1, Math.min(k, 1.9));
+    document.documentElement.style.setProperty("--k", k.toFixed(3));
+    document.body.classList.toggle("wide", wide);
+    document.body.classList.toggle("tab", tab);
+  }
+  fit();
+  window.addEventListener("resize", fit);
+  window.addEventListener("orientationchange", function(){ setTimeout(fit, 150); });
+})();
+</script>
+
+<div class="app" lang="ru" role="main">
+  <div class="top">
+    <div class="tabs" role="tablist" aria-label="Режим">
+      <button class="tab" id="tabDrill" role="tab" type="button" aria-selected="false" aria-controls="drill">Тренировка</button>
+      <button class="tab" id="tabRule" role="tab" type="button" aria-selected="true" aria-controls="rule">Справочник</button>
+    </div>
+  </div>
+  <div class="meta" id="meta" hidden><span id="status">Карточка 1 из 10</span></div>
+  <div class="bar" id="barWrap" hidden><span class="bar-fill" id="barFill"></span></div>
+
+  <section class="view" id="drill" role="tabpanel" aria-labelledby="tabDrill" hidden>
+    <article class="card" id="card">
+      <span class="kind" id="kind">Тема 1</span>
+      <p class="q" id="q"></p>
+      <p class="hint" id="hint">Выбери вариант</p>
+      <div class="back" id="back" aria-live="polite" hidden>
+        <p class="verdict" id="verdict"></p>
+        <p class="why" id="why"></p>
+      </div>
+    </article>
+    <div class="opts c2" id="opts"></div>
+    <div class="actions" id="actNext" hidden>
+      <button class="big primary" id="next" type="button">Дальше</button>
+    </div>
+    <div class="actions" id="actDone" hidden>
+      <button class="big primary" id="more" type="button">Ещё 10 новых</button>
+      <button class="big" id="toRule" type="button">Справочник</button>
+    </div>
+  </section>
+
+  <section class="rule" id="rule" role="tabpanel" aria-labelledby="tabRule">
+    <div class="r-left">
+      <h1 class="r-title">ВИТС после инсульта</h1>
+      <p class="r-sub">Высокоинтенсивная терапия статинами в&nbsp;ранней вторичной профилактике ИИ и&nbsp;ТИА: препараты и&nbsp;дозы, возраст, сроки старта, контроля и&nbsp;снижения дозы. Основа&nbsp;— <b>КР&nbsp;по&nbsp;ИИ&nbsp;2024</b>; рядом&nbsp;— новые РКИ <b>INSPIRES</b> (2024) и&nbsp;<b>STAREE</b> (2026), мета‑анализ <b>CTT</b> (2026).</p>
+      <section class="abbr" aria-labelledby="h-abbr">
+        <h2 class="algo-h" id="h-abbr">Сокращения</h2>
+        <dl>
+          <div><dt>ВИТС</dt><dd>высокоинтенсивная терапия статинами: аторвастатин 40–&#8288;80&nbsp;мг или розувастатин 20–&#8288;40&nbsp;мг, снижает ХС&nbsp;ЛНП на&nbsp;50% и&nbsp;больше</dd></div>
+          <div><dt>ХС ЛНП</dt><dd>холестерин липопротеинов низкой плотности, ммоль/л <span class="nw">(мг/дл&nbsp;÷&nbsp;38,7)</span></dd></div>
+          <div><dt>ВГН</dt><dd>верхняя граница нормы</dd></div>
+          <div><dt>КФК</dt><dd>креатинфосфокиназа</dd></div>
+          <div><dt>КК</dt><dd>клиренс креатинина по&nbsp;Кокрофту–Голту</dd></div>
+          <div><dt>иPCSK9</dt><dd>алирокумаб, эволокумаб, инклисиран</dd></div>
+          <div><dt>УУР</dt><dd>уровень убедительности рекомендаций: A&nbsp;— сильная, C&nbsp;— слабая</dd></div>
+          <div><dt>КР&nbsp;по&nbsp;ИИ&nbsp;2024</dt><dd>клинические рекомендации «Ишемический инсульт и&nbsp;транзиторная ишемическая атака»</dd></div>
+          <div><dt>КР&nbsp;по&nbsp;ДЛП&nbsp;2023</dt><dd>клинические рекомендации «Нарушения липидного обмена»</dd></div>
+          <div><dt>Приказ 168н</dt><dd>порядок диспансерного наблюдения за&nbsp;взрослыми, Минздрав РФ, 2022; цитируется в&nbsp;КР&nbsp;по&nbsp;ИИ&nbsp;2024</dd></div>
+        </dl>
+      </section>
+      <nav class="jump" aria-label="Разделы справочника">
+        <button type="button" data-to="s-dose">Дозы</button>
+        <button type="button" data-to="s-target">Цель</button>
+        <button type="button" data-to="s-ctrl">Контроль</button>
+        <button type="button" data-to="s-safe">Печень и&nbsp;мышцы</button>
+        <button type="button" data-to="s-red">Снижение дозы</button>
+        <button type="button" data-to="s-spec">Особые случаи</button>
+        <button type="button" data-to="s-topics">Темы</button>
+      </nav>
+      <section class="algo" id="s-dose" aria-labelledby="h-dose">
+        <h2 class="algo-h" id="h-dose">Кому и&nbsp;в&nbsp;какой дозе</h2>
+        <div class="dz">
+          <div class="dr"><span class="dk">Аторвастатин</span><span class="dv">40–⁠80 мг × 1</span><span class="dd">ВИТС · умеренная интенсивность — 10–⁠20 мг · в любое время суток, независимо от еды · по КК и возрасту дозу не корректируют</span></div>
+          <div class="dr"><span class="dk">Розувастатин</span><span class="dv">20–⁠40 мг × 1</span><span class="dd">ВИТС по КР · инструкция: старт 5–⁠10 мг, 20 мг — через 4 недели, 40 мг — только если на 20 мг нет цели · 40 мг нельзя при КК &lt; 60, гипотиреозе, с фибратами, пациентам азиатской расы · КК &lt; 30 — противопоказан</span></div>
+          <div class="dr"><span class="dk">Старше 75 лет, статина не было</span><span class="dv">умеренная</span><span class="dd">аторвастатин 10–⁠20 или розувастатин 5–⁠10 мг · КР по ИИ 2024, УУР C</span></div>
+          <div class="dr"><span class="dk">Старше 75 лет, уже на ВИТС</span><span class="dv">продолжить</span><span class="dd">интенсивность не снижать · КР по ИИ 2024, УУР C</span></div>
+          <div class="dr"><span class="dk">Нет цели за 4–⁠12 недель</span><span class="dv">+ эзетимиб 10 мг</span><span class="dd">к максимально переносимой дозе статина (УУР C); дальше — иPCSK9 (УУР A)</span></div>
+        </div>
+        <p class="algo-note"><b>Кому.</b> ВИТС в&nbsp;максимально переносимых дозах&nbsp;— большинству взрослых с&nbsp;ИИ и&nbsp;ТИА (КР&nbsp;по&nbsp;ИИ&nbsp;2024, УУР&nbsp;A). Исходный ЛНП на&nbsp;показание не&nbsp;влияет.</p>
+        <p class="algo-note"><b>Когда.</b> Не&nbsp;позднее 48&nbsp;ч от&nbsp;развития ИИ, при&nbsp;ТИА&nbsp;— сразу. Принимал статин до&nbsp;инсульта&nbsp;— продолжить без перерыва. Лечение пожизненное.</p>
+        <p class="algo-note"><b>Новые данные.</b> INSPIRES (2024): аторвастатин 80&nbsp;мг в&nbsp;первые 72&nbsp;ч против старта на&nbsp;4‑й день&nbsp;— инсультов поровну, функциональный исход лучше (ОШ&nbsp;0,83). STAREE (2026): аторвастатин 40&nbsp;мг у&nbsp;людей от&nbsp;70&nbsp;лет без ССЗ, СД и&nbsp;деменции&nbsp;— сердечно‑сосудистых событий на&nbsp;30% меньше; серьёзных нежелательных явлений поровну, мышечные, печёночные и&nbsp;связанные с&nbsp;СД&nbsp;— чаще.</p>
+        <div class="calc" id="pcalc">
+          <p class="calc-h">Подобрать режим<small>Пример&nbsp;— замените данными пациента</small></p>
+          <div class="g2">
+            <div><label class="fl" for="age">Возраст, лет</label><input class="inp" id="age" type="number" inputmode="numeric" min="18" max="110" step="1" value="68"></div>
+            <div><label class="fl" for="kk">КК <small>мл/мин</small></label><input class="inp" id="kk" type="number" inputmode="numeric" min="5" max="250" step="1" placeholder="не указан"></div>
+          </div>
+          <label class="fl" for="ldl">ХС ЛНП сейчас <small>ммоль/л</small></label>
+          <input class="inp" id="ldl" type="number" inputmode="decimal" min="0.3" max="20" step="0.1" value="3.2">
+          <p class="fl" id="curLbl">Что принимает сейчас</p>
+          <div class="seg s2" role="group" aria-labelledby="curLbl">
+            <button type="button" class="chip" data-cur="none" aria-pressed="true">Статина нет</button>
+            <button type="button" class="chip" data-cur="mod" aria-pressed="false">Умеренная</button>
+            <button type="button" class="chip" data-cur="high" aria-pressed="false">ВИТС</button>
+            <button type="button" class="chip" data-cur="highez" aria-pressed="false">ВИТС + эзетимиб</button>
+          </div>
+          <div class="flags" role="group" aria-label="Что ещё учесть">
+            <button type="button" class="chip" data-flag="extreme" aria-pressed="false">Экстремальный риск</button>
+            <button type="button" class="chip" data-flag="asian" aria-pressed="false">Азиатская раса</button>
+            <button type="button" class="chip" data-flag="hypo" aria-pressed="false">Гипотиреоз</button>
+            <button type="button" class="chip" data-flag="fibr" aria-pressed="false">Фибраты</button>
+            <button type="button" class="chip" data-flag="myo" aria-pressed="false">Миопатия на&nbsp;статине в&nbsp;анамнезе</button>
+            <button type="button" class="chip" data-flag="cyclo" aria-pressed="false">Циклоспорин</button>
+            <button type="button" class="chip" data-flag="amio" aria-pressed="false">Амиодарон или верапамил</button>
+            <button type="button" class="chip" data-flag="warf" aria-pressed="false">Варфарин</button>
+          </div>
+          <div class="res" id="pres" aria-live="polite"></div>
+        </div>
+      </section>
+      <section class="algo algo-2" id="s-target" aria-labelledby="h-target">
+        <h2 class="algo-h" id="h-target">Цель ХС ЛНП, ммоль/л</h2>
+        <div class="tt">
+          <div class="tr"><span class="tk">ИИ или ТИА</span><span class="tv">ЛНП &lt; 1,4</span><span class="td">или как минимум снижение ≥ 50% от исходного · КР по ИИ 2024, УУР A · КР по ДЛП 2023: оба условия сразу</span></div>
+          <div class="tr"><span class="tk">Экстремальный риск</span><span class="tv">ЛНП &lt; 1,0</span><span class="td">атеросклеротический ИИ и повторное атеросклеротическое событие за 2 года на максимальной терапии (статин, эзетимиб, иPCSK9) или при ЛНП &lt; 1,4 · УУР B</span></div>
+          <div class="tr"><span class="tk">Стеноз сонной артерии, атерома дуги аорты</span><span class="tv">ЛНП &lt; 1,4</span><span class="td">высокоинтенсивная гиполипидемическая терапия · УУР C</span></div>
+          <div class="tr"><span class="tk">Интракраниальный стеноз 50–⁠99%</span><span class="tv">ВИТС</span><span class="td">и САД не выше 140 мм рт. ст. · УУР A</span></div>
+          <div class="tr"><span class="tk">Триглицериды</span><span class="tv">&lt; 2,3</span><span class="td">КР по ИИ 2024; ТГ выше — статин всё равно первая линия · КР по ДЛП 2023 — &lt; 1,7</span></div>
+        </div>
+        <p class="algo-note">КР&nbsp;по&nbsp;ИИ&nbsp;2024: <span class="nw">&lt;&nbsp;1,4</span> или как минимум снижение на&nbsp;50%. КР&nbsp;по&nbsp;ДЛП&nbsp;2023 требуют обоих условий, и&nbsp;тогда берут более строгое: при&nbsp;исходном ЛНП 2,4 цель&nbsp;— <span class="nw">≤&nbsp;1,2</span>, при&nbsp;3,6&nbsp;— <span class="nw">&lt;&nbsp;1,4</span>. TST: выигрыш был при&nbsp;снижении ЛНП больше чем на&nbsp;50% (ОР&nbsp;0,61), а&nbsp;не&nbsp;меньше (ОР&nbsp;0,96). ESO&nbsp;2022 ставят цель мягче&nbsp;— <span class="nw">&lt;&nbsp;1,8</span>.</p>
+      </section>
+      <section class="algo" id="s-ctrl" aria-labelledby="h-ctrl">
+        <h2 class="algo-h" id="h-ctrl">Сроки контроля</h2>
+        <ul class="mon">
+          <li><p class="sw-k">При поступлении</p><p class="sw-v">АЛТ, АСТ — в первые 3 ч; липидограмма — в первые 48 ч</p><p class="sw-s">КР по ИИ 2024, табл. 9 · КФК исходно — КР по ДЛП 2023</p></li>
+          <li><p class="sw-k">Через 4 недели</p><p class="sw-v">АЛТ, АСТ, КФК</p><p class="sw-s">Приказ 168н (в КР по ИИ 2024, раздел 5.16) · КР по ДЛП 2023 — через 4–⁠6 недель после изменения терапии · и при мышечных симптомах</p></li>
+          <li><p class="sw-k">Через 4–⁠12 недель</p><p class="sw-v">липиды натощак, АЛТ, АСТ → решение о дозе и эзетимибе</p><p class="sw-s">КР по ИИ 2024 · КР по ДЛП 2023: 8 ± 4 недели — то же окно</p></li>
+          <li><p class="sw-k">После каждой смены терапии</p><p class="sw-v">снова через 4–⁠12 недель</p><p class="sw-s">КР по ИИ 2024 — после старта и повышения дозы; КР по ДЛП 2023 — после любого изменения, 8 ± 4 недели</p></li>
+          <li><p class="sw-k">Цель достигнута</p><p class="sw-v">липиды раз в год, ферменты — только по симптомам</p><p class="sw-s">КР по ИИ 2024 · после ОНМК КР по ДЛП 2023 — ХС ЛНП дважды в год</p></li>
+          <li><p class="sw-k">Диспансерно, 24 месяца</p><p class="sw-v">визит раз в 3 месяца в первый год, затем раз в 6 месяцев</p><p class="sw-s">Приказ 168н: ХС ЛНП, АД, ЧСС, ЭКГ</p></li>
+        </ul>
+        <p class="algo-note">Инструкции строже: аторвастатин&nbsp;— печёночные пробы через 6 и&nbsp;12&nbsp;недель, розувастатин&nbsp;— через 3&nbsp;месяца. Раньше 4&nbsp;недель ЛНП не&nbsp;оценивают: максимум эффекта&nbsp;— к&nbsp;4‑й неделе.</p>
+        <div class="calc" id="mcalc">
+          <p class="calc-h">Посчитать даты контроля<small>Пример&nbsp;— укажите даты пациента</small></p>
+          <label class="fl" for="start">Старт или смена дозы</label>
+          <input class="inp" id="start" type="date">
+          <label class="fl" for="dis">Выписка <small>для диспансерных визитов</small></label>
+          <div class="inp-row">
+            <input class="inp" id="dis" type="date">
+            <button type="button" class="x" id="disClear" aria-label="Без даты выписки" hidden>×</button>
+          </div>
+          <div class="res" id="mres" aria-live="polite"></div>
+        </div>
+      </section>
+      <div class="go-wrap"><button class="big primary" id="go" type="button">Начать тренировку</button></div>
+    </div>
+    <div class="r-right">
+      <h2 class="lbl" id="s-safe">Печень и&nbsp;мышцы</h2>
+      <div class="mx-wrap">
+        <ul class="lst">
+          <li><p class="ad-k">АЛТ &lt; 3 ВГН</p><p class="ad-v">продолжить</p><p class="ad-n">АЛТ повторить через 4–⁠6 недель · КР по ДЛП 2023</p></li>
+          <li><p class="ad-k">АЛТ ≥ 3 ВГН</p><p class="ad-v">отменить</p><p class="ad-n">АЛТ через 4–⁠6 недель, после нормализации — возобновить; не нормализуется — искать другую причину · КР по ДЛП 2023 · инструкция аторвастатина: при стойком повышении — снизить дозу или отменить</p></li>
+          <li><p class="ad-k">КФК исходно &gt; 4 ВГН</p><p class="ad-v">не начинать</p><p class="ad-n">КР по ДЛП 2023 · в инструкциях аторвастатина и розувастатина порог — 5 ВГН</p></li>
+          <li><p class="ad-k">КФК &lt; 4 ВГН и мышечные симптомы</p><p class="ad-v">КФК в динамике</p><p class="ad-n">симптомы держатся — отменить, через 6 недель оценить симптомы и КФК; прошли — рестарт в меньшей дозе, можно через день или 2 раза в неделю; возможна комбинация с эзетимибом</p></li>
+          <li><p class="ad-k">КФК 4–⁠10 ВГН, симптомов нет</p><p class="ad-v">продолжить</p><p class="ad-n">КФК через 2–⁠6 недель · инструкция розувастатина строже: отменить при КФК &gt; 5 ВГН</p></li>
+          <li><p class="ad-k">КФК 4–⁠10 ВГН и мышечные симптомы</p><p class="ad-v">отменить</p><p class="ad-n">КФК до нормализации, затем рестарт в меньшей дозе; исключить физическую нагрузку</p></li>
+          <li><p class="ad-k">КФК &gt; 10 ВГН</p><p class="ad-v">отменить</p><p class="ad-n">функция почек, КФК каждые 2 недели</p></li>
+        </ul>
+      </div>
+      <p class="mx-note">Больше 90% мышечных жалоб на&nbsp;статине&nbsp;— не&nbsp;от&nbsp;статина (CTT&nbsp;2022); в&nbsp;SAMSON 90% симптомов вызывала и&nbsp;таблетка‑плацебо. Непереносимость по&nbsp;КР&nbsp;— побочные эффекты после отмены и&nbsp;рестарта, в&nbsp;том числе другим статином или в&nbsp;меньшей дозе.</p>
+      <h2 class="lbl" id="s-red">Когда снижать дозу</h2>
+      <div class="mx-wrap">
+        <ul class="lst">
+          <li><p class="sw-k">После острого периода</p><p class="sw-v">плановое снижение ВИТС не предусмотрено: доза — максимально переносимая для цели, лечение пожизненное</p><p class="sw-s">КР по ИИ 2024, КР по ДЛП 2023</p></li>
+          <li><p class="sw-k">Цель достигнута</p><p class="sw-v">дозу не снижают — цель держится той же дозой</p><p class="sw-s">FOURIER-OLE: ЛНП &lt; 1,0 без роста геморрагических инсультов</p></li>
+          <li><p class="sw-k">Непереносимость</p><p class="sw-v">снизить дозу или сменить статин, но не отменять; цели нет — + эзетимиб</p><p class="sw-s">КР по ДЛП 2023 · отмена через 3–⁠6 мес: ОР повторного инсульта 1,42; снижение дозы: 0,94</p></li>
+          <li><p class="sw-k">АЛТ ≥ 3 ВГН, КФК &gt; 10 ВГН, КФК 4–⁠10 ВГН с симптомами</p><p class="sw-v">отменить; после нормализации — рестарт в меньшей дозе</p><p class="sw-s">КР по ДЛП 2023; при КФК &lt; 4 ВГН — если симптомы держатся</p></li>
+          <li><p class="sw-k">Циклоспорин</p><p class="sw-v">аторвастатин не выше 10 мг; розувастатин противопоказан</p><p class="sw-s">инструкции</p></li>
+          <li><p class="sw-k">Амиодарон, верапамил</p><p class="sw-v">снизить максимальную дозу аторвастатина</p><p class="sw-s">инструкция аторвастатина</p></li>
+          <li><p class="sw-k">Фузидовая кислота</p><p class="sw-v">статин прервать на весь курс и 7 дней после</p><p class="sw-s">инструкция аторвастатина: сочетание противопоказано</p></li>
+          <li><p class="sw-k">КК &lt; 60, гипотиреоз, фибраты, азиатская раса</p><p class="sw-v">розувастатин не выше 20 мг, старт — 5 мг</p><p class="sw-s">инструкции розувастатина</p></li>
+          <li><p class="sw-k">INSPIRES</p><p class="sw-v">80 мг первые 21 день, затем 40 мг</p><p class="sw-s">протокол РКИ, а не правило КР</p></li>
+        </ul>
+      </div>
+      <h2 class="lbl" id="s-spec">Особые ситуации</h2>
+      <div class="mx-wrap">
+        <ul class="lst">
+          <li><p class="iv-k">Статин до инсульта <span>· при поступлении</span></p><p class="iv-v v-yes"><span class="sr">да: </span>не прерывать ни на день: отмена на 3 дня — mRS &gt; 2 у 60% против 39% (Blanco 2007)</p></li>
+          <li><p class="iv-k">Тромболизис</p><p class="iv-v v-yes"><span class="sr">да: </span>статин не откладывают: INSPIRE — розувастатин 20 мг против 5 мг после тромболизиса, сВЧК 0,6% и 1,3%</p></li>
+          <li><p class="iv-k">Тромбэктомия</p><p class="iv-v v-yes"><span class="sr">да: </span>отдельных РКИ нет — общее правило: не позднее 48 ч от развития ИИ</p></li>
+          <li><p class="iv-k">Дисфагия <span>· до скрининга глотания</span></p><p class="iv-v v-maybe"><span class="sr">с условием: </span>per os — после скрининга; Крестор по инструкции не разжёвывают и не измельчают</p></li>
+          <li><p class="iv-k">Геморрагическая трансформация</p><p class="iv-v v-maybe"><span class="sr">с условием: </span>в КР по ИИ 2024 и инструкциях противопоказанием не названа; РКИ нет — решение индивидуально</p></li>
+          <li><p class="iv-k">Геморрагический инсульт в анамнезе</p><p class="iv-v v-maybe"><span class="sr">с условием: </span>SPARCL: повторных геморрагических на аторвастатине 80 мг — 7 против 2 (инструкция); строгий контроль АД</p></li>
+          <li><p class="iv-k">Беременность, лактация</p><p class="iv-v v-no"><span class="sr">нельзя: </span>статины не назначают, принимаемые отменяют; рестарт после родов — индивидуально (КР по ИИ 2024)</p></li>
+          <li><p class="iv-k">Детородный возраст <span>· без контрацепции</span></p><p class="iv-v v-no"><span class="sr">нельзя: </span>противопоказание в инструкциях аторвастатина и розувастатина</p></li>
+          <li><p class="iv-k">Болезнь печени <span>· активная</span></p><p class="iv-v v-no"><span class="sr">нельзя: </span>противопоказание в инструкциях: аторвастатин — и трансаминазы &gt; 3 ВГН неясного генеза, розувастатин — любое повышение &gt; 3 ВГН</p></li>
+          <li><p class="iv-k">Варфарин</p><p class="iv-v v-maybe"><span class="sr">с условием: </span>розувастатин: МНО при старте, смене дозы и отмене; аторвастатин: протромбиновое время до старта</p></li>
+        </ul>
+      </div>
+      <p class="mx-note">Кровоизлияния: в&nbsp;SPARCL геморрагических инсультов на&nbsp;аторвастатине 80&nbsp;мг&nbsp;— 55 против 33, ишемических&nbsp;— 218 против 274. В&nbsp;TST внутричерепные кровоизлияния с&nbsp;низким ЛНП не&nbsp;были связаны; предикторы&nbsp;— неконтролируемая АГ и&nbsp;антикоагулянты.</p>
+      <h2 class="lbl">Одна ситуация&nbsp;— разное решение</h2>
+      <div class="mx-wrap">
+        <div class="md"><div><p class="cp-en"><span class="pr">68 лет</span>, статина не было</p><p class="cp-ru">ВИТС: аторвастатин 40–⁠80 или розувастатин 20–⁠40 мг</p><p class="cp-en"><span class="pr">79 лет</span>, статина не было</p><p class="cp-ru">умеренная: аторвастатин 10–⁠20 или розувастатин 5–⁠10 мг</p></div></div>
+        <div class="md"><div><p class="cp-en">79 лет, <span class="pr">уже на ВИТС</span></p><p class="cp-ru">продолжить, не снижая интенсивность</p><p class="cp-en">79 лет, <span class="pr">статина не было</span></p><p class="cp-ru">начать с умеренной интенсивности</p></div></div>
+        <div class="md"><div><p class="cp-en">КР по ДЛП 2023, исходный ЛНП <span class="pr">3,6</span></p><p class="cp-ru">цель &lt; 1,4 — строже половины (1,8)</p><p class="cp-en">КР по ДЛП 2023, исходный ЛНП <span class="pr">2,4</span></p><p class="cp-ru">цель ≤ 1,2 — половина строже 1,4</p></div></div>
+        <div class="md"><div><p class="cp-en">Розувастатин, КК <span class="pr">75</span></p><p class="cp-ru">до 40 мг, если на 20 мг нет цели</p><p class="cp-en">Розувастатин, КК <span class="pr">45</span></p><p class="cp-ru">не выше 20 мг; КК &lt; 30 — противопоказан</p></div></div>
+        <div class="md"><div><p class="cp-en">ЛНП <span class="pr">1,1</span> через 6 недель, жалоб нет</p><p class="cp-ru">та же доза, дальше — липиды раз в год</p><p class="cp-en">ЛНП <span class="pr">2,0</span> через 8 недель на 80 мг</p><p class="cp-ru">+ эзетимиб 10 мг, контроль через 4–⁠12 недель</p></div></div>
+        <div class="md"><div><p class="cp-en">АЛТ <span class="pr">2 ВГН</span></p><p class="cp-ru">продолжить, АЛТ через 4–⁠6 недель</p><p class="cp-en">АЛТ <span class="pr">4 ВГН</span></p><p class="cp-ru">отменить, АЛТ через 4–⁠6 недель</p></div></div>
+        <div class="md"><div><p class="cp-en">КФК <span class="pr">3 ВГН</span>, без симптомов</p><p class="cp-ru">продолжить</p><p class="cp-en">КФК <span class="pr">12 ВГН</span></p><p class="cp-ru">отменить, почки, КФК каждые 2 недели</p></div></div>
+      </div>
+      <h2 class="lbl">Ловушки</h2>
+      <div class="mx-wrap">
+        <ul class="errs">
+          <li class="err"><span class="sr">Неверно:</span> <s>Отменить статин на острый период</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Продолжать без перерыва</span><span class="err-note">отмена на 3 дня ухудшила исходы (Blanco 2007)</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Не назначать статин при «нормальном» ЛНП</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">ВИТС — большинству с ИИ/ТИА</span><span class="err-note">у больных ССЗ статин назначают вне зависимости от уровня ХС (КР по ДЛП 2023)</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Снизить до 20 мг, раз ЛНП в цели</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Та же доза</span><span class="err-note">цель держится той же дозой; лечение пожизненное</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Старше 75 — статин уже не нужен</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Умеренная интенсивность; на ВИТС — продолжить</span><span class="err-note">КР по ИИ 2024</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Липиды на 7–⁠10-й день ВИТС</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Через 4–⁠12 недель</span><span class="err-note">максимум эффекта — к 4-й неделе</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>АЛТ каждые 3 месяца</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">АЛТ, АСТ через 4–⁠12 недель, дальше — по симптомам</span><span class="err-note">КР по ИИ 2024</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>КФК всем рутинно</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">КФК — исходно, через 4 недели, дальше по симптомам</span><span class="err-note">Приказ 168н; КР по ДЛП 2023 — через 4–⁠6 недель после изменения терапии</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Миалгия — отменить статины навсегда</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Пауза, рестарт в меньшей дозе или другим статином</span><span class="err-note">&gt;90% мышечных жалоб на статине не от статина (CTT 2022)</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Розувастатин 40 мг при КК 45</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Не выше 20 мг</span><span class="err-note">40 мг при КК &lt; 60 противопоказан (инструкция)</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Цели нет на 80 мг — просто ждать</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Добавить эзетимиб</span><span class="err-note">КР по ИИ 2024: через 4–⁠12 недель без цели</span></li>
+        </ul>
+      </div>
+      <h2 class="lbl" id="s-topics">Темы</h2>
+      <div class="topics" id="topics"></div>
+      <h2 class="lbl">Источники</h2>
+      <ol class="src">
+        <li><a href="https://cr.minzdrav.gov.ru/preview-cr/814_1" target="_blank" rel="noopener">КР «Ишемический инсульт и транзиторная ишемическая атака», Минздрав РФ, 2024 (814_1): разделы 5.1, 5.2.2, 5.3, 5.5, 5.14, 5.16, табл. 9</a></li>
+        <li><a href="https://cr.minzdrav.gov.ru/preview-cr/752_1" target="_blank" rel="noopener">КР «Нарушения липидного обмена», Минздрав РФ, 2023 (752_1): разделы 3.3–&#8288;3.5, 5, приложения А3, Б</a></li>
+        <li><a href="https://www.vidal.ru/drugs/liprimar-3" target="_blank" rel="noopener">Инструкция по применению аторвастатина (Липримар)</a></li>
+        <li><a href="https://medi.ru/instrukciya/krestor_4761/" target="_blank" rel="noopener">Инструкция по применению розувастатина (Крестор)</a></li>
+        <li><a href="https://medi.ru/instrukciya/rozuvastatin_23036/" target="_blank" rel="noopener">Инструкция по применению розувастатина (дженерик): старше 70 лет — старт 5 мг</a></li>
+        <li><a href="https://doi.org/10.1056/NEJMoa061894" target="_blank" rel="noopener">Amarenco P, et al. High-dose atorvastatin after stroke or TIA (SPARCL). N Engl J Med 2006;355:549–&#8288;59</a></li>
+        <li><a href="https://doi.org/10.1056/NEJMoa1910355" target="_blank" rel="noopener">Amarenco P, et al. A comparison of two LDL cholesterol targets after ischemic stroke (TST). N Engl J Med 2020;382:9</a></li>
+        <li><a href="https://doi.org/10.1161/STROKEAHA.121.035846" target="_blank" rel="noopener">Amarenco P, et al. Intracranial hemorrhage in the TST trial. Stroke 2022;53:457–&#8288;62</a></li>
+        <li><a href="https://doi.org/10.1161/STROKEAHA.122.039728" target="_blank" rel="noopener">Amarenco P, et al. Yield of dual therapy with statin and ezetimibe in TST. Stroke 2022;53:3260–&#8288;67</a></li>
+        <li><a href="https://doi.org/10.1161/STROKEAHA.123.042621" target="_blank" rel="noopener">Amarenco P, et al. More than 50 percent reduction in LDL cholesterol after a stroke (TST). Stroke 2023;54:1993–&#8288;2001</a></li>
+        <li><a href="https://doi.org/10.1001/jamaneurol.2024.1433" target="_blank" rel="noopener">Gao Y, et al. Immediate- or delayed-intensive statin in acute cerebral ischemia (INSPIRES). JAMA Neurol 2024;81:741–&#8288;51</a></li>
+        <li><a href="https://doi.org/10.1161/STROKEAHA.117.017623" target="_blank" rel="noopener">Yoshimura S, et al. Early versus delayed statin therapy in acute ischemic stroke (ASSORT). Stroke 2017;48:3057–&#8288;63</a></li>
+        <li><a href="https://doi.org/10.1007/s00415-020-10388-3" target="_blank" rel="noopener">Yang WY, et al. Intensive statin plus intravenous rt-PA (INSPIRE). J Neurol 2021;268:2560–&#8288;69</a></li>
+        <li><a href="https://doi.org/10.1212/01.wnl.0000269789.09277.47" target="_blank" rel="noopener">Blanco M, et al. Statin treatment withdrawal in ischemic stroke. Neurology 2007;69:904–&#8288;10</a></li>
+        <li><a href="https://doi.org/10.1161/JAHA.117.005658" target="_blank" rel="noopener">Lee M, et al. Utilization of statins beyond the initial period after stroke. J Am Heart Assoc 2017;6:e005658</a></li>
+        <li><a href="https://doi.org/10.1016/S0140-6736(18)31942-1" target="_blank" rel="noopener">CTT Collaboration. Efficacy and safety of statin therapy in older people. Lancet 2019;393:407–&#8288;15</a></li>
+        <li><a href="https://doi.org/10.1056/NEJMoa2607314" target="_blank" rel="noopener">Zoungas S, et al. Atorvastatin, cardiovascular events, and disability-free survival in older adults (STAREE). N Engl J Med 2026</a></li>
+        <li><a href="https://doi.org/10.1016/S0140-6736(22)01545-8" target="_blank" rel="noopener">CTT Collaboration. Effect of statin therapy on muscle symptoms. Lancet 2022;400:832–&#8288;45</a></li>
+        <li><a href="https://doi.org/10.1016/j.jacc.2021.07.022" target="_blank" rel="noopener">Howard JP, et al. Side effect patterns in a crossover trial of statin, placebo, and no treatment (SAMSON). J Am Coll Cardiol 2021;78:1210–&#8288;22</a></li>
+        <li><a href="https://doi.org/10.1016/S0140-6736(25)01578-8" target="_blank" rel="noopener">CTT Collaboration. Adverse effects attributed to statin therapy in product labels. Lancet 2026;407:689–&#8288;703</a></li>
+        <li><a href="https://doi.org/10.1016/S2213-8587(24)00040-8" target="_blank" rel="noopener">CTT Collaboration. Statin therapy and new-onset diabetes. Lancet Diabetes Endocrinol 2024;12:306–&#8288;19</a></li>
+        <li><a href="https://doi.org/10.1016/S0140-6736(22)00916-3" target="_blank" rel="noopener">Kim BK, et al. Moderate-intensity statin with ezetimibe vs high-intensity statin (RACING). Lancet 2022;400:380–&#8288;90</a></li>
+        <li><a href="https://doi.org/10.1136/bmj-2023-075837" target="_blank" rel="noopener">Lee YJ, et al. Rosuvastatin versus atorvastatin (LODESTAR). BMJ 2023;383:e075837</a></li>
+        <li><a href="https://doi.org/10.1161/CIRCULATIONAHA.125.077549" target="_blank" rel="noopener">Monguillon V, et al. Very low achieved LDL cholesterol in patients with previous ischemic stroke (FOURIER-OLE). Circulation 2026;153:86–&#8288;93</a></li>
+        <li><a href="https://doi.org/10.1016/j.jstrokecerebrovasdis.2019.02.018" target="_blank" rel="noopener">Judge C, et al. Lipid lowering therapy, LDL level and risk of intracerebral hemorrhage. J Stroke Cerebrovasc Dis 2019;28:1703–&#8288;09</a></li>
+        <li><a href="https://doi.org/10.1161/JAHA.123.030714" target="_blank" rel="noopener">Bétrisey S, et al. Lipid-lowering therapy and risk of hemorrhagic stroke. J Am Heart Assoc 2024;13:e030714</a></li>
+        <li><a href="https://doi.org/10.1177/23969873221100032" target="_blank" rel="noopener">Dawson J, et al. ESO guideline on pharmacological secondary prevention after ischaemic stroke or TIA. Eur Stroke J 2022;7(3)</a></li>
+      </ol>
+      <p class="foot">Сверено 29&nbsp;сентября 2026&nbsp;г. Справочник для&nbsp;врача: решение принимают по&nbsp;клинической ситуации и&nbsp;протоколу отделения.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+// ——— Темы по группам: правило и примеры. […] — главное в примере (оранжевый).
+const MIXED_TOPIC = 12;
+const GROUPS = {"who": "Кому и сколько", "when": "Когда и как долго", "safe": "Безопасность и снижение дозы", "mix": "Итог"};
+const TOPICS = [
+ {
+  "n": 1,
+  "group": "who",
+  "title": "Кому ВИТС и цель",
+  "sub": "КР по ИИ 2024, TST, SPARCL",
+  "rule": "КР по ИИ 2024 рекомендуют высокоинтенсивную терапию статинами (ВИТС) в максимально переносимых дозах большинству взрослых с ИИ и ТИА (УУР A, УДД 1). Исходный ЛНП на показание не влияет: у больных ССЗ статин назначают вне зависимости от уровня холестерина (КР по ДЛП 2023).\n\nЦель по КР по ИИ 2024 — ХС ЛНП < 1,4 ммоль/л или как минимум снижение на 50% от исходного (УУР A, УДД 2). КР по ДЛП 2023 для очень высокого риска требуют обоих условий сразу — тогда из двух чисел берут меньшее: при исходном 2,4 цель ≤ 1,2. При экстремальном риске — < 1,0 ммоль/л (УУР B): атеросклеротический ИИ и повторное атеросклеротическое событие за 2 года на максимальной терапии (статин, эзетимиб, иPCSK9) или при уже достигнутом ЛНП < 1,4. ESO 2022 ставят цель мягче — < 1,8.\n\nДоказательства. SPARCL (2006, 4731 пациент): аторвастатин 80 мг против плацебо — инсультов 11,2% против 13,1% за медиану 4,9 года (ОР 0,84), ЛНП 1,9 против 3,3 ммоль/л. TST (2020, 2860): цель < 1,8 ммоль/л против 2,3–⁠2,8 — сосудистых событий 8,5% против 10,9% (ОР 0,78); выигрыш был при снижении ЛНП больше чем на 50% (ОР 0,61), а не меньше (0,96). CTT: каждый 1 ммоль/л снижения ЛНП уменьшает крупные сосудистые события на 21%.\n\nОтдельно в КР по ИИ 2024: интракраниальный стеноз 50–⁠99% — ВИТС и САД не выше 140 мм рт. ст. (УУР A); стеноз сонной артерии и атерома дуги аорты — цель ЛНП < 1,4 (УУР C). Триглицериды выше 2,3 ммоль/л — статин тоже первая линия.",
+  "ex": [
+   {
+    "en": "Цель: ЛНП [< 1,4] или хотя бы [−50%].",
+    "ru": "КР по ИИ 2024, УУР A."
+   },
+   {
+    "en": "КР по ДЛП 2023: исходный [2,4] — цель [≤ 1,2].",
+    "ru": "Оба условия сразу — берут более строгое."
+   },
+   {
+    "en": "Экстремальный риск — [< 1,0].",
+    "ru": "Повторное событие за 2 года на максимальной терапии."
+   },
+   {
+    "en": "TST: ОР [0,78] при цели < 1,8.",
+    "ru": "При снижении ЛНП > 50% — 0,61."
+   }
+  ]
+ },
+ {
+  "n": 2,
+  "group": "who",
+  "title": "Препараты и дозы",
+  "sub": "аторвастатин 40–⁠80, розувастатин 20–⁠40",
+  "rule": "ВИТС — аторвастатин 40–⁠80 мг или розувастатин 20–⁠40 мг в сутки; она снижает ХС ЛНП на 50% и больше. Умеренная интенсивность — аторвастатин 10–⁠20 мг или розувастатин 5–⁠10 мг, снижение на 30–⁠50%.\n\nОриентир КР по ДЛП 2023 (табл. А3.11): умеренная терапия ≈ −30%, интенсивная ≈ −50%, интенсивная с эзетимибом ≈ −65%, с иPCSK9 ≈ −75%, все три ≈ −85%.\n\nОба статина принимают один раз в сутки, в любое время, независимо от еды: действие аторвастатина за счёт метаболитов держится 20–⁠30 ч, T½ розувастатина — около 19 ч. Эффект появляется через 1–⁠2 недели, максимум — к 4-й неделе, поэтому ЛНП раньше 4 недель не оценивают.\n\nИнструкция розувастатина осторожнее КР: старт — 5–⁠10 мг, 20 мг — через 4 недели, 40 мг — только если на 20 мг нет цели при тяжёлой гиперхолестеринемии и высоком риске.\n\nПочки. Аторвастатин по КК не корректируют. Розувастатин при КК < 30 противопоказан, при КК < 60 — не выше 20 мг, старт с 5 мг.",
+  "ex": [
+   {
+    "en": "ВИТС: аторвастатин [40–⁠80 мг], розувастатин [20–⁠40 мг].",
+    "ru": "Снижение ЛНП ≥ 50%."
+   },
+   {
+    "en": "Умеренная: аторвастатин [10–⁠20], розувастатин [5–⁠10].",
+    "ru": "Снижение 30–⁠50%."
+   },
+   {
+    "en": "Максимум эффекта — к [4-й неделе].",
+    "ru": "Раньше ЛНП не оценивают."
+   },
+   {
+    "en": "Розувастатин, КК 45 — [не выше 20 мг].",
+    "ru": "Аторвастатин по КК не корректируют."
+   }
+  ]
+ },
+ {
+  "n": 3,
+  "group": "who",
+  "title": "Возраст",
+  "sub": "старше 75 лет, STAREE, CTT",
+  "rule": "Старше 75 лет, если статина до инсульта не было, КР по ИИ 2024 советуют начинать с умеренной интенсивности: аторвастатин 10–⁠20 мг или розувастатин 5–⁠10 мг (УУР C, УДД 2; в КР по ДЛП 2023 та же рекомендация — УУР A). Если пациент старше 75 лет уже получал ВИТС — продолжить, не снижая интенсивность (УУР C). В 75 лет и моложе — ВИТС на общих основаниях.\n\nДальше дозу титруют до цели по ЛНП; при риске лекарственных взаимодействий КР по ДЛП 2023 советуют начать с низкой дозы, а для более низкой цели — комбинировать низкую дозу статина с эзетимибом.\n\nДоказательства. CTT 2019 (28 РКИ): у людей с сосудистым заболеванием относительная польза статинов с возрастом не уменьшается. STAREE (NEJM, 2026; 9971 человек от 70 лет без ССЗ, СД и деменции): аторвастатин 40 мг снизил сердечно-сосудистые события на 30% (ОР 0,70); серьёзных нежелательных явлений — 2,7% в обеих группах, мышечные, печёночные и связанные с СД — чаще; выживаемость без деменции и инвалидности не изменилась (ОР 0,94).\n\nИнструкции. Аторвастатин по возрасту не корректируют; возраст старше 70 лет — сам по себе фактор риска рабдомиолиза, поэтому оценивают необходимость исходной КФК (КР по ДЛП 2023 — КФК до начала терапии всем). Розувастатин: в ряде инструкций старше 70 лет старт — 5 мг, в инструкции Крестора коррекции по возрасту нет.",
+  "ex": [
+   {
+    "en": "Старше 75, статина не было — [умеренная].",
+    "ru": "Аторвастатин 10–⁠20 или розувастатин 5–⁠10 мг."
+   },
+   {
+    "en": "Старше 75, уже на ВИТС — [продолжить].",
+    "ru": "Интенсивность не снижать."
+   },
+   {
+    "en": "STAREE: ОР [0,70] на аторвастатине 40 мг.",
+    "ru": "От 70 лет, без ССЗ; серьёзные НЯ — 2,7% в обеих группах."
+   }
+  ]
+ },
+ {
+  "n": 4,
+  "group": "who",
+  "title": "Особые пациенты",
+  "sub": "почки, раса, взаимодействия, беременность",
+  "rule": "Розувастатин: при КК < 30 противопоказан; 40 мг противопоказан при КК < 60, гипотиреозе, мышечных болезнях в личном или семейном анамнезе, миотоксичности на других статинах или фибратах, злоупотреблении алкоголем, приёме фибратов и пациентам азиатской расы; при КК < 60, азиатской расе и предрасположенности к миопатии старт — 5 мг. С циклоспорином розувастатин противопоказан.\n\nАторвастатин: с циклоспорином — не выше 10 мг; с амиодароном или верапамилом (ингибиторы CYP3A4) максимальную дозу снижают; с фузидовой кислотой сочетание противопоказано — статин прерывают на курс и возобновляют через 7 дней. Розувастатин через CYP3A4 почти не метаболизируется.\n\nВарфарин: старт, повышение дозы или отмена розувастатина меняют МНО — его контролируют; перед аторвастатином определяют протромбиновое время.\n\nПротивопоказаны оба статина: активное заболевание печени (для аторвастатина — и трансаминазы > 3 ВГН неясного генеза, для розувастатина — любое повышение > 3 ВГН), беременность, грудное вскармливание, детородный возраст без контрацепции. После ИИ при беременности — диета и образ жизни, рестарт статина после родов — индивидуально (КР по ИИ 2024).",
+  "ex": [
+   {
+    "en": "Розувастатин, КК [< 30] — [противопоказан].",
+    "ru": "При КК < 60 — не выше 20 мг."
+   },
+   {
+    "en": "Циклоспорин: аторвастатин [≤ 10 мг].",
+    "ru": "Розувастатин противопоказан."
+   },
+   {
+    "en": "Варфарин + розувастатин — [контроль МНО].",
+    "ru": "При старте, смене дозы и отмене."
+   }
+  ]
+ },
+ {
+  "n": 5,
+  "group": "when",
+  "title": "Когда начинать",
+  "sub": "48 часов, INSPIRES, после тромболизиса",
+  "rule": "КР по ИИ 2024: вторичную профилактику начинают как можно раньше — сразу после диагностики ТИА и не позднее 48 ч после развития ИИ (УУР C). Липидограмма — в первые 48 ч, АЛТ и АСТ — в первые 3 ч от поступления (табл. 9). Кровь на липиды лучше взять до первой дозы: от исходного считают снижение на 50%.\n\nINSPIRES (JAMA Neurol, 2024; 6100 пациентов 35–⁠80 лет с лёгким атеросклеротическим инсультом или ТИА высокого риска): аторвастатин 80 мг в первые 72 ч против старта на 4-й день — повторных инсультов за 90 дней поровну (8,1% и 8,4%, ОР 0,95), плохой функциональный исход реже (9,8% против 11,4%, ОШ 0,83), кровотечений 0,8% против 0,6%. Схема: 80 мг в 1–⁠21-й день, затем 40 мг. ASSORT (2017, 257 пациентов): старт в первые 24 ч и на 7-й день по исходу не различались.\n\nПосле тромболизиса статин не откладывают: в INSPIRE (2021, 310 пациентов) розувастатин 20 мг против 5 мг после тромболизиса — сВЧК 0,6% и 1,3%, без различий.\n\nДисфагия: таблетки per os — после скрининга глотания; Крестор по инструкции не разжёвывают и не измельчают.",
+  "ex": [
+   {
+    "en": "ИИ — не позднее [48 ч], ТИА — [сразу].",
+    "ru": "КР по ИИ 2024."
+   },
+   {
+    "en": "INSPIRES: 80 мг в первые 72 ч — инсультов [поровну].",
+    "ru": "Функциональный исход лучше: ОШ 0,83."
+   },
+   {
+    "en": "После тромболизиса — [не откладывать].",
+    "ru": "INSPIRE: сВЧК 0,6% против 1,3%."
+   }
+  ]
+ },
+ {
+  "n": 6,
+  "group": "when",
+  "title": "Не прерывать",
+  "sub": "продолжение при поступлении, пожизненно",
+  "rule": "Если пациент принимал статин до инсульта, его продолжают с первого дня, без перерыва. В РКИ Blanco (2007, 89 пациентов) отмена статина на 3 дня увеличила долю mRS > 2 через 3 месяца — 60% против 39%, раннее неврологическое ухудшение — 65% против 21%, объём инфаркта — 74 против 26 мл.\n\nЛечение пожизненное: КР по ДЛП 2023 требуют убедить пациента в необходимости непрерывной терапии. В тайваньском регистре (45 151 пациент) отмена статина через 3–⁠6 месяцев после ИИ повышала риск повторного инсульта за год (ОР 1,42), а снижение дозы — нет (ОР 0,94). При плохой переносимости меньшая доза лучше отмены.\n\nПосле выписки — диспансерное наблюдение 24 месяца (Приказ 168н): в первый год не реже раза в 3 месяца, затем раза в 6 месяцев; контролируют ХС ЛНП, АД, ЧСС, ЭКГ, при статинах — АЛТ, АСТ, КФК. КР по ИИ 2024: не достигнута цель по ЛНП — по показаниям консультация невролога или кардиолога.",
+  "ex": [
+   {
+    "en": "Статин до инсульта — [не прерывать].",
+    "ru": "Отмена на 3 дня: mRS > 2 у 60% против 39%."
+   },
+   {
+    "en": "Отмена через 3–⁠6 мес — ОР [1,42].",
+    "ru": "Снижение дозы — 0,94."
+   },
+   {
+    "en": "Диспансерно — [24 месяца].",
+    "ru": "Раз в 3 месяца в первый год, затем раз в 6."
+   }
+  ]
+ },
+ {
+  "n": 7,
+  "group": "when",
+  "title": "Сроки контроля",
+  "sub": "4 недели, 4–⁠12 недель, раз в год",
+  "rule": "КР по ИИ 2024: липиды натощак, АЛТ и АСТ — через 4–⁠12 недель после старта или повышения дозы; КР по ДЛП 2023 — через 8 ± 4 недели, то есть то же окно. После каждой смены терапии — снова через 4–⁠12 недель. Когда цель по ЛНП и ТГ достигнута — контроль раз в год, чаще — при плохой приверженности. Рутинно печёночные ферменты не контролируют — только при симптомах поражения печени.\n\nПриказ 168н (цитируется в КР по ИИ 2024): при терапии статинами АЛТ, АСТ и КФК — через 4 недели от начала или при мышечных симптомах. КР по ДЛП 2023: КФК — исходно; в тексте — АЛТ, АСТ и КФК через 4–⁠6 недель после изменения терапии, в таблице Б1 — рутинно не нужна, только при миалгии или слабости; после ОНМК ХС ЛНП — дважды в год; при ВИТС и высоком риске СД — регулярно HbA1c или глюкоза.\n\nИнструкции строже: аторвастатин — печёночные пробы до лечения, через 6 и 12 недель после старта или повышения дозы; розувастатин — до лечения и через 3 месяца.",
+  "ex": [
+   {
+    "en": "Липиды, АЛТ, АСТ — через [4–⁠12 недель].",
+    "ru": "После старта и после каждой смены дозы."
+   },
+   {
+    "en": "Цель достигнута — [раз в год].",
+    "ru": "Ферменты — только по симптомам."
+   },
+   {
+    "en": "Приказ 168н: АЛТ, АСТ, КФК — через [4 недели].",
+    "ru": "И при мышечных симптомах."
+   }
+  ]
+ },
+ {
+  "n": 8,
+  "group": "when",
+  "title": "Эскалация",
+  "sub": "эзетимиб, иPCSK9, стартовая комбинация",
+  "rule": "Нет цели через 4–⁠12 недель на максимально переносимой дозе статина — добавить эзетимиб 10 мг (КР по ИИ 2024, УУР C). Нет цели и на статине с эзетимибом — иPCSK9: алирокумаб, эволокумаб или инклисиран (УУР A). Непереносимость статинов — эзетимиб.\n\nКР по ДЛП 2023 разрешают начинать сразу с комбинации: ХС ЛНП > 4,0 ммоль/л у пациента очень высокого риска — статин с эзетимибом, лучше в одной таблетке; > 5,0 — статин, эзетимиб и иPCSK9.\n\nКак прикинуть. Цель — < 1,4 (по КР по ДЛП 2023 — ещё и не выше половины исходного). Ожидаемый ЛНП: ВИТС ≈ исходный × 0,5, с эзетимибом ≈ × 0,35, со всеми тремя ≈ × 0,15. При исходном 4,5 ВИТС даст ≈ 2,3, с эзетимибом ≈ 1,6 — цели < 1,4 так не достичь.\n\nДоказательства. TST: с эзетимибом ОР событий 0,60, на монотерапии статином — 0,92. RACING (2022, 3780 пациентов с АССЗ): розувастатин 10 мг + эзетимиб не хуже розувастатина 20 мг (9,1% против 9,9%), ЛНП < 1,8 к 3-му году — у 72% против 58%, отмена или снижение дозы из-за непереносимости — 4,8% против 8,2%.",
+  "ex": [
+   {
+    "en": "Нет цели за 4–⁠12 недель — [+ эзетимиб 10 мг].",
+    "ru": "К максимально переносимой дозе статина."
+   },
+   {
+    "en": "ЛНП [> 4,0] — сразу [статин + эзетимиб].",
+    "ru": "КР по ДЛП 2023; > 5,0 — ещё иPCSK9."
+   },
+   {
+    "en": "RACING: непереносимость [4,8%] против 8,2%.",
+    "ru": "Умеренный статин + эзетимиб против ВИТС."
+   }
+  ]
+ },
+ {
+  "n": 9,
+  "group": "safe",
+  "title": "Снижение дозы",
+  "sub": "когда можно и когда нельзя",
+  "rule": "Планового снижения ВИТС после острого периода КР не предусматривают: доза — максимально переносимая для цели, лечение пожизненное. Достигнутая цель — не повод снижать дозу: её держит именно эта доза. В FOURIER-OLE у 5291 пациента после ИИ ЛНП < 1,0 ммоль/л против ≥ 1,8 сопровождался меньшим числом всех инсультов (отношение частот 0,73), а геморрагические инсульты с достигнутым ЛНП связаны не были.\n\nСнижают дозу при непереносимости (лучше, чем отменить: цель добирают эзетимибом), при взаимодействиях (циклоспорин — аторвастатин не выше 10 мг; амиодарон, верапамил — ниже максимум аторвастатина), при ограничениях розувастатина (КК < 60, гипотиреоз, фибраты, азиатская раса — не выше 20 мг).\n\nОтменяют при АЛТ ≥ 3 ВГН, КФК > 10 ВГН, КФК 4–⁠10 ВГН с мышечными симптомами, а при КФК < 4 ВГН — если симптомы держатся; после нормализации — рестарт в меньшей дозе.\n\nВ INSPIRES аторвастатин давали по 80 мг 21 день, затем по 40 мг — это протокол РКИ. В практике дозу подбирают по ЛНП через 4–⁠12 недель.",
+  "ex": [
+   {
+    "en": "ЛНП [в цели], жалоб нет — [та же доза].",
+    "ru": "Цель держит именно эта доза."
+   },
+   {
+    "en": "Непереносимость — [снизить или сменить], не отменять.",
+    "ru": "Цель добрать эзетимибом."
+   },
+   {
+    "en": "INSPIRES: 80 мг [21 день], затем 40 мг.",
+    "ru": "Протокол РКИ, а не правило КР."
+   }
+  ]
+ },
+ {
+  "n": 10,
+  "group": "safe",
+  "title": "Мышцы и печень",
+  "sub": "КФК, АЛТ, ноцебо",
+  "rule": "АЛТ (КР по ДЛП 2023): < 3 ВГН — продолжить, повторить через 4–⁠6 недель; ≥ 3 ВГН — отменить, АЛТ через 4–⁠6 недель, после нормализации возобновить. КФК: исходно > 4 ВГН — статин не начинают (в инструкциях — 5 ВГН); < 4 ВГН без симптомов — продолжить; < 4 ВГН с симптомами — КФК в динамике, симптомы держатся — отменить и через 6 недель оценить, затем меньшая доза (можно через день или 2 раза в неделю); 4–⁠10 ВГН без симптомов — продолжить, КФК через 2–⁠6 недель; с симптомами — отменить до нормализации, затем меньшая доза; > 10 ВГН — отменить, проверить почки, КФК каждые 2 недели. Инструкция розувастатина строже: отмена уже при КФК > 5 ВГН.\n\nНепереносимость статинов по КР — побочные эффекты после отмены и повторного рестарта, в том числе другим статином или в меньшей дозе.\n\nЧто говорят слепые РКИ. CTT 2022: из мышечных жалоб на статине от самого статина лишь 1 из 15 (больше 90% — не от него), избыток — в основном в первый год. SAMSON: 90% симптомов на статине вызывала и таблетка-плацебо (ноцебо-отношение 0,90). CTT 2026: кроме уже известных (мышечные симптомы, СД), из 66 других эффектов из инструкций подтвердились только 4 — повышение трансаминаз (0,30% против 0,22% в год), другие отклонения печёночных проб, изменения мочи и отёки; когнитивные нарушения, депрессия, нарушения сна и нейропатия не подтвердились.",
+  "ex": [
+   {
+    "en": "АЛТ [≥ 3 ВГН] — [отменить].",
+    "ru": "АЛТ через 4–⁠6 недель, после нормализации — возобновить."
+   },
+   {
+    "en": "КФК [> 10 ВГН] — [отменить].",
+    "ru": "Почки, КФК каждые 2 недели."
+   },
+   {
+    "en": "CTT 2022: от статина — [1 из 15] мышечных жалоб.",
+    "ru": "Больше 90% — не от статина."
+   }
+  ]
+ },
+ {
+  "n": 11,
+  "group": "safe",
+  "title": "Кровоизлияния и диабет",
+  "sub": "SPARCL, TST, CTT 2024",
+  "rule": "SPARCL: на аторвастатине 80 мг геморрагических инсультов было 55 против 33 на плацебо, ишемических — 218 против 274; у включённых с геморрагическим инсультом повторных геморрагических — 7 против 2 (это внесено в инструкцию аторвастатина).\n\nTST: внутричерепных кровоизлияний 18 против 13 (не достоверно); с низким достигнутым ЛНП они не были связаны, предикторы — неконтролируемая АГ (ОР 2,51) и приём антикоагулянта (ОР 2,36). Мета-анализ Judge 2019: при вторичной профилактике на 1000 пациенто-лет — на 9,17 ишемических инсультов меньше и на 0,48 ВЧК больше. В мета‑анализе Bétrisey 2024 в РКИ статинов у перенёсших инсульт риск геморрагического инсульта был выше (ОР 1,46), но абсолютный прирост мал — см. Judge 2019. Практический вывод: ВИТС не снижают из страха ВЧК, а держат АД в цели.\n\nДиабет. CTT 2024: ВИТС повышает риск нового СД на 36% (4,8% против 3,5% в год), умеренная интенсивность — на 10%; чаще у тех, у кого гликемия и так была высокой. LODESTAR (ИБС): розувастатин против аторвастатина — исходы те же, но СД с лечением (ОР 1,39) и операций по поводу катаракты (ОР 1,66) больше. КР по ДЛП 2023: при ВИТС и высоком риске СД — регулярно HbA1c или глюкоза.",
+  "ex": [
+   {
+    "en": "SPARCL: геморрагических [55] против 33.",
+    "ru": "Ишемических — 218 против 274."
+   },
+   {
+    "en": "TST: ВЧК [не связаны] с низким ЛНП.",
+    "ru": "Предикторы — АГ и антикоагулянты."
+   },
+   {
+    "en": "CTT 2024: новый СД на ВИТС — [+36%].",
+    "ru": "4,8% против 3,5% в год."
+   }
+  ]
+ },
+ {
+  "n": 12,
+  "group": "mix",
+  "title": "Итог — всё вместе",
+  "sub": "",
+  "rule": "15 случайных карточек из всех тем вперемешку.",
+  "ex": []
+ }
+];
+
+// ——— Карточки. opts — варианты, a — правильный, why — пояснение.
+const CARDS = [
+ {
+  "id": "w-most",
+  "t": 1,
+  "q": "КР по ИИ 2024: ВИТС в максимально переносимых дозах — ___ взрослых с ИИ/ТИА.",
+  "ru": "",
+  "opts": [
+   "большинству",
+   "только при ЛНП > 3,0",
+   "только при ИБС"
+  ],
+  "a": "большинству",
+  "why": "УУР A, УДД 1. У больных ССЗ статин назначают вне зависимости от уровня холестерина (КР по ДЛП 2023)."
+ },
+ {
+  "id": "w-target",
+  "t": 1,
+  "q": "Целевой ХС ЛНП после ИИ/ТИА по КР по ИИ 2024 — ___ ммоль/л.",
+  "ru": "",
+  "opts": [
+   "< 1,4",
+   "< 1,8",
+   "< 2,6"
+  ],
+  "a": "< 1,4",
+  "why": "Или как минимум снижение на 50% от исходного (УУР A). < 1,8 — цель ESO 2022 и группы TST."
+ },
+ {
+  "id": "w-50",
+  "t": 1,
+  "q": "КР по ИИ 2024: цель < 1,4 ммоль/л или как минимум снижение ЛНП на ___ от исходного.",
+  "ru": "",
+  "opts": [
+   "≥ 50%",
+   "≥ 30%",
+   "≥ 70%"
+  ],
+  "a": "≥ 50%",
+  "why": "КР по ДЛП 2023 требуют обоих условий сразу. TST: при снижении больше 50% — ОР 0,61, меньше 50% — 0,96."
+ },
+ {
+  "id": "w-extreme",
+  "t": 1,
+  "q": "Экстремальный риск: цель ХС ЛНП — ___ ммоль/л.",
+  "ru": "",
+  "opts": [
+   "< 1,0",
+   "< 1,4",
+   "< 0,5"
+  ],
+  "a": "< 1,0",
+  "why": "Атеросклеротический ИИ и повторное атеросклеротическое событие за 2 года на максимальной терапии или при ЛНП < 1,4 (КР по ИИ 2024, УУР B)."
+ },
+ {
+  "id": "w-tst",
+  "t": 1,
+  "q": "TST: цель ЛНП < 1,8 ммоль/л против 2,3–⁠2,8 снизила риск сосудистых событий на ___.",
+  "ru": "",
+  "opts": [
+   "22%",
+   "50%",
+   "5%"
+  ],
+  "a": "22%",
+  "why": "8,5% против 10,9%, ОР 0,78 (0,61–⁠0,98); 2860 пациентов, медиана 3,5 года."
+ },
+ {
+  "id": "w-sparcl",
+  "t": 1,
+  "q": "SPARCL: аторвастатин 80 мг против плацебо — инсультов ___.",
+  "ru": "",
+  "opts": [
+   "11,2% против 13,1%",
+   "5% против 10%",
+   "поровну"
+  ],
+  "a": "11,2% против 13,1%",
+  "why": "ОР 0,84 (0,71–⁠0,99) за медиану 4,9 года; ЛНП 1,9 против 3,3 ммоль/л."
+ },
+ {
+  "id": "w-ctt",
+  "t": 1,
+  "q": "CTT: каждый 1 ммоль/л снижения ЛНП уменьшает крупные сосудистые события на ___.",
+  "ru": "",
+  "opts": [
+   "21%",
+   "5%",
+   "50%"
+  ],
+  "a": "21%",
+  "why": "ОР 0,79 (0,77–⁠0,81); CTT 2019, 28 РКИ."
+ },
+ {
+  "id": "w-icas",
+  "t": 1,
+  "q": "Интракраниальный стеноз 50–⁠99%: КР по ИИ 2024 — ВИТС и САД ___ мм рт. ст.",
+  "ru": "",
+  "opts": [
+   "не выше 140",
+   "ниже 120",
+   "не выше 160"
+  ],
+  "a": "не выше 140",
+  "why": "Плюс умеренная или интенсивная физическая активность (УУР A)."
+ },
+ {
+  "id": "w-carotid",
+  "t": 1,
+  "q": "Стеноз сонной артерии после ИИ/ТИА: цель ХС ЛНП ___ ммоль/л.",
+  "ru": "",
+  "opts": [
+   "< 1,4",
+   "< 2,6",
+   "< 1,8"
+  ],
+  "a": "< 1,4",
+  "why": "В составе оптимальной медикаментозной терапии (КР по ИИ 2024, УУР C). Атерома дуги аорты — та же цель."
+ },
+ {
+  "id": "w-tg",
+  "t": 1,
+  "q": "Триглицериды выше 2,3 ммоль/л: статин ___.",
+  "ru": "",
+  "opts": [
+   "тоже первая линия",
+   "противопоказан",
+   "заменяют фибратом"
+  ],
+  "a": "тоже первая линия",
+  "why": "Комментарий КР по ИИ 2024; целевые ТГ там — < 2,3."
+ },
+ {
+  "id": "d-atorva",
+  "t": 2,
+  "q": "ВИТС: аторвастатин ___ мг в сутки.",
+  "ru": "",
+  "opts": [
+   "40–⁠80",
+   "10–⁠20",
+   "5–⁠10"
+  ],
+  "a": "40–⁠80",
+  "why": "10–⁠20 мг — умеренная интенсивность."
+ },
+ {
+  "id": "d-rosu",
+  "t": 2,
+  "q": "ВИТС: розувастатин ___ мг в сутки.",
+  "ru": "",
+  "opts": [
+   "20–⁠40",
+   "40–⁠80",
+   "5–⁠10"
+  ],
+  "a": "20–⁠40",
+  "why": "40–⁠80 мг — дозы аторвастатина; 5–⁠10 мг розувастатина — умеренная интенсивность. По инструкции 40 мг — только если на 20 мг нет цели."
+ },
+ {
+  "id": "d-mod-a",
+  "t": 2,
+  "q": "Умеренная интенсивность: аторвастатин ___ мг.",
+  "ru": "",
+  "opts": [
+   "10–⁠20",
+   "40",
+   "80"
+  ],
+  "a": "10–⁠20",
+  "why": "Снижает ЛНП на 30–⁠50%; ВИТС — на 50% и больше."
+ },
+ {
+  "id": "d-mod-r",
+  "t": 2,
+  "q": "Умеренная интенсивность: розувастатин ___ мг.",
+  "ru": "",
+  "opts": [
+   "5–⁠10",
+   "20",
+   "40"
+  ],
+  "a": "5–⁠10",
+  "why": "20–⁠40 мг — уже ВИТС."
+ },
+ {
+  "id": "d-effect",
+  "t": 2,
+  "q": "ВИТС снижает ХС ЛНП примерно на ___.",
+  "ru": "",
+  "opts": [
+   "50%",
+   "30%",
+   "85%"
+  ],
+  "a": "50%",
+  "why": "КР по ДЛП 2023: умеренная ≈ 30%, интенсивная ≈ 50%, с эзетимибом ≈ 65%, с эзетимибом и иPCSK9 ≈ 85%."
+ },
+ {
+  "id": "d-ezet",
+  "t": 2,
+  "q": "ВИТС с эзетимибом снижают ХС ЛНП примерно на ___.",
+  "ru": "",
+  "opts": [
+   "65%",
+   "50%",
+   "85%"
+  ],
+  "a": "65%",
+  "why": "Табл. А3.11 КР по ДЛП 2023."
+ },
+ {
+  "id": "d-time",
+  "t": 2,
+  "q": "Аторвастатин и розувастатин принимают ___.",
+  "ru": "",
+  "opts": [
+   "в любое время суток",
+   "только вечером",
+   "только натощак"
+  ],
+  "a": "в любое время суток",
+  "why": "Раз в сутки, независимо от еды: действие аторвастатина держится 20–⁠30 ч, T½ розувастатина — около 19 ч."
+ },
+ {
+  "id": "d-max",
+  "t": 2,
+  "q": "Максимальное снижение ЛНП на статине — к ___ неделе.",
+  "ru": "",
+  "opts": [
+   "4-й",
+   "1-й",
+   "12-й"
+  ],
+  "a": "4-й",
+  "why": "Инструкции: эффект — через 1–⁠2 недели, максимум — к 4-й. Поэтому контроль — не раньше 4 недель."
+ },
+ {
+  "id": "d-rosu-kk",
+  "t": 2,
+  "q": "Розувастатин при КК 30–⁠59 мл/мин — не выше ___ мг.",
+  "ru": "",
+  "opts": [
+   "20",
+   "40",
+   "5"
+  ],
+  "a": "20",
+  "why": "40 мг при КК < 60 противопоказан, старт — 5 мг; при КК < 30 розувастатин противопоказан."
+ },
+ {
+  "id": "d-atorva-kk",
+  "t": 2,
+  "q": "Аторвастатин при сниженном КК ___.",
+  "ru": "",
+  "opts": [
+   "без коррекции дозы",
+   "не выше 20 мг",
+   "противопоказан"
+  ],
+  "a": "без коррекции дозы",
+  "why": "Функция почек на концентрацию аторвастатина не влияет (инструкция)."
+ },
+ {
+  "id": "a-75new",
+  "t": 3,
+  "q": "Старше 75 лет, статина не было: КР по ИИ 2024 советуют начать с ___ терапии.",
+  "ru": "",
+  "opts": [
+   "умеренно-интенсивной",
+   "высокоинтенсивной",
+   "отказа от"
+  ],
+  "a": "умеренно-интенсивной",
+  "why": "Аторвастатин 10–⁠20 или розувастатин 5–⁠10 мг (УУР C); дальше — титровать до цели (КР по ДЛП 2023)."
+ },
+ {
+  "id": "a-75cont",
+  "t": 3,
+  "q": "Старше 75 лет и уже на ВИТС: ___.",
+  "ru": "",
+  "opts": [
+   "продолжить, не снижая",
+   "снизить до умеренной",
+   "отменить"
+  ],
+  "a": "продолжить, не снижая",
+  "why": "КР по ИИ 2024: не изменять режим интенсивности (УУР C)."
+ },
+ {
+  "id": "a-75line",
+  "t": 3,
+  "q": "С умеренной интенсивности КР по ИИ 2024 советуют начинать тем, кто старше ___ лет.",
+  "ru": "",
+  "opts": [
+   "75",
+   "65",
+   "80"
+  ],
+  "a": "75",
+  "why": "В 75 лет и моложе — ВИТС на общих основаниях."
+ },
+ {
+  "id": "a-ctt",
+  "t": 3,
+  "q": "CTT 2019: у людей с сосудистым заболеванием польза статинов с возрастом ___.",
+  "ru": "",
+  "opts": [
+   "не уменьшается",
+   "исчезает после 75",
+   "удваивается"
+  ],
+  "a": "не уменьшается",
+  "why": "Относительное снижение событий сходно в любом возрасте; меньше оно лишь при первичной профилактике у пожилых."
+ },
+ {
+  "id": "a-staree",
+  "t": 3,
+  "q": "STAREE (2026): аторвастатин 40 мг у людей от 70 лет снизил сердечно-сосудистые события на ___.",
+  "ru": "",
+  "opts": [
+   "30%",
+   "5%",
+   "60%"
+  ],
+  "a": "30%",
+  "why": "ОР 0,70 (0,61–⁠0,82); без ССЗ, СД и деменции. Серьёзные нежелательные явления — 2,7% в обеих группах, мышечные, печёночные и связанные с СД — чаще."
+ },
+ {
+  "id": "a-staree-dfs",
+  "t": 3,
+  "q": "STAREE: выживаемость без деменции и инвалидности на аторвастатине ___.",
+  "ru": "",
+  "opts": [
+   "не изменилась",
+   "выросла",
+   "снизилась"
+  ],
+  "a": "не изменилась",
+  "why": "ОР 0,94 (0,84–⁠1,05): у пожилых без ССЗ статин защищает сосуды, но жизнь без инвалидности не продлевает."
+ },
+ {
+  "id": "a-rosu70",
+  "t": 3,
+  "q": "Розувастатин старше 70 лет: в ряде инструкций стартовая доза — ___ мг.",
+  "ru": "",
+  "opts": [
+   "5",
+   "20",
+   "40"
+  ],
+  "a": "5",
+  "why": "В инструкции Крестора коррекции по возрасту нет; аторвастатин по возрасту не корректируют."
+ },
+ {
+  "id": "a-ck70",
+  "t": 3,
+  "q": "Инструкция аторвастатина: возраст старше 70 лет — ___.",
+  "ru": "",
+  "opts": [
+   "фактор риска рабдомиолиза",
+   "противопоказание",
+   "повод для 80 мг"
+  ],
+  "a": "фактор риска рабдомиолиза",
+  "why": "Нужно оценить необходимость исходной КФК; при КФК > 5 ВГН лечение не начинают. КР по ДЛП 2023 — КФК до начала терапии всем."
+ },
+ {
+  "id": "s-kk30",
+  "t": 4,
+  "q": "КК < 30 мл/мин: розувастатин ___.",
+  "ru": "",
+  "opts": [
+   "противопоказан",
+   "не выше 20 мг",
+   "без ограничений"
+  ],
+  "a": "противопоказан",
+  "why": "Аторвастатин — без коррекции дозы."
+ },
+ {
+  "id": "s-asian",
+  "t": 4,
+  "q": "Пациент азиатской расы: розувастатин 40 мг ___.",
+  "ru": "",
+  "opts": [
+   "противопоказан",
+   "разрешён",
+   "только с эзетимибом"
+  ],
+  "a": "противопоказан",
+  "why": "Старт — 5 мг (инструкции розувастатина)."
+ },
+ {
+  "id": "s-40list",
+  "t": 4,
+  "q": "Розувастатин 40 мг противопоказан при ___.",
+  "ru": "",
+  "opts": [
+   "гипотиреозе",
+   "ФП",
+   "артериальной гипертензии"
+  ],
+  "a": "гипотиреозе",
+  "why": "А также при КК < 60, мышечных болезнях в анамнезе, миотоксичности на других статинах или фибратах, злоупотреблении алкоголем, приёме фибратов."
+ },
+ {
+  "id": "s-cyclo",
+  "t": 4,
+  "q": "Циклоспорин: аторвастатин — не выше ___ мг.",
+  "ru": "",
+  "opts": [
+   "10",
+   "40",
+   "80"
+  ],
+  "a": "10",
+  "why": "Розувастатин с циклоспорином противопоказан."
+ },
+ {
+  "id": "s-fusid",
+  "t": 4,
+  "q": "Фузидовая кислота: статин ___.",
+  "ru": "",
+  "opts": [
+   "прервать на курс и 7 дней после",
+   "продолжить",
+   "удвоить"
+  ],
+  "a": "прервать на курс и 7 дней после",
+  "why": "Описан рабдомиолиз; для аторвастатина сочетание противопоказано."
+ },
+ {
+  "id": "s-warf",
+  "t": 4,
+  "q": "Варфарин и старт розувастатина: ___.",
+  "ru": "",
+  "opts": [
+   "контроль МНО",
+   "отменить варфарин",
+   "ничего не менять"
+  ],
+  "a": "контроль МНО",
+  "why": "Старт и повышение дозы розувастатина могут повысить МНО, отмена — снизить. Перед аторвастатином — протромбиновое время."
+ },
+ {
+  "id": "s-preg",
+  "t": 4,
+  "q": "Беременность после ИИ: статины ___.",
+  "ru": "",
+  "opts": [
+   "не назначают",
+   "продолжают",
+   "снижают дозу"
+  ],
+  "a": "не назначают",
+  "why": "Диета и образ жизни; принимаемый статин отменяют, рестарт после родов — индивидуально (КР по ИИ 2024)."
+ },
+ {
+  "id": "s-contra",
+  "t": 4,
+  "q": "Детородный возраст без контрацепции: аторвастатин и розувастатин ___.",
+  "ru": "",
+  "opts": [
+   "противопоказаны",
+   "допустимы",
+   "только 10 мг"
+  ],
+  "a": "противопоказаны",
+  "why": "Инструкции обоих препаратов."
+ },
+ {
+  "id": "s-amio",
+  "t": 4,
+  "q": "Амиодарон или верапамил с аторвастатином: ___.",
+  "ru": "",
+  "opts": [
+   "снизить максимальную дозу",
+   "противопоказаны",
+   "удвоить дозу"
+  ],
+  "a": "снизить максимальную дозу",
+  "why": "Ингибиторы CYP3A4 повышают экспозицию аторвастатина. Розувастатин через CYP3A4 почти не метаболизируется."
+ },
+ {
+  "id": "s-liver",
+  "t": 4,
+  "q": "Активное заболевание печени для аторвастатина и розувастатина — ___.",
+  "ru": "",
+  "opts": [
+   "противопоказание",
+   "повод для 80 мг",
+   "без значения"
+  ],
+  "a": "противопоказание",
+  "why": "Аторвастатин — и трансаминазы > 3 ВГН неясного генеза, розувастатин — любое повышение трансаминаз > 3 ВГН (инструкции)."
+ },
+ {
+  "id": "t-48",
+  "t": 5,
+  "q": "КР по ИИ 2024: вторичную профилактику начинают не позднее ___ ч от развития ИИ.",
+  "ru": "",
+  "opts": [
+   "48",
+   "24",
+   "72"
+  ],
+  "a": "48",
+  "why": "При ТИА — сразу после диагностики (УУР C)."
+ },
+ {
+  "id": "t-lipids",
+  "t": 5,
+  "q": "Липидограмма при ИИ/ТИА по КР по ИИ 2024 — в первые ___ ч.",
+  "ru": "",
+  "opts": [
+   "48",
+   "3",
+   "72"
+  ],
+  "a": "48",
+  "why": "АЛТ и АСТ — в первые 3 ч, в общетерапевтической биохимии (табл. 9)."
+ },
+ {
+  "id": "t-nowait",
+  "t": 5,
+  "q": "Показание к статину после ИИ/ТИА ___ исходного ЛНП.",
+  "ru": "",
+  "opts": [
+   "не зависит от",
+   "зависит от"
+  ],
+  "a": "не зависит от",
+  "why": "ВИТС — большинству с ИИ/ТИА. От исходного зависят цель (−50%) и нужна ли сразу комбинация, поэтому кровь на липиды лучше взять до первой дозы."
+ },
+ {
+  "id": "t-inspires",
+  "t": 5,
+  "q": "INSPIRES: аторвастатин 80 мг в первые 72 ч против старта на 4-й день — повторных инсультов ___.",
+  "ru": "",
+  "opts": [
+   "поровну",
+   "вдвое меньше",
+   "вдвое больше"
+  ],
+  "a": "поровну",
+  "why": "8,1% против 8,4%, ОР 0,95 (0,80–⁠1,13); 6100 пациентов с лёгким атеросклеротическим инсультом или ТИА."
+ },
+ {
+  "id": "t-inspires-fn",
+  "t": 5,
+  "q": "INSPIRES: при немедленной ВИТС плохой функциональный исход ___.",
+  "ru": "",
+  "opts": [
+   "реже",
+   "чаще",
+   "не изменился"
+  ],
+  "a": "реже",
+  "why": "9,8% против 11,4%, ОШ 0,83 (0,71–⁠0,98); кровотечения — 0,8% против 0,6%."
+ },
+ {
+  "id": "t-assort",
+  "t": 5,
+  "q": "ASSORT: старт статина в первые 24 ч против 7-го дня — исход через 90 дней ___.",
+  "ru": "",
+  "opts": [
+   "не различался",
+   "лучше на 7-й день",
+   "лучше в первые 24 ч"
+  ],
+  "a": "не различался",
+  "why": "257 пациентов, ОШ 0,84 (0,53–⁠1,3)."
+ },
+ {
+  "id": "t-ivt",
+  "t": 5,
+  "q": "После тромболизиса статин ___.",
+  "ru": "",
+  "opts": [
+   "не откладывают",
+   "не раньше 7-го дня",
+   "противопоказан"
+  ],
+  "a": "не откладывают",
+  "why": "INSPIRE: розувастатин 20 мг против 5 мг после тромболизиса — сВЧК 0,6% и 1,3%, без различий."
+ },
+ {
+  "id": "t-inspires-reg",
+  "t": 5,
+  "q": "Схема INSPIRES: аторвастатин 80 мг ___ дней, затем 40 мг.",
+  "ru": "",
+  "opts": [
+   "21",
+   "3",
+   "90"
+  ],
+  "a": "21",
+  "why": "Это протокол РКИ; плановое снижение дозы КР не предусматривают."
+ },
+ {
+  "id": "t-crush",
+  "t": 5,
+  "q": "Крестор по инструкции ___.",
+  "ru": "",
+  "opts": [
+   "не разжёвывают и не измельчают",
+   "растворяют в воде",
+   "делят на четыре части"
+  ],
+  "a": "не разжёвывают и не измельчают",
+  "why": "Таблетку проглатывают целиком; при дисфагии — сначала скрининг глотания."
+ },
+ {
+  "id": "n-blanco",
+  "t": 6,
+  "q": "Статин принимал до инсульта: при поступлении его ___.",
+  "ru": "",
+  "opts": [
+   "продолжают без перерыва",
+   "отменяют на 3 дня",
+   "отменяют до выписки"
+  ],
+  "a": "продолжают без перерыва",
+  "why": "Blanco 2007: отмена на 3 дня — mRS > 2 у 60% против 39%."
+ },
+ {
+  "id": "n-end",
+  "t": 6,
+  "q": "РКИ Blanco: при отмене статина на 3 дня раннее неврологическое ухудшение — ___.",
+  "ru": "",
+  "opts": [
+   "65% против 21%",
+   "поровну",
+   "10% против 30%"
+  ],
+  "a": "65% против 21%",
+  "why": "Объём инфаркта — 74 против 26 мл."
+ },
+ {
+  "id": "n-lee",
+  "t": 6,
+  "q": "Отмена статина через 3–⁠6 месяцев после ИИ: риск повторного инсульта за год ___.",
+  "ru": "",
+  "opts": [
+   "выше на 42%",
+   "не меняется",
+   "ниже"
+  ],
+  "a": "выше на 42%",
+  "why": "Тайвань, 45 151 пациент: ОР 1,42 (1,28–⁠1,57)."
+ },
+ {
+  "id": "n-lee-red",
+  "t": 6,
+  "q": "Снижение дозы статина вместо отмены (тот же регистр): риск повторного инсульта ___.",
+  "ru": "",
+  "opts": [
+   "не вырос",
+   "вырос, как при отмене"
+  ],
+  "a": "не вырос",
+  "why": "ОР 0,94 (0,78–⁠1,12). При плохой переносимости меньшая доза лучше отмены."
+ },
+ {
+  "id": "n-life",
+  "t": 6,
+  "q": "Длительность гиполипидемической терапии после ИИ — ___.",
+  "ru": "",
+  "opts": [
+   "пожизненно",
+   "3 месяца",
+   "1 год"
+  ],
+  "a": "пожизненно",
+  "why": "КР по ДЛП 2023: убедить пациента в необходимости непрерывной терапии."
+ },
+ {
+  "id": "n-disp",
+  "t": 6,
+  "q": "Диспансерное наблюдение после ИИ по Приказу 168н — ___ месяца.",
+  "ru": "",
+  "opts": [
+   "24",
+   "12",
+   "6"
+  ],
+  "a": "24",
+  "why": "В первый год — не реже раза в 3 месяца, затем — раза в 6 месяцев."
+ },
+ {
+  "id": "n-fail",
+  "t": 6,
+  "q": "КР по ИИ 2024 (раздел 5.16): цель по ХС ЛНП не достигнута — ___.",
+  "ru": "",
+  "opts": [
+   "консультация невролога или кардиолога",
+   "отмена статина",
+   "ничего не менять"
+  ],
+  "a": "консультация невролога или кардиолога",
+  "why": "При неэффективности медикаментозной терапии — по показаниям."
+ },
+ {
+  "id": "m-kr",
+  "t": 7,
+  "q": "КР по ИИ 2024: липиды натощак, АЛТ, АСТ — через ___ недель после старта или повышения дозы.",
+  "ru": "",
+  "opts": [
+   "4–⁠12",
+   "1–⁠2",
+   "24"
+  ],
+  "a": "4–⁠12",
+  "why": "КР по ДЛП 2023 — 8 ± 4 недели, то есть то же окно."
+ },
+ {
+  "id": "m-year",
+  "t": 7,
+  "q": "Цель по ЛНП достигнута: лабораторный контроль ___.",
+  "ru": "",
+  "opts": [
+   "раз в год",
+   "каждый месяц",
+   "не нужен"
+  ],
+  "a": "раз в год",
+  "why": "Чаще — при плохой приверженности (КР по ИИ 2024). После ОНМК КР по ДЛП 2023 — ХС ЛНП дважды в год."
+ },
+ {
+  "id": "m-liver",
+  "t": 7,
+  "q": "Рутинный контроль печёночных ферментов после первой проверки ___.",
+  "ru": "",
+  "opts": [
+   "не нужен",
+   "нужен ежемесячно",
+   "нужен раз в 3 месяца"
+  ],
+  "a": "не нужен",
+  "why": "Только при симптомах поражения печени (КР по ИИ 2024)."
+ },
+ {
+  "id": "m-168",
+  "t": 7,
+  "q": "Приказ 168н: АЛТ, АСТ и КФК при терапии статинами — через ___ недели от начала.",
+  "ru": "",
+  "opts": [
+   "4",
+   "12",
+   "1"
+  ],
+  "a": "4",
+  "why": "Или при мышечных симптомах (КР по ИИ 2024, раздел 5.16)."
+ },
+ {
+  "id": "m-ck",
+  "t": 7,
+  "q": "После контроля через 4 недели (Приказ 168н) КФК рутинно ___.",
+  "ru": "",
+  "opts": [
+   "не контролируют",
+   "контролируют ежемесячно"
+  ],
+  "a": "не контролируют",
+  "why": "Дальше — при миалгии или слабости (КР по ДЛП 2023, табл. Б1). В тексте КР по ДЛП 2023 — ещё через 4–⁠6 недель после каждого изменения терапии."
+ },
+ {
+  "id": "m-atorva-lft",
+  "t": 7,
+  "q": "Инструкция аторвастатина: печёночные пробы через ___ недель после старта или повышения дозы.",
+  "ru": "",
+  "opts": [
+   "6 и 12",
+   "1 и 2",
+   "24 и 48"
+  ],
+  "a": "6 и 12",
+  "why": "И до начала лечения. Инструкция розувастатина — до лечения и через 3 месяца."
+ },
+ {
+  "id": "m-early",
+  "t": 7,
+  "q": "Липиды на 7-й день ВИТС для решения о дозе — ___.",
+  "ru": "",
+  "opts": [
+   "рано",
+   "в самый раз"
+  ],
+  "a": "рано",
+  "why": "Максимум эффекта — к 4-й неделе; решение — по анализу через 4–⁠12 недель."
+ },
+ {
+  "id": "m-visits",
+  "t": 7,
+  "q": "Диспансерные визиты после ИИ в первый год — не реже раза в ___.",
+  "ru": "",
+  "opts": [
+   "3 месяца",
+   "месяц",
+   "6 месяцев"
+  ],
+  "a": "3 месяца",
+  "why": "Затем — раз в 6 месяцев; ХС ЛНП, АД, ЧСС, ЭКГ (Приказ 168н)."
+ },
+ {
+  "id": "m-hba1c",
+  "t": 7,
+  "q": "ВИТС при высоком риске СД: регулярно контролируют ___.",
+  "ru": "",
+  "opts": [
+   "HbA1c или глюкозу",
+   "креатинин",
+   "ТТГ"
+  ],
+  "a": "HbA1c или глюкозу",
+  "why": "КР по ДЛП 2023."
+ },
+ {
+  "id": "e-ez",
+  "t": 8,
+  "q": "Нет цели через 4–⁠12 недель на максимально переносимом статине — добавить ___.",
+  "ru": "",
+  "opts": [
+   "эзетимиб 10 мг",
+   "фенофибрат",
+   "омега-3"
+  ],
+  "a": "эзетимиб 10 мг",
+  "why": "КР по ИИ 2024 (УУР C)."
+ },
+ {
+  "id": "e-pcsk9",
+  "t": 8,
+  "q": "Нет цели на статине с эзетимибом — добавить ___.",
+  "ru": "",
+  "opts": [
+   "иPCSK9",
+   "второй статин",
+   "фибрат"
+  ],
+  "a": "иPCSK9",
+  "why": "Алирокумаб, эволокумаб или инклисиран (КР по ИИ 2024, УУР A)."
+ },
+ {
+  "id": "e-4",
+  "t": 8,
+  "q": "КР по ДЛП 2023: ХС ЛНП > 4,0 ммоль/л при очень высоком риске — можно начать сразу с ___.",
+  "ru": "",
+  "opts": [
+   "статина с эзетимибом",
+   "умеренной дозы статина"
+  ],
+  "a": "статина с эзетимибом",
+  "why": "Лучше в одной таблетке; при > 5,0 — сразу статин, эзетимиб и иPCSK9."
+ },
+ {
+  "id": "e-intol",
+  "t": 8,
+  "q": "Непереносимость статинов — назначить ___.",
+  "ru": "",
+  "opts": [
+   "эзетимиб",
+   "ничего",
+   "фибрат"
+  ],
+  "a": "эзетимиб",
+  "why": "КР по ИИ 2024. Непереносимость — побочные эффекты после отмены и рестарта, в том числе другим статином или в меньшей дозе."
+ },
+ {
+  "id": "e-tstez",
+  "t": 8,
+  "q": "TST: при цели < 1,8 ммоль/л на статине с эзетимибом ОР событий — ___.",
+  "ru": "",
+  "opts": [
+   "0,60",
+   "0,92",
+   "1,20"
+  ],
+  "a": "0,60",
+  "why": "На монотерапии статином — 0,92, не достоверно."
+ },
+ {
+  "id": "e-racing",
+  "t": 8,
+  "q": "RACING: розувастатин 10 мг + эзетимиб против розувастатина 20 мг — отмена или снижение дозы из-за непереносимости ___.",
+  "ru": "",
+  "opts": [
+   "4,8% против 8,2%",
+   "поровну",
+   "8,2% против 4,8%"
+  ],
+  "a": "4,8% против 8,2%",
+  "why": "Исходы не хуже: 9,1% против 9,9%; ЛНП < 1,8 к 3-му году — у 72% против 58%."
+ },
+ {
+  "id": "e-calc",
+  "t": 8,
+  "q": "По КР по ДЛП 2023 (< 1,4 и снижение ≥ 50%): исходный ЛНП 3,6 — цель ___ ммоль/л.",
+  "ru": "",
+  "opts": [
+   "< 1,4",
+   "≤ 1,8",
+   "< 2,0"
+  ],
+  "a": "< 1,4",
+  "why": "Половина от 3,6 — 1,8; из двух условий строже < 1,4."
+ },
+ {
+  "id": "e-calc2",
+  "t": 8,
+  "q": "По КР по ДЛП 2023 (< 1,4 и снижение ≥ 50%): исходный ЛНП 2,4 — цель ___ ммоль/л.",
+  "ru": "",
+  "opts": [
+   "≤ 1,2",
+   "< 1,4",
+   "< 1,8"
+  ],
+  "a": "≤ 1,2",
+  "why": "Половина от 2,4 — 1,2, это строже 1,4. По формулировке КР по ИИ 2024 («< 1,4 или хотя бы −50%») достаточно < 1,4."
+ },
+ {
+  "id": "e-calc3",
+  "t": 8,
+  "q": "Исходный ЛНП 4,5, цель < 1,4: одной ВИТС ___.",
+  "ru": "",
+  "opts": [
+   "не хватит",
+   "хватит"
+  ],
+  "a": "не хватит",
+  "why": "ВИТС ≈ 2,3, с эзетимибом ≈ 1,6; при > 4,0 КР по ДЛП 2023 допускают старт сразу со статина и эзетимиба."
+ },
+ {
+  "id": "r-plan",
+  "t": 9,
+  "q": "Плановое снижение ВИТС после острого периода по КР ___.",
+  "ru": "",
+  "opts": [
+   "не предусмотрено",
+   "через 3 месяца",
+   "при выписке"
+  ],
+  "a": "не предусмотрено",
+  "why": "Доза — максимально переносимая для цели, лечение пожизненное."
+ },
+ {
+  "id": "r-target",
+  "t": 9,
+  "q": "ЛНП 1,1 ммоль/л на аторвастатине 80 мг, жалоб нет: ___.",
+  "ru": "",
+  "opts": [
+   "оставить 80 мг",
+   "снизить до 20 мг",
+   "отменить"
+  ],
+  "a": "оставить 80 мг",
+  "why": "Цель держит именно эта доза; FOURIER-OLE: ЛНП < 1,0 без роста геморрагических инсультов."
+ },
+ {
+  "id": "r-fourier",
+  "t": 9,
+  "q": "FOURIER-OLE, пациенты после ИИ: при ЛНП < 1,0 ммоль/л против ≥ 1,8 всех инсультов ___.",
+  "ru": "",
+  "opts": [
+   "меньше",
+   "больше",
+   "поровну"
+  ],
+  "a": "меньше",
+  "why": "Отношение частот 0,73 (0,53–⁠0,99); геморрагические инсульты с достигнутым ЛНП не связаны."
+ },
+ {
+  "id": "r-intol",
+  "t": 9,
+  "q": "Мышечные жалобы на ВИТС: вместо отмены лучше ___.",
+  "ru": "",
+  "opts": [
+   "снизить дозу или сменить статин",
+   "отменить навсегда"
+  ],
+  "a": "снизить дозу или сменить статин",
+  "why": "Цель добирают эзетимибом (КР по ДЛП 2023)."
+ },
+ {
+  "id": "r-alt3",
+  "t": 9,
+  "q": "АЛТ ≥ 3 ВГН на статине: ___.",
+  "ru": "",
+  "opts": [
+   "отменить",
+   "продолжить",
+   "удвоить дозу"
+  ],
+  "a": "отменить",
+  "why": "АЛТ через 4–⁠6 недель, после нормализации — возобновить; не нормализуется — искать другую причину (КР по ДЛП 2023)."
+ },
+ {
+  "id": "r-alt2",
+  "t": 9,
+  "q": "АЛТ 2 ВГН на статине: ___.",
+  "ru": "",
+  "opts": [
+   "продолжить",
+   "отменить"
+  ],
+  "a": "продолжить",
+  "why": "АЛТ повторить через 4–⁠6 недель; отмена — с 3 ВГН."
+ },
+ {
+  "id": "r-restart",
+  "t": 9,
+  "q": "После отмены из-за КФК и мышечных симптомов статин возобновляют ___.",
+  "ru": "",
+  "opts": [
+   "в меньшей дозе",
+   "в той же дозе",
+   "никогда"
+  ],
+  "a": "в меньшей дозе",
+  "why": "Когда КФК нормализуется; возможен приём через день или 2 раза в неделю (КР по ДЛП 2023)."
+ },
+ {
+  "id": "r-cyclo",
+  "t": 9,
+  "q": "Начат циклоспорин: аторвастатин 80 мг снижают до ___ мг.",
+  "ru": "",
+  "opts": [
+   "10",
+   "40",
+   "20"
+  ],
+  "a": "10",
+  "why": "Инструкция: не выше 10 мг в сутки."
+ },
+ {
+  "id": "r-inspires",
+  "t": 9,
+  "q": "В INSPIRES через 21 день доза аторвастатина ___.",
+  "ru": "",
+  "opts": [
+   "снижалась с 80 до 40 мг",
+   "повышалась до 80 мг",
+   "отменялась"
+  ],
+  "a": "снижалась с 80 до 40 мг",
+  "why": "Это протокол РКИ; в практике дозу подбирают по ЛНП через 4–⁠12 недель."
+ },
+ {
+  "id": "h-ck4",
+  "t": 10,
+  "q": "КФК исходно > 4 ВГН: статин ___.",
+  "ru": "",
+  "opts": [
+   "не начинают",
+   "начинают с 80 мг"
+  ],
+  "a": "не начинают",
+  "why": "КР по ДЛП 2023; в инструкциях аторвастатина и розувастатина порог — 5 ВГН."
+ },
+ {
+  "id": "h-ck10",
+  "t": 10,
+  "q": "КФК > 10 ВГН на статине: ___.",
+  "ru": "",
+  "opts": [
+   "отменить",
+   "продолжить",
+   "снизить вдвое"
+  ],
+  "a": "отменить",
+  "why": "Проверить функцию почек, КФК каждые 2 недели (КР по ДЛП 2023)."
+ },
+ {
+  "id": "h-ck-sym",
+  "t": 10,
+  "q": "КФК 6 ВГН и мышечные симптомы: ___.",
+  "ru": "",
+  "opts": [
+   "отменить до нормализации",
+   "продолжить"
+  ],
+  "a": "отменить до нормализации",
+  "why": "Затем рестарт в меньшей дозе; исключить физическую нагрузку как причину (КР по ДЛП 2023)."
+ },
+ {
+  "id": "h-ck-nosym",
+  "t": 10,
+  "q": "КР по ДЛП 2023: КФК 6 ВГН без симптомов — ___.",
+  "ru": "",
+  "opts": [
+   "продолжить, КФК через 2–⁠6 недель",
+   "отменить"
+  ],
+  "a": "продолжить, КФК через 2–⁠6 недель",
+  "why": "Инструкция розувастатина строже: отменить при КФК > 5 ВГН."
+ },
+ {
+  "id": "h-ctt",
+  "t": 10,
+  "q": "CTT 2022: из мышечных жалоб на статине от самого статина — ___.",
+  "ru": "",
+  "opts": [
+   "1 из 15",
+   "каждая вторая",
+   "9 из 10"
+  ],
+  "a": "1 из 15",
+  "why": "Больше 90% жалоб — не от статина; избыток — в основном в первый год."
+ },
+ {
+  "id": "h-samson",
+  "t": 10,
+  "q": "SAMSON: таблетка-плацебо вызывала ___ симптомов, возникавших на статине.",
+  "ru": "",
+  "opts": [
+   "90%",
+   "10%",
+   "50%"
+  ],
+  "a": "90%",
+  "why": "Ноцебо-отношение 0,90."
+ },
+ {
+  "id": "h-ctt26",
+  "t": 10,
+  "q": "CTT 2026: связь статинов с когнитивными нарушениями, депрессией, нарушениями сна и нейропатией ___.",
+  "ru": "",
+  "opts": [
+   "не подтвердилась",
+   "подтвердилась"
+  ],
+  "a": "не подтвердилась",
+  "why": "Кроме уже известных (мышечные симптомы, СД), из 66 других эффектов из инструкций подтвердились 4: повышение трансаминаз, другие отклонения печёночных проб, изменения мочи, отёки."
+ },
+ {
+  "id": "h-trans",
+  "t": 10,
+  "q": "CTT 2026: повышение трансаминаз на статине — ___ в год.",
+  "ru": "",
+  "opts": [
+   "0,30% против 0,22%",
+   "3% против 1%",
+   "поровну"
+  ],
+  "a": "0,30% против 0,22%",
+  "why": "ОР 1,41; эффект зависит от дозы."
+ },
+ {
+  "id": "h-intol",
+  "t": 10,
+  "q": "Непереносимость статинов по КР — побочные эффекты ___.",
+  "ru": "",
+  "opts": [
+   "после отмены и рестарта",
+   "после первой таблетки"
+  ],
+  "a": "после отмены и рестарта",
+  "why": "В том числе другим статином и/или в меньшей дозе."
+ },
+ {
+  "id": "b-sparcl",
+  "t": 11,
+  "q": "SPARCL: геморрагических инсультов на аторвастатине 80 мг — ___.",
+  "ru": "",
+  "opts": [
+   "55 против 33",
+   "поровну",
+   "меньше, чем на плацебо"
+  ],
+  "a": "55 против 33",
+  "why": "Ишемических — 218 против 274; сигнал внесён в инструкцию аторвастатина."
+ },
+ {
+  "id": "b-tst-ich",
+  "t": 11,
+  "q": "TST: внутричерепные кровоизлияния с низким достигнутым ЛНП ___.",
+  "ru": "",
+  "opts": [
+   "не были связаны",
+   "были тесно связаны"
+  ],
+  "a": "не были связаны",
+  "why": "18 против 13 случаев, не достоверно."
+ },
+ {
+  "id": "b-bp",
+  "t": 11,
+  "q": "Один из двух предикторов ВЧК в TST — ___.",
+  "ru": "",
+  "opts": [
+   "неконтролируемая АГ",
+   "низкий ЛНП",
+   "возраст"
+  ],
+  "a": "неконтролируемая АГ",
+  "why": "ОР 2,51; второй — приём антикоагулянта (ОР 2,36). Низкий достигнутый ЛНП предиктором не был."
+ },
+ {
+  "id": "b-judge",
+  "t": 11,
+  "q": "Judge 2019, вторичная профилактика: на 1000 пациенто-лет — на 9,17 ишемических инсультов меньше и на ___ ВЧК больше.",
+  "ru": "",
+  "opts": [
+   "0,48",
+   "9",
+   "5"
+  ],
+  "a": "0,48",
+  "why": "Польза намного перевешивает риск."
+ },
+ {
+  "id": "b-hem",
+  "t": 11,
+  "q": "SPARCL, геморрагический инсульт при включении: повторных геморрагических на аторвастатине 80 мг — ___.",
+  "ru": "",
+  "opts": [
+   "7 против 2",
+   "поровну",
+   "0"
+  ],
+  "a": "7 против 2",
+  "why": "Это внесено в инструкцию аторвастатина; решение индивидуально, АД — под строгим контролем."
+ },
+ {
+  "id": "b-dm",
+  "t": 11,
+  "q": "CTT 2024: ВИТС повышает риск нового СД на ___.",
+  "ru": "",
+  "opts": [
+   "36%",
+   "5%",
+   "100%"
+  ],
+  "a": "36%",
+  "why": "4,8% против 3,5% в год; умеренная интенсивность — на 10%. Чаще — у тех, у кого гликемия и так была высокой."
+ },
+ {
+  "id": "b-lodestar",
+  "t": 11,
+  "q": "LODESTAR: у розувастатина по сравнению с аторвастатином СД с лечением ___.",
+  "ru": "",
+  "opts": [
+   "чаще",
+   "реже",
+   "так же"
+  ],
+  "a": "чаще",
+  "why": "ОР 1,39; операций по поводу катаракты — ОР 1,66; сосудистые исходы те же. Пациенты с ИБС."
+ },
+ {
+  "id": "b-ht",
+  "t": 11,
+  "q": "Геморрагическая трансформация: в КР по ИИ 2024 и инструкциях статинов противопоказанием ___.",
+  "ru": "",
+  "opts": [
+   "не названа",
+   "названа"
+  ],
+  "a": "не названа",
+  "why": "РКИ нет; решение индивидуально."
+ }
+];
+
+const NEW_PER_SESSION = 10;
+const MIXED_SIZE = 15;
+const INTERVALS = [1, 3, 7, 16];            // дни
+const DAY = 86400000;
+const LS_STATE = "vits:state";
+const LS_TAB = "vits:tab";
+const LS_OPEN = "vits:open";
+const TOPIC_BY = {};
+TOPICS.forEach(t => { TOPIC_BY[t.n] = t; });
+
+let progress = {};
+let queue = [];
+let index = 0;
+let answered = false;
+let autoSpeak = false;   // озвучки в этом приложении нет
+let mode = "main";          // main | topic | mixed
+let topicN = null;
+let lapsed = {};
+let seen = new Set();
+let stats = { first: 0, correct: 0 };
+let shownOpts = [];
+let cloudDoc = null;
+let writing = false, dirty = false, retried = false, pushTimer = null;
+
+const $ = id => document.getElementById(id);
+function el(tag, cls, text){
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+}
+try{ document.documentElement.lang = "ru"; }catch(e){}
+
+// Мета-теги для установки на домашний экран
+(function addMobileMeta(){
+  const metas = [
+    ["apple-mobile-web-app-capable", "yes"],
+    ["mobile-web-app-capable", "yes"],
+    ["apple-mobile-web-app-status-bar-style", "black-translucent"],
+    ["apple-mobile-web-app-title", "ВИТС"],
+    ["theme-color", "#0e1113"]
+  ];
+  for (const [name, content] of metas){
+    if (document.querySelector('meta[name="' + name + '"]')) continue;
+    const m = document.createElement("meta");
+    m.setAttribute("name", name);
+    m.setAttribute("content", content);
+    document.head.appendChild(m);
+  }
+  // Плитка для экрана «Домой» и значок вкладки
+  const links = [
+    ["apple-touch-icon", "180x180", "data:image/png;base64,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"],
+    ["icon", "192x192", "data:image/png;base64,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"]
+  ];
+  for (const [rel, sizes, href] of links){
+    if (document.querySelector('link[rel="' + rel + '"]')) continue;
+    const l = document.createElement("link");
+    l.setAttribute("rel", rel);
+    l.setAttribute("sizes", sizes);
+    l.setAttribute("type", "image/png");
+    l.setAttribute("href", href);
+    document.head.appendChild(l);
+  }
+})();
+
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
+function loadLocal(){
+  try{
+    const raw = lsGet(LS_STATE);
+    const s = raw ? JSON.parse(raw) : null;
+    return (s && s.progress && typeof s.progress === "object") ? s.progress : {};
+  }catch(e){ return {}; }
+}
+function saveLocal(){ lsSet(LS_STATE, JSON.stringify({ progress: progress })); }
+function mergeProgress(a, b){
+  const out = {};
+  const keys = new Set(Object.keys(a || {}).concat(Object.keys(b || {})));
+  keys.forEach(k => {
+    const x = (a || {})[k], y = (b || {})[k];
+    if (!x){ if (y) out[k] = y; return; }
+    if (!y){ out[k] = x; return; }
+    out[k] = (y.ts || 0) > (x.ts || 0) ? y : x;
+  });
+  return out;
+}
+function dayStart(ts){ const d = new Date(ts); d.setHours(0, 0, 0, 0); return d.getTime(); }
+function shuffle(arr){
+  for (let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+  return arr;
+}
+function plural(n, one, few, many){
+  const a = n % 10, b = n % 100;
+  if (a === 1 && b !== 11) return one;
+  if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return few;
+  return many;
+}
+function unseenCount(){ return CARDS.filter(c => !progress[c.id]).length; }
+function topicLabel(n){ return n === MIXED_TOPIC ? "Всё вместе" : "Тема " + n + " · " + TOPIC_BY[n].title; }
+function label(a){ return a === "" ? "ничего" : a; }
+
+// ——— Предложение с пропуском
+function isStart(q, i){ const b = q.slice(0, i).trimEnd(); return b === "" || /[.!?]$/.test(b); }
+function cap(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+function split(card, word){
+  const i = card.q.indexOf("___");
+  const start = isStart(card.q, i);
+  const pre = card.q.slice(0, i);
+  let post = card.q.slice(i + 3);
+  if (word) return { pre: pre, word: start ? cap(word) : word, post: post };
+  post = post.replace(/^\s+/, "");                  // ответ «ничего»: слово после пропуска встаёт на его место
+  return { pre: pre, word: "", post: start ? cap(post) : post };
+}
+function fullText(card){ const p = split(card, card.a); return p.pre + p.word + p.post; }
+function exText(en){ return en.replace(/\|\w\]/g, "]").replace(/[\[\]]/g, ""); }
+function richText(s){
+  const f = document.createDocumentFragment();
+  String(s).replace(/ → /g, "\u00a0→\u00a0").split(/(-[a-z]+)/).forEach(part => { if (/^-[a-z]+$/.test(part)) f.append(el("span", "nw", part)); else if (part) f.append(part); });
+  return f;
+}
+// [текст|x] — форма в фокусе: без метки used to — оранжевый, |b be used to — зелёный, |g get used to — синий, |w would и |p пассив — подчёркнуты
+const MARK_CLS = { b: "good", g: "st", w: "hl", p: "hl" };
+function modalCls(t){ const i = t.lastIndexOf("|"); return i > 0 ? (MARK_CLS[t.slice(i + 1)] || "pr") : "pr"; }
+function markText(t){ const i = t.lastIndexOf("|"); return i > 0 ? t.slice(0, i) : t; }
+function marked(s){
+  const f = document.createDocumentFragment();
+  const re = /\[([^\]]+)\]/g;
+  let last = 0, m;
+  while ((m = re.exec(s))){
+    if (m.index > last) f.append(richText(s.slice(last, m.index)));
+    f.append(el("span", modalCls(m[1]), markText(m[1])));
+    last = re.lastIndex;
+  }
+  if (last < s.length) f.append(richText(s.slice(last)));
+  return f;
+}
+
+// ——— Синхронизация прогресса между устройствами (личная, у каждого зрителя своя)
+function schedulePush(){
+  if (!cloudDoc) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(pushCloud, 700);
+}
+async function pushCloud(){
+  if (!cloudDoc) return;
+  if (writing){ dirty = true; return; }
+  writing = true; dirty = false;
+  try{
+    await cloudDoc.set({ progress: progress, v: 1 });
+    retried = false;
+  }catch(e){
+    const c = e && e.code;
+    if (c === "unavailable" && !retried){ retried = true; setTimeout(pushCloud, 1200 + Math.random() * 1200); }
+    else if (c !== "unavailable" && c !== "resource_exhausted") cloudDoc = null;
+  }
+  writing = false;
+  if (dirty) pushCloud();
+}
+async function connectCloud(){
+  try{
+    if (!window.claude || typeof window.claude.use !== "function") return;
+    const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+    if (!db || !user) return;
+    const uid = await user.id();
+    if (!uid) return;
+    let ref;
+    try{ ref = db.doc("data/users/" + uid + "/progress"); }catch(e){ return; }
+    const snap = await ref.get();
+    const body = snap.exists ? (snap.data() || {}) : {};
+    const remote = (body.progress && typeof body.progress === "object") ? body.progress : {};
+    const before = JSON.stringify(progress);
+    progress = mergeProgress(progress, remote);
+    saveLocal();
+    cloudDoc = ref;
+    if (JSON.stringify(progress) !== JSON.stringify(remote)) schedulePush();
+    if (JSON.stringify(progress) !== before){
+      renderTopics();
+      if (mode === "main" && stats.first === 0 && !answered){ buildMain(); render(); }
+    }
+  }catch(e){ /* офлайн-режим */ }
+}
+
+function stopAudio(){}   // озвучки в этом приложении нет
+
+// ——— Очередь
+// Новые карточки идут вперемешку по темам: цель, дозы, возраст, старт, контроль, эскалация и безопасность чередуются.
+const FRESH_ORDER = (function(){
+  const pools = {};
+  CARDS.forEach(c => { const k = "t" + c.t; (pools[k] = pools[k] || []).push(c); });
+  // темы «сверх основы» (late) вступают позже
+  const late = {};
+  TOPICS.forEach(t => { if (t.late) late["t" + t.n] = t.late; });
+  const keys = Object.keys(pools), list = keys.map(k => pools[k]), used = list.map(() => 0), out = [];
+  while (out.length < CARDS.length){
+    let best = -1, bestR = 9;
+    list.forEach((p, i) => {
+      if (used[i] >= p.length) return;
+      const r = (used[i] + 0.5) / p.length + (late[keys[i]] || 0);
+      if (r < bestR){ bestR = r; best = i; }
+    });
+    out.push(list[best][used[best]++]);
+  }
+  return out;
+})();
+function resetSession(){ lapsed = {}; seen = new Set(); stats = { first: 0, correct: 0 }; index = 0; }
+function buildMain(){
+  const now = Date.now();
+  const due = CARDS.filter(c => progress[c.id] && progress[c.id].due <= now);
+  const fresh = FRESH_ORDER.filter(c => !progress[c.id]).slice(0, NEW_PER_SESSION);
+  queue = shuffle(due).concat(shuffle(fresh));
+  mode = "main"; topicN = null;
+  resetSession();
+}
+function buildTopic(n){
+  if (n === MIXED_TOPIC){
+    queue = shuffle(CARDS.slice()).slice(0, MIXED_SIZE);
+    mode = "mixed";
+  } else {
+    queue = shuffle(CARDS.filter(c => c.t === n));
+    mode = "topic";
+  }
+  topicN = n;
+  resetSession();
+}
+
+function setBar(done, total){
+  $("barFill").style.width = (total ? Math.min(100, Math.round(done / total * 100)) : 100) + "%";
+}
+function show(id, on){ $(id).hidden = !on; }
+
+function renderOpts(card){
+  const box = $("opts");
+  box.textContent = "";
+  shownOpts = shuffle(card.opts.slice());
+  const longest = Math.max.apply(null, shownOpts.map(o => o.length));
+  const n = shownOpts.length;
+  const cols = longest > 8 ? 1 : (n === 3 ? (longest <= 5 ? 3 : 1) : 2);   // три в ряд — только короткие: 48, < 1,4, 21; два — до 8 знаков
+  box.className = "opts c" + cols;
+  shownOpts.forEach(o => {
+    const b = el("button", "opt" + (longest > 9 ? " long" : ""));
+    b.type = "button";
+    if (o === ""){
+      b.setAttribute("aria-label", "Ничего не нужно");
+      b.append(el("span", null, "—"), el("small", null, "ничего"));
+    } else {
+      if (!/[а-яё]/i.test(o)) b.lang = "en";
+      b.textContent = o;
+    }
+    b.addEventListener("click", () => choose(o));
+    box.append(b);
+  });
+}
+
+function render(){
+  stopAudio();
+  answered = false;
+  const card = queue[index];
+  $("card").scrollTop = 0;
+  if (!card){ renderDone(); return; }
+  show("kind", true);
+  $("kind").textContent = topicLabel(card.t);
+  const q = $("q");
+  q.textContent = "";
+  const i = card.q.indexOf("___");
+  // пропуск и знак препинания после него не разрываются переносом строки
+  const post = card.q.slice(i + 3), pm = post.match(/^[?.!,;:]+/);
+  const gapBox = el("span", "nw");
+  gapBox.append(el("span", "gap"));
+  if (pm) gapBox.append(pm[0]);
+  q.append(card.q.slice(0, i), gapBox, pm ? post.slice(pm[0].length) : post);
+  q.setAttribute("aria-label", card.q.replace("___", "пропуск"));
+  show("hint", true);
+  $("hint").textContent = card.ru ? card.ru : "Выбери вариант";
+  show("back", false);
+  renderOpts(card);
+  show("opts", true);
+  show("actNext", false);
+  show("actDone", false);
+  const prefix = mode === "topic" ? "Тема " + topicN + " · " : mode === "mixed" ? "Всё вместе · " : "";
+  $("status").textContent = prefix + "Карточка " + (index + 1) + " из " + queue.length;
+  setBar(index, queue.length);
+}
+
+function renderDone(){
+  show("kind", false);
+  const q = $("q");
+  q.removeAttribute("aria-label");
+  q.textContent = mode === "main" ? "На сегодня всё" : mode === "mixed" ? "Итог пройден" : "Тема " + topicN + " пройдена";
+  const left = unseenCount();
+  let text = stats.first ? "Верно с первого раза: " + stats.correct + " из " + stats.first + ". " : "";
+  if (mode === "main") text += left ? "Новых карточек в запасе: " + left + ". " : "Все карточки уже в работе. ";
+  text += "Повторы вернутся сами — завтра, через 3, 7 и 16 дней.";
+  $("hint").textContent = text;
+  show("hint", true);
+  show("back", false);
+  show("opts", false);
+  show("actNext", false);
+  const more = $("more");
+  if (mode === "main"){
+    more.hidden = !left;
+    const k = Math.min(NEW_PER_SESSION, left);
+    more.textContent = "Ещё " + k + " " + plural(k, "новая", "новых", "новых");
+  } else {
+    more.hidden = false;
+    more.textContent = "Обычная тренировка";
+  }
+  show("actDone", true);
+  $("status").textContent = "Готово";
+  setBar(1, 1);
+}
+
+function choose(opt){
+  if (answered) return;
+  const card = queue[index];
+  if (!card) return;
+  answered = true;
+  const exact = opt === card.a;
+  const alsoNote = !exact && card.also && Object.prototype.hasOwnProperty.call(card.also, opt) ? card.also[opt] : null;
+  const ok = exact || alsoNote !== null;
+
+  if (!seen.has(card.id)){
+    seen.add(card.id);
+    stats.first++;
+    if (ok) stats.correct++;
+  }
+  const prev = progress[card.id];
+  let step = prev ? prev.step : -1;
+  if (!ok){
+    step = 0;
+    lapsed[card.id] = true;
+    queue.splice(Math.min(queue.length, index + 4), 0, card);   // вернётся через несколько карточек
+  } else if (step < 0 || lapsed[card.id]){
+    step = 0;
+  } else {
+    step = Math.min(INTERVALS.length - 1, step + 1);
+  }
+  progress[card.id] = { step: step, due: dayStart(Date.now()) + INTERVALS[step] * DAY, ts: Date.now() };
+  saveLocal();
+  schedulePush();
+
+  const q = $("q");
+  q.textContent = "";
+  q.removeAttribute("aria-label");
+  const p = split(card, card.a);
+  if (p.word) q.append(p.pre, el("span", "good", p.word), p.post);
+  else q.append(p.pre, el("span", "zero", "∅"), p.post);
+
+  const v = $("verdict");
+  v.textContent = "";
+  if (exact){
+    v.className = "verdict ok";
+    v.append("Верно");
+  } else if (ok){
+    v.className = "verdict ok";
+    v.append("Тоже верно: ", el("b", null, opt), ". " + alsoNote.charAt(0).toUpperCase() + alsoNote.slice(1) + ".");
+  } else {
+    v.className = "verdict bad";
+    v.append("Нужно ", el("b", "good", label(card.a)), " · твой ответ: ", el("b", null, label(opt)));
+  }
+  const why = $("why"); why.textContent = ""; why.append(richText(card.why));
+  show("hint", false);
+  show("back", true);
+  show("opts", false);
+  show("actNext", true);
+}
+
+function next(){
+  if (!answered) return;
+  index++;
+  render();
+}
+
+// ——— Правила
+function learnedIn(n){
+  const cards = CARDS.filter(c => c.t === n);
+  const done = cards.filter(c => progress[c.id] && progress[c.id].step >= 1).length;
+  return done + "/" + cards.length;
+}
+const PLAY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>';
+let openTopic = null;
+function renderTopics(){
+  const box = $("topics");
+  box.textContent = "";
+  let group = null;
+  TOPICS.forEach(t => {
+    if (t.group !== group){
+      group = t.group;
+      box.append(el("p", "t-group", GROUPS[group]));
+    }
+    const item = el("div", "t-item");
+    const head = el("button", "t-head");
+    head.type = "button";
+    head.setAttribute("aria-expanded", String(openTopic === t.n));
+    const txt = el("span", "t-txt");
+    const title = el("span", "t-title", t.title);
+    if (/[a-z]/.test(t.title) && !/[а-я]/i.test(t.title)) title.lang = "en";
+    txt.append(title);
+    if (t.sub) txt.append(el("span", "t-sub", t.sub));
+    head.append(el("span", "t-n", String(t.n)), txt,
+                el("span", "t-count", t.n === MIXED_TOPIC ? "" : learnedIn(t.n)), el("span", "t-chev", "›"));
+    head.addEventListener("click", () => {
+      openTopic = openTopic === t.n ? null : t.n;
+      lsSet(LS_OPEN, openTopic ? String(openTopic) : "");
+      stopAudio();
+      renderTopics();
+    });
+    item.append(head);
+    if (openTopic === t.n){
+      const body = el("div", "t-body");
+      String(t.rule).split("\n\n").forEach(par => { const rule = el("p", "t-rule"); rule.append(richText(par)); body.append(rule); });
+      t.ex.forEach((ex, i) => {
+        const row = el("div", "ex");
+        const en = el("p", "ex-en"); en.append(marked(ex.en));
+        row.append(en, el("p", "ex-ru", ex.ru));
+        body.append(row);
+      });
+      const train = el("button", "t-train", t.n === MIXED_TOPIC ? "Начать итоговую тренировку" : "Потренировать эту тему");
+      train.type = "button";
+      train.addEventListener("click", () => { buildTopic(t.n); setTab("drill"); render(); });
+      body.append(train);
+      item.append(body);
+    }
+    box.append(item);
+  });
+}
+
+function setTab(name){
+  const drill = name === "drill";
+  $("drill").hidden = !drill;
+  $("rule").hidden = drill;
+  $("meta").hidden = !drill;
+  $("barWrap").hidden = !drill;
+  $("tabDrill").setAttribute("aria-selected", String(drill));
+  $("tabRule").setAttribute("aria-selected", String(!drill));
+  if (!drill){ stopAudio(); renderTopics(); }
+  lsSet(LS_TAB, name);
+}
+
+// ——— События
+$("tabDrill").addEventListener("click", () => setTab("drill"));
+$("tabRule").addEventListener("click", () => setTab("rule"));
+$("go").addEventListener("click", () => {
+  if (mode !== "main" || !queue[index]){ buildMain(); render(); }
+  setTab("drill");
+});
+$("toRule").addEventListener("click", () => setTab("rule"));
+$("more").addEventListener("click", () => { buildMain(); render(); });
+$("next").addEventListener("click", next);
+// Клавиатура на компьютере: 1, 2, 3 — варианты по порядку на экране; пробел или Enter — дальше
+document.addEventListener("keydown", e => {
+  if ($("drill").hidden || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (e.target && e.target.closest && e.target.closest("button")) return;
+  if (!answered){
+    const i = parseInt(e.key, 10) - 1;
+    if (i >= 0 && i < shownOpts.length && queue[index]) choose(shownOpts[i]);
+  } else if (e.key === " " || e.key === "Enter"){
+    e.preventDefault(); next();
+  }
+});
+
+
+// ——— Переход к разделам справочника
+document.querySelectorAll(".jump button").forEach(b => b.addEventListener("click", () => {
+  const t = document.getElementById(b.dataset.to);
+  if (!t) return;
+  const smooth = !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  try{ t.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" }); }catch(e){ t.scrollIntoView(); }
+}));
+
+// ——— Общие помощники калькуляторов
+const plan = { cur: "none", extreme: false, asian: false, hypo: false, fibr: false, myo: false, cyclo: false, amio: false, warf: false };
+const fmtD = new Intl.DateTimeFormat("ru-RU", { weekday: "short", day: "numeric", month: "long" });
+const fmtDM = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long" });
+const fmtDMY = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", year: "numeric" });
+function pad2(n){ return String(n).padStart(2, "0"); }
+function toDateInput(d){ return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); }
+function fromDate(v){
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(v || "");
+  return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null;
+}
+function today0(){ const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+function addDays(d, n){ return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
+function addMonths(d, n){
+  const y = d.getFullYear(), m = d.getMonth() + n;
+  const last = new Date(y, m + 1, 0).getDate();
+  return new Date(y, m, Math.min(d.getDate(), last));
+}
+function span(a, b){
+  const x = fmtDM.format(a), y = fmtDM.format(b);
+  if (a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear()) return a.getDate() + "–" + y;
+  return x + " – " + y;
+}
+// неразрывные пробелы и тире в строках калькуляторов: «40–80 мг», «4–12 недель», «< 1,4» не рвутся
+function tp(s){
+  return String(s)
+    .replace(/(\d)–(\d)/g, "$1–⁠$2")
+    .replace(/(\d) (?=(?:мг|мл|мин|лет|ч(?![а-яё])|дн|сут|кг|ммоль|мкмоль|недел|месяц|ВГН|янв|фев|мар|апр|ма[яй]|июн|июл|авг|сен|окт|ноя|дек))/g, "$1 ")
+    .replace(/ ([×<>≤≥=≈−±÷]) /g, " $1 ")
+    .replace(/ \+ /g, " + ")
+    .replace(/ХС ЛНП/g, "ХС ЛНП").replace(/КР по /g, "КР по ")
+    .replace(/(^|[\s(])([<>≤≥≈]) (?=\d)/g, "$1$2 ")
+    .replace(/(КК|ЛНП|КФК|АЛТ|ОР|ОШ) (?=[\d<>≤≥=≈])/g, "$1 ")
+    .replace(/(^|[\s(«])(не|в|с|к|и|а|о|у|на|по|за|из|от|до|со|но|же|ли|при|без|для) /g, "$1$2 ")
+    .replace(/ — /g, " — ");
+}
+function pillD(now, from, to){
+  if (now < from) return ["ещё рано", "p-wait"];
+  if (to && now >= to) return ["срок прошёл", "p-late"];
+  return ["сейчас", "p-now"];
+}
+function line(k, v, n, cls, p){
+  const box = el("div", "rl" + (cls ? " " + cls : ""));
+  box.append(el("p", "rk", tp(k)));
+  box.append(el("p", "rv", tp(v)));
+  if (n || p){
+    const nn = el("p", "rn", tp(n || ""));
+    if (p) nn.append(n ? " " : "", el("span", "pill " + p[1], p[0]));
+    box.append(nn);
+  }
+  return box;
+}
+function num(id){ const v = String($(id).value).replace(",", ".").trim(); return v === "" ? NaN : Number(v); }
+function row(name, dose, cls, why){
+  const li = el("li");
+  li.append(el("span", "n", tp(name)), el("span", "d" + (cls ? " " + cls : ""), tp(dose)));
+  if (why) li.append(el("span", "w", tp(why)));
+  return li;
+}
+function joinRu(a){ return a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " и " + a[a.length - 1]; }
+function dec(x){ return String(Math.round(x * 100) / 100).replace(".", ","); }
+function dec1(x){ return (Math.round(x * 10) / 10).toFixed(1).replace(".", ","); }
+
+// ——— Калькулятор режима: цель ЛНП (КР по ИИ 2024), ожидаемый ЛНП (табл. А3.11 КР по ДЛП 2023), дозы по инструкциям
+const CUT = { none: 0, mod: 0.30, high: 0.50, highez: 0.65 };
+const CUR_NAME = { none: "статина нет", mod: "умеренная терапия", high: "ВИТС", highez: "ВИТС + эзетимиб" };
+function renderPlan(){
+  const box = $("pres");
+  box.textContent = "";
+  const age = num("age"), ldl = num("ldl");
+  const kkRaw = String($("kk").value).trim(), kk = kkRaw === "" ? null : num("kk");
+  if (!(age >= 18 && age <= 110) || !(ldl >= 0.3 && ldl <= 20)){
+    box.append(el("p", "res-note", tp("Введите возраст (18–110 лет) и ХС ЛНП (0,3–20 ммоль/л).")));
+    return;
+  }
+  if (kk !== null && !(kk >= 5 && kk <= 250)){
+    box.append(el("p", "res-note", tp("КК — от 5 до 250 мл/мин или оставьте поле пустым.")));
+    return;
+  }
+  const cur = plan.cur, old = age > 75;
+  const base = ldl / (1 - CUT[cur]);          // исходный без терапии: сейчас или расчётно
+  const half = base / 2;
+  const lim = plan.extreme ? 1.0 : 1.4;
+  const atGoal = cur !== "none" && ldl < lim - 1e-9;                       // КР по ИИ 2024: < 1,4 (экстремальный риск — < 1,0)
+  const strictGap = !plan.extreme && half < 1.4 && ldl > half + 1e-9;      // КР по ДЛП 2023: ещё и снижение ≥ 50%
+
+  // цель
+  let tv, tn;
+  if (plan.extreme){ tv = "< 1,0 ммоль/л"; tn = "экстремальный риск — КР по ИИ 2024, УУР B"; }
+  else if (half < 1.4){ tv = "< 1,4; по КР по ДЛП 2023 — ≤ " + dec(half); tn = "КР по ИИ 2024: < 1,4 или хотя бы −50%; КР по ДЛП 2023 требуют обоих — здесь строже −50%"; }
+  else { tv = "< 1,4 ммоль/л"; tn = "КР по ИИ 2024: < 1,4 или хотя бы −50% (≤ " + dec(half) + "); КР по ДЛП 2023 — оба условия, строже < 1,4"; }
+  if (cur !== "none") tn += " · исходный без терапии — расчётно ≈ " + dec1(base) + " (табл. А3.11 КР по ДЛП 2023)";
+  box.append(line("Цель ХС ЛНП", tv, tn));
+
+  // что делать
+  let av, an, acls = "";
+  if (plan.cyclo && !atGoal){
+    av = "ВИТС недоступна: аторвастатин не выше 10 мг + эзетимиб"; an = "розувастатин с циклоспорином противопоказан; нет цели — иPCSK9 (КР по ИИ 2024, УУР A)";
+  } else if (cur === "none"){
+    if (old){ av = "Умеренная интенсивность: аторвастатин 10–20 мг или розувастатин 5–10 мг"; an = "старше 75 лет, статина не было — КР по ИИ 2024, УУР C; дальше титровать до цели — КР по ДЛП 2023"; }
+    else { av = "ВИТС: аторвастатин 40–80 мг или розувастатин 20–40 мг"; an = "не позднее 48 ч от развития ИИ; нет цели — до максимально переносимой дозы"; }
+  } else if (atGoal){
+    av = "Цель достигнута — та же терапия"; an = "дозу не снижают; липиды раз в год" + (old && cur === "high" ? "; старше 75 лет — интенсивность не снижать (КР по ИИ 2024)" : "") + (strictGap ? "; по КР по ДЛП 2023 ещё нужно ≤ " + dec(half) : ""); acls = "ok";
+  } else if (cur === "mod"){
+    if (old){ av = "Продолжить без перерыва и усилить"; an = "титровать дозу или добавить эзетимиб к низкой дозе статина — КР по ДЛП 2023"; }
+    else { av = "Перевести на ВИТС: аторвастатин 40–80 мг или розувастатин 20–40 мг"; an = "статин не прерывать ни на день"; }
+  } else if (cur === "high"){
+    av = "Продолжить ВИТС без перерыва"; an = "доза уже максимальная переносимая — + эзетимиб 10 мг; нет — сначала повысить" + (old ? "; старше 75 лет интенсивность не снижать (КР по ИИ 2024)" : "");
+  } else {
+    av = "Продолжить и добавить иPCSK9"; an = "алирокумаб, эволокумаб или инклисиран — КР по ИИ 2024, УУР A";
+  }
+  if (cur !== "none" && !atGoal) an += " · решение — по анализу через 4–12 недель на максимально переносимой дозе";
+  box.append(line("Что делать · " + CUR_NAME[cur], av, an, acls));
+  if (cur !== "none") box.append(line("При поступлении", "Не прерывать статин", "отмена на 3 дня: mRS > 2 у 60% против 39% (Blanco 2007)", "ok"));
+  if (cur === "none" && base > 5.0) box.append(line("ЛНП > 5,0", "Можно сразу статин + эзетимиб + иPCSK9", "КР по ДЛП 2023, экстремальный или очень высокий риск"));
+  else if (cur === "none" && base > 4.0) box.append(line("ЛНП > 4,0", "Можно сразу статин + эзетимиб", "лучше в одной таблетке — КР по ДЛП 2023"));
+
+  // ожидаемый ЛНП по ступеням
+  const steps = [["Умеренная терапия", 0.30, "mod"], ["ВИТС", 0.50, "high"], ["ВИТС + эзетимиб", 0.65, "highez"], ["ВИТС + эзетимиб + иPCSK9", 0.85, "all"]];
+  const shown = steps.filter(st => st[2] !== "mod" || old || cur === "mod");
+  const wrap = el("div", "rl");
+  wrap.append(el("p", "rk", tp("Ожидаемый ЛНП · табл. А3.11 КР по ДЛП 2023")));
+  const ul = el("ul", "dzr");
+  let first = true;
+  for (const [name, r, key] of shown){
+    const v = base * (1 - r);
+    const ok = v < lim - 1e-9;
+    const notes = ["−" + Math.round(r * 100) + "%"];
+    if (key === cur) notes.push("сейчас");
+    if (ok && first){ notes.push("первая ступень с ЛНП < " + (plan.extreme ? "1,0" : "1,4") + (!plan.extreme && half < 1.4 && v > half + 1e-9 ? "; для −50% по КР по ДЛП 2023 — дальше" : "")); first = false; }
+    ul.append(row(name, "≈ " + dec1(v), ok ? "ok" : "low", notes.join(" · ")));
+  }
+  wrap.append(ul);
+  box.append(wrap);
+
+  // препараты
+  const dw = el("div", "rl");
+  dw.append(el("p", "rk", tp("Препараты · инструкции")));
+  const dl = el("ul", "dzr");
+  const newOld = old && cur === "none";
+  // аторвастатин
+  const an2 = [];
+  let ad = newOld ? "10–20 мг" : "40–80 мг", acl2 = "";
+  if (plan.cyclo){ ad = "не выше 10 мг"; acl2 = "low"; an2.push("циклоспорин"); }
+  if (plan.amio){ if (!plan.cyclo){ acl2 = "low"; } an2.push("амиодарон или верапамил — снизить максимальную дозу"); }
+  if (plan.warf) an2.push("варфарин — протромбиновое время до старта");
+  if (!an2.length) an2.push("по КК и возрасту не корректируют");
+  dl.append(row("Аторвастатин", ad, acl2, an2.join(" · ")));
+  // розувастатин
+  const contra = [], rlim = [], start5 = [];
+  if (kk !== null && kk < 30) contra.push("КК < 30");
+  if (plan.cyclo) contra.push("циклоспорин");
+  if (kk !== null && kk < 60 && kk >= 30){ rlim.push("КК < 60"); start5.push("КК < 60"); }
+  if (plan.asian){ rlim.push("азиатская раса"); start5.push("азиатская раса"); }
+  if (plan.hypo){ rlim.push("гипотиреоз"); start5.push("гипотиреоз"); }
+  if (plan.fibr){ rlim.push("фибраты"); start5.push("фибраты"); }
+  if (plan.myo){ rlim.push("миотоксичность статинов или фибратов в анамнезе"); start5.push("миотоксичность"); }
+  const rn2 = [];
+  let rd, rcl = "";
+  if (contra.length){ rd = "противопоказан"; rcl = "no"; rn2.push(joinRu(contra)); }
+  else {
+    if (newOld) rd = "5–10 мг";
+    else if (rlim.length){ rd = "не выше 20 мг"; rcl = "low"; }
+    else { rd = "20–40 мг"; rn2.push("инструкция: старт 5–10 мг, 20 мг — через 4 недели, 40 мг — если на 20 мг нет цели"); }
+    if (rlim.length) rn2.push("40 мг нельзя: " + joinRu(rlim));
+    if (start5.length) rn2.push("старт — 5 мг");
+    else if (age > 70) rn2.push("старше 70 лет — в ряде инструкций старт 5 мг");
+    if (plan.warf) rn2.push("варфарин — МНО при старте, смене дозы и отмене");
+  }
+  dl.append(row("Розувастатин", rd, rcl, rn2.join(" · ")));
+  // эзетимиб
+  if (cur === "highez") dl.append(row("Эзетимиб", "10 мг", "", "уже принимает"));
+  else dl.append(row("Эзетимиб", "10 мг", "", "если за 4–12 недель на максимально переносимом статине нет цели — КР по ИИ 2024, УУР C"));
+  dw.append(dl);
+  box.append(dw);
+  const notes = [];
+  if (kk === null) notes.push("КК не указан — почечные ограничения розувастатина не учтены.");
+  notes.push("Проценты — ориентир КР по ДЛП 2023 (≈ 30, 50, 65, 85%), ответ у пациента индивидуален. ЛНП в мг/дл ÷ 38,7 = ммоль/л.");
+  box.append(el("p", "res-note", tp(notes.join(" "))));
+}
+
+// ——— Калькулятор дат контроля: КР по ИИ 2024, КР по ДЛП 2023, Приказ 168н, инструкции
+function renderCtrl(){
+  const box = $("mres");
+  box.textContent = "";
+  $("disClear").hidden = !$("dis").value;
+  $("dis").parentElement.classList.toggle("has-x", !!$("dis").value);
+  const st = fromDate($("start").value);
+  if (!st){ box.append(line("Даты", "Укажите дату старта или смены дозы", "")); return; }
+  const now = today0();
+  const w4 = addDays(st, 28), w6 = addDays(st, 42), w12 = addDays(st, 84), m3 = addMonths(st, 3);
+  box.append(line("Приказ 168н", "АЛТ, АСТ, КФК — " + fmtD.format(w4), "через 4 недели от начала терапии, для смены дозы — по аналогии; раньше — при мышечных симптомах", "", pillD(now, w4, addDays(w4, 7))));
+  box.append(line("КР по ИИ 2024", "Липиды натощак, АЛТ, АСТ: " + span(w4, w12), "через 4–12 недель; КР по ДЛП 2023 — 8 ± 4 недели, то же окно", "", pillD(now, w4, addDays(w12, 1))));
+  box.append(line("Решение по анализу", "Цель есть — та же доза, липиды раз в год", "нет — до максимально переносимой дозы или + эзетимиб 10 мг, затем снова через 4–12 недель; после ОНМК КР по ДЛП 2023 — ХС ЛНП дважды в год", "ok"));
+  box.append(line("Инструкции · печёночные пробы", "Аторвастатин — " + fmtDM.format(w6) + " и " + fmtDM.format(w12), "через 6 и 12 недель; розувастатин — через 3 месяца: " + fmtDM.format(m3)));
+  const dis = fromDate($("dis").value);
+  if (!dis){ box.append(el("p", "res-note", tp("Укажите дату выписки — появятся даты диспансерных визитов по Приказу 168н."))); return; }
+  const wrap = el("div", "rl");
+  wrap.append(el("p", "rk", tp("Приказ 168н · диспансерные визиты")));
+  wrap.append(el("p", "rn", tp("24 месяца: в первый год — не реже раза в 3 месяца, затем — раз в 6 месяцев; ХС ЛНП, АД, ЧСС, ЭКГ")));
+  const ul = el("ul", "dzr");
+  let next = true;
+  for (const mo of [3, 6, 9, 12, 18, 24]){
+    const d = addMonths(dis, mo);
+    const soon = next && d >= now;
+    if (soon) next = false;
+    ul.append(row(mo + " мес", fmtDMY.format(d), soon ? "now" : "", soon ? "ближайший" : ""));
+  }
+  wrap.append(ul);
+  box.append(wrap);
+}
+
+function pressOne(sel, attr, val){
+  document.querySelectorAll(sel).forEach(b => b.setAttribute("aria-pressed", String(b.dataset[attr] === val)));
+}
+function initCalc(){
+  const t = today0();
+  $("start").value = toDateInput(t);
+  $("dis").value = toDateInput(addDays(t, 10));
+  document.querySelectorAll("[data-cur]").forEach(b => b.addEventListener("click", () => { plan.cur = b.dataset.cur; pressOne("[data-cur]", "cur", plan.cur); renderPlan(); }));
+  document.querySelectorAll("[data-flag]").forEach(b => b.addEventListener("click", () => {
+    const k = b.dataset.flag; plan[k] = !plan[k]; b.setAttribute("aria-pressed", String(plan[k])); renderPlan();
+  }));
+  ["age", "kk", "ldl"].forEach(id => { $(id).addEventListener("input", renderPlan); $(id).addEventListener("change", renderPlan); });
+  ["start", "dis"].forEach(id => { $(id).addEventListener("input", renderCtrl); $(id).addEventListener("change", renderCtrl); });
+  $("disClear").addEventListener("click", () => { $("dis").value = ""; renderCtrl(); });
+  renderPlan();
+  renderCtrl();
+}
+
+function boot(){
+  progress = loadLocal();
+  const o = parseInt(lsGet(LS_OPEN) || "", 10);
+  openTopic = TOPIC_BY[o] ? o : null;
+  buildMain();
+  render();
+  const saved = lsGet(LS_TAB);
+  setTab(saved === "drill" || saved === "rule" ? saved : (Object.keys(progress).length ? "drill" : "rule"));
+  renderTopics();
+  initCalc();
+  connectCloud();
+}
+boot();
+</script>
+
+</body></html>

@@ -1,0 +1,3023 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Антитромботики при тромбоцитопении</title>
+<style>
+  :root{
+    --k:1;
+    color-scheme:dark;
+    --bg:#0e1113;
+    --surface:#171c1f;
+    --raise:#1f262a;
+    --line:#252c30;
+    --line-2:#343d42;
+    --text:#e8e8e8;
+    --soft:#c3cbcf;
+    --muted:#939ea3;
+    --accent:#d97757;
+    --on-accent:#14181a;
+    --blue:#7cc0dd;
+    --blue-soft:rgba(124,192,221,.13);
+    --no:#b4544a;
+    --no-text:#e9a7a0;
+    --no-soft:rgba(180,84,74,.10);
+    --yes:#4e8767;
+    --yes-text:#9ad0b4;
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  [hidden]{display:none!important}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);overflow-x:hidden}
+  body{font-family:var(--sans);font-size:calc(17px*var(--k));line-height:1.5;display:flex;justify-content:center}
+  button{font:inherit;color:inherit}
+  .app{width:100%;max-width:calc(440px*var(--k));height:100%;display:flex;flex-direction:column;gap:calc(10px*var(--k));padding:calc(10px*var(--k)) calc(16px*var(--k)) calc(14px*var(--k))}
+  .nw{white-space:nowrap}
+  .sr{position:absolute;width:calc(1px*var(--k));height:calc(1px*var(--k));overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+  .top{display:flex;align-items:center;gap:calc(10px*var(--k))}
+  .tabs{flex:1;display:flex;gap:calc(4px*var(--k));padding:calc(4px*var(--k));border:calc(1px*var(--k)) solid var(--line);border-radius:calc(14px*var(--k))}
+  .tab{flex:1;min-height:calc(44px*var(--k));border:0;border-radius:calc(10px*var(--k));background:transparent;color:var(--muted);font-size:calc(16px*var(--k));cursor:pointer}
+  .tab[aria-selected="true"]{background:var(--raise);color:var(--text)}
+  .icon{width:calc(52px*var(--k));height:calc(52px*var(--k));flex:0 0 calc(52px*var(--k));display:grid;place-items:center;border:calc(1px*var(--k)) solid var(--line);border-radius:calc(14px*var(--k));background:transparent;color:var(--muted);cursor:pointer}
+  .icon[aria-pressed="true"]{color:var(--accent);border-color:var(--accent)}
+  .icon svg{width:calc(22px*var(--k));height:calc(22px*var(--k))}
+  .icon .sl{display:none}
+  .icon[aria-pressed="false"] .sl{display:inline}
+  .icon[aria-pressed="false"] .wv{display:none}
+
+  .meta{font-size:calc(15px*var(--k));color:var(--muted);font-variant-numeric:tabular-nums;line-height:1.3}
+  .bar{height:calc(3px*var(--k));border-radius:calc(2px*var(--k));background:var(--line);overflow:hidden;margin-top:-4px}
+  .bar-fill{display:block;height:100%;width:0;background:var(--accent);transition:width .25s ease}
+
+  .st{color:var(--blue)}
+  .pr{color:var(--accent)}
+  .good{color:var(--yes-text)}
+
+  .view{flex:1;min-height:0;display:flex;flex-direction:column;gap:calc(12px*var(--k))}
+  .card{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:calc(22px*var(--k)) calc(20px*var(--k));background:var(--surface);border:calc(1px*var(--k)) solid var(--line);border-radius:calc(20px*var(--k));display:flex;flex-direction:column;gap:calc(16px*var(--k))}
+  .kind{align-self:flex-start;font-size:calc(14px*var(--k));letter-spacing:.02em;color:var(--blue);padding:calc(5px*var(--k)) calc(11px*var(--k));border-radius:calc(999px*var(--k));border:calc(1px*var(--k)) solid currentColor;background:var(--blue-soft)}
+  .q{margin:0;font-family:var(--serif);font-size:calc(30px*var(--k));line-height:1.32;text-wrap:pretty}
+  .gap{display:inline-block;min-width:3em;height:.95em;border-bottom:calc(3px*var(--k)) solid var(--accent);margin:0 .08em;vertical-align:-.05em}
+  .hint{margin:0;font-size:calc(17px*var(--k));color:var(--muted)}
+  .back{display:flex;flex-direction:column;gap:calc(12px*var(--k));padding-top:calc(14px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .verdict{margin:0;font-size:calc(18px*var(--k));line-height:1.45}
+  .verdict.ok{color:var(--yes-text)}
+  .verdict.bad{color:var(--no-text)}
+  .verdict b{font-family:var(--serif);font-weight:400;font-size:calc(21px*var(--k))}
+  .why{margin:0;font-size:calc(18px*var(--k));line-height:1.5;color:var(--soft)}
+
+  .opts{display:grid;gap:calc(10px*var(--k))}
+  .opts.c1{grid-template-columns:minmax(0,1fr)}
+  .opts.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .opts.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .opt{min-height:calc(64px*var(--k));padding:calc(6px*var(--k)) calc(10px*var(--k));border-radius:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:var(--surface);font-family:var(--serif);font-size:calc(25px*var(--k));line-height:1.15;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(2px*var(--k))}
+  .opt.long{font-size:calc(22px*var(--k))}
+  .opt:active{background:var(--raise)}
+
+  .actions{display:flex;gap:calc(10px*var(--k))}
+  .big{flex:1;min-height:calc(58px*var(--k));border-radius:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:transparent;font-size:calc(19px*var(--k));cursor:pointer}
+  .primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+  .big:active,.opt:active{transform:scale(.985)}
+  .say{width:calc(58px*var(--k));height:calc(58px*var(--k));flex:0 0 calc(58px*var(--k));border-radius:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--accent);background:transparent;color:var(--accent);display:grid;place-items:center;cursor:pointer}
+  .say svg{width:calc(24px*var(--k));height:calc(24px*var(--k))}
+
+  /* ——— Правила */
+  .rule{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:calc(4px*var(--k)) calc(2px*var(--k)) calc(12px*var(--k))}
+  .r-title{margin:calc(8px*var(--k)) 0 calc(4px*var(--k));font-family:var(--serif);font-weight:400;font-size:calc(40px*var(--k));line-height:1.1;text-wrap:balance}
+  .r-sub{margin:0 0 calc(14px*var(--k));font-size:calc(17px*var(--k));line-height:1.45;color:var(--soft);text-wrap:pretty}
+  .r-sub b{color:var(--text)}
+  .r-sub i{font-family:var(--serif);font-style:normal;color:var(--text)}
+  .algo{background:var(--surface);border:calc(1px*var(--k)) solid var(--line);border-radius:calc(18px*var(--k));padding:calc(16px*var(--k)) calc(16px*var(--k)) calc(14px*var(--k))}
+  .algo-h{margin:0 0 calc(4px*var(--k));font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+  .steps{list-style:none;margin:0;padding:0}
+  .steps li{display:grid;grid-template-columns:calc(26px*var(--k)) minmax(0,1fr);gap:calc(8px*var(--k));padding:calc(10px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .steps li:first-child{border-top:0}
+  .sn{font-size:calc(15px*var(--k));line-height:1.45;color:var(--blue);font-variant-numeric:tabular-nums}
+  .s-t{margin:0;font-size:calc(17px*var(--k));line-height:1.4}
+  .s-f{margin:calc(3px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.3}
+  .s-f i{font-style:normal;color:var(--soft)}
+  .algo-m{margin:calc(4px*var(--k)) 0 0;padding-top:calc(12px*var(--k));border-top:calc(1px*var(--k)) solid var(--line);font-size:calc(18px*var(--k));color:var(--text)}
+  .algo-m b{font-family:var(--serif);font-weight:400;font-size:calc(26px*var(--k))}
+  .algo-note{margin:calc(8px*var(--k)) 0 0;font-size:calc(15px*var(--k));line-height:1.45;color:var(--muted)}
+  .algo-note i{font-family:var(--serif);font-style:normal;color:var(--soft)}
+  .go-wrap{display:flex;margin:calc(14px*var(--k)) 0 calc(4px*var(--k))}
+
+  .lbl{margin:calc(26px*var(--k)) 0 calc(8px*var(--k));font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+  .mx-wrap{overflow-x:auto;border:calc(1px*var(--k)) solid var(--line);border-radius:calc(16px*var(--k));background:var(--surface)}
+  .mx-note{margin:calc(10px*var(--k)) calc(2px*var(--k)) 0;font-size:calc(16px*var(--k));line-height:1.5;color:var(--soft)}
+  .mx-note i{font-family:var(--serif);font-style:normal;color:var(--text)}
+
+  .mm{margin-top:calc(10px*var(--k));padding:calc(12px*var(--k)) calc(14px*var(--k)) calc(12px*var(--k));background:var(--surface);border:calc(1px*var(--k)) solid var(--line);border-radius:calc(16px*var(--k))}
+  .mm:first-of-type{margin-top:0}
+  .mm-h{margin:0 0 calc(6px*var(--k));font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
+  .mm-n{display:inline-block;min-width:1.6em;color:var(--accent)}
+  .mm-grid{display:grid;grid-template-columns:1fr 1fr;gap:calc(2px*var(--k)) calc(12px*var(--k))}
+  .mm-w{margin:0;padding:calc(5px*var(--k)) 0}
+  .mm-w span{display:block;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2}
+  .mm-w small{display:block;font-size:calc(13px*var(--k));line-height:1.3;color:var(--muted)}
+  .mm-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) calc(44px*var(--k));column-gap:calc(10px*var(--k));align-items:center;padding:calc(6px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .mm-pair:first-of-type{border-top:0}
+  .mm-pair p{margin:0}
+  .mm-pair span{display:block;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2}
+  .mm-pair small{display:block;font-size:calc(13px*var(--k));line-height:1.3;color:var(--muted)}
+  .mm-play{width:calc(44px*var(--k));height:calc(44px*var(--k));border-radius:50%;border:calc(1px*var(--k)) solid var(--line-2);background:transparent;color:var(--accent);display:grid;place-items:center;cursor:pointer}
+  .mm-play svg{width:calc(18px*var(--k));height:calc(18px*var(--k))}
+  .mm-note{margin:calc(8px*var(--k)) 0 0;padding-top:calc(8px*var(--k));border-top:calc(1px*var(--k)) solid var(--line);font-size:calc(14px*var(--k));line-height:1.45;color:var(--soft)}
+  .legend{margin:0 calc(2px*var(--k)) calc(10px*var(--k));font-size:calc(15px*var(--k));line-height:1.45;color:var(--soft)}
+  .hl{color:var(--text);text-decoration:underline;text-decoration-thickness:calc(1.5px*var(--k));text-underline-offset:calc(3px*var(--k))}
+  .algo-m i{font-family:var(--serif);font-style:normal;font-size:calc(18px*var(--k))}
+  .md{display:grid;grid-template-columns:minmax(0,1fr) calc(48px*var(--k));column-gap:calc(10px*var(--k));align-items:center;padding:calc(8px*var(--k)) calc(10px*var(--k)) calc(8px*var(--k)) calc(14px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .md:first-child{border-top:0}
+  .s-f .sep{color:var(--muted)}
+  .pw{margin:0;line-height:1.35}
+  .pw + .pw{margin-top:calc(3px*var(--k))}
+  .pw-w{margin-right:calc(6px*var(--k));font-family:var(--serif);font-size:calc(22px*var(--k))}
+  .ipa{margin-right:calc(6px*var(--k));font-size:calc(14px*var(--k));color:var(--muted);white-space:nowrap}
+  .pw-ru{font-size:calc(15px*var(--k));color:var(--soft)}
+  .pw-tip{margin:calc(8px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.45;color:var(--muted)}
+  .snd-ex{margin:calc(4px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(18px*var(--k));line-height:1.35;color:var(--soft)}
+  .algo-m b.pr{color:var(--accent)}
+  .s-t b{margin-right:calc(4px*var(--k));font-family:var(--serif);font-weight:400;font-size:calc(21px*var(--k));color:var(--accent)}
+  .s-t .ipa{margin-right:calc(4px*var(--k))}
+  .algo-m b.st{color:var(--blue)}
+  .algo-m b.good{color:var(--yes-text)}
+  .mt{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(6px*var(--k))}
+  .mt col.rh{width:calc(92px*var(--k))}
+  .mt thead th{padding:calc(2px*var(--k)) calc(6px*var(--k)) calc(8px*var(--k));font-size:calc(12px*var(--k));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left}
+  .mt tbody th{padding:calc(12px*var(--k)) calc(6px*var(--k)) calc(12px*var(--k)) 0;text-align:left;vertical-align:top;font-family:var(--serif);font-weight:400;font-size:calc(24px*var(--k));line-height:1.15;border-top:calc(1px*var(--k)) solid var(--line)}
+  .mt td{padding:calc(12px*var(--k)) calc(6px*var(--k));vertical-align:top;font-size:calc(15px*var(--k));line-height:1.4;color:var(--soft);border-top:calc(1px*var(--k)) solid var(--line)}
+  .mt td .f{display:block;margin-bottom:calc(2px*var(--k));font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.2}
+  .mt td b{color:var(--text);font-weight:600}
+  .mt td b.h{display:block;margin-bottom:calc(2px*var(--k))}
+  .mt thead td{border-top:0}
+  .mt tbody th small{display:block;margin-top:calc(3px*var(--k));font-family:var(--sans);font-size:calc(12px*var(--k));line-height:1.2;color:var(--muted)}
+  .mt.wx col.rh{width:calc(78px*var(--k))}
+  .mt.wx td .f{font-size:calc(18px*var(--k))}
+  .mt td i{display:block;font-family:var(--serif);font-style:normal;font-size:calc(15px*var(--k));line-height:1.3;color:var(--soft)}
+  .mt td small{display:block;margin-top:calc(2px*var(--k));font-size:calc(13px*var(--k));line-height:1.3;color:var(--muted)}
+  .mt td small i{display:inline;font-size:calc(13px*var(--k));color:var(--soft)}
+  .cp-en + .cp-ru + .cp-en{margin-top:calc(8px*var(--k))}
+  .algo-2{margin-top:calc(12px*var(--k))}
+  .ct{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(4px*var(--k))}
+  .ct col.sit{width:46%}
+  .ct th{padding:calc(11px*var(--k)) calc(10px*var(--k)) calc(11px*var(--k)) 0;text-align:left;vertical-align:top;font-size:calc(15px*var(--k));font-weight:600;line-height:1.35;color:var(--text);border-top:calc(1px*var(--k)) solid var(--line)}
+  .ct td{padding:calc(11px*var(--k)) 0;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .ct tr:first-child th,.ct tr:first-child td{border-top:0}
+  .ct .f{display:block;font-family:var(--serif);font-size:calc(21px*var(--k));line-height:1.2}
+  .ct .e{display:block;margin-top:calc(2px*var(--k));font-family:var(--serif);font-size:calc(15px*var(--k));line-height:1.3;color:var(--soft)}
+  .vt{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(4px*var(--k))}
+  .vt col.v{width:46%}
+  .vt th{padding:calc(10px*var(--k)) calc(10px*var(--k)) calc(10px*var(--k)) 0;text-align:left;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .vt td{padding:calc(10px*var(--k)) 0;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .vt tr:first-child th,.vt tr:first-child td{border-top:0}
+  .vt .w{display:block;font-family:var(--serif);font-weight:400;font-size:calc(21px*var(--k));line-height:1.15;color:var(--accent)}
+  .vt .w.st{color:var(--blue)}
+  .vt .w.hl{color:var(--text)}
+  .vt tr.pb th,.vt tr.pb td{border-top:0;padding-top:0}
+  .vt .w.good{color:var(--yes-text)}
+  .wd-w{margin:0;line-height:1.3}
+  .wd-w .ph{margin-right:calc(6px*var(--k));font-family:var(--serif);font-size:calc(21px*var(--k))}
+  .wd-ru{font-size:calc(15px*var(--k));color:var(--muted)}
+  .wd-p{margin:calc(3px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(17px*var(--k));line-height:1.35;color:var(--soft)}
+  .vt .p{display:block;margin-top:calc(2px*var(--k));font-size:calc(13px*var(--k));font-weight:600;line-height:1.3;color:var(--blue)}
+  .vt .e{display:block;font-family:var(--serif);font-size:calc(16px*var(--k));line-height:1.3;color:var(--text)}
+  .vt .r{display:block;margin-top:calc(2px*var(--k));font-size:calc(13px*var(--k));line-height:1.35;color:var(--muted)}
+  .mt.af thead th{padding:calc(2px*var(--k)) calc(8px*var(--k)) calc(8px*var(--k)) 0}
+  .mt.af td{padding:calc(12px*var(--k)) calc(8px*var(--k)) calc(12px*var(--k)) 0}
+  .mt.af td .f{font-size:calc(20px*var(--k))}
+  .mt.af td small{margin-top:calc(4px*var(--k))}
+  .vt.sv col.v{width:40%}
+  .q{font-size:calc(26px*var(--k))}
+  .md{grid-template-columns:minmax(0,1fr)}
+  .ex{grid-template-columns:minmax(0,1fr)}
+  .mt.cp col.rh{width:calc(64px*var(--k))}
+  .mt.cp thead th{padding:calc(2px*var(--k)) calc(4px*var(--k)) calc(8px*var(--k));font-size:calc(13px*var(--k));letter-spacing:0;text-transform:none}
+  .mt.cp tbody th{font-size:calc(20px*var(--k))}
+  .mt.cp td{padding:calc(12px*var(--k)) calc(4px*var(--k))}
+  .mt.cp td .f{font-size:calc(20px*var(--k))}
+  .mt.cp .c-core{color:var(--accent)}
+  .mt.cp .c-pen{color:var(--yes-text)}
+  .mt.cp .c-olig{color:var(--blue)}
+  .algo-note b{color:var(--text);font-weight:600}
+  .mt.af .sep{color:var(--muted)}
+  .g4{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:calc(6px*var(--k))}
+  .g4 col.rh{width:calc(76px*var(--k))}
+  .g4 thead th{padding:calc(4px*var(--k)) calc(4px*var(--k)) calc(8px*var(--k));font-size:calc(14px*var(--k));font-weight:600;color:var(--soft);text-align:center;vertical-align:bottom}
+  .g4 thead th small{display:block;font-weight:400;font-size:calc(12px*var(--k));color:var(--muted)}
+  .g4 tbody th{padding:calc(12px*var(--k)) 0;text-align:left;vertical-align:middle;font-size:calc(13px*var(--k));font-weight:600;line-height:1.3;color:var(--soft);border-top:calc(1px*var(--k)) solid var(--line)}
+  .g4 td{padding:calc(12px*var(--k)) calc(4px*var(--k)) calc(10px*var(--k));text-align:center;vertical-align:top;border-top:calc(1px*var(--k)) solid var(--line)}
+  .g4 thead td{border-top:0}
+  .g4 svg{display:block;width:calc(40px*var(--k));height:calc(40px*var(--k));margin:0 auto calc(4px*var(--k))}
+  .g4 .w{display:block;font-family:var(--serif);font-size:calc(28px*var(--k));line-height:1.1}
+  .g4 .e{display:block;margin-top:calc(4px*var(--k));font-family:var(--serif);font-size:calc(15px*var(--k));line-height:1.3;color:var(--soft)}
+  .cp-en{margin:0;font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.3}
+  .cp-ru{margin:calc(1px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.35;color:var(--muted)}
+  .cp-ru + .cp-en{margin-top:calc(8px*var(--k))}
+  .md .ex-play{grid-row:1}
+  .t-group{margin:calc(22px*var(--k)) 0 0;padding:0 calc(2px*var(--k)) calc(7px*var(--k));border-bottom:calc(1px*var(--k)) solid var(--line);font-size:calc(14px*var(--k));font-weight:600;color:var(--soft)}
+  .t-group:first-child{margin-top:calc(4px*var(--k))}
+  .wb{display:grid;grid-template-columns:minmax(0,1fr) calc(48px*var(--k));column-gap:calc(10px*var(--k));align-items:start}
+  .wb-h{margin:0;display:flex;align-items:baseline;flex-wrap:wrap;gap:calc(4px*var(--k)) calc(12px*var(--k))}
+  .wb-w{font-family:var(--serif);font-size:calc(38px*var(--k));line-height:1.05}
+  .wb-s{font-size:calc(15px*var(--k));color:var(--soft)}
+  .wb-ex{margin:calc(6px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.4}
+  .wb .ex-play{grid-column:2;grid-row:1 / span 2;align-self:center}
+  .zero{font-family:var(--sans);font-size:.55em;line-height:1;color:var(--yes-text);border:calc(1px*var(--k)) solid rgba(78,135,103,.65);border-radius:calc(999px*var(--k));padding:.12em .45em;margin:0 .35em 0 .05em;vertical-align:.25em}
+  .opt small{font-family:var(--sans);font-size:calc(13px*var(--k));color:var(--muted)}
+  .errs{list-style:none;margin:0;padding:0}
+  .err{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:baseline;gap:calc(10px*var(--k));padding:calc(11px*var(--k)) calc(14px*var(--k));border-top:calc(1px*var(--k)) solid var(--line);font-family:var(--serif);font-size:calc(17px*var(--k));line-height:1.35}
+  .err:first-child{border-top:0}
+  .err s{color:var(--no-text);text-decoration-thickness:calc(1.5px*var(--k))}
+  .err .arr{font-family:var(--sans);color:var(--muted)}
+  .err-note{grid-column:1 / -1;margin-top:-4px;font-family:var(--sans);font-size:calc(13px*var(--k));line-height:1.35;color:var(--muted)}
+
+  .topics{border-top:0}
+  .t-item{border-bottom:calc(1px*var(--k)) solid var(--line)}
+  .t-head{width:100%;min-height:calc(60px*var(--k));display:grid;grid-template-columns:calc(34px*var(--k)) minmax(0,1fr) auto calc(20px*var(--k));align-items:center;gap:calc(8px*var(--k));padding:calc(8px*var(--k)) calc(2px*var(--k));border:0;background:transparent;text-align:left;cursor:pointer}
+  .t-n{font-size:calc(15px*var(--k));color:var(--blue);font-variant-numeric:tabular-nums}
+  .t-txt{display:flex;flex-direction:column;min-width:0}
+  .t-title{font-size:calc(18px*var(--k));line-height:1.3}
+  .t-sub{font-size:calc(14px*var(--k));line-height:1.3;color:var(--muted)}
+  .t-count{font-size:calc(14px*var(--k));color:var(--muted);font-variant-numeric:tabular-nums}
+  .t-chev{color:var(--muted);transition:transform .2s ease}
+  .t-head[aria-expanded="true"] .t-chev{transform:rotate(90deg)}
+  .t-body{padding:calc(2px*var(--k)) calc(2px*var(--k)) calc(18px*var(--k)) calc(44px*var(--k));display:flex;flex-direction:column;gap:calc(12px*var(--k))}
+  .t-rule{margin:0;font-size:calc(17px*var(--k));line-height:1.5;color:var(--soft)}
+  .ex{display:grid;grid-template-columns:1fr calc(48px*var(--k));gap:calc(4px*var(--k)) calc(10px*var(--k));align-items:start}
+  .ex-en{margin:0;grid-column:1;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.4}
+  .ex-ru{margin:0;grid-column:1;font-size:calc(15px*var(--k));line-height:1.4;color:var(--muted)}
+  .ex-play{grid-column:2;grid-row:1 / span 2;width:calc(48px*var(--k));height:calc(48px*var(--k));border-radius:50%;border:calc(1px*var(--k)) solid var(--accent);background:transparent;color:var(--accent);display:grid;place-items:center;cursor:pointer}
+  .ex-play svg{width:calc(20px*var(--k));height:calc(20px*var(--k))}
+  .t-train{min-height:calc(50px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--accent);background:transparent;color:var(--accent);font-size:calc(17px*var(--k));cursor:pointer}
+
+  :focus-visible{outline:calc(2px*var(--k)) solid var(--accent);outline-offset:calc(2px*var(--k))}
+  @media (prefers-reduced-motion:reduce){.bar-fill,.t-chev{transition:none}.big:active,.opt:active{transform:none}}
+
+
+  /* ——— Справочник: разделы, таблицы, калькуляторы */
+  h2.algo-h{line-height:1.35}
+  .algo,.lbl{scroll-margin-top:calc(8px*var(--k))}
+  .jump{display:flex;flex-wrap:wrap;gap:calc(6px*var(--k));margin:0 0 calc(14px*var(--k))}
+  .jump button{min-height:calc(44px*var(--k));padding:0 calc(14px*var(--k));border-radius:calc(999px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:transparent;color:var(--soft);font-size:calc(15px*var(--k));cursor:pointer}
+  .jump button:active{background:var(--raise)}
+  .tt,.dz{margin-top:calc(2px*var(--k))}
+  .tr,.dr{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:calc(12px*var(--k));row-gap:calc(2px*var(--k));padding:calc(10px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .tr:first-child,.dr:first-child{border-top:0}
+  .tk,.dk{flex:0 1 auto;min-width:0;overflow-wrap:break-word;font-family:var(--serif);font-size:calc(21px*var(--k));line-height:1.2;color:var(--accent)}
+  .tv{flex:0 1 auto;margin-left:auto;min-width:0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2;color:var(--yes-text);text-align:right}
+  .dv{flex:0 1 auto;margin-left:auto;min-width:0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2;color:var(--text);text-align:right}
+  .td,.dd{flex:1 0 100%;margin-top:calc(1px*var(--k));font-size:calc(14px*var(--k));line-height:1.45;color:var(--soft)}
+  .algo-note + .algo-note{margin-top:calc(6px*var(--k))}
+
+  .calc{margin-top:calc(14px*var(--k));padding:calc(12px*var(--k)) calc(14px*var(--k)) calc(14px*var(--k));border-radius:calc(16px*var(--k));background:var(--bg);border:calc(1px*var(--k)) solid var(--line);display:flex;flex-direction:column;gap:calc(6px*var(--k))}
+  .calc-h{margin:0 0 calc(2px*var(--k));font-size:calc(15px*var(--k));font-weight:600;color:var(--text)}
+  .calc-h small{display:block;margin-top:calc(1px*var(--k));font-size:calc(13px*var(--k));font-weight:400;color:var(--muted)}
+  .fl{margin:calc(6px*var(--k)) 0 0;font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.03em;color:var(--muted)}
+  .fl small{margin-left:calc(5px*var(--k));font-size:calc(12px*var(--k));font-weight:400;letter-spacing:0}
+  .inp{display:block;width:100%;min-height:calc(48px*var(--k));padding:0 calc(12px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:var(--surface);color:var(--text);font:inherit;font-size:calc(17px*var(--k));font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none}
+  .inp::placeholder{color:var(--muted)}
+  .inp:focus{outline:calc(2px*var(--k)) solid var(--accent);outline-offset:calc(1px*var(--k))}
+  .inp-row{display:grid;grid-template-columns:minmax(0,1fr);gap:calc(6px*var(--k))}
+  .inp-row.has-x{grid-template-columns:minmax(0,1fr) calc(48px*var(--k))}
+  .x{min-height:calc(48px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:transparent;color:var(--muted);font-size:calc(20px*var(--k));line-height:1;cursor:pointer}
+  .seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:calc(6px*var(--k))}
+  .seg.s3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .seg.s4{grid-template-columns:repeat(auto-fit,minmax(calc(64px*var(--k)),1fr))}
+  .seg.s4 .chip{font-size:calc(14px*var(--k))}
+  .chip{overflow-wrap:break-word}
+  .err s,.err .good{min-width:0;overflow-wrap:break-word}
+  .seg.s2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chip{min-height:calc(44px*var(--k));padding:0 calc(2px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:transparent;color:var(--soft);font-size:calc(15px*var(--k));line-height:1.2;cursor:pointer}
+  .chip[aria-pressed="true"]{background:var(--raise);color:var(--text);border-color:var(--accent)}
+  .flags{display:flex;flex-wrap:wrap;gap:calc(6px*var(--k));margin-top:calc(6px*var(--k))}
+  .flags .chip{padding:calc(6px*var(--k)) calc(12px*var(--k));text-align:left}
+  .g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 calc(8px*var(--k))}
+  .res{margin-top:calc(8px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .rl{padding:calc(10px*var(--k)) 0;border-bottom:calc(1px*var(--k)) solid var(--line)}
+  .rl:last-child{border-bottom:0;padding-bottom:0}
+  .rk{margin:0;font-size:calc(12px*var(--k));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
+  .rv{margin:calc(2px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(22px*var(--k));line-height:1.25;color:var(--text);text-wrap:balance}
+  .rn{margin:calc(3px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.45;color:var(--muted)}
+  .rl.warn .rv{color:var(--no-text)}
+  .rl.ok .rv{color:var(--yes-text)}
+  .pill{display:inline-block;margin-left:calc(4px*var(--k));padding:0 calc(9px*var(--k));border-radius:calc(999px*var(--k));font-size:calc(12px*var(--k));font-weight:600;line-height:calc(20px*var(--k));border:calc(1px*var(--k)) solid currentColor;white-space:nowrap;vertical-align:calc(1px*var(--k))}
+  .p-now{color:var(--yes-text);background:rgba(78,135,103,.14)}
+  .p-wait{color:var(--blue);background:var(--blue-soft)}
+  .p-late{color:var(--muted)}
+  .crcl{margin:calc(10px*var(--k)) 0 0;font-size:calc(15px*var(--k));color:var(--soft)}
+  .crcl b{margin:0 calc(4px*var(--k));font-family:var(--serif);font-weight:400;font-size:calc(30px*var(--k));line-height:1;color:var(--text);font-variant-numeric:tabular-nums}
+  .dzr{list-style:none;margin:calc(6px*var(--k)) 0 0;padding:0}
+  .dzr li{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:calc(10px*var(--k));row-gap:calc(2px*var(--k));padding:calc(9px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .dzr .n{flex:0 1 auto;min-width:0;font-size:calc(15px*var(--k));font-weight:600;color:var(--soft)}
+  .dzr .d{flex:0 1 auto;margin-left:auto;min-width:0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.2;color:var(--text);text-align:right}
+  .dzr .d.low{color:var(--accent)}
+  .dzr .d.no{color:var(--no-text)}
+  .dzr .w{flex:1 0 100%;margin-top:0;font-size:calc(13px*var(--k));line-height:1.4;color:var(--muted)}
+  .res-note{margin:calc(8px*var(--k)) 0 0;font-size:calc(13px*var(--k));line-height:1.45;color:var(--muted)}
+  .q{overflow-wrap:break-word}
+  .t-rule + .t-rule{margin-top:-4px}
+
+  .lst{list-style:none;margin:0;padding:0}
+  .lst li{padding:calc(11px*var(--k)) calc(14px*var(--k)) calc(12px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .lst li:first-child{border-top:0}
+  .sw-k{margin:0;font-family:var(--serif);font-size:calc(20px*var(--k));line-height:1.25;color:var(--accent)}
+  .sw-v{margin:calc(3px*var(--k)) 0 0;font-size:calc(16px*var(--k));line-height:1.45;color:var(--text)}
+  .sw-s{margin:calc(3px*var(--k)) 0 0;font-size:calc(12px*var(--k));font-weight:600;letter-spacing:.03em;color:var(--muted)}
+  .ad-k{margin:0;font-size:calc(14px*var(--k));font-weight:600;line-height:1.35;color:var(--soft)}
+  .ad-v{margin:calc(2px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(21px*var(--k));line-height:1.25;color:var(--accent)}
+  .ad-n{margin:calc(3px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.45;color:var(--muted)}
+  .iv-k{margin:0;font-size:calc(14px*var(--k));font-weight:600;line-height:1.35;color:var(--soft)}
+  .iv-k span{font-weight:400;color:var(--muted)}
+  .iv-v{margin:calc(3px*var(--k)) 0 0;font-family:var(--serif);font-size:calc(19px*var(--k));line-height:1.3}
+  .iv-v::before{content:"";display:inline-block;width:calc(9px*var(--k));height:calc(9px*var(--k));margin-right:calc(8px*var(--k));border-radius:50%;background:currentColor;vertical-align:calc(2px*var(--k))}
+  .v-yes{color:var(--yes-text)}
+  .v-maybe{color:#e5c07b}
+  .v-no{color:var(--no-text)}
+  .src{margin:0;padding:0 0 0 calc(22px*var(--k));font-size:calc(13px*var(--k));line-height:1.45;color:var(--soft)}
+  .src li{margin:0 0 calc(7px*var(--k));padding-left:calc(2px*var(--k))}
+  .src a{color:var(--blue);text-decoration:underline;text-decoration-thickness:calc(1px*var(--k));text-underline-offset:calc(2px*var(--k));overflow-wrap:anywhere}
+  .foot{margin:calc(14px*var(--k)) 0 calc(6px*var(--k));font-size:calc(13px*var(--k));line-height:1.45;color:var(--muted)}
+  .r-title{font-size:min(calc(40px*var(--k)),10vw);overflow-wrap:break-word;hyphens:auto}
+  .t-title,.t-sub{overflow-wrap:break-word;hyphens:auto}
+  .opt{min-width:0;overflow-wrap:break-word;hyphens:auto}
+  label.fl{display:block}
+  .fl small{margin-left:0}
+  .abbr{margin:0 0 calc(14px*var(--k));padding:calc(12px*var(--k)) calc(14px*var(--k)) calc(10px*var(--k));border:calc(1px*var(--k)) solid var(--line);border-radius:calc(16px*var(--k))}
+  .abbr dl{margin:calc(4px*var(--k)) 0 0}
+  .abbr dl div{display:grid;grid-template-columns:minmax(0,7.5em) minmax(0,1fr);column-gap:calc(10px*var(--k));padding:calc(5px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .abbr dl div:first-child{border-top:0}
+  .abbr dt{font-size:calc(14px*var(--k));font-weight:600;line-height:1.4;color:var(--text);overflow-wrap:break-word}
+  .abbr dd{margin:0;font-size:calc(14px*var(--k));line-height:1.4;color:var(--soft);overflow-wrap:break-word}
+  .mx-note{font-size:calc(14px*var(--k));color:var(--muted)}
+
+  .mon{list-style:none;margin:calc(2px*var(--k)) 0 0;padding:0}
+  .mon li{padding:calc(10px*var(--k)) 0;border-top:calc(1px*var(--k)) solid var(--line)}
+  .mon li:first-child{border-top:0}
+  .dzr .d.ok{color:var(--yes-text)}
+  .calc-top{margin-top:0}
+  .rl.lead .rv{font-size:calc(25px*var(--k))}
+  .calc-hint{margin:calc(8px*var(--k)) 0 0;font-size:calc(13px*var(--k));line-height:1.45;color:var(--muted)}
+  .mxg{margin-top:calc(2px*var(--k))}
+  .mxr{padding:calc(10px*var(--k)) 0 calc(12px*var(--k));border-top:calc(1px*var(--k)) solid var(--line)}
+  .mxr:first-child{border-top:0;padding-top:calc(2px*var(--k))}
+  .mxr-k{margin:0 0 calc(6px*var(--k));font-size:calc(15px*var(--k));font-weight:600;line-height:1.3;color:var(--text)}
+  .mxr-c{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:calc(6px*var(--k))}
+  .mxr-c span{display:block;min-width:0;padding:calc(5px*var(--k)) calc(7px*var(--k)) calc(6px*var(--k));border-radius:calc(10px*var(--k));font-family:var(--serif);font-size:calc(16px*var(--k));line-height:1.2;overflow-wrap:break-word}
+  .mxr-c small{display:block;margin-bottom:calc(1px*var(--k));font-family:var(--sans);font-size:calc(11px*var(--k));font-weight:600;letter-spacing:.03em;color:var(--muted)}
+  .c-yes{color:var(--yes-text);background:rgba(78,135,103,.14)}
+  .c-maybe{color:#e5c07b;background:rgba(229,192,123,.10)}
+  .c-no{color:var(--no-text);background:rgba(233,167,160,.10)}
+  .lvl{margin-top:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--line);border-radius:calc(16px*var(--k));overflow:hidden;background:var(--bg)}
+  .lvl-h{margin:0;padding:calc(11px*var(--k)) calc(14px*var(--k)) calc(10px*var(--k));font-family:var(--serif);font-weight:400;font-size:calc(24px*var(--k));line-height:1.2;border-bottom:calc(1px*var(--k)) solid var(--line)}
+  .lvl-h small{display:block;margin-top:calc(3px*var(--k));font-family:var(--sans);font-size:calc(13px*var(--k));line-height:1.35;letter-spacing:.01em;color:var(--muted)}
+  .lvl-hi .lvl-h{color:var(--yes-text)}
+  .lvl-mid .lvl-h{color:#e5c07b}
+  .lvl-lo .lvl-h{color:var(--no-text)}
+  .iv-n{margin:calc(3px*var(--k)) 0 0;font-size:calc(13px*var(--k));line-height:1.45;color:var(--muted)}
+  .seg.s1{grid-template-columns:minmax(0,1fr)}
+  .seg.s1 .chip{padding:calc(8px*var(--k)) calc(12px*var(--k));text-align:left;line-height:1.3}
+  .seg.s1 .chip b{display:inline-block;min-width:1.1em;margin-right:calc(6px*var(--k));font-family:var(--serif);font-weight:400;font-size:calc(18px*var(--k));color:var(--accent)}
+  .tcalc{margin-top:0}
+  .q,.err s,.err .good,.err-note,.rv,.rn,.dv,.dk,.ad-v,.iv-k,.iv-v,.iv-n,.sw-k,.sw-v,.sw-s,.cp-en,.cp-ru,.t-rule,.ex-en,.ex-ru,.why,.dzr .n,.dzr .d,.dzr .w,.abbr dd,.algo-note,.calc-hint,.mxr-k,.lvl-h small,.verdict,.back p{hyphens:auto;-webkit-hyphens:auto}
+
+  /* ——— Планшет */
+  body.tab .app{max-width:calc(600px*var(--k))}
+  body.wide .app{max-width:none;padding-left:calc(28px*var(--k));padding-right:calc(28px*var(--k))}
+  body.wide #drill{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;gap:calc(16px*var(--k))}
+  body.wide #drill .card{grid-column:1;grid-row:1 / span 2}
+  body.wide #drill .opts{grid-column:2;grid-row:1;align-content:end}
+  body.wide #drill .opts.c2,body.wide #drill .opts.c3{grid-template-columns:minmax(0,1fr)}
+  body.wide #drill .opt{min-height:calc(76px*var(--k))}
+  body.wide #drill .actions{grid-column:2;grid-row:2}
+  body.wide #rule{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:calc(36px*var(--k));align-items:start}
+  body.wide .r-left{position:static}
+  body.wide .r-right .lbl:first-child{margin-top:calc(14px*var(--k))}
+</style>
+<script>
+// Масштаб под размер экрана: телефон — как есть, планшет — крупнее, альбомная ориентация — две колонки
+(function(){
+  function fit(){
+    var w = window.innerWidth || 390, h = window.innerHeight || 760;
+    var wide = w >= 900 && w / h > 1.15;
+    var tab = !wide && w >= 600;
+    var k = wide ? h / 600 : Math.min(w / 440, h / 780);
+    if (w < 600) k = 1;
+    k = Math.max(1, Math.min(k, 1.9));
+    document.documentElement.style.setProperty("--k", k.toFixed(3));
+    document.body.classList.toggle("wide", wide);
+    document.body.classList.toggle("tab", tab);
+  }
+  fit();
+  window.addEventListener("resize", fit);
+  window.addEventListener("orientationchange", function(){ setTimeout(fit, 150); });
+})();
+</script>
+
+<div class="app" lang="ru" role="main">
+  <div class="top">
+    <div class="tabs" role="tablist" aria-label="Режим">
+      <button class="tab" id="tabDrill" role="tab" type="button" aria-selected="false" aria-controls="drill">Тренировка</button>
+      <button class="tab" id="tabRule" role="tab" type="button" aria-selected="true" aria-controls="rule">Справочник</button>
+    </div>
+  </div>
+  <div class="meta" id="meta" hidden><span id="status">Карточка 1 из 10</span></div>
+  <div class="bar" id="barWrap" hidden><span class="bar-fill" id="barFill"></span></div>
+
+  <section class="view" id="drill" role="tabpanel" aria-labelledby="tabDrill" hidden>
+    <article class="card" id="card">
+      <span class="kind" id="kind">Тема 1</span>
+      <p class="q" id="q"></p>
+      <p class="hint" id="hint">Выбери вариант</p>
+      <div class="back" id="back" aria-live="polite" hidden>
+        <p class="verdict" id="verdict"></p>
+        <p class="why" id="why"></p>
+      </div>
+    </article>
+    <div class="opts c2" id="opts"></div>
+    <div class="actions" id="actNext" hidden>
+      <button class="big primary" id="next" type="button">Дальше</button>
+    </div>
+    <div class="actions" id="actDone" hidden>
+      <button class="big primary" id="more" type="button">Ещё 10 новых</button>
+      <button class="big" id="toRule" type="button">Справочник</button>
+    </div>
+  </section>
+
+  <section class="rule" id="rule" role="tabpanel" aria-labelledby="tabRule">
+    <div class="r-left">
+      <h1 class="r-title">Антитромботики при&nbsp;тромбоцитопении</h1>
+      <p class="r-sub">НМГ, ПОАК, АСК и&nbsp;клопидогрел при&nbsp;тромбоцитах меньше 20, 20–&#8288;50 и&nbsp;больше 50&nbsp;×&nbsp;10⁹/&#8288;л: что оставить, что снизить, что отменить; ТЛТ, тромбэктомия, ГИТ. <b>КР&nbsp;по&nbsp;ИИ&nbsp;2024</b> порогов для&nbsp;антиагрегантов и&nbsp;ПОАК не&nbsp;дают&nbsp;— они из&nbsp;<b>EHA&nbsp;2022</b>, <b>EHRA&nbsp;2021</b>, <b>ISTH&nbsp;2018</b> и&nbsp;<b>ESC&nbsp;2022</b>; рядом&nbsp;— <b>AHA/ASA&nbsp;2026</b>, <b>ASH&nbsp;2018</b>, <b>AABB&nbsp;2025</b> и&nbsp;новые когорты.</p>
+      <section class="abbr" aria-labelledby="h-abbr">
+        <h2 class="algo-h" id="h-abbr">Сокращения</h2>
+        <dl>
+          <div><dt>ТЦП</dt><dd>тромбоцитопения: меньше 150&nbsp;×&nbsp;10⁹/&#8288;л; в&nbsp;EHA&nbsp;2022&nbsp;— 100 и&nbsp;меньше, степени 1–&#8288;4. 50&nbsp;×&nbsp;10⁹/&#8288;л&nbsp;= 50&nbsp;000/мкл</dd></div>
+          <div><dt>НМГ, НФГ</dt><dd>низкомолекулярный и&nbsp;нефракционированный гепарин</dd></div>
+          <div><dt>ПОАК</dt><dd>прямые пероральные антикоагулянты: апиксабан, ривароксабан, дабигатран, эдоксабан</dd></div>
+          <div><dt>АСК, ДААТ</dt><dd>ацетилсалициловая кислота; двойная антиагрегантная терапия</dd></div>
+          <div><dt>ВТЭ</dt><dd>венозная тромбоэмболия: ТГВ и&nbsp;ТЭЛА</dd></div>
+          <div><dt>ППК</dt><dd>перемежающаяся пневмокомпрессия</dd></div>
+          <div><dt>ГИТ, ИТП</dt><dd>гепарин-индуцированная и&nbsp;иммунная тромбоцитопения</dd></div>
+          <div><dt>ТЛТ, ТЭ</dt><dd>тромболизис, тромбэктомия; сВЧК&nbsp;— симптомное внутричерепное кровоизлияние</dd></div>
+          <div><dt>EHA</dt><dd>European Hematology Association: руководство 2022&nbsp;г. для&nbsp;онкобольных с&nbsp;ТЦП</dd></div>
+          <div><dt>EHRA</dt><dd>European Heart Rhythm Association: практическое руководство по&nbsp;ПОАК 2021&nbsp;г.</dd></div>
+          <div><dt>ISTH</dt><dd>International Society on Thrombosis and Haemostasis</dd></div>
+          <div><dt>КР&nbsp;по&nbsp;ИИ&nbsp;2024</dt><dd>клинические рекомендации «Ишемический инсульт и&nbsp;транзиторная ишемическая атака»</dd></div>
+        </dl>
+      </section>
+      <nav class="jump" aria-label="Разделы справочника">
+        <button type="button" data-to="s-calc">Подобрать</button>
+        <button type="button" data-to="s-levels">Три уровня</button>
+        <button type="button" data-to="s-thr">Пороги</button>
+        <button type="button" data-to="s-rep">ТЛТ и&nbsp;ТЭ</button>
+        <button type="button" data-to="s-hit">ГИТ</button>
+        <button type="button" data-to="s-spec">Особые случаи</button>
+        <button type="button" data-to="s-topics">Темы</button>
+      </nav>
+      <section class="algo" id="s-calc" aria-labelledby="h-calc">
+        <h2 class="algo-h" id="h-calc">Подобрать тактику</h2>
+        <div class="calc calc-top" id="pcalc">
+          <p class="calc-h">Пациент<small>Пример&nbsp;— замените данными пациента</small></p>
+          <label class="fl" for="plt">Тромбоциты <small>×&nbsp;10⁹/&#8288;л</small></label>
+          <input class="inp" id="plt" type="number" inputmode="decimal" min="0" max="1500" step="1" value="35">
+          <p class="fl" id="trLbl">Динамика</p>
+          <div class="seg s2" role="group" aria-labelledby="trLbl">
+            <button type="button" class="chip" data-tr="st" aria-pressed="true">Стабильно</button>
+            <button type="button" class="chip" data-tr="fall" aria-pressed="false">Снижаются</button>
+          </div>
+          <div class="flags" role="group" aria-label="Что ещё учесть">
+            <button type="button" class="chip" data-flag="vhr" aria-pressed="false">Очень высокий тромботический риск</button>
+            <button type="button" class="chip" data-flag="bleed" aria-pressed="false">Другие факторы кровотечения</button>
+            <button type="button" class="chip" data-flag="icas" aria-pressed="false">Симптомный интракраниальный стеноз</button>
+            <button type="button" class="chip" data-flag="hit" aria-pressed="false">Подозрение на&nbsp;ГИТ</button>
+          </div>
+          <p class="calc-hint">Снижаются&nbsp;— в&nbsp;ближайшие дни ожидается падение ниже 50, а&nbsp;при 25–&#8288;50&nbsp;— ниже 25 (EHA&nbsp;2022). Очень высокий риск (EHA&nbsp;2022): для&nbsp;трансфузии и&nbsp;полной дозы НМГ&nbsp;— механический клапан, острая ТЭЛА или проксимальный ТГВ, ОКС, ФП с&nbsp;эмболией в&nbsp;последний месяц; для&nbsp;НМГ 50% при&nbsp;ФП&nbsp;— ещё эмболия в&nbsp;последние 3&nbsp;месяца или CHA2DS2-VASc&nbsp;≥&nbsp;6. Сроки антикоагуляции после текущего инсульта EHA не&nbsp;разбирает&nbsp;— по&nbsp;протоколу отделения. Факторы кровотечения: недавнее большое кровотечение, ХБП III&nbsp;стадии и&nbsp;тяжелее, поражение костного мозга, опухоль мозга, ДВС.</p>
+          <div class="res" id="pres" aria-live="polite"></div>
+        </div>
+      </section>
+      <section class="algo algo-2" id="s-levels" aria-labelledby="h-levels">
+        <h2 class="algo-h" id="h-levels">Три уровня: коротко</h2>
+        <div class="mxg">
+          <div class="mxr"><p class="mxr-k">НМГ, профилактика ТГВ</p><div class="mxr-c"><span class="c-yes"><small>&gt; 50</small>да</span><span class="c-maybe"><small>20–⁠50</small>условно, от 25</span><span class="c-no"><small>&lt; 20</small>нет</span></div></div>
+          <div class="mxr"><p class="mxr-k">НМГ, лечение ВТЭ</p><div class="mxr-c"><span class="c-yes"><small>&gt; 50</small>полная</span><span class="c-maybe"><small>20–⁠50</small>50% дозы, от 25</span><span class="c-no"><small>&lt; 20</small>пауза</span></div></div>
+          <div class="mxr"><p class="mxr-k">ПОАК</p><div class="mxr-c"><span class="c-yes"><small>&gt; 50</small>да</span><span class="c-no"><small>20–⁠50</small>нет</span><span class="c-no"><small>&lt; 20</small>нет</span></div></div>
+          <div class="mxr"><p class="mxr-k">АСК</p><div class="mxr-c"><span class="c-yes"><small>&gt; 50</small>да</span><span class="c-maybe"><small>20–⁠50</small>низкая, от 25</span><span class="c-no"><small>&lt; 20</small>пауза</span></div></div>
+          <div class="mxr"><p class="mxr-k">Клопидогрел</p><div class="mxr-c"><span class="c-yes"><small>&gt; 50</small>да</span><span class="c-maybe"><small>20–⁠50</small>от 30</span><span class="c-no"><small>&lt; 20</small>нет</span></div></div>
+          <div class="mxr"><p class="mxr-k">ДААТ: АСК + клопидогрел</p><div class="mxr-c"><span class="c-maybe"><small>&gt; 50</small>21 день</span><span class="c-no"><small>20–⁠50</small>только АСК, от 25</span><span class="c-no"><small>&lt; 20</small>нет</span></div></div>
+          <div class="mxr"><p class="mxr-k">Тикагрелор</p><div class="mxr-c"><span class="c-maybe"><small>&gt; 50</small>от 75</span><span class="c-no"><small>20–⁠50</small>нет</span><span class="c-no"><small>&lt; 20</small>нет</span></div></div>
+        </div>
+        <div class="lvl lvl-hi"><h3 class="lvl-h">Больше 50<small>× 10⁹/⁠л · обычные дозы с контролем</small></h3><ul class="lst">
+          <li><p class="iv-k">НМГ, профилактика ТГВ</p><p class="iv-v v-yes"><span class="sr">можно: </span>обычная доза для профилактики</p><p class="iv-n">КР по ИИ 2024: у обездвиженных, если польза выше риска (УУР A) · EHA 2022 — и при 50–⁠100</p></li>
+          <li><p class="iv-k">НМГ, лечение ВТЭ</p><p class="iv-v v-yes"><span class="sr">можно: </span>полная лечебная доза</p><p class="iv-n">ISTH 2018, EHA 2022 · если тромбоциты снижаются — НМГ лучше ПОАК</p></li>
+          <li><p class="iv-k">ПОАК</p><p class="iv-v v-yes"><span class="sr">можно: </span>обычная доза, частый контроль</p><p class="iv-n">EHRA 2021: с осторожностью · EHA 2022: стабильные 50–⁠100 и неклапанная ФП — без снижения дозы</p></li>
+          <li><p class="iv-k">АСК</p><p class="iv-v v-yes"><span class="sr">можно: </span>75–⁠100 мг</p><p class="iv-n">EHA 2022: продолжать · при 50–⁠75 и факторах кровотечения — АСК вместо ДААТ</p></li>
+          <li><p class="iv-k">Клопидогрел</p><p class="iv-v v-yes"><span class="sr">можно: </span>75 мг</p><p class="iv-n">ESC 2022 (по обзору; ОКС и ЧКВ у онкобольных): избегать только при &lt; 30</p></li>
+          <li><p class="iv-k">ДААТ: АСК + клопидогрел</p><p class="iv-v v-maybe"><span class="sr">с условием: </span>21 день: при ≥ 75 и стабильных тромбоцитах; при 50–⁠75 — если нет факторов кровотечения</p><p class="iv-n">EHA 2022 после малого ИИ и ТИА · интра­краниальный стеноз — до 90 дней</p></li>
+          <li><p class="iv-k">Тикагрелор</p><p class="iv-v v-maybe"><span class="sr">с условием: </span>не при &lt; 75; при ТЦП лучше клопидогрел</p><p class="iv-n">EHA 2022: &lt; 75 — против ДААТ с тикагрелором (раздел ОКС) · ESC 2022: избегать &lt; 50</p></li>
+        </ul></div>
+        <div class="lvl lvl-mid"><h3 class="lvl-h">20–⁠50<small>× 10⁹/⁠л · сниженные дозы, выбор по риску</small></h3><ul class="lst">
+          <li><p class="iv-k">НМГ, профилактика ТГВ</p><p class="iv-v v-maybe"><span class="sr">с условием: </span>25–⁠50: доза для профилактики, если тромбоциты стабильны или часто контролируются и нет других факторов кровотечения; &lt; 25 — нет</p><p class="iv-n">EHA 2022 · КР по ИИ 2024: &lt; 50 — фактор высокого риска ВЧК, довод за ППК</p></li>
+          <li><p class="iv-k">НМГ, лечение ВТЭ</p><p class="iv-v v-maybe"><span class="sr">с условием: </span>25–⁠50: 50% лечебной дозы или доза для профилактики; &lt; 25 — пауза</p><p class="iv-n">EHA 2022, ISTH 2018 · высокий риск по ISTH, очень высокий по EHA — полная доза + трансфузия до 40–⁠50; EHA: не дольше 14 дней</p></li>
+          <li><p class="iv-k">ПОАК</p><p class="iv-v v-no"><span class="sr">нет: </span>не назначать; ФП — пауза; НМГ 50% — только при очень высоком риске и стабильных 25–⁠50</p><p class="iv-n">EHA 2022 (25–⁠50): против ПОАК · EHRA 2021 (20–⁠50): ½ дозы — только решением консилиума</p></li>
+          <li><p class="iv-k">АСК</p><p class="iv-v v-maybe"><span class="sr">с условием: </span>25–⁠50: низкая доза после ИИ или ТИА; &lt; 25 — пауза</p><p class="iv-n">EHA 2022 · ESC 2022 и SCAI 2016 при кардиальных показаниях допускают АСК от 10</p></li>
+          <li><p class="iv-k">Клопидогрел</p><p class="iv-v v-maybe"><span class="sr">с условием: </span>30–⁠50: допустим; &lt; 30 — нет</p><p class="iv-n">ESC 2022 (по обзору; ОКС и ЧКВ) · после ИИ и ТИА EHA 2022 при 25–⁠50 выбирает АСК</p></li>
+          <li><p class="iv-k">ДААТ: АСК + клопидогрел</p><p class="iv-v v-no"><span class="sr">нет: </span>только АСК</p><p class="iv-n">EHA 2022 · симптомный интра­краниальный стеноз: 25–⁠50 без факторов кровотечения — ДААТ до 21 дня</p></li>
+          <li><p class="iv-k">Тикагрелор</p><p class="iv-v v-no"><span class="sr">нет: </span>нет</p><p class="iv-n">EHA 2022, ESC 2022, SCAI 2016</p></li>
+        </ul></div>
+        <div class="lvl lvl-lo"><h3 class="lvl-h">Меньше 20<small>× 10⁹/⁠л · антитромботики отменяют</small></h3><ul class="lst">
+          <li><p class="iv-k">НМГ, профилактика ТГВ</p><p class="iv-v v-no"><span class="sr">нет: </span>нет — перемежающаяся пневмо­компрессия</p><p class="iv-n">EHA 2022: &lt; 25 — без медикаментозной профилактики · КР по ИИ 2024: ППК (УУР B)</p></li>
+          <li><p class="iv-k">НМГ, лечение ВТЭ</p><p class="iv-v v-no"><span class="sr">нет: </span>пауза; полная доза — снова при &gt; 50</p><p class="iv-n">ISTH 2018, EHA 2022 · высокий риск по ISTH, очень высокий по EHA — только с трансфузией до 40–⁠50 · острый проксимальный ТГВ или ТЭЛА — съёмный кава-фильтр</p></li>
+          <li><p class="iv-k">ПОАК</p><p class="iv-v v-no"><span class="sr">нет: </span>отменить</p><p class="iv-n">EHRA 2021: &lt; 20 — избегать, риск спонтанных кровотечений</p></li>
+          <li><p class="iv-k">АСК</p><p class="iv-v v-no"><span class="sr">нет: </span>пауза до &gt; 25</p><p class="iv-n">EHA 2022 после ИИ и ТИА · &lt; 10 — все источники</p></li>
+          <li><p class="iv-k">Клопидогрел</p><p class="iv-v v-no"><span class="sr">нет: </span>нет</p><p class="iv-n">ESC 2022: &lt; 30 — избегать</p></li>
+          <li><p class="iv-k">ДААТ: АСК + клопидогрел</p><p class="iv-v v-no"><span class="sr">нет: </span>нет</p><p class="iv-n">EHA 2022</p></li>
+          <li><p class="iv-k">Тикагрелор</p><p class="iv-v v-no"><span class="sr">нет: </span>нет</p><p class="iv-n">EHA 2022, ESC 2022, SCAI 2016</p></li>
+        </ul></div>
+        <p class="algo-note">Динамика важнее одного числа: при&nbsp;падающих тромбоцитах выбирают НМГ, а&nbsp;не&nbsp;ПОАК, и&nbsp;контролируют анализ чаще. EHA&nbsp;2022 написаны для&nbsp;онкобольных; при&nbsp;другой причине ТЦП их применяют по&nbsp;аналогии.</p>
+      </section>
+      <div class="go-wrap"><button class="big primary" id="go" type="button">Начать тренировку</button></div>
+    </div>
+    <div class="r-right">
+      <h2 class="lbl" id="s-thr">Пороги разных документов</h2>
+      <div class="mx-wrap">
+        <ul class="lst">
+          <li><p class="sw-k">EHA 2022</p><p class="sw-v">полная антикоагуляция ≥ 50 · НМГ 50% или профилактика 25–⁠50 · АСК &gt; 25 (очень высокий риск, например ОКС, — &gt; 10) · ДААТ с клопидогрелом ≥ 50 (симптомный интра­краниальный стеноз — от 25, до 21 дня) · тикагрелор — не при &lt; 75</p><p class="sw-s">онкобольные с ТЦП; есть разделы по ИИ, ТИА, стенозам, ТЛТ и ТЭ</p></li>
+          <li><p class="sw-k">EHRA 2021</p><p class="sw-v">ПОАК: &gt; 50 — с осторожностью · 20–⁠50 — ½ дозы и консилиум · &lt; 20 — избегать</p><p class="sw-s">ФП; практическое руководство по ПОАК, рис. 24</p></li>
+          <li><p class="sw-k">ISTH 2018</p><p class="sw-v">≥ 50 — полная доза · низкий риск: 25–⁠50 — 50% или профилакти­ческая, &lt; 25 — пауза · высокий риск: при &lt; 50 — полная доза с трансфузией до 40–⁠50</p><p class="sw-s">ВТЭ при раке; по вторичным источникам</p></li>
+          <li><p class="sw-k">ESC 2022</p><p class="sw-v">АСК — избегать при &lt; 10 · клопидогрел — при &lt; 30 · тикагрелор и прасугрел — при &lt; 50</p><p class="sw-s">кардиоонкология, ОКС и ЧКВ; по обзору Gent, Dobson 2023</p></li>
+          <li><p class="sw-k">SCAI 2016</p><p class="sw-v">АСК — при &gt; 10 · тикагрелор и прасугрел — не при &lt; 50 · ЧКВ — от 20–⁠30 без других нарушений гемостаза</p><p class="sw-s">кардиоонкология, катетеризация и ОКС</p></li>
+          <li><p class="sw-k">ИТП и ОКС, 2024</p><p class="sw-v">&lt; 30 — пауза антитромботиков · 30–⁠50 — один антиагрегант · &gt; 50 — ДААТ и антикоагулянт</p><p class="sw-s">практическое руководство Rahhal и соавт.; ИТП при ОКС</p></li>
+          <li><p class="sw-k">ТЛТ</p><p class="sw-v">противопоказана при &lt; 100</p><p class="sw-s">инструкция алтеплазы (Актилизе), AHA/ASA 2026</p></li>
+          <li><p class="sw-k">AABB 2025</p><p class="sw-v">профилакти­ческая трансфузия &lt; 10 · люмбальная пункция &lt; 20 · большая ненейроаксиальная операция &lt; 50</p><p class="sw-s">трансфузия тромбоцитов</p></li>
+        </ul>
+      </div>
+      <h2 class="lbl" id="s-rep">ТЛТ и&nbsp;тромбэктомия</h2>
+      <div class="mx-wrap">
+        <ul class="lst">
+          <li><p class="iv-k">ТЛТ <span>· тромбоциты &lt; 100</span></p><p class="iv-v v-no"><span class="sr">нельзя: </span>противопоказана: инструкция алтеплазы (Актилизе), AHA/ASA 2026 · EHA 2022 — при любой степени ТЦП</p></li>
+          <li><p class="iv-k">ТЛТ <span>· нет подозрения на коагулопатию</span></p><p class="iv-v v-yes"><span class="sr">да: </span>анализ не ждать: КР по ИИ 2024; AHA/ASA 2026 (2a) · неожиданные тромбоциты &lt; 100 — у 0,3% (Cucchiara 2007)</p></li>
+          <li><p class="iv-k">ТЛТ уже идёт <span>· пришёл анализ: тромбоциты &lt; 100</span></p><p class="iv-v v-no"><span class="sr">нельзя: </span>прекратить инфузию (EHA 2022)</p></li>
+          <li><p class="iv-k">Тромбэктомия <span>· ≥ 50</span></p><p class="iv-v v-yes"><span class="sr">да: </span>рассматривать всем подходящим (EHA 2022) · КР по ИИ 2024: не отказываться только из-за антикоагулянтов или повышения МНО и АЧТВ; о тромбоцитах прямо не сказано</p></li>
+          <li><p class="iv-k">Тромбэктомия <span>· 25–⁠50</span></p><p class="iv-v v-maybe"><span class="sr">с условием: </span>можно рассмотреть по риску тромбоза и кровотечения (EHA 2022)</p></li>
+          <li><p class="iv-k">Тромбэктомия <span>· &lt; 25</span></p><p class="iv-v v-maybe"><span class="sr">с условием: </span>по каждому случаю, с трансфузией тромбоцитов или без (EHA 2022)</p></li>
+          <li><p class="iv-k">Внутривенные антиагреганты <span>· ингибиторы GP IIb/IIIa</span></p><p class="iv-v v-no"><span class="sr">нельзя: </span>при любой степени ТЦП не рекомендованы (EHA 2022, раздел ОКС)</p></li>
+        </ul>
+      </div>
+      <p class="mx-note">TRISP: при&nbsp;тромбоцитах меньше 150 сВЧК после ТЛТ чаще (ОШ&nbsp;1,73), но&nbsp;у&nbsp;44 пациентов с&nbsp;меньше 100&nbsp;— ОШ&nbsp;1,56, незначимо. Тромбэктомия при&nbsp;ТЦП: сВЧК не&nbsp;чаще (ОШ&nbsp;1,20), летальность выше (ОШ&nbsp;1,76)&nbsp;— мета-анализ Toruno&nbsp;2024.</p>
+      <h2 class="lbl" id="s-hit">ГИТ: шкала 4Ts</h2>
+      <div class="calc tcalc" id="tcalc">
+        <p class="calc-h">Вероятность ГИТ<small>ASH&nbsp;2018: по&nbsp;4Ts, а&nbsp;не&nbsp;«на&nbsp;глаз». Пример&nbsp;— замените данными пациента</small></p>
+        <p class="fl" id="t0Lbl">Тромбо­цитопения</p>
+        <div class="seg s1" role="group" aria-labelledby="t0Lbl">
+          <button type="button" class="chip" data-tq="0" data-tv="2" aria-pressed="true"><b>2</b>падение &gt; 50% и надир ≥ 20</button>
+          <button type="button" class="chip" data-tq="0" data-tv="1" aria-pressed="false"><b>1</b>падение 30–⁠50% или надир 10–⁠19</button>
+          <button type="button" class="chip" data-tq="0" data-tv="0" aria-pressed="false"><b>0</b>падение &lt; 30% или надир &lt; 10</button>
+        </div>
+        <p class="fl" id="t1Lbl">Время падения</p>
+        <div class="seg s1" role="group" aria-labelledby="t1Lbl">
+          <button type="button" class="chip" data-tq="1" data-tv="2" aria-pressed="true"><b>2</b>5–⁠14-й день или ≤ 1 дня при гепарине в последние 30 дней</button>
+          <button type="button" class="chip" data-tq="1" data-tv="1" aria-pressed="false"><b>1</b>вероятно 5–⁠14-й день, но неясно; после 14-го; ≤ 1 дня при гепарине 30–⁠100 дней назад</button>
+          <button type="button" class="chip" data-tq="1" data-tv="0" aria-pressed="false"><b>0</b>≤ 4 дней без недавнего гепарина</button>
+        </div>
+        <p class="fl" id="t2Lbl">Тромбоз и другое</p>
+        <div class="seg s1" role="group" aria-labelledby="t2Lbl">
+          <button type="button" class="chip" data-tq="2" data-tv="2" aria-pressed="false"><b>2</b>новый тромбоз, некроз кожи в месте инъекции, реакция на болюс гепарина</button>
+          <button type="button" class="chip" data-tq="2" data-tv="1" aria-pressed="false"><b>1</b>прогрессирующий или рецидивирующий тромбоз, эритема кожи, подозрение на тромбоз</button>
+          <button type="button" class="chip" data-tq="2" data-tv="0" aria-pressed="true"><b>0</b>нет</button>
+        </div>
+        <p class="fl" id="t3Lbl">Другая причина ТЦП</p>
+        <div class="seg s1" role="group" aria-labelledby="t3Lbl">
+          <button type="button" class="chip" data-tq="3" data-tv="2" aria-pressed="false"><b>2</b>не видна</button>
+          <button type="button" class="chip" data-tq="3" data-tv="1" aria-pressed="true"><b>1</b>возможна</button>
+          <button type="button" class="chip" data-tq="3" data-tv="0" aria-pressed="false"><b>0</b>очевидна</button>
+        </div>
+        <div class="res" id="tres" aria-live="polite"></div>
+      </div>
+      <h2 class="lbl">ГИТ: что делать</h2>
+      <div class="mx-wrap">
+        <ul class="lst">
+          <li><p class="iv-k">Гепарины <span>· 4Ts ≥ 4</span></p><p class="iv-v v-no"><span class="sr">нельзя: </span>отменить все: НФГ и НМГ (ASH 2018)</p></li>
+          <li><p class="iv-k">Негепариновый антикоагулянт <span>· 4Ts ≥ 4</span></p><p class="iv-v v-yes"><span class="sr">да: </span>аргатробан, бивалирудин, данапароид, фондапаринукс или ПОАК · стабильным — фондапаринукс или ПОАК · высокий риск кровотечения, критическое состояние, возможна срочная процедура — аргатробан или бивалирудин · тяжёлая дисфункция печени — без ПОАК</p></li>
+          <li><p class="iv-k">Доза</p><p class="iv-v v-yes"><span class="sr">да: </span>лечебная · 4Ts 4–⁠5, высокий риск кровотечения и нет других показаний — профилакти­ческая</p></li>
+          <li><p class="iv-k">ПОАК при ГИТ</p><p class="iv-v v-maybe"><span class="sr">с условием: </span>ГИТ с тромбозом: апиксабан 10 мг × 2 неделю, затем 5 мг × 2; ривароксабан 15 мг × 2 три недели, затем 20 мг × 1 · без тромбоза — апиксабан 5 мг × 2, ривароксабан 15 мг × 2 до восстановления тромбоцитов · дозы экстраполированы с ВТЭ</p></li>
+          <li><p class="iv-k">Фондапаринукс</p><p class="iv-v v-yes"><span class="sr">да: </span>&lt; 50 кг — 5 мг · 50–⁠100 кг — 7,5 мг · &gt; 100 кг — 10 мг × 1 в сутки</p></li>
+          <li><p class="iv-k">Варфарин</p><p class="iv-v v-no"><span class="sr">нельзя: </span>не начинать до восстановления тромбоцитов, обычно ≥ 150</p></li>
+          <li><p class="iv-k">Трансфузия тромбоцитов</p><p class="iv-v v-no"><span class="sr">нельзя: </span>рутинно не нужна; только при кровотечении или высоком риске кровотечения</p></li>
+          <li><p class="iv-k">Длительность</p><p class="iv-v v-yes"><span class="sr">да: </span>без тромбоза — до восстановления тромбоцитов, не больше 3 месяцев · с тромбозом — обычно 3–⁠6 месяцев</p></li>
+          <li><p class="iv-k">УЗИ вен <span>· ГИТ без явного тромбоза</span></p><p class="iv-v v-yes"><span class="sr">да: </span>обеих ног — искать бессимптомный проксимальный ТГВ</p></li>
+        </ul>
+      </div>
+      <h2 class="lbl" id="s-spec">Особые ситуации</h2>
+      <div class="mx-wrap">
+        <ul class="lst">
+          <li><p class="iv-k">Псевдо­тромбо­цитопения <span>· низкие тромбоциты без кровоточивости</span></p><p class="iv-v v-maybe"><span class="sr">с условием: </span>мазок и повторный подсчёт; чаще у получающих НМГ, в стационаре, у мужчин 50 лет и старше (Lardinois 2021)</p></li>
+          <li><p class="iv-k">ФП и очень высокий риск <span>· стабильные 25–⁠50</span></p><p class="iv-v v-maybe"><span class="sr">с условием: </span>НМГ 50% лечебной дозы вместо ПОАК (EHA 2022) · очень высокий риск: эмболия в последние 3 месяца, CHA2DS2-VASc ≥ 6</p></li>
+          <li><p class="iv-k">Механический клапан <span>· стабильные 40–⁠50</span></p><p class="iv-v v-maybe"><span class="sr">с условием: </span>варфарин, целевое МНО 2,0 (EHA 2022) · 25–⁠40 или нестабильное МНО — НМГ 50% лечебной дозы</p></li>
+          <li><p class="iv-k">Антиагрегант + антикоагулянт <span>· &lt; 50</span></p><p class="iv-v v-no"><span class="sr">нельзя: </span>не сочетать (EHA 2022)</p></li>
+          <li><p class="iv-k">Ривароксабан 2,5 мг × 2 + АСК <span>· любая ТЦП</span></p><p class="iv-v v-no"><span class="sr">нельзя: </span>не рекомендован — оставить АСК по общим правилам (EHA 2022)</p></li>
+          <li><p class="iv-k">ИТП и ОКС</p><p class="iv-v v-maybe"><span class="sr">с условием: </span>&lt; 30 — пауза антитромботиков, 30–⁠50 — один антиагрегант, &gt; 50 — ДААТ и антикоагулянт (Rahhal 2024) · лечение ИТП — с гематологом</p></li>
+          <li><p class="iv-k">Цирроз <span>· профилактика ВТЭ</span></p><p class="iv-v v-yes"><span class="sr">да: </span>ТЦП и удлинённое МНО — не абсолютное противопоказание; НМГ или фондапаринукс лучше НФГ (ISTH 2022)</p></li>
+          <li><p class="iv-k">Химиотерапия</p><p class="iv-v v-maybe"><span class="sr">с условием: </span>тромбоциты — в ожидаемый надир; при 50–⁠100 — повтор через 1–⁠2 дня (EHA 2022)</p></li>
+          <li><p class="iv-k">ВЧК на антиагрегантах <span>· тромбоциты &gt; 100</span></p><p class="iv-v v-no"><span class="sr">нельзя: </span>трансфузия не рекомендована (AABB 2025) · PATCH: смерть или зависимость ОШ 2,05</p></li>
+          <li><p class="iv-k">Всем на антитромботиках при ТЦП</p><p class="iv-v v-yes"><span class="sr">да: </span>ИПП; с клопидогрелом — пантопразол, не омепразол и эзомепразол; без НПВП и АСК ≥ 300 мг как анальгетика (EHA 2022, уровень 1, степень A)</p></li>
+        </ul>
+      </div>
+      <h2 class="lbl">Одна ситуация&nbsp;— разное решение</h2>
+      <div class="mx-wrap">
+        <div class="md"><div><p class="cp-en">ИИ, тромбоциты <span class="pr">60</span></p><p class="cp-ru">АСК продолжать</p><p class="cp-en">ИИ, тромбоциты <span class="pr">20</span></p><p class="cp-ru">пауза до &gt; 25</p></div></div>
+        <div class="md"><div><p class="cp-en">ФП, <span class="pr">60</span>, стабильно</p><p class="cp-ru">ПОАК в обычной дозе</p><p class="cp-en">ФП, <span class="pr">35</span></p><p class="cp-ru">без ПОАК: EHA против</p></div></div>
+        <div class="md"><div><p class="cp-en">ВТЭ, тромбоциты <span class="pr">60</span></p><p class="cp-ru">НМГ — полная доза</p><p class="cp-en">ВТЭ, тромбоциты <span class="pr">35</span></p><p class="cp-ru">НМГ — 50% или профилакти­ческая</p></div></div>
+        <div class="md"><div><p class="cp-en">Малый ИИ, <span class="pr">80</span>, стабильно</p><p class="cp-ru">ДААТ 21 день</p><p class="cp-en">Малый ИИ, <span class="pr">40</span></p><p class="cp-ru">только АСК</p></div></div>
+        <div class="md"><div><p class="cp-en">Интра­краниальный стеноз, <span class="pr">60</span></p><p class="cp-ru">ДААТ до 90 дней</p><p class="cp-en">Интра­краниальный стеноз, <span class="pr">40</span></p><p class="cp-ru">ДААТ до 21 дня, если нет факторов кровотечения</p></div></div>
+        <div class="md"><div><p class="cp-en">ТЛТ: <span class="pr">нет подозрения</span></p><p class="cp-ru">анализ не ждать</p><p class="cp-en">ТЛТ: <span class="pr">известная ТЦП</span></p><p class="cp-ru">ждать: &lt; 100 — нет</p></div></div>
+        <div class="md"><div><p class="cp-en">Клопидогрел, <span class="pr">40</span></p><p class="cp-ru">допустим по ESC 2022 (кардиология); после ИИ EHA — АСК</p><p class="cp-en">Тикагрелор, <span class="pr">40</span></p><p class="cp-ru">нет</p></div></div>
+        <div class="md"><div><p class="cp-en">НМГ, падение <span class="pr">на 2-й день</span>, гепарина в последние 30 дней не было</p><p class="cp-ru">ГИТ маловероятна</p><p class="cp-en">НМГ, падение <span class="pr">на 8-й день</span></p><p class="cp-ru">4Ts: подозрение на ГИТ</p></div></div>
+      </div>
+      <h2 class="lbl">Ловушки</h2>
+      <div class="mx-wrap">
+        <ul class="errs">
+          <li class="err"><span class="sr">Неверно:</span> <s>Ждать тромбоциты перед ТЛТ «на всякий случай»</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Без подозрения на коагулопатию — не ждать</span><span class="err-note">КР по ИИ 2024; AHA/ASA 2026</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Отменить АСК при тромбоцитах 60–⁠80</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">При 50–⁠100 АСК продолжают</span><span class="err-note">EHA 2022; при 50–⁠75 — если нет больших факторов кровотечения</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>ПОАК в полной дозе при тромбоцитах 30</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Без ПОАК; очень высокий риск — НМГ 50%</span><span class="err-note">EHA 2022; EHRA: ½ дозы — только консилиум</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>ДААТ по схеме CHANCE при тромбоцитах 30</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Только АСК</span><span class="err-note">EHA 2022; исключение — стеноз: до 21 дня</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Тикагрелор при тромбоцитах &lt; 75</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Клопидогрел</span><span class="err-note">EHA 2022; ESC 2022 — не при &lt; 50</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Продолжать НМГ при падении на 5–⁠14-й день</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Оценить 4Ts; ≥ 4 — отменить гепарин</span><span class="err-note">и начать негепариновый антикоагулянт — ASH 2018</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Перелить тромбоциты при ГИТ «для безопасности»</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Рутинно не переливают</span><span class="err-note">ASH 2018</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Перелить тромбоциты при ВЧК на АСК</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">ВЧК без операции, &gt; 100 — не нужно</span><span class="err-note">PATCH, AABB 2025</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Тромбоциты &lt; 50 — без профилактики ТГВ</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Пневмо­компрессия</span><span class="err-note">КР по ИИ 2024, УУР B</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>Не пересчитать неожиданную ТЦП</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Мазок и повторный анализ</span><span class="err-note">псевдо­тромбо­цитопения</span></li>
+          <li class="err"><span class="sr">Неверно:</span> <s>НПВП от боли на фоне антитромботиков</s> <span class="arr" aria-hidden="true">→</span> <span class="sr">верно:</span> <span class="good">Без НПВП и АСК ≥ 300 мг</span><span class="err-note">EHA 2022, уровень 1, степень A</span></li>
+        </ul>
+      </div>
+      <h2 class="lbl" id="s-topics">Темы</h2>
+      <div class="topics" id="topics"></div>
+      <h2 class="lbl">Источники</h2>
+      <ol class="src">
+        <li><a href="https://cr.minzdrav.gov.ru/preview-cr/814_1" target="_blank" rel="noopener">КР «Ишемический инсульт и транзиторная ишемическая атака», Минздрав РФ, 2024 (814_1): разделы 2.3, 3.1.1.7, 3.1.2.1.5, табл. 9, прил. Г18</a></li>
+        <li><a href="https://doi.org/10.1097/HS9.0000000000000750" target="_blank" rel="noopener">Falanga A, et al. EHA Guidelines on management of antithrombotic treatments in thrombocytopenic patients with cancer. HemaSphere 2022;6:e750</a></li>
+        <li><a href="https://doi.org/10.1093/europace/euab065" target="_blank" rel="noopener">Steffel J, et al. 2021 EHRA Practical Guide on the use of non-vitamin K antagonist oral anticoagulants in patients with atrial fibrillation. Europace 2021;23:1612–&#8288;76</a></li>
+        <li><a href="https://doi.org/10.1111/jth.14015" target="_blank" rel="noopener">Samuelson Bannow BT, et al. Management of cancer-associated thrombosis in patients with thrombocytopenia: guidance from the SSC of the ISTH. J Thromb Haemost 2018;16:1246–&#8288;49</a></li>
+        <li><a href="https://doi.org/10.1002/rth2.12726" target="_blank" rel="noopener">Held N, et al. Management of cancer-associated thrombosis with thrombocytopenia: impact of the ISTH guidance statement. Res Pract Thromb Haemost 2022;6:e12726</a></li>
+        <li><a href="https://doi.org/10.1016/j.rpth.2025.103165" target="_blank" rel="noopener">Xirou V, Patell R. STARTing to bridge the evidence gap: cancer-associated thrombosis with thrombocytopenia. Res Pract Thromb Haemost 2025;9:103165</a></li>
+        <li><a href="https://doi.org/10.1093/eurheartj/ehac244" target="_blank" rel="noopener">Lyon AR, et al. 2022 ESC Guidelines on cardio-oncology. Eur Heart J 2022;43:4229–&#8288;361</a></li>
+        <li><a href="https://doi.org/10.15420/ecr.2022.63" target="_blank" rel="noopener">Gent DG, Dobson R. The 2022 ESC Cardio-oncology Guidelines in focus. Eur Cardiol 2023;18:e16</a></li>
+        <li><a href="https://doi.org/10.1002/ccd.26379" target="_blank" rel="noopener">Iliescu CA, et al. SCAI expert consensus statement: cardio-oncology patients in the cardiac catheterization laboratory. Catheter Cardiovasc Interv 2016;87:E202–&#8288;23</a></li>
+        <li><a href="https://doi.org/10.1182/bloodadvances.2018024489" target="_blank" rel="noopener">Cuker A, et al. ASH 2018 guidelines for management of venous thromboembolism: heparin-induced thrombocytopenia. Blood Adv 2018;2:3360–&#8288;92</a></li>
+        <li><a href="https://doi.org/10.1161/STR.0000000000000513" target="_blank" rel="noopener">Prabhakaran S, et al. 2026 AHA/ASA Guideline for the early management of acute ischemic stroke. Stroke 2026;57:e316–&#8288;436: табл. 8, раздел 4.6</a></li>
+        <li><a href="https://medi.ru/instrukciya/aktilize_7182/" target="_blank" rel="noopener">Инструкция по применению алтеплазы (Актилизе)</a></li>
+        <li><a href="https://doi.org/10.1001/jama.2025.7529" target="_blank" rel="noopener">Metcalf RA, et al. Platelet transfusion: 2025 AABB and ICTMG international clinical practice guidelines. JAMA 2025;334:606–&#8288;17</a></li>
+        <li><a href="https://doi.org/10.1111/jth.15829" target="_blank" rel="noopener">Roberts LN, et al. Thromboprophylaxis in hospitalized patients with cirrhosis: guidance from the SSC of the ISTH. J Thromb Haemost 2022;20:2237–&#8288;45</a></li>
+        <li><a href="https://doi.org/10.1182/bloodadvances.2021005966" target="_blank" rel="noopener">Carney BJ, et al. Anticoagulation in cancer-associated thromboembolism with thrombocytopenia (TROVE). Blood Adv 2021;5:5546–&#8288;53</a></li>
+        <li><a href="https://doi.org/10.1016/j.thromres.2023.05.012" target="_blank" rel="noopener">Wang TF, et al. Anticoagulation in cancer-associated thrombosis and thrombocytopenia: systematic review and meta-analysis. Thromb Res 2023;227:8–&#8288;16</a></li>
+        <li><a href="https://doi.org/10.1111/jth.15748" target="_blank" rel="noopener">Booth S, et al. Platelet transfusion and anticoagulation in hematological cancer-associated thrombosis and thrombocytopenia (CAVEaT). J Thromb Haemost 2022;20:1830–&#8288;38</a></li>
+        <li><a href="https://doi.org/10.1080/10428194.2017.1306644" target="_blank" rel="noopener">Houghton DE, et al. Anticoagulation strategies for VTE during severe thrombocytopenia in hematologic malignancies. Leuk Lymphoma 2017;58:2573–&#8288;81</a></li>
+        <li><a href="https://doi.org/10.1182/bloodadvances.2023011235" target="_blank" rel="noopener">Iyengar V, et al. Influence of thrombocytopenia on bleeding and vascular events in atrial fibrillation. Blood Adv 2023;7:7516–&#8288;24</a></li>
+        <li><a href="https://doi.org/10.1016/j.thromres.2024.01.012" target="_blank" rel="noopener">Drozdinsky G, et al. Anticoagulation in cancer patients with atrial fibrillation and grade 3–&#8288;4 thrombocytopenia. Thromb Res 2024;235:92–&#8288;97</a></li>
+        <li><a href="https://doi.org/10.1212/WNL.0000000000004982" target="_blank" rel="noopener">Gensicke H, et al. Intravenous thrombolysis and platelet count (TRISP). Neurology 2018;90:e690–&#8288;97</a></li>
+        <li><a href="https://doi.org/10.1016/j.jstrokecerebrovasdis.2024.107805" target="_blank" rel="noopener">Xu Y, et al. Thrombocytopenia and in-hospital outcomes after intravenous thrombolysis: nationwide registry in China. J Stroke Cerebrovasc Dis 2024;33:107805</a></li>
+        <li><a href="https://doi.org/10.1161/STROKEAHA.106.480889" target="_blank" rel="noopener">Cucchiara BL, et al. Usefulness of checking platelet count before thrombolysis in acute ischemic stroke. Stroke 2007;38:1639–&#8288;40</a></li>
+        <li><a href="https://doi.org/10.1007/s00415-024-12363-8" target="_blank" rel="noopener">Toruno MA, et al. Mechanical thrombectomy in acute ischemic stroke with thrombocytopenia: systematic review and meta-analysis. J Neurol 2024;271:4383–&#8288;91</a></li>
+        <li><a href="https://doi.org/10.1016/S0140-6736(16)30392-0" target="_blank" rel="noopener">Baharoglu MI, et al. Platelet transfusion versus standard care after intracerebral haemorrhage associated with antiplatelet therapy (PATCH). Lancet 2016;387:2605–&#8288;13</a></li>
+        <li><a href="https://doi.org/10.1093/eurheartj/ehx531" target="_blank" rel="noopener">McCarthy CP, Steg G, Bhatt DL. Antiplatelet therapy in acute coronary syndrome patients with thrombocytopenia. Eur Heart J 2017;38:3488–&#8288;92</a></li>
+        <li><a href="https://doi.org/10.3389/fmed.2024.1348941" target="_blank" rel="noopener">Rahhal A, et al. A practical guide to the management of immune thrombocytopenia co-existing with acute coronary syndrome. Front Med 2024;11:1348941</a></li>
+        <li><a href="https://doi.org/10.1159/000546860" target="_blank" rel="noopener">Alesci RS, et al. Managing antithrombotic treatment in patients with immune thrombocytopenia. Oncol Res Treat 2025</a></li>
+        <li><a href="https://doi.org/10.1111/bjh.70474" target="_blank" rel="noopener">Garabet L, Ghanima W. Thrombosis in immune thrombocytopenia. Br J Haematol 2026;208:1924–&#8288;27</a></li>
+        <li><a href="https://doi.org/10.1111/bjh.70572" target="_blank" rel="noopener">Cao L, et al. Ischaemic stroke in patients with immune thrombocytopenia: multicentre retrospective study. Br J Haematol 2026;209:228–&#8288;39</a></li>
+        <li><a href="https://doi.org/10.3390/jcm10040594" target="_blank" rel="noopener">Lardinois B, et al. Pseudothrombocytopenia — a review on causes, occurrence and clinical implications. J Clin Med 2021;10:594</a></li>
+      </ol>
+      <p class="foot">Сверено 30&nbsp;сентября 2026&nbsp;г. Справочник для&nbsp;врача: решение принимают по&nbsp;клинической ситуации, вместе с&nbsp;гематологом и&nbsp;по&nbsp;протоколу отделения.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+// ——— Темы по группам: правило и примеры. […] — главное в примере (оранжевый).
+const MIXED_TOPIC = 13;
+const GROUPS = {"base": "Основа", "ac": "Антикоагулянты", "ap": "Антиагреганты", "spec": "Особые ситуации", "mix": "Итог"};
+const TOPICS = [
+ {
+  "n": 1,
+  "group": "base",
+  "title": "Три уровня тромбоцитов",
+  "sub": "20, 50 и почему нет безопасного порога",
+  "rule": "Тромбо­цитопения (ТЦП) — меньше 150 × 10⁹/⁠л. В руководстве EHA 2022 — 100 и меньше, по степеням CTCAE с поправкой (верхняя граница 1-й степени — 100): 1-я — 75–⁠100, 2-я — 50–⁠75, 3-я — 25–⁠50, 4-я — меньше 25. EHRA 2021 для ПОАК делит проще: больше 50, 20–⁠50, меньше 20. Приложение держится этой тройки, а внутри 20–⁠50 показывает пороги 25 и 30, на которых документы расходятся.\n\nБольше 50 — большинство препаратов в обычных дозах, с контролем. 20–⁠50 — только то, без чего тромботический риск перевешивает: НМГ в сниженной дозе, АСК в низкой дозе. Меньше 20 — антитромботики отменяют; исключение — очень высокий тромботический риск, и то с трансфузией тромбоцитов. Безопасного порога нет: по EHRA 2021, нет уровня, выше которого ПОАК не несут риска.\n\nВажна динамика. EHA 2022 называет стабильной ТЦП 1–⁠2-й степени ту, при которой в ближайшие дни и недели тромбоциты не ожидаются ниже 50, а 3-й степени — ниже 25. При 50–⁠100 анализ повторяют через 1–⁠2 дня; если тромбоциты падают, выбирают НМГ, а не ПОАК.\n\nДоказательства слабые: РКИ ПОАК не включали пациентов с тромбоцитами меньше 100 (RE-LY, ENGAGE AF) или 90 (ROCKET-AF); рекомендации — консенсус экспертов и когорты, чаще онкологические. EHA 2022 написаны для онкобольных; для ТЦП другой природы их применяют по аналогии.",
+  "ex": [
+   {
+    "en": "[> 50] — обычные дозы",
+    "ru": "С контролем тромбоцитов."
+   },
+   {
+    "en": "[20–⁠50] — сниженные дозы",
+    "ru": "НМГ 50% или профилактика, АСК в низкой дозе."
+   },
+   {
+    "en": "[< 20] — отмена",
+    "ru": "Кроме очень высокого риска с трансфузией."
+   }
+  ]
+ },
+ {
+  "n": 2,
+  "group": "base",
+  "title": "Что есть в КР по ИИ 2024",
+  "sub": "ОАК, ТЛТ, профилактика ТГВ, IMPROVE",
+  "rule": "В КР по ИИ 2024 нет порогов тромбоцитов для антиагрегантов и ПОАК. О тромбоцитах там четыре вещи.\n\nПервое: развёрнутый общий анализ крови — обязательный анализ в первые 3 ч от поступления (табл. 9, УУР C). Второе: без подозрения на коагулопатию рутинные тесты гемостаза, включая тромбоциты, перед ТЛТ нецелесообразны и ждать их не нужно — «непредвиденная» коагулопатия встречается в 0,4% случаев.\n\nТретье — профилактика ТГВ у обездвиженных: НМГ или НФГ в профилакти­ческой дозе, если польза выше риска кровотечения (УУР A), НМГ предпочтительнее НФГ (УУР A); с первых суток, после ТЛТ — не раньше 24 ч. Тромбо­цитопения меньше 50 тыс. названа среди основных факторов высокого риска внутричерепного кровоизлияния — это довод в пользу перемежающейся пневмо­компрессии (ППК, УУР B). По шкале IMPROVE (прил. Г18) тромбоциты меньше 50 × 10⁹/⁠л дают 4 балла; 7 и больше — высокий риск кровотечения.\n\nЧетвёртое: от тромбэктомии не отказываются только из-за приёма антикоагулянтов или отклонений показателей гемостаза — МНО, АЧТВ и других (УУР C); тромбоциты здесь прямо не названы.\n\nОстальные пороги — для НМГ, ПОАК, АСК, клопидогрела и ДААТ — из международных документов: EHA 2022, EHRA 2021, ISTH 2018, ESC 2022.",
+  "ex": [
+   {
+    "en": "ТЛТ: тромбоциты [не ждать]",
+    "ru": "Если нет подозрения на коагулопатию."
+   },
+   {
+    "en": "< 50 — довод за [пневмо­компрессию]",
+    "ru": "Профилактика ТГВ, КР по ИИ 2024."
+   },
+   {
+    "en": "IMPROVE: < 50 — [4 балла]",
+    "ru": "≥ 7 — высокий риск кровотечения."
+   }
+  ]
+ },
+ {
+  "n": 3,
+  "group": "base",
+  "title": "Сначала проверить",
+  "sub": "пересчёт, причина, ГИТ, риск кровотечения",
+  "rule": "Перед сменой терапии — три вопроса (EHRA 2021, рис. 24): причина ТЦП, уровень с динамикой, риск кровотечения.\n\nНастоящая ли ТЦП. Псевдо­тромбо­цитопения — нередкая причина ложно низкого результата: тромбоциты слипаются в пробирке, чаще всего с ЭДТА. Она чаще у получающих НМГ, в стационаре и у мужчин 50 лет и старше (обзор Lardinois 2021). Неожиданно низкий результат без кровоточивости — мазок и повторный подсчёт.\n\nПричина. EHRA 2021 перечисляет: снижение продукции, болезни печени и гиперспленизм, лекарства, включая ГИТ, ИТП и аутоиммунные болезни, инфекции, алкоголь, опухоли, беременность. Пациент на гепарине и тромбоциты упали на 5–⁠14-й день — сначала исключить ГИТ по шкале 4Ts.\n\nРиск кровотечения (EHA 2022, табл. 4): недавнее большое кровотечение, ХБП III стадии и тяжелее, острый лейкоз, поражение костного мозга, первичная или метастатическая опухоль мозга, ДВС. Чем больше факторов, тем раньше антитромботик снижают или отменяют.\n\nВсем на антитромботиках при ТЦП (EHA 2022, уровень 1, степень A): без НПВП и без АСК 300 мг и больше как обезболивающего или жаропонижающего; ингибитор протонной помпы; с клопидогрелом — пантопразол, а не омепразол или эзомепразол.",
+  "ex": [
+   {
+    "en": "Неожиданно низко — [мазок и пересчёт]",
+    "ru": "Исключить псевдо­тромбо­цитопению."
+   },
+   {
+    "en": "На гепарине, 5–⁠14-й день — [4Ts]",
+    "ru": "Исключить ГИТ."
+   },
+   {
+    "en": "Клопидогрел + ИПП — [пантопразол]",
+    "ru": "Не омепразол и не эзомепразол."
+   }
+  ]
+ },
+ {
+  "n": 4,
+  "group": "ac",
+  "title": "НМГ: профилактика ТГВ",
+  "sub": "лежачий пациент с тромбо­цитопенией",
+  "rule": "КР по ИИ 2024: у обездвиженных — НМГ или НФГ в профилакти­ческой дозе, если польза выше риска (УУР A); НМГ предпочтительнее. Тромбоциты меньше 50 тыс. — фактор высокого риска ВЧК и довод в пользу перемежающейся пневмо­компрессии (УУР B). ППК можно начать без УЗИ вен в первые 72 ч, если до инсульта пациент ходил; позже 3 суток или при mRS 4–⁠5 до инсульта — только после дуплексного сканирования. Компрессионные чулки не рекомендованы (УУР A).\n\nEHA 2022 (рек. 7): 50–⁠100 — стандартная профилакти­ческая доза НМГ или апиксабана либо ривароксабана по показаниям. 25–⁠50 — только стандартная профилакти­ческая доза НМГ, не ПОАК, и лишь при стабильных тромбоцитах или частом контроле и без других факторов кровотечения. Меньше 25 — никакой медикаментозной профилактики.\n\nЦирроз — отдельный случай: ISTH 2022 не считает ТЦП и удлинённое МНО абсолютным противопоказанием к профилактике ВТЭ; НМГ или фондапаринукс лучше НФГ.",
+  "ex": [
+   {
+    "en": "[> 50] — профилакти­ческая доза НМГ",
+    "ru": "КР по ИИ 2024, УУР A."
+   },
+   {
+    "en": "[25–⁠50] — только НМГ, при стабильных тромбоцитах",
+    "ru": "Без ПОАК и других факторов кровотечения."
+   },
+   {
+    "en": "[< 25] — пневмо­компрессия",
+    "ru": "Без медикаментозной профилактики."
+   }
+  ]
+ },
+ {
+  "n": 5,
+  "group": "ac",
+  "title": "НМГ: лечение ВТЭ",
+  "sub": "полная, 50% или пауза",
+  "rule": "ISTH 2018 и EHA 2022: 50 и больше — полная лечебная доза. 25–⁠50 — 50% лечебной или профилакти­ческая доза НМГ. Меньше 25 — антикоагулянт временно отменяют; полную дозу возвращают, когда тромбоциты снова больше 50 (ISTH). При высоком тромботическом риске (по ISTH; у EHA — очень высоком) и тромбоцитах меньше 50 — полная доза под прикрытием трансфузий тромбоцитов до 40–⁠50.\n\nВысокий риск по ISTH — острая ВТЭ с признаками высокого риска: симптомная сегментарная или более проксимальная ТЭЛА, проксимальный ТГВ, рецидивирующий или прогрессирующий тромбоз. Низкий — дистальный ТГВ, случайная субсегментарная ТЭЛА, катетер-ассоциированный тромбоз, подострая ВТЭ. EHA: трансфузия до 40–⁠50 под полную дозу НМГ — не дольше 14 дней и не как рутина.\n\nПри нестабильной ТЦП 1–⁠2-й степени и острой ВТЭ EHA предпочитает НМГ, а не ПОАК и варфарин. Если антикоагулянт отменён при остром проксимальном ТГВ или ТЭЛА, в первые 30 дней можно обсудить съёмный кава-фильтр (EHA, рек. 6).\n\nДанные. TROVE (2021, 121 онкобольной, тромбоциты < 100): больших кровотечений за 60 дней 12,8% на полной дозе против 6,6% на сниженной (ОР 2,18), рецидивов ВТЭ — 5,6% против 0. Мета‑анализ Wang 2023 (707 пациентов): рецидивы и кровотечения часты при любой тактике, все исследования с высоким риском систематической ошибки.",
+  "ex": [
+   {
+    "en": "[≥ 50] — полная доза",
+    "ru": "ISTH 2018, EHA 2022."
+   },
+   {
+    "en": "[25–⁠50] — 50% или профилакти­ческая",
+    "ru": "Очень высокий риск — полная доза и трансфузия до 40–⁠50."
+   },
+   {
+    "en": "[< 25] — пауза",
+    "ru": "Полная доза — снова при > 50."
+   }
+  ]
+ },
+ {
+  "n": 6,
+  "group": "ac",
+  "title": "ПОАК и ФП",
+  "sub": "EHRA 2021 и EHA 2022",
+  "rule": "EHRA 2021 (рис. 24): больше 50 — с осторожностью, частый контроль клиники и тромбоцитов. 20–⁠50 — с большой осторожностью, очень частый контроль, обсудить половинную дозу ПОАК (особенно при факторах риска кровотечения) и решение мультидисциплинарной команды. Меньше 20 — избегать: риск спонтанных кровотечений.\n\nEHA 2022 строже: при 25–⁠50 ПОАК и варфарин при ВТЭ и ФП не применяют. При ФП и ожидаемой короткой ТЦП антикоагуляцию ставят на паузу, если нет очень высокого риска — эмболии в последние 3 месяца или CHA2DS2-VASc ≥ 6; при стабильной ТЦП 3-й степени и очень высоком риске можно рассмотреть НМГ 50% лечебной дозы. При стабильных 50–⁠100 и неклапанной ФП ПОАК продолжают без снижения дозы; при падающих тромбоцитах НМГ — временный вариант.\n\nИнсульт при ФП — эмболия, поэтому в первые 3 месяца риск по EHA очень высокий. Сроки старта антикоагулянта после текущего инсульта EHA не разбирает: их определяют по протоколу отделения, а при ТЦП решение лучше принимать вместе с гематологом.\n\nДанные. Iyengar 2023 (ФП, тромбоциты < 100): больших кровотечений за год 13,3% против 5,7% (ОР 2,20). Drozdinsky 2024 (рак, ФП, тромбоциты < 50): артериальных эмболий за 30 дней по 2% — с отменой антикоагулянта и без; больших кровотечений 7,8% при отмене и 2,4% при продолжении, различие незначимо.",
+  "ex": [
+   {
+    "en": "[> 50] — с осторожностью",
+    "ru": "Частый контроль тромбоцитов."
+   },
+   {
+    "en": "[20–⁠50] — ½ дозы только консилиумом",
+    "ru": "EHA 2022 при 25–⁠50 — против ПОАК."
+   },
+   {
+    "en": "[< 20] — ПОАК [нет]",
+    "ru": "Риск спонтанных кровотечений."
+   }
+  ]
+ },
+ {
+  "n": 7,
+  "group": "ap",
+  "title": "АСК",
+  "sub": "вторичная профилактика после ИИ",
+  "rule": "EHA 2022 (рек. 8, вторичная профилактика — ИМ, ИБС, инсульт, ТИА): 75–⁠100 — продолжать низкую дозу АСК; 50–⁠75 — продолжать, если нет других больших факторов кровотечения; 25–⁠50 — только при дополнительных факторах сердечно-сосудистого риска; меньше 25 — временно отменить при любом тромботическом риске и вернуть при 25–⁠50 и больше.\n\nПосле ИИ или ТИА в последний месяц (рек. 10) EHA при 25–⁠50 прямо рекомендует монотерапию низкой дозой АСК, а меньше 25 — никаких антиагрегантов, пока тромбоциты не станут больше 25.\n\nКардиологические документы мягче: ESC 2022 (по обзору Gent, Dobson) — избегать АСК при меньше 10; SCAI 2016 — АСК можно при больше 10, при ОКС её у большинства не отменяют. EHA тоже допускает АСК при больше 10, но только при событиях очень высокого тромботического риска вроде ОКС.\n\nПервичная профилактика — другое дело: при меньше 75 АСК отменяют и возвращают при 75 и больше (EHA, рек. 9).",
+  "ex": [
+   {
+    "en": "ИИ < 1 мес., [25–⁠50] — АСК",
+    "ru": "Низкая доза, без ДААТ."
+   },
+   {
+    "en": "[< 25] — пауза",
+    "ru": "Вернуть при > 25."
+   },
+   {
+    "en": "Кардиологи: АСК от [10]",
+    "ru": "ESC 2022, SCAI 2016 — ОКС."
+   }
+  ]
+ },
+ {
+  "n": 8,
+  "group": "ap",
+  "title": "Клопидогрел и ДААТ",
+  "sub": "21 день, стеноз, тикагрелор",
+  "rule": "После малого ИИ или ТИА без значимого интра­краниального стеноза (EHA 2022, рек. 10): стабильные 75–⁠100 — ДААТ с клопидогрелом 21 день, затем АСК; 50–⁠75 — так же, но при дополнительных факторах кровотечения — только АСК; 25–⁠50 — только АСК; меньше 25 — без антиагрегантов.\n\nСимптомный интра­краниальный стеноз (рек. 11): 50–⁠100 — ДААТ с клопидогрелом до 90 дней; 25–⁠50 — до 21 дня, если нет дополнительных факторов кровотечения, иначе АСК; меньше 25 — ДААТ отменить, АСК при тромбоцитах больше 25 — индивидуально.\n\nКлопидогрел: ESC 2022 (по обзору; раздел ОКС и ЧКВ у онкобольных) — избегать при меньше 30. McCarthy 2017 (ОКС без ЧКВ): 50–⁠100 — клопидогрел в монотерапии с ИПП; меньше 50 — отменить все антиагреганты.\n\nТикагрелор и прасугрел: EHA 2022 — против ДААТ с ними при меньше 75 (раздел ОКС), а для ИИ и ТИА называет только клопидогрел; ESC 2022 и SCAI 2016 — не при меньше 50. Внутривенные антиагреганты — ингибиторы GP IIb/IIIa и P2Y12 — при любой степени ТЦП не рекомендованы. Антиагрегант вместе с антикоагулянтом при меньше 50 не сочетают; ривароксабан 2,5 мг × 2 с АСК — ни при какой ТЦП (EHA).\n\nEHA: решения о ДААТ принимают вместе с сосудистым неврологом, риск геморраги­ческой трансформации оценивают индивидуально. Единственная когорта с ИИ и тромбоцитами меньше 100, на которую ссылается EHA (28 пациентов), — внутричерепных кровоизлияний 14,3% против 1,5% без ТЦП.",
+  "ex": [
+   {
+    "en": "Малый ИИ, [75–⁠100] — ДААТ 21 день",
+    "ru": "При стабильных тромбоцитах."
+   },
+   {
+    "en": "Малый ИИ, [25–⁠50] — только АСК",
+    "ru": "Стеноз — ДААТ до 21 дня."
+   },
+   {
+    "en": "Клопидогрел [< 30] — нет",
+    "ru": "ESC 2022."
+   }
+  ]
+ },
+ {
+  "n": 9,
+  "group": "spec",
+  "title": "ТЛТ и тромбэктомия",
+  "sub": "100 тыс. и не ждать анализ",
+  "rule": "ТЛТ противопоказана при тромбоцитах меньше 100 000/мкл — это в инструкции алтеплазы (Актилизе) и в AHA/ASA 2026 (табл. 8, абсолютные противопоказания). EHA 2022 против ТЛТ при любой степени ТЦП и советует прекратить инфузию, если ТЦП выявлена после старта.\n\nНо анализ не ждут. КР по ИИ 2024: без подозрения на коагулопатию рутинные тесты, включая тромбоциты, перед ТЛТ нецелесообразны. AHA/ASA 2026 (2a): не задерживать ТЛТ ради анализов, если нет причин ждать отклонений. Cucchiara 2007: из 1752 пациентов тромбоциты меньше 100 были у 4,7%, а неожиданно, без анамнеза, — у 0,3%, и снижение было лёгким.\n\nНасколько опасно. TRISP (7533 ТЛТ): при тромбоцитах меньше 150 сВЧК чаще (ОШ 1,73), но у 44 пациентов с меньше 100 — ОШ 1,56, незначимо; авторы ставят под сомнение безусловный запрет. Китайский регистр (44 882 ТЛТ): меньше 100 — сВЧК ОШ 1,48.\n\nТромбэктомия: EHA — при 50–⁠100 рассматривать всем подходящим, 25–⁠50 — можно рассмотреть, меньше 25 — по каждому случаю, с трансфузией или без. Мета‑анализ Toruno 2024 (974 пациента с ТЦП): сВЧК не чаще (ОШ 1,20), реканализация так же успешна, но летальность выше (ОШ 1,76), функциональная независимость реже (ОШ 0,83). КР по ИИ 2024: не отказываться от ТЭ только из-за приёма антикоагулянтов или повышения МНО и АЧТВ (о тромбоцитах прямо не сказано).",
+  "ex": [
+   {
+    "en": "ТЛТ: < 100 — [нет]",
+    "ru": "Инструкция алтеплазы, AHA/ASA 2026."
+   },
+   {
+    "en": "Анализ [не ждать]",
+    "ru": "Если нет подозрения на коагулопатию."
+   },
+   {
+    "en": "ТЭ при ТЦП: сВЧК [не чаще]",
+    "ru": "Летальность выше: ОШ 1,76."
+   }
+  ]
+ },
+ {
+  "n": 10,
+  "group": "spec",
+  "title": "ГИТ",
+  "sub": "4Ts, отмена гепарина, чем заменить",
+  "rule": "Гепарин-индуцированная тромбо­цитопения опасна тромбозами, а не кровотечением: при подозрении отменяют все гепарины — НФГ и НМГ — и начинают негепариновый антикоагулянт (ASH 2018).\n\nВероятность — по шкале 4Ts, а не «на глаз». Четыре признака по 0–⁠2 балла: насколько упали тромбоциты, когда, есть ли тромбоз, есть ли другая причина. 0–⁠3 — низкая вероятность: лабораторные тесты не нужны, гепарин продолжают, если он показан. 4–⁠5 — средняя, 6–⁠8 — высокая: гепарин отменить, иммуноанализ на антитела.\n\nЧем лечить: аргатробан, бивалирудин, данапароид, фондапаринукс или ПОАК; у стабильных пациентов — фондапаринукс или ПОАК. Доза лечебная; при 4Ts 4–⁠5, высоком риске кровотечения и без других показаний — профилакти­ческая. Дозы ПОАК при ГИТ экстраполированы с лечения ВТЭ. ГИТ с тромбозом: апиксабан 10 мг × 2 неделю, затем 5 мг × 2; ривароксабан 15 мг × 2 три недели, затем 20 мг × 1. Без тромбоза — апиксабан 5 мг × 2 или ривароксабан 15 мг × 2 до восстановления тромбоцитов. Высокий риск кровотечения, критическое состояние или возможна срочная процедура — аргатробан или бивалирудин. Варфарин — только после восстановления тромбоцитов, обычно до 150 и больше. Рутинная трансфузия тромбоцитов не нужна.\n\nСколько: без тромбоза — минимум до восстановления тромбоцитов, но не больше 3 месяцев; с тромбозом — обычно 3–⁠6 месяцев. При ГИТ без явного тромбоза — УЗИ вен обеих ног.",
+  "ex": [
+   {
+    "en": "4Ts [≥ 4] — отменить гепарины",
+    "ru": "Негепариновый антикоагулянт."
+   },
+   {
+    "en": "Варфарин — после [≥ 150]",
+    "ru": "Не раньше восстановления тромбоцитов."
+   },
+   {
+    "en": "Трансфузия — [рутинно нет]",
+    "ru": "Только при кровотечении."
+   }
+  ]
+ },
+ {
+  "n": 11,
+  "group": "spec",
+  "title": "ИТП, цирроз, трансфузии",
+  "sub": "особые причины и переливание",
+  "rule": "ИТП: риск тромбозов выше, чем в общей популяции (обзор Garabet, Ghanima 2026). Практическое руководство Rahhal 2024 (ИТП и ОКС): меньше 30 — пауза антиагрегантов и антикоагулянтов после решения мультидисциплинарной команды; 30–⁠50 — один антиагрегант; больше 50 — ДААТ и антикоагулянт по показаниям. Опрос 210 гематологов Германии, Австрии и Швейцарии (Alesci 2025): для антикоагуляции большинство считают безопасным порог больше 50. ИИ при ИТП (Cao 2026, 113 пациентов, медиана тромбоцитов 44): антиагреганты получили 32%, геморраги­ческая трансформация — у 4,4%. Лечение самой ИТП — с гематологом.\n\nЦирроз: ISTH 2022 не считает ТЦП и удлинённое МНО абсолютным противопоказанием к профилактике ВТЭ; НМГ или фондапаринукс лучше НФГ.\n\nХимиотерапия: тромбоциты измеряют в ожидаемый надир, при 50–⁠100 — повтор через 1–⁠2 дня (EHA 2022).\n\nТрансфузии (AABB 2025): профилакти­чески — при меньше 10 у некровоточащих на химиотерапии или после аллогенной трансплантации (не после аутологичной и не при апластической анемии) и при ТЦП потребления без большого кровотечения; люмбальная пункция — при меньше 20; большая ненейроаксиальная операция — при меньше 50. ВЧК без операции при тромбоцитах больше 100, в том числе на антиагрегантах, — трансфузия не рекомендована. PATCH: переливание тромбоцитов при ВЧК на антиагрегантах повысило шансы смерти или зависимости (ОШ 2,05).",
+  "ex": [
+   {
+    "en": "ИТП, [30–⁠50] — один антиагрегант",
+    "ru": "Rahhal 2024."
+   },
+   {
+    "en": "Цирроз — ТЦП [не абсолютное] противопоказание",
+    "ru": "Профилактика ВТЭ, ISTH 2022."
+   },
+   {
+    "en": "ВЧК на АСК — трансфузия [нет]",
+    "ru": "PATCH: исход хуже."
+   }
+  ]
+ },
+ {
+  "n": 12,
+  "group": "spec",
+  "title": "Частые ошибки",
+  "sub": "что путают на практике",
+  "rule": "Ждать тромбоциты перед ТЛТ у пациента без подозрения на коагулопатию. Отменять всё при 60–⁠80 «на всякий случай» — при 50–⁠100 АСК и НМГ дают в обычных дозах. И наоборот — продолжать ПОАК в полной дозе при падении до 30: при 25–⁠50 EHA против ПОАК.\n\nНе заметить ГИТ: падение тромбоцитов на 5–⁠14-й день НМГ списывают на инфекцию и продолжают гепарин, а нужно оценить 4Ts и при 4 баллах и больше — отменить гепарин и начать негепариновый антикоагулянт. Переливать тромбоциты при ГИТ «для безопасности» рутинно не нужно.\n\nДААТ по схеме CHANCE при тромбоцитах 30 — EHA: только АСК. Тикагрелор при тромбоцитах меньше 75. НПВП или АСК 300 мг как жаропонижающее на фоне антитромботиков.\n\nСчитать ТЦП противопоказанием к любой профилактике ТГВ: при меньше 50 — пневмо­компрессия (КР по ИИ 2024), при стабильных 25–⁠50 допустима профилакти­ческая доза НМГ (EHA).\n\nНе пересчитать неожиданный результат: низкие тромбоциты без кровоточивости — сначала мазок и повторный анализ.",
+  "ex": [
+   {
+    "en": "ТЛТ: ждать тромбоциты? [Нет].",
+    "ru": "Если нет подозрения на коагулопатию."
+   },
+   {
+    "en": "Тромбоциты 70 — АСК [продолжать].",
+    "ru": "EHA 2022."
+   },
+   {
+    "en": "Падение на 7-й день НМГ — [4Ts].",
+    "ru": "Исключить ГИТ."
+   }
+  ]
+ },
+ {
+  "n": 13,
+  "group": "mix",
+  "title": "Итог — всё вместе",
+  "sub": "",
+  "rule": "15 случайных карточек из всех тем вперемешку.",
+  "ex": []
+ }
+];
+
+// ——— Карточки. opts — варианты, a — правильный, why — пояснение.
+const CARDS = [
+ {
+  "id": "l-eha3",
+  "t": 1,
+  "q": "EHA 2022: тромбоциты 25–⁠50 × 10⁹/⁠л — ТЦП ___ степени.",
+  "ru": "",
+  "opts": [
+   "3-й",
+   "2-й",
+   "4-й"
+  ],
+  "a": "3-й",
+  "why": "1-я — 75–⁠100, 2-я — 50–⁠75, 4-я — меньше 25; верхняя граница 1-й степени у EHA — 100."
+ },
+ {
+  "id": "l-eha4",
+  "t": 1,
+  "q": "По EHA 2022 4-я степень ТЦП — тромбоциты меньше ___.",
+  "ru": "",
+  "opts": [
+   "25",
+   "20",
+   "10"
+  ],
+  "a": "25",
+  "why": "EHRA 2021 для ПОАК использует порог 20."
+ },
+ {
+  "id": "l-ehra",
+  "t": 1,
+  "q": "EHRA 2021 делит тромбоциты на больше 50, 20–⁠50 и ___.",
+  "ru": "",
+  "opts": [
+   "меньше 20",
+   "меньше 10",
+   "меньше 30"
+  ],
+  "a": "меньше 20",
+  "why": "Меньше 20 — ПОАК избегать."
+ },
+ {
+  "id": "l-safe",
+  "t": 1,
+  "q": "Уровень тромбоцитов, выше которого ПОАК совсем без риска, по EHRA 2021 ___.",
+  "ru": "",
+  "opts": [
+   "не существует",
+   "100",
+   "50"
+  ],
+  "a": "не существует",
+  "why": "Поэтому контролируют и клинику, и анализ."
+ },
+ {
+  "id": "l-rct",
+  "t": 1,
+  "q": "RE-LY и ENGAGE AF не включали пациентов с тромбоцитами меньше ___.",
+  "ru": "",
+  "opts": [
+   "100",
+   "50",
+   "150"
+  ],
+  "a": "100",
+  "why": "ROCKET-AF — меньше 90; в ARISTOTLE такого критерия не было."
+ },
+ {
+  "id": "l-stable",
+  "t": 1,
+  "q": "EHA 2022: стабильная ТЦП 1–⁠2-й степени — если в ближайшие дни и недели тромбоциты не ожидаются ниже ___.",
+  "ru": "",
+  "opts": [
+   "50",
+   "100",
+   "10"
+  ],
+  "a": "50",
+  "why": "Для 3-й степени — ниже 25. При падающих тромбоцитах выбирают НМГ, а не ПОАК."
+ },
+ {
+  "id": "l-recheck",
+  "t": 1,
+  "q": "EHA 2022: при тромбоцитах 50–⁠100 анализ повторяют через ___.",
+  "ru": "",
+  "opts": [
+   "1–⁠2 дня",
+   "неделю",
+   "месяц"
+  ],
+  "a": "1–⁠2 дня",
+  "why": "EHRA 2021 — частый контроль клиники и тромбоцитов."
+ },
+ {
+  "id": "l-who",
+  "t": 1,
+  "q": "Руководство EHA 2022 написано для ___.",
+  "ru": "",
+  "opts": [
+   "онкобольных с ТЦП",
+   "пациентов с ИТП",
+   "всех пациентов с инсультом"
+  ],
+  "a": "онкобольных с ТЦП",
+  "why": "Для ТЦП другой природы его применяют по аналогии."
+ },
+ {
+  "id": "k-thr",
+  "t": 2,
+  "q": "Порогов тромбоцитов для антиагрегантов и ПОАК в КР по ИИ 2024 ___.",
+  "ru": "",
+  "opts": [
+   "нет",
+   "есть: 50 и 100"
+  ],
+  "a": "нет",
+  "why": "Пороги — из EHA 2022, EHRA 2021, ISTH 2018, ESC 2022."
+ },
+ {
+  "id": "k-oak",
+  "t": 2,
+  "q": "КР по ИИ 2024: развёрнутый общий анализ крови — в первые ___ от поступления.",
+  "ru": "",
+  "opts": [
+   "3 ч",
+   "24 ч",
+   "48 ч"
+  ],
+  "a": "3 ч",
+  "why": "Табл. 9, УУР C."
+ },
+ {
+  "id": "k-tlt",
+  "t": 2,
+  "q": "Без подозрения на коагулопатию тромбоциты перед ТЛТ по КР по ИИ 2024 ___.",
+  "ru": "",
+  "opts": [
+   "не ждут",
+   "ждут обязательно"
+  ],
+  "a": "не ждут",
+  "why": "Рутинные тесты гемостаза перед ТЛТ нецелесообразны."
+ },
+ {
+  "id": "k-04",
+  "t": 2,
+  "q": "По КР «непредвиденная» коагулопатия перед ТЛТ встречается в ___ случаев.",
+  "ru": "",
+  "opts": [
+   "0,4%",
+   "4%",
+   "14%"
+  ],
+  "a": "0,4%",
+  "why": "Поэтому ТЛТ не задерживают ради анализов."
+ },
+ {
+  "id": "k-50",
+  "t": 2,
+  "q": "КР: тромбо­цитопения меньше ___ тыс. — фактор высокого риска ВЧК при выборе профилактики ТГВ.",
+  "ru": "",
+  "opts": [
+   "50",
+   "100",
+   "20"
+  ],
+  "a": "50",
+  "why": "Довод в пользу перемежающейся пневмо­компрессии."
+ },
+ {
+  "id": "k-improve",
+  "t": 2,
+  "q": "IMPROVE (прил. Г18 КР): тромбоциты меньше 50 × 10⁹/⁠л — ___ балла.",
+  "ru": "",
+  "opts": [
+   "4",
+   "1",
+   "7"
+  ],
+  "a": "4",
+  "why": "7 баллов и больше — высокий риск кровотечения."
+ },
+ {
+  "id": "k-ipc",
+  "t": 2,
+  "q": "КР по ИИ 2024: перемежающаяся пневмо­компрессия у обездвиженных — УУР ___.",
+  "ru": "",
+  "opts": [
+   "B",
+   "A",
+   "C"
+  ],
+  "a": "B",
+  "why": "CLOTS 3: ТГВ реже, ОШ 0,65."
+ },
+ {
+  "id": "k-24",
+  "t": 2,
+  "q": "После ТЛТ профилакти­ческую дозу НМГ по КР начинают не раньше чем через ___.",
+  "ru": "",
+  "opts": [
+   "24 ч",
+   "6 ч",
+   "72 ч"
+  ],
+  "a": "24 ч",
+  "why": "Без ТЛТ — с первых суток."
+ },
+ {
+  "id": "k-evt",
+  "t": 2,
+  "q": "КР: от тромбэктомии только из-за отклонений МНО, АЧТВ и других показателей гемостаза ___.",
+  "ru": "",
+  "opts": [
+   "не отказываются",
+   "отказываются"
+  ],
+  "a": "не отказываются",
+  "why": "УУР C."
+ },
+ {
+  "id": "f-pseudo",
+  "t": 3,
+  "q": "Тромбоциты 40 без кровоточивости, вчера было 220 — сначала ___.",
+  "ru": "",
+  "opts": [
+   "мазок и повторный анализ",
+   "отменить АСК",
+   "трансфузия"
+  ],
+  "a": "мазок и повторный анализ",
+  "why": "Псевдо­тромбо­цитопения — тромбоциты слипаются в пробирке."
+ },
+ {
+  "id": "f-lmwh",
+  "t": 3,
+  "q": "Псевдо­тромбо­цитопения чаще у получающих ___.",
+  "ru": "",
+  "opts": [
+   "НМГ",
+   "АСК",
+   "статины"
+  ],
+  "a": "НМГ",
+  "why": "А также в стационаре и у мужчин 50 лет и старше (Lardinois 2021)."
+ },
+ {
+  "id": "f-hit",
+  "t": 3,
+  "q": "Пациент на НМГ, тромбоциты упали на 7-й день — сначала ___.",
+  "ru": "",
+  "opts": [
+   "оценить 4Ts",
+   "добавить АСК",
+   "снизить дозу НМГ вдвое"
+  ],
+  "a": "оценить 4Ts",
+  "why": "Исключить ГИТ."
+ },
+ {
+  "id": "f-three",
+  "t": 3,
+  "q": "EHRA 2021 перед решением спрашивает о причине ТЦП, уровне с динамикой и ___.",
+  "ru": "",
+  "opts": [
+   "риске кровотечения",
+   "группе крови",
+   "СОЭ"
+  ],
+  "a": "риске кровотечения",
+  "why": "Рис. 24 практического руководства."
+ },
+ {
+  "id": "f-nsaid",
+  "t": 3,
+  "q": "На антитромботиках при ТЦП НПВП как обезболивающее ___.",
+  "ru": "",
+  "opts": [
+   "не назначают",
+   "предпочтительны"
+  ],
+  "a": "не назначают",
+  "why": "И АСК ≥ 300 мг как анальгетик — тоже (EHA 2022, уровень 1, степень A)."
+ },
+ {
+  "id": "f-ppi",
+  "t": 3,
+  "q": "На антитромботиках при ТЦП ингибитор протонной помпы по EHA 2022 ___.",
+  "ru": "",
+  "opts": [
+   "рекомендован",
+   "не нужен"
+  ],
+  "a": "рекомендован",
+  "why": "Уровень 1, степень A."
+ },
+ {
+  "id": "f-panto",
+  "t": 3,
+  "q": "С клопидогрелом из ИПП выбирают ___.",
+  "ru": "",
+  "opts": [
+   "пантопразол",
+   "омепразол",
+   "эзомепразол"
+  ],
+  "a": "пантопразол",
+  "why": "Омепразол и эзомепразол не рекомендованы (EHA 2022)."
+ },
+ {
+  "id": "f-bleed",
+  "t": 3,
+  "q": "Фактор высокого риска кровотечения при ТЦП по EHA 2022 — ___.",
+  "ru": "",
+  "opts": [
+   "недавнее большое кровотечение",
+   "возраст 45 лет",
+   "гипотиреоз"
+  ],
+  "a": "недавнее большое кровотечение",
+  "why": "А также ХБП III стадии и тяжелее, острый лейкоз, поражение костного мозга, опухоль мозга, ДВС."
+ },
+ {
+  "id": "p-70",
+  "t": 4,
+  "q": "Тромбоциты 70, обездвиженный пациент с ИИ: профилактика ТГВ — ___.",
+  "ru": "",
+  "opts": [
+   "профилакти­ческая доза НМГ",
+   "только пневмо­компрессия",
+   "ничего"
+  ],
+  "a": "профилакти­ческая доза НМГ",
+  "why": "КР по ИИ 2024, УУР A; EHA 2022 — при 50–⁠100 стандартная доза."
+ },
+ {
+  "id": "p-35",
+  "t": 4,
+  "q": "Тромбоциты 35, стабильно, других факторов кровотечения нет: профилакти­ческая доза НМГ по EHA 2022 ___.",
+  "ru": "",
+  "opts": [
+   "может быть рассмотрена",
+   "запрещена",
+   "заменяется лечебной"
+  ],
+  "a": "может быть рассмотрена",
+  "why": "Только НМГ, не ПОАК; с частым контролем тромбоцитов."
+ },
+ {
+  "id": "p-apix",
+  "t": 4,
+  "q": "Тромбоциты 35: апиксабан для профилактики ТГВ по EHA 2022 ___.",
+  "ru": "",
+  "opts": [
+   "не применяют",
+   "допустим"
+  ],
+  "a": "не применяют",
+  "why": "При 25–⁠50 — только НМГ."
+ },
+ {
+  "id": "p-20",
+  "t": 4,
+  "q": "Тромбоциты 20: медикаментозная профилактика ТГВ по EHA 2022 ___.",
+  "ru": "",
+  "opts": [
+   "не рекомендована",
+   "НМГ в половинной дозе",
+   "НФГ 5000 ЕД × 2"
+  ],
+  "a": "не рекомендована",
+  "why": "Меньше 25 — без медикаментозной профилактики; ППК — по КР по ИИ 2024."
+ },
+ {
+  "id": "p-ipc72",
+  "t": 4,
+  "q": "Ходил до инсульта, 2-е сутки: пневмо­компрессию можно начать ___.",
+  "ru": "",
+  "opts": [
+   "без УЗИ вен",
+   "только после УЗИ вен"
+  ],
+  "a": "без УЗИ вен",
+  "why": "КР: в первые 72 ч у ходивших до инсульта; позже 3 суток или при mRS 4–⁠5 до инсульта — после дуплексного сканирования."
+ },
+ {
+  "id": "p-stock",
+  "t": 4,
+  "q": "Компрессионные чулки для профилактики ТГВ при ИИ по КР ___.",
+  "ru": "",
+  "opts": [
+   "не рекомендованы",
+   "заменяют НМГ"
+  ],
+  "a": "не рекомендованы",
+  "why": "УУР A: пользы нет, повреждений кожи больше."
+ },
+ {
+  "id": "p-cirr",
+  "t": 4,
+  "q": "Цирроз, тромбоциты 60: ТЦП для профилактики ВТЭ по ISTH 2022 — ___.",
+  "ru": "",
+  "opts": [
+   "не абсолютное противопоказание",
+   "абсолютное противопоказание"
+  ],
+  "a": "не абсолютное противопоказание",
+  "why": "НМГ или фондапаринукс лучше НФГ."
+ },
+ {
+  "id": "p-ufh",
+  "t": 4,
+  "q": "КР по ИИ 2024: для профилактики ТГВ предпочтительнее ___.",
+  "ru": "",
+  "opts": [
+   "НМГ",
+   "НФГ"
+  ],
+  "a": "НМГ",
+  "why": "УУР A; у пожилых со сниженной функцией почек — осторожно."
+ },
+ {
+  "id": "t-60",
+  "t": 5,
+  "q": "Острый проксимальный ТГВ, тромбоциты 60: НМГ ___.",
+  "ru": "",
+  "opts": [
+   "в полной лечебной дозе",
+   "в половинной дозе",
+   "отменить"
+  ],
+  "a": "в полной лечебной дозе",
+  "why": "50 и больше — полная доза (ISTH 2018, EHA 2022)."
+ },
+ {
+  "id": "t-35",
+  "t": 5,
+  "q": "Подострая ВТЭ, тромбоциты 35: НМГ ___.",
+  "ru": "",
+  "opts": [
+   "50% лечебной или профилакти­ческая",
+   "полная без трансфузии",
+   "отменить"
+  ],
+  "a": "50% лечебной или профилакти­ческая",
+  "why": "ISTH 2018 (низкий риск), EHA 2022."
+ },
+ {
+  "id": "t-35hr",
+  "t": 5,
+  "q": "Острая ТЭЛА 10 дней назад, тромбоциты 35: вариант ISTH — полная доза НМГ и трансфузии до ___.",
+  "ru": "",
+  "opts": [
+   "40–⁠50",
+   "100",
+   "20"
+  ],
+  "a": "40–⁠50",
+  "why": "EHA: не дольше 14 дней и не как рутина."
+ },
+ {
+  "id": "t-14",
+  "t": 5,
+  "q": "EHA 2022: трансфузии под полную дозу НМГ — не дольше ___ дней.",
+  "ru": "",
+  "opts": [
+   "14",
+   "3",
+   "30"
+  ],
+  "a": "14",
+  "why": "Только при очень высоком тромботическом риске."
+ },
+ {
+  "id": "t-20",
+  "t": 5,
+  "q": "Тромбоциты 20, ТГВ 2 месяца назад: антикоагулянт ___.",
+  "ru": "",
+  "opts": [
+   "временно отменить",
+   "продолжить полную дозу",
+   "перейти на ПОАК"
+  ],
+  "a": "временно отменить",
+  "why": "Меньше 25 — пауза; полная доза — снова при > 50 (ISTH)."
+ },
+ {
+  "id": "t-resume",
+  "t": 5,
+  "q": "По ISTH 2018 после паузы полную дозу возвращают при тромбоцитах больше ___.",
+  "ru": "",
+  "opts": [
+   "50",
+   "25",
+   "100"
+  ],
+  "a": "50",
+  "why": "EHA 2022: как только позволяет уровень тромбоцитов."
+ },
+ {
+  "id": "t-filter",
+  "t": 5,
+  "q": "Острая ТЭЛА, антикоагулянт отменён из-за ТЦП: EHA 2022 допускает ___.",
+  "ru": "",
+  "opts": [
+   "съёмный кава-фильтр",
+   "тромболизис",
+   "двойную дозу НМГ"
+  ],
+  "a": "съёмный кава-фильтр",
+  "why": "В первые 30 дней; снимать при первой возможности."
+ },
+ {
+  "id": "t-trove",
+  "t": 5,
+  "q": "TROVE: больших кровотечений за 60 дней на полной дозе — ___.",
+  "ru": "",
+  "opts": [
+   "12,8% против 6,6%",
+   "поровну",
+   "2% против 1%"
+  ],
+  "a": "12,8% против 6,6%",
+  "why": "На сниженной дозе рецидивов ВТЭ не было, на полной — 5,6%."
+ },
+ {
+  "id": "t-hr",
+  "t": 5,
+  "q": "Высокий риск ВТЭ по ISTH — ___.",
+  "ru": "",
+  "opts": [
+   "проксимальный ТГВ",
+   "дистальный ТГВ",
+   "катетерный тромбоз"
+  ],
+  "a": "проксимальный ТГВ",
+  "why": "А также сегментарная или более проксимальная ТЭЛА, рецидивирующий тромбоз."
+ },
+ {
+  "id": "d-60",
+  "t": 6,
+  "q": "ФП, тромбоциты 60, стабильно: ПОАК ___.",
+  "ru": "",
+  "opts": [
+   "в обычной дозе, с контролем",
+   "в половинной дозе",
+   "отменить"
+  ],
+  "a": "в обычной дозе, с контролем",
+  "why": "EHA 2022: при стабильных 50–⁠100 без снижения дозы; EHRA 2021 — с осторожностью."
+ },
+ {
+  "id": "d-ehra",
+  "t": 6,
+  "q": "EHRA 2021 при тромбоцитах 20–⁠50: ПОАК ___.",
+  "ru": "",
+  "opts": [
+   "½ дозы после консилиума",
+   "полная доза",
+   "отменить всегда"
+  ],
+  "a": "½ дозы после консилиума",
+  "why": "Очень частый контроль; особенно при факторах риска кровотечения."
+ },
+ {
+  "id": "d-eha",
+  "t": 6,
+  "q": "EHA 2022 при тромбоцитах 25–⁠50: ПОАК при ФП ___.",
+  "ru": "",
+  "opts": [
+   "не применяют",
+   "в половинной дозе",
+   "в обычной дозе"
+  ],
+  "a": "не применяют",
+  "why": "Пауза при короткой ТЦП; очень высокий риск и стабильная ТЦП — можно рассмотреть НМГ 50% лечебной дозы."
+ },
+ {
+  "id": "d-15",
+  "t": 6,
+  "q": "Тромбоциты 15, ФП: ПОАК ___.",
+  "ru": "",
+  "opts": [
+   "избегать",
+   "½ дозы",
+   "обычная доза"
+  ],
+  "a": "избегать",
+  "why": "EHRA 2021: риск спонтанных кровотечений."
+ },
+ {
+  "id": "d-fall",
+  "t": 6,
+  "q": "ФП, тромбоциты 70 и падают: временно лучше ___.",
+  "ru": "",
+  "opts": [
+   "НМГ",
+   "ПОАК",
+   "варфарин"
+  ],
+  "a": "НМГ",
+  "why": "EHA 2022: при нестабильной ТЦП — НМГ как временный вариант."
+ },
+ {
+  "id": "d-vhr",
+  "t": 6,
+  "q": "ФП, инсульт 2 недели назад: тромботический риск по EHA 2022 — ___.",
+  "ru": "",
+  "opts": [
+   "очень высокий",
+   "низкий",
+   "средний"
+  ],
+  "a": "очень высокий",
+  "why": "ФП с артериальной эмболией в последние 3 месяца."
+ },
+ {
+  "id": "d-iyen",
+  "t": 6,
+  "q": "Iyengar 2023: ФП и тромбоциты меньше 100 — больших кровотечений за год ___.",
+  "ru": "",
+  "opts": [
+   "13,3% против 5,7%",
+   "поровну",
+   "1% против 0,5%"
+  ],
+  "a": "13,3% против 5,7%",
+  "why": "ОР 2,20."
+ },
+ {
+  "id": "d-droz",
+  "t": 6,
+  "q": "Drozdinsky 2024 (рак, ФП, < 50): артериальных эмболий за 30 дней при отмене антикоагулянта ___.",
+  "ru": "",
+  "opts": [
+   "2% — как без отмены",
+   "в 5 раз больше",
+   "ни одной"
+  ],
+  "a": "2% — как без отмены",
+  "why": "Больших кровотечений 7,8% при отмене и 2,4% при продолжении, незначимо."
+ },
+ {
+  "id": "d-hit",
+  "t": 6,
+  "q": "ПОАК при ГИТ по ASH 2018 — ___.",
+  "ru": "",
+  "opts": [
+   "один из вариантов",
+   "противопоказаны"
+  ],
+  "a": "один из вариантов",
+  "why": "Вместе с аргатробаном, бивалирудином, данапароидом, фондапаринуксом."
+ },
+ {
+  "id": "a-60",
+  "t": 7,
+  "q": "ИИ 2 недели назад, тромбоциты 60, факторов кровотечения нет: АСК ___.",
+  "ru": "",
+  "opts": [
+   "продолжать",
+   "отменить",
+   "заменить НМГ"
+  ],
+  "a": "продолжать",
+  "why": "EHA 2022, рек. 8 и 10."
+ },
+ {
+  "id": "a-35",
+  "t": 7,
+  "q": "ИИ 2 недели назад, тромбоциты 35: антиагрегант по EHA 2022 — ___.",
+  "ru": "",
+  "opts": [
+   "АСК в низкой дозе",
+   "ДААТ",
+   "ничего"
+  ],
+  "a": "АСК в низкой дозе",
+  "why": "Рек. 10: монотерапия низкой дозой АСК."
+ },
+ {
+  "id": "a-20",
+  "t": 7,
+  "q": "ИИ, тромбоциты 20: АСК по EHA 2022 — ___.",
+  "ru": "",
+  "opts": [
+   "пауза до > 25",
+   "продолжить 100 мг",
+   "заменить клопидогрелом"
+  ],
+  "a": "пауза до > 25",
+  "why": "Меньше 25 — без антиагрегантов."
+ },
+ {
+  "id": "a-resume",
+  "t": 7,
+  "q": "EHA 2022: отменённую АСК при вторичной профилактике возвращают при ___.",
+  "ru": "",
+  "opts": [
+   "25–⁠50 и больше",
+   "100 и больше",
+   "150 и больше"
+  ],
+  "a": "25–⁠50 и больше",
+  "why": "По тромботическому риску."
+ },
+ {
+  "id": "a-esc",
+  "t": 7,
+  "q": "ESC 2022 (кардиоонкология): АСК избегать при тромбоцитах меньше ___.",
+  "ru": "",
+  "opts": [
+   "10",
+   "50",
+   "100"
+  ],
+  "a": "10",
+  "why": "SCAI 2016: АСК можно при > 10."
+ },
+ {
+  "id": "a-acs",
+  "t": 7,
+  "q": "EHA допускает АСК при тромбоцитах больше 10 только при ___.",
+  "ru": "",
+  "opts": [
+   "событиях очень высокого тромботического риска",
+   "любом ИИ",
+   "первичной профилактике"
+  ],
+  "a": "событиях очень высокого тромботического риска",
+  "why": "Например, ОКС; после ИИ — пауза до > 25."
+ },
+ {
+  "id": "a-prim",
+  "t": 7,
+  "q": "Первичная профилактика, тромбоциты 60: АСК по EHA 2022 — ___.",
+  "ru": "",
+  "opts": [
+   "отменить до 75 и больше",
+   "продолжить",
+   "удвоить дозу"
+  ],
+  "a": "отменить до 75 и больше",
+  "why": "Рек. 9: при ТЦП 2-й степени и тяжелее."
+ },
+ {
+  "id": "a-dose",
+  "t": 7,
+  "q": "При 25–⁠50 АСК после ИИ по EHA 2022 — в ___ дозе.",
+  "ru": "",
+  "opts": [
+   "низкой",
+   "нагрузочной 300 мг"
+  ],
+  "a": "низкой",
+  "why": "АСК ≥ 300 мг как анальгетик на фоне ТЦП — не назначают."
+ },
+ {
+  "id": "c-80",
+  "t": 8,
+  "q": "Малый ИИ, тромбоциты 80, стабильно: ___.",
+  "ru": "",
+  "opts": [
+   "ДААТ с клопидогрелом 21 день",
+   "только АСК",
+   "ничего"
+  ],
+  "a": "ДААТ с клопидогрелом 21 день",
+  "why": "EHA 2022, рек. 10a; затем АСК."
+ },
+ {
+  "id": "c-60b",
+  "t": 8,
+  "q": "Малый ИИ, тромбоциты 60, недавнее большое кровотечение: ___.",
+  "ru": "",
+  "opts": [
+   "только АСК",
+   "ДААТ 21 день",
+   "тикагрелор + АСК"
+  ],
+  "a": "только АСК",
+  "why": "EHA 2022, рек. 10b."
+ },
+ {
+  "id": "c-40",
+  "t": 8,
+  "q": "Малый ИИ, тромбоциты 40, стеноза нет: ___.",
+  "ru": "",
+  "opts": [
+   "только АСК",
+   "ДААТ 21 день"
+  ],
+  "a": "только АСК",
+  "why": "EHA 2022, рек. 10c."
+ },
+ {
+  "id": "c-icas40",
+  "t": 8,
+  "q": "Симптомный интра­краниальный стеноз, тромбоциты 40, без факторов кровотечения: ДААТ ___.",
+  "ru": "",
+  "opts": [
+   "до 21 дня",
+   "до 90 дней",
+   "не назначают"
+  ],
+  "a": "до 21 дня",
+  "why": "EHA 2022, рек. 11b; при 50–⁠100 — до 90 дней."
+ },
+ {
+  "id": "c-icas60",
+  "t": 8,
+  "q": "Симптомный интра­краниальный стеноз, тромбоциты 60: ДААТ с клопидогрелом — до ___ дней.",
+  "ru": "",
+  "opts": [
+   "90",
+   "21",
+   "7"
+  ],
+  "a": "90",
+  "why": "EHA 2022, рек. 11a."
+ },
+ {
+  "id": "c-esc",
+  "t": 8,
+  "q": "ESC 2022: клопидогрел избегать при тромбоцитах меньше ___.",
+  "ru": "",
+  "opts": [
+   "30",
+   "50",
+   "10"
+  ],
+  "a": "30",
+  "why": "По обзору Gent, Dobson 2023; раздел ОКС и ЧКВ у онкобольных."
+ },
+ {
+  "id": "c-tic",
+  "t": 8,
+  "q": "Тромбоциты 60: ДААТ с тикагрелором по EHA 2022 ___.",
+  "ru": "",
+  "opts": [
+   "не рекомендована",
+   "предпочтительна"
+  ],
+  "a": "не рекомендована",
+  "why": "При < 75 — против тикагрелора и прасугрела; ESC 2022 — не при < 50."
+ },
+ {
+  "id": "c-iv",
+  "t": 8,
+  "q": "Внутривенные ингибиторы GP IIb/IIIa при ТЦП по EHA 2022 ___.",
+  "ru": "",
+  "opts": [
+   "не рекомендованы",
+   "допустимы при > 50"
+  ],
+  "a": "не рекомендованы",
+  "why": "При любой степени ТЦП."
+ },
+ {
+  "id": "c-mcc",
+  "t": 8,
+  "q": "McCarthy 2017, ОКС без ЧКВ, тромбоциты 50–⁠100: ___.",
+  "ru": "",
+  "opts": [
+   "клопидогрел в монотерапии",
+   "ДААТ 12 месяцев",
+   "тикагрелор"
+  ],
+  "a": "клопидогрел в монотерапии",
+  "why": "Меньше 50 — отменить все антиагреганты."
+ },
+ {
+  "id": "c-comb",
+  "t": 8,
+  "q": "Тромбоциты 40: антиагрегант вместе с антикоагулянтом по EHA 2022 ___.",
+  "ru": "",
+  "opts": [
+   "не сочетают",
+   "можно"
+  ],
+  "a": "не сочетают",
+  "why": "Рек. 13: при ТЦП 3–⁠4-й степени."
+ },
+ {
+  "id": "c-coh",
+  "t": 8,
+  "q": "Когорта из EHA 2022: ИИ и тромбоциты меньше 100 — внутричерепных кровоизлияний ___.",
+  "ru": "",
+  "opts": [
+   "14,3% против 1,5%",
+   "поровну",
+   "меньше"
+  ],
+  "a": "14,3% против 1,5%",
+  "why": "28 пациентов, ретроспективно — повод к осторожности."
+ },
+ {
+  "id": "c-riva",
+  "t": 8,
+  "q": "Ривароксабан 2,5 мг × 2 с АСК при ТЦП по EHA 2022 ___.",
+  "ru": "",
+  "opts": [
+   "не рекомендован",
+   "допустим при > 50"
+  ],
+  "a": "не рекомендован",
+  "why": "При любой степени; оставить АСК."
+ },
+ {
+  "id": "r-100",
+  "t": 9,
+  "q": "ТЛТ по инструкции алтеплазы противопоказана при тромбоцитах меньше ___.",
+  "ru": "",
+  "opts": [
+   "100 000/мкл",
+   "50 000/мкл",
+   "150 000/мкл"
+  ],
+  "a": "100 000/мкл",
+  "why": "Так же — AHA/ASA 2026, табл. 8."
+ },
+ {
+  "id": "r-wait",
+  "t": 9,
+  "q": "Нет подозрения на коагулопатию: тромбоциты перед ТЛТ ___.",
+  "ru": "",
+  "opts": [
+   "не ждут",
+   "ждут обязательно"
+  ],
+  "a": "не ждут",
+  "why": "КР по ИИ 2024; AHA/ASA 2026 — 2a."
+ },
+ {
+  "id": "r-stop",
+  "t": 9,
+  "q": "ТЛТ идёт, пришёл анализ: тромбоциты 70 — по EHA 2022 инфузию ___.",
+  "ru": "",
+  "opts": [
+   "прекратить",
+   "продолжить",
+   "ускорить"
+  ],
+  "a": "прекратить",
+  "why": "Рек. 15b: ТЦП у EHA — 100 и меньше."
+ },
+ {
+  "id": "r-cucc",
+  "t": 9,
+  "q": "Cucchiara 2007: неожиданно низкие тромбоциты (< 100) при инсульте — у ___ пациентов.",
+  "ru": "",
+  "opts": [
+   "0,3%",
+   "3%",
+   "13%"
+  ],
+  "a": "0,3%",
+  "why": "У всех снижение было лёгким."
+ },
+ {
+  "id": "r-trisp",
+  "t": 9,
+  "q": "TRISP: 44 пациента с тромбоцитами меньше 100 после ТЛТ — сВЧК ___.",
+  "ru": "",
+  "opts": [
+   "ОШ 1,56, незначимо",
+   "в 10 раз чаще",
+   "ни одного"
+  ],
+  "a": "ОШ 1,56, незначимо",
+  "why": "При < 150 — ОШ 1,73."
+ },
+ {
+  "id": "r-xu",
+  "t": 9,
+  "q": "Китайский регистр (44 882 ТЛТ): тромбоциты меньше 100 — сВЧК ___.",
+  "ru": "",
+  "opts": [
+   "ОШ 1,48",
+   "ОШ 0,5",
+   "без изменений"
+  ],
+  "a": "ОШ 1,48",
+  "why": "Авторы считают < 100 разумным противопоказанием."
+ },
+ {
+  "id": "r-evt60",
+  "t": 9,
+  "q": "Тромбоциты 60, окклюзия крупной артерии: тромбэктомия по EHA 2022 ___.",
+  "ru": "",
+  "opts": [
+   "рассматривается как обычно",
+   "противопоказана"
+  ],
+  "a": "рассматривается как обычно",
+  "why": "Рек. 15c."
+ },
+ {
+  "id": "r-evt20",
+  "t": 9,
+  "q": "Тромбоциты 20, окклюзия крупной артерии: тромбэктомия по EHA 2022 — ___.",
+  "ru": "",
+  "opts": [
+   "по каждому случаю",
+   "всегда",
+   "никогда"
+  ],
+  "a": "по каждому случаю",
+  "why": "С трансфузией тромбоцитов или без."
+ },
+ {
+  "id": "r-tor",
+  "t": 9,
+  "q": "Мета‑анализ Toruno 2024: ТЭ при ТЦП — летальность ___.",
+  "ru": "",
+  "opts": [
+   "выше: ОШ 1,76",
+   "ниже",
+   "та же"
+  ],
+  "a": "выше: ОШ 1,76",
+  "why": "сВЧК не чаще: ОШ 1,20."
+ },
+ {
+  "id": "h-what",
+  "t": 10,
+  "q": "ГИТ опасна прежде всего ___.",
+  "ru": "",
+  "opts": [
+   "тромбозами",
+   "кровотечениями"
+  ],
+  "a": "тромбозами",
+  "why": "Поэтому нужен негепариновый антикоагулянт."
+ },
+ {
+  "id": "h-4ts",
+  "t": 10,
+  "q": "Вероятность ГИТ ASH 2018 советует оценивать по ___.",
+  "ru": "",
+  "opts": [
+   "шкале 4Ts",
+   "D-димеру",
+   "объёму тромбоцитов"
+  ],
+  "a": "шкале 4Ts",
+  "why": "А не «на глаз»."
+ },
+ {
+  "id": "h-low",
+  "t": 10,
+  "q": "4Ts 0–⁠3: лабораторные тесты на ГИТ ___.",
+  "ru": "",
+  "opts": [
+   "не нужны",
+   "обязательны"
+  ],
+  "a": "не нужны",
+  "why": "Низкая вероятность; гепарин продолжают, если он показан."
+ },
+ {
+  "id": "h-int",
+  "t": 10,
+  "q": "4Ts 4 и больше: ___.",
+  "ru": "",
+  "opts": [
+   "отменить гепарин, начать негепариновый антикоагулянт",
+   "снизить дозу НМГ",
+   "перелить тромбоциты"
+  ],
+  "a": "отменить гепарин, начать негепариновый антикоагулянт",
+  "why": "И иммуноанализ на антитела."
+ },
+ {
+  "id": "h-time",
+  "t": 10,
+  "q": "Типичное время падения тромбоцитов при ГИТ — ___ день гепарина.",
+  "ru": "",
+  "opts": [
+   "5–⁠14-й",
+   "1-й",
+   "30-й"
+  ],
+  "a": "5–⁠14-й",
+  "why": "Раньше — если гепарин был в последние 30 дней."
+ },
+ {
+  "id": "h-fall",
+  "t": 10,
+  "q": "4Ts: 2 балла за тромбо­цитопению — падение ___ и надир ≥ 20.",
+  "ru": "",
+  "opts": [
+   "> 50%",
+   "> 10%",
+   "> 90%"
+  ],
+  "a": "> 50%",
+  "why": "30–⁠50% или надир 10–⁠19 — 1 балл."
+ },
+ {
+  "id": "h-warf",
+  "t": 10,
+  "q": "Варфарин при ГИТ начинают ___.",
+  "ru": "",
+  "opts": [
+   "после восстановления тромбоцитов",
+   "сразу",
+   "вместо отмены гепарина"
+  ],
+  "a": "после восстановления тромбоцитов",
+  "why": "Обычно до 150 и больше."
+ },
+ {
+  "id": "h-trans",
+  "t": 10,
+  "q": "Рутинная трансфузия тромбоцитов при ГИТ ___.",
+  "ru": "",
+  "opts": [
+   "не нужна",
+   "обязательна"
+  ],
+  "a": "не нужна",
+  "why": "Только при кровотечении или высоком риске кровотечения."
+ },
+ {
+  "id": "h-dur",
+  "t": 10,
+  "q": "ГИТ без тромбоза: антикоагулянт — до восстановления тромбоцитов, но не больше ___.",
+  "ru": "",
+  "opts": [
+   "3 месяцев",
+   "2 недель",
+   "года"
+  ],
+  "a": "3 месяцев",
+  "why": "С тромбозом — обычно 3–⁠6 месяцев."
+ },
+ {
+  "id": "h-apix",
+  "t": 10,
+  "q": "ГИТ с тромбозом: апиксабан по таблице ASH — ___.",
+  "ru": "",
+  "opts": [
+   "10 мг × 2 неделю, затем 5 мг × 2",
+   "2,5 мг × 2",
+   "5 мг × 1"
+  ],
+  "a": "10 мг × 2 неделю, затем 5 мг × 2",
+  "why": "Дозы экстраполированы с лечения ВТЭ."
+ },
+ {
+  "id": "h-us",
+  "t": 10,
+  "q": "ГИТ без явного тромбоза: ASH предлагает ___.",
+  "ru": "",
+  "opts": [
+   "УЗИ вен обеих ног",
+   "КТ-ангиографию лёгких",
+   "ничего"
+  ],
+  "a": "УЗИ вен обеих ног",
+  "why": "Поиск бессимптомного проксимального ТГВ."
+ },
+ {
+  "id": "s-itp25",
+  "t": 11,
+  "q": "ИТП, тромбоциты 25, недавний ОКС: антитромботики по Rahhal 2024 — ___.",
+  "ru": "",
+  "opts": [
+   "пауза после консилиума",
+   "ДААТ",
+   "один антиагрегант"
+  ],
+  "a": "пауза после консилиума",
+  "why": "Меньше 30 — пауза."
+ },
+ {
+  "id": "s-itp40",
+  "t": 11,
+  "q": "ИТП и ОКС, тромбоциты 40: по Rahhal 2024 — ___.",
+  "ru": "",
+  "opts": [
+   "один антиагрегант",
+   "ДААТ",
+   "ничего"
+  ],
+  "a": "один антиагрегант",
+  "why": "Больше 50 — ДААТ и антикоагулянт по показаниям."
+ },
+ {
+  "id": "s-itpac",
+  "t": 11,
+  "q": "Опрос гематологов (Alesci 2025): антикоагуляция при ИТП безопасна при тромбоцитах больше ___.",
+  "ru": "",
+  "opts": [
+   "50",
+   "20",
+   "100"
+  ],
+  "a": "50",
+  "why": "Так считало большинство из 210 гематологов."
+ },
+ {
+  "id": "s-itpthr",
+  "t": 11,
+  "q": "Риск тромбозов при ИТП по сравнению с общей популяцией ___.",
+  "ru": "",
+  "opts": [
+   "выше",
+   "ниже"
+  ],
+  "a": "выше",
+  "why": "Обзор Garabet, Ghanima 2026."
+ },
+ {
+  "id": "s-cao",
+  "t": 11,
+  "q": "ИИ при ИТП (Cao 2026, 113 пациентов): медиана тромбоцитов — ___.",
+  "ru": "",
+  "opts": [
+   "44",
+   "150",
+   "10"
+  ],
+  "a": "44",
+  "why": "Антиагреганты получили 32%, геморраги­ческая трансформация — 4,4%."
+ },
+ {
+  "id": "s-aabb",
+  "t": 11,
+  "q": "AABB 2025: профилакти­ческая трансфузия при гипопролиферативной ТЦП — при меньше ___.",
+  "ru": "",
+  "opts": [
+   "10",
+   "50",
+   "100"
+  ],
+  "a": "10",
+  "why": "Сильная рекомендация."
+ },
+ {
+  "id": "s-patch",
+  "t": 11,
+  "q": "PATCH: трансфузия тромбоцитов при ВЧК на антиагрегантах — ___.",
+  "ru": "",
+  "opts": [
+   "хуже исход (ОШ 2,05)",
+   "лучше исход",
+   "без разницы"
+  ],
+  "a": "хуже исход (ОШ 2,05)",
+  "why": "Смерть или зависимость через 3 месяца."
+ },
+ {
+  "id": "s-ich",
+  "t": 11,
+  "q": "ВЧК без операции, тромбоциты 180, принимал АСК: трансфузия по AABB 2025 ___.",
+  "ru": "",
+  "opts": [
+   "не рекомендована",
+   "показана"
+  ],
+  "a": "не рекомендована",
+  "why": "При тромбоцитах больше 100."
+ },
+ {
+  "id": "s-lp",
+  "t": 11,
+  "q": "AABB 2025: люмбальная пункция — трансфузия при тромбоцитах меньше ___.",
+  "ru": "",
+  "opts": [
+   "20",
+   "50",
+   "100"
+  ],
+  "a": "20",
+  "why": "Спинальные гематомы — крайне редки."
+ },
+ {
+  "id": "s-valve",
+  "t": 11,
+  "q": "Механический клапан, стабильные тромбоциты 40–⁠50: EHA 2022 предлагает ___.",
+  "ru": "",
+  "opts": [
+   "варфарин с МНО 2,0",
+   "ПОАК",
+   "ничего"
+  ],
+  "a": "варфарин с МНО 2,0",
+  "why": "25–⁠40 — НМГ 50% лечебной дозы."
+ },
+ {
+  "id": "e-wait",
+  "t": 12,
+  "q": "Ждать тромбоциты перед ТЛТ у пациента без анамнеза ТЦП и подозрения на коагулопатию — ___.",
+  "ru": "",
+  "opts": [
+   "ошибка",
+   "правильно"
+  ],
+  "a": "ошибка",
+  "why": "КР по ИИ 2024, AHA/ASA 2026."
+ },
+ {
+  "id": "e-70",
+  "t": 12,
+  "q": "Тромбоциты 70, после ИИ отменили АСК «на всякий случай» — ___.",
+  "ru": "",
+  "opts": [
+   "ошибка",
+   "правильно"
+  ],
+  "a": "ошибка",
+  "why": "При 50–⁠100 АСК продолжают (EHA 2022)."
+ },
+ {
+  "id": "e-poac",
+  "t": 12,
+  "q": "ФП, тромбоциты упали до 30, ПОАК в полной дозе продолжают — ___.",
+  "ru": "",
+  "opts": [
+   "ошибка",
+   "правильно"
+  ],
+  "a": "ошибка",
+  "why": "EHA 2022: при 25–⁠50 — против ПОАК."
+ },
+ {
+  "id": "e-hit",
+  "t": 12,
+  "q": "Тромбоциты упали вдвое на 8-й день НМГ, НМГ продолжают — ___.",
+  "ru": "",
+  "opts": [
+   "ошибка: сначала 4Ts",
+   "правильно"
+  ],
+  "a": "ошибка: сначала 4Ts",
+  "why": "Подозрение на ГИТ."
+ },
+ {
+  "id": "e-dapt",
+  "t": 12,
+  "q": "Малый ИИ, тромбоциты 30, стеноза нет: ДААТ 21 день — ___.",
+  "ru": "",
+  "opts": [
+   "ошибка",
+   "правильно"
+  ],
+  "a": "ошибка",
+  "why": "EHA 2022: только АСК."
+ },
+ {
+  "id": "e-tic",
+  "t": 12,
+  "q": "Тромбоциты 45: ДААТ с тикагрелором — ___.",
+  "ru": "",
+  "opts": [
+   "ошибка",
+   "правильно"
+  ],
+  "a": "ошибка",
+  "why": "EHA 2022, ESC 2022."
+ },
+ {
+  "id": "e-noprop",
+  "t": 12,
+  "q": "Тромбоциты 40 — значит, никакой профилактики ТГВ: ___.",
+  "ru": "",
+  "opts": [
+   "неверно: пневмо­компрессия",
+   "верно"
+  ],
+  "a": "неверно: пневмо­компрессия",
+  "why": "КР по ИИ 2024; при стабильных 25–⁠50 — и профилакти­ческая доза НМГ (EHA)."
+ },
+ {
+  "id": "e-hittr",
+  "t": 12,
+  "q": "ГИТ, тромбоциты 40, кровотечения нет — перелили тромбоциты «для безопасности»: ___.",
+  "ru": "",
+  "opts": [
+   "ошибка",
+   "правильно"
+  ],
+  "a": "ошибка",
+  "why": "ASH 2018: рутинно не переливают."
+ },
+ {
+  "id": "e-pseudo",
+  "t": 12,
+  "q": "Тромбоциты 30 без кровоточивости — сразу отменили всё, не пересчитав: ___.",
+  "ru": "",
+  "opts": [
+   "ошибка",
+   "правильно"
+  ],
+  "a": "ошибка",
+  "why": "Сначала мазок и повторный анализ."
+ }
+];
+
+const NEW_PER_SESSION = 10;
+const MIXED_SIZE = 15;
+const INTERVALS = [1, 3, 7, 16];            // дни
+const DAY = 86400000;
+const LS_STATE = "thrombo:state";
+const LS_TAB = "thrombo:tab";
+const LS_OPEN = "thrombo:open";
+const TOPIC_BY = {};
+TOPICS.forEach(t => { TOPIC_BY[t.n] = t; });
+
+let progress = {};
+let queue = [];
+let index = 0;
+let answered = false;
+let autoSpeak = false;   // озвучки в этом приложении нет
+let mode = "main";          // main | topic | mixed
+let topicN = null;
+let lapsed = {};
+let seen = new Set();
+let stats = { first: 0, correct: 0 };
+let shownOpts = [];
+let cloudDoc = null;
+let writing = false, dirty = false, retried = false, pushTimer = null;
+
+const $ = id => document.getElementById(id);
+function el(tag, cls, text){
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+}
+try{ document.documentElement.lang = "ru"; }catch(e){}
+
+// Мета-теги для установки на домашний экран
+(function addMobileMeta(){
+  const metas = [
+    ["apple-mobile-web-app-capable", "yes"],
+    ["mobile-web-app-capable", "yes"],
+    ["apple-mobile-web-app-status-bar-style", "black-translucent"],
+    ["apple-mobile-web-app-title", "Тромбоциты"],
+    ["theme-color", "#0e1113"]
+  ];
+  for (const [name, content] of metas){
+    if (document.querySelector('meta[name="' + name + '"]')) continue;
+    const m = document.createElement("meta");
+    m.setAttribute("name", name);
+    m.setAttribute("content", content);
+    document.head.appendChild(m);
+  }
+  // Плитка для экрана «Домой» и значок вкладки
+  const links = [
+    ["apple-touch-icon", "180x180", "data:image/png;base64,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"],
+    ["icon", "192x192", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAMAAABlApw1AAABgFBMVEX6+fjv7+3i4uCbxNTVlH7mfVqMp7J+jZTjfFrdeVjWdlbHdVq8ak+aWkZ5VkxpRDlHVFk6Q0hLNzItNjsyMTMoMDUkMTczLCspLDAnLjImLTElLDEkKy8jKi4jJikhKCwfJiofJSkgJCceJCggIyYeIyYeIiYeIiUdJCgdIycdIyYdIiYcIiccIiYcIiUbIiYdISYcISYcISUcISQbISYbISUbISQaISUbICQaICUaICQaICMaHyMZICQZHyQZHyMZHyIZHiEXHyQXHiIXHSAWGx8THSMQHCIOGyINGyEVGRwTGBwTFxoSFxoSFhkRFhgRFRgQFhkQFBcPExUPEhULFhwOEhQOERQOERMOERINERMOEBINEBMNEBINEBENDxEMEBIMDxIMDxEMDxAJEBQPDg8MDhAMDg8LDhALDg8LDQ8LDQ4KDg8KDQ8KDQ4KDQ0HDhILDA4KDA4KDA0KCw0JDA0JCw0JCwwICwwJCgwICgwICgsICQsHCQoGCAkEBgfNsL0OAAAUyklEQVR42u2di1caybaHUZb4CG9WHw4KAsF4bEnjvZy0Gh4X0W5Q3oIPYoImjYc0eOHOwQGMBPOv313VDYLJTMApmDNrsbMSHkH4fbV37aralF2K/F/cFFOAKcAUYAowBZgCTAGmAFOAKcAUYAowBZgCTAGmAM+yQqHwnw9QGNL+XIACEZsEQGG8NlaAJ58l9OzPQ1A8V73wY/t9aR8+XFxcdN/v4kJ68hL92If8MwkUz5Iv/I59+vSx+zJQK4m8vBKEYqlULlcqN7W6ZLWbSqVcuiq8y5/kcu/KNfHiWQSKZ7X+p49Y5EdJsnRTEkUQWK2BwEajia3RqNdApFBAGjOpRDzG8+GA37vpcjrsNpt1ZXnZYqGQWVaciYqYfwaBYlT9+YKIRDaQyNvy5WWxXLu9qXwuXr4HldkMFsn1i1yxyCIls1iWV1asVpvNbrc7nK4NmmZYln3tWKFWUvVn+EAxmv4LsVbKJWIxngv7/S4rVrQMLTmgURZpQyIdIBI0gkifzxcI9VnA70O2y2Lz7YVsJm9tdALFKPrzpZu4w9Kv0W7HGp0b9GtJo79fZCCANfrYoSzEUvb61RgAHvXXsiuU1cUGvmtGn2+bJWB7lKPxfkQCxfD639c5ky0U8rHjs5CJa16ORjA8wPtbv4kJsWM1H00VKt3hhBBAzwHQ/js+dswWsmzedUdEwgDlrOn12PWzuxtUUSzKCEQAZPmXhbrVFmLHbyEqdV8SRiAYFqCaoALsJABWnGfC/4mfho6i4QAuCw2H9YkD3mzBPwzDwDCFB1NCALaV8Cb3rib3ZFIAV0LZ4ur2AJoNbG2wAV8YnuBiPAzLCW6LHID9Q2LPEasPm4oUQzlAKJ9Q8ids7cYCtnBqy76x4vCxfzOYDAaD3hQm5YOA3XaWysYde3V5ak4E4EqoZSjJAVucXjVvmNfH9Mp5R9iuMuiVKod+PrNBCMBvt56lU6m0yz8kwZAA9QTll+InZlCq/mVQ6k3K+YRvRf8vuE0xhjCpGPLZVwAgmUg7+MYlMQBBqKdkD7zmQTHvUKkMcMMw3rBJqQqw4TfExmLH8lkmnUzG4/aTyjBTimEAYM1Xz8oADAeKY4xyHjg4Bh7+TanysVvkJhNOywkGSO15GgQBarkeACje0KtMcANxQ4fh9vUuwdmQy5KTPJB05ERCAFdCsdbNQgxSbDDYUyh03rD+8Arw+N4QBciiThBPb/H1IVwwLEBeBthCisOx3T3kgbDPwDlVKiZALoR2aUsWAYAHOE/tihhAtUBJmX4rYFcqrT4UOsqVN/r5E5NSSS4HoSxBZSUPJGIbJeGSEECpIsgA0Inn5w1hmoOxAEYwAwd/TQT1swyVkQDiMZdQvCIGULbQ3ZlELAb9+U04leC4BM+gqQTJ2dwWlXoKUCAAUK5YaDnXbL/GKFsbNEzkXrMMTXAqh4xKZjNyCJWLAjGA2rJr/MsZCSCRwx5I8p5hZhNDAoi3y87JAPiomAwQ9jeFn/fiYQGaK5MGSAW5FjmAUsvqmDBAmuXJARRLLZt9MgABij+RAOhEkyDAvd0+kTUxrOq5MymEXNkGoU58CQDtyQGEJYCkM18nB1BsOyZSVUEAAQkg7hRqQ6yLhwZwTgrAsnuOAWKuakW4Igfgsk4KwHueTicTCX6zUSYJsLkyIYCVzQsEkOS270WSANsTA3BJAHt7ZAH8EwNwYoDUDt8mtR7AAGHLhACsDgyQZmL3RAG4SQHY7JIHNlJ3IkGAe36CABkE4Mw1RYHMmriAAGLUZAACNhsCSCachYYokCmrFASh2EpMCsBuxQBxl1gXr/6CAD67NY8AYnS9StQDmcl8Q8P6HCuoOJrmPc0KMQ/AfLrZLY6OHwBXd9Oc/75MFCA3KQCpupve44gA9NaUjRNqdzIAuDiazGzH7kWiAO+pZ9XZRq4Z+TYoDMAkAOCSIMAlNZxgZJtyFc/FcAe0azSAbRoVR5MZOtskC1CihmlMX+jggOP5uA/DZOOU5fh4RC+g6m4mld7IN0Txj3/F1AOoly0/13HgddqtFpPJYHD4WCYU16rmVUp97GBz1OpuJpXcEOpEAWoVC/2jPUH9hVFGNSvbjCHuCjEqxfwxr1KoHAcj+QBXd+N0pUYWoG7Z+D6PMq5jviuOCdlnFTOyGeLOuEqhjNO8ZVahio8GkMil0zFPoyKWCAJUmz+o7jq5X/SGLgETss4qwDCAno/rFQrVsYvmlTMK/fEIPdlHxXPpDO9vlUkCiNXWd8VRmrm2qJSPAOgLWK0emcFgZ5KqGcV8zuXKqhQzSo4ZBSAGAFz4nihAuXL/pDgK0ROfV87H+W4PZXiD6jp7fJyMg/k4alYCOJtXoC5BjwaQ3eNhGCAK0B4sjjq5a71SZblm3D2iuEEVsrMc53M6aFdSPzMreQAAFNrs8DHkp3gA2IkDQJEUwOVTABdzTUGCvOacjx/sBoBfsnaTaTl5zDizeoUMIN8ZoTTHn6WzW5kWWYByp684Sh/zKHqOnf2hTR/rVQbosTOzSn3cdayVAY4RgOp4FADuLJ1hYEEpCh+JAvRqiyBVOW+9pgfjmk7qZ5Wq+XmUiua5LgC8FmJJlaRHAAgDwGahThqgV92FsJ41fWMd332yXe+7zv1imEXR/9AFSI4MYPGfZVKMWCtjgDwxAFcXgOH1KpU+F3c9FRVKvnW57L+gtDMrNXy2CzBKCFm2zzNxLywoS8InkgCbveruZpKHDGS4forAoId0XI9GMpNpZgZ00+ghuOJsFADPeTbmhwUlQYBiWex4H2uLNJOLf4/wPz5GGg6kuQSMA8q4W/KAfoQ0GlrevMjy4TsYx4bZuDgcgAgAA8VRF0JQIQT6sZyA5xowIM8iAIikmVnGB1loZmbWxA8/FKPqbpbD4xg5gBIABJYH6ipdhGOml5rmszAsbMaQB2Zd6GbWxDkhHY3UBXBxNLuHFpRFggCi2PmuOAoIaOtfTCKg44YZw7GDceDEP5+1wxA8o8/ZUJ8exQESgD91RxKgUBLLnR8UR2FA9hl83WHAoFBy1/zxLyoYB2ACzcTnFcpAzjQzaxghiUrF0ew2HseIeqAd+1F118XGuymIMykVs3qDXqWY1cZZAGBhvIMl2TwVH2lZHLLZLrLsuwZ5gB/XFnvBwXCcYR6Z3nUsrdPo46TJYL/mXo1YHLVdZNhiXQLIE8pCYrn90+Iow8Svr49z18e+bou7aC4Wco1YWfHbrRep7VqNOEDm59Vd2oVsYJk8+l4in33lIiGNY+QAoBPfZeW9u3/QPB6317OOzYtn4W631xsMDlR3L2LhL0QBBABoDV8c9biReSWVaMHjdXu83p39HbgXjBxE9yOH0cPDw6MgIohEI/v7a6s7/cXRC57/WiYOcNIH4PUgkZ7eWgZ0ur29/9yPREBW8Ag0Hh5F0RNIpHfVveMNrhrN8Edn1Ol0WvP+P/aNGo1GrdYY9z0DALE2eYD3VK8utB/ZP0AaZc3Bw8NoNBqUH3mDZrMRzKxDptWu7q9p1SBSrVsHALNmUbNqVs8tzM3pdrysO6KbW1ic0x2t91d3z7kUABTJAjSFXnE0uGo2Y5FYs3ffrEFmjsjLY0a9sLjwwriunQN7YX7rCYLgxTnNEbzafWhWR4NHxsWlpSVzxMN6Ima4t2iMuB8BaOosnAMAgSxAo0S96YaIWQOfuqA278uNblyEFtUc4lZ0R4wLS0tzmlPPkWZxaUFz5GbXj3RzS4saFCXuQ5326GVEBnCznn3z0iIARN19uYzK7eW/EPdAo9Irjrqjq/Cpc7rTrt+P1KB56e+YZ/1Qu4QAoi+jSPaL1X1IMqsvQCUSvH6k1R2tRcwAgB9799FbLQwAMFQ2IDRJeSAvA1Qatd7WVy/7Ug2fqov2AlfzAgFhF+y81GgWEMAablzQts56D4AQB7p3H0Jt/UBqdgSA2fCL+gBSe9VfiQPUm72tr963a+qeYPyEVruwtKj2Yu8YtdDyC5qo2x3BJIfrXglFDb6A6Av2x40E0PdWuDgaDzfr5RJZgHL9bvmxuusdAPDua43dxoYYMWKAiHv9EMWQen3n1ZFOo8YxtHao0xx1gYwR8EjwSVtggBh/JwPkiQAI2APtvq2vwW5ISH0iolnVSKIhhDSrMoBbbmiQrTFq59APvERdAACkuDl6G/S+Wv0OYJfiYu3aGACsPQDvPgLQ9gCiGrNR6pavokbNKQKAeGGlGNIesqvqVUhNC+og7gIeuVNrtNhwCPWNA6yPCiTGAdCx9aq7HllZD0BrPMJIh6iJJYAgSkjSPYCKvkIxZDw0a96ioU5KAmurq2vr+wPOxAAWT6ZdLRdJAhTFSq3zWBztdU/pIWRO46mUM4NBjRnfVXt3WCnWl8ynGt1hFMWQ9hR1AQizdRw3R2zwLXsw4EwJwHUyDoCHx+IoxMwAAHTcIymbnBo1+zj/q1+97caQ7lBtjBxA6l9U4y6Acm0v8N2DzsQrGotDuBs7wBxK9X0AEdTEC+ojne4wokM59SXMM3AMzWnMapQ6oaUXzagLDCSBJ86UKlv2m1a1LBAHeNw5un4oAUjDpwemCsaonBo15v0odFgUTV4phhbVGogbqT9oNOt9SQB7YLAtZIAvTcIAAgJwDQJIWROp+W9o96M1pATE7r+SAdDEArcvHrKkwWtBipW+JNBti0GAzm21MuSvRI8CYH0E0GIAFA1MxAjdFgHgSRy+A+G+ZEZzN2ksw97ALPL0Q44bdH89itsi+qofwPFwK3mgUCAGUK09OJ4AqPHkzXOgwQDrENgo5RysRx4BUAzhaQVmAUD8LOs+RTCaU/T0qQan2qC3D8D1UK9+Jg1Qf7D3iqN4fozGJY9nLWJc+jvquijKFxbVBx43nuIvmXEPgbZeXMDpBo1ec2pp7fvWvATz70XjDkxUjS+Wll680Kw+EoSWPQ81kh5A71SuwkA2CLCojiA71Sytnuq0p3iCgDILXmQtzGnXJF/p5hblZo9qFrVRCUWnxcu1tbesxwhro9VV88u3fdXd7Ycb8gC399YewH9B4C7CYgstyyCYYIn4wghJM6p9ARF0gJa5Gi0sc72SWKP8Uzvrq12NUVgvwzoUreQjsFwOBvff9pen/zkOgF8bjwBBnRqLxM0IAtESGDXyjjuIwyYahfW8tFzzBg+jXWU7wb4qgFywYD0ejxdsoLq7CQCfSQO0RNtjfX3tAImElfzh0REIhPV9RJLolQaGXtUHCNYfF1veIYujLgAokQWoVL+8tz9Wd9963biU4pYa0tNXYiGxd9cJACJpgHbOaZnU3l2HDFAgCpDatExm52jAboc0SgwgL8gAcb/FPxEAv932UKuQBqi1+PDEtr7aOqQBiuVag+cnBmDt1CvSN2TEACr1ajg2sb27K22CAAXJAw0hnKDYyQC4llv1MmEPlJv5cGZSABuWBmmAUvkuF85SbyZDQFtuMUCBXAiVyvcpLkcxkwFgLDe3hAHEcjvG56jXEwKgyk3yAHzshKInswOfpQTyAPdc/OxHe3fHA1AgD9DcS55ZJnZdgDzatksQoChW6v702eSuzJBriYQBaqXtzPnyxC5skCUOUC9sZ89XJgTgHwPA7cl2Nm+1+ycZQgWyALvZC9uELmzAUpeNsrTvmBBASay/ZwFgMtcF8DmXWxWyANCJb7ZTH+yTAQhZXQ9l0gDldjj2cXM5NJk+nGtXRMIAYjsVKPAT+YXWkA0viUWhQHQkrje20zmK3h5/D6BNV+1adyAmBiBWvma2Rcf4Y8jnMyUe6iQBpAUN+pqV53MmesxDWYgxhb/92rgRxSIxALkX15t3e8mwaZwu8IVCNpOj/rVRr0j7pskBgAv+3WjDlNpB7ZGQuo2vFu4fvBY7u2GjVjLxUudxRUziOzK5LIG6cbuTiK1QviGdsItFBgZE+vGF2BmG3kDXxrfbbfjy+L1r+Ntj4gXXuLu9Gd4Bw1x7Xei6oNl+KGdsJps/7Ov2uO9bMoA1bjE0DRolkX0aHy+Pv4wuj48u4L/p9QfCPB9LZApV4SzDf/211i0KkQQQoBs3Wl8eHh5OwNF2uquxT+TTcwYskkYQSXu2A2GOj8USqUw2d4ILxuL/VqvVWr1Rr9dq1SrK+x/PT3J5PtGpVSvF4a9ePszV7wUpiG7qjS/37c63b+/+abXIV/C3ItkWi9XmcHn8qB3jiZQs8iMk3zLSiFSCxmq1LOLtxPh3k6SzOM7Pz8/O0F9sJ7lcbrt4V6t8FogCyC4oVqq1Ruu+/fXrt2/fOq1mu/PwAPe+PXTuasV3uWwGLJvNnV0g5UgpqASJZ5LCc1nruXzviZ2cIPXZM57vwCAgEAaQzwwpfq7Wbn+9u2t/Rdr7DFE8PHS+1Evvcxl0PAQvR8vZ+cWHwgdoa0li13I/sCyyXGKz1vq3tFNIGPL698MdYSFfDP0zRMSvzbv7NjC0O4PWRQGWdkMsIBKe5zjMkoaYwg3dk/oDA/8lXXlpFjG8/mHP4OgSQBihQ05arS9f7u/bQNK1Tu+OBIOd0m6UL3PpRIwL7wX2UC+Oo/7Rpcj0WzqdycYcWejBUj8hC/BIgI6SuakjhoZ8VkurdXfXaiEi2dp9Jjvmod2sgE/i6AyX7W3fXhjckgTFEkY6lUrBg+SuK48ykFgie/5A336D7nEzYvnm5ubf9Z7dytbomkR2J5EBG+r5GKTztXVzeZKO8WH/NsMwrB+7JZlOxvktB3/bruN59AinD4xykE6XoIgQEAWySrlSqfasVqs9hcLWfCRrtb8it3Q6rXoxn0nwnN9Db2y4NrZj5U4Tsq3cA4R8nixAfuAAo2IJTOwaevAZW7nfKshkrC5X49FJkJBxgHWgowhio9O5q6Njg7oBRBwg//NDmLox1g83BAlCuW/CiFyvVnoZKE8eID/USVKPVhwk+S2WBgSbxITnE6UR8s+oAN+fpCYMiVIs/qZXal2D1u+twsYG8JuHwT2TpMuDehGavl2N9Tyy30f4fZJPyPpednl5eYXt8SVXV5djPxHuJxQjcA6yIHv+oXzjP9ZxzMciTvBgzf+YYx3Hh/Kc9/pzjzb9g+L/fAACNgWYAkwBpgBTgCnAFGAKMAX4C9v/A5Tw9ReUGEMtAAAAAElFTkSuQmCC"]
+  ];
+  for (const [rel, sizes, href] of links){
+    if (document.querySelector('link[rel="' + rel + '"]')) continue;
+    const l = document.createElement("link");
+    l.setAttribute("rel", rel);
+    l.setAttribute("sizes", sizes);
+    l.setAttribute("type", "image/png");
+    l.setAttribute("href", href);
+    document.head.appendChild(l);
+  }
+})();
+
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
+function loadLocal(){
+  try{
+    const raw = lsGet(LS_STATE);
+    const s = raw ? JSON.parse(raw) : null;
+    return (s && s.progress && typeof s.progress === "object") ? s.progress : {};
+  }catch(e){ return {}; }
+}
+function saveLocal(){ lsSet(LS_STATE, JSON.stringify({ progress: progress })); }
+function mergeProgress(a, b){
+  const out = {};
+  const keys = new Set(Object.keys(a || {}).concat(Object.keys(b || {})));
+  keys.forEach(k => {
+    const x = (a || {})[k], y = (b || {})[k];
+    if (!x){ if (y) out[k] = y; return; }
+    if (!y){ out[k] = x; return; }
+    out[k] = (y.ts || 0) > (x.ts || 0) ? y : x;
+  });
+  return out;
+}
+function dayStart(ts){ const d = new Date(ts); d.setHours(0, 0, 0, 0); return d.getTime(); }
+function shuffle(arr){
+  for (let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+  return arr;
+}
+function plural(n, one, few, many){
+  const a = n % 10, b = n % 100;
+  if (a === 1 && b !== 11) return one;
+  if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return few;
+  return many;
+}
+function unseenCount(){ return CARDS.filter(c => !progress[c.id]).length; }
+function topicLabel(n){ return n === MIXED_TOPIC ? "Всё вместе" : "Тема " + n + " · " + TOPIC_BY[n].title; }
+function label(a){ return a === "" ? "ничего" : a; }
+
+// ——— Предложение с пропуском
+function isStart(q, i){ const b = q.slice(0, i).trimEnd(); return b === "" || /[.!?]$/.test(b); }
+function cap(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+function split(card, word){
+  const i = card.q.indexOf("___");
+  const start = isStart(card.q, i);
+  const pre = card.q.slice(0, i);
+  let post = card.q.slice(i + 3);
+  if (word) return { pre: pre, word: start ? cap(word) : word, post: post };
+  post = post.replace(/^\s+/, "");                  // ответ «ничего»: слово после пропуска встаёт на его место
+  return { pre: pre, word: "", post: start ? cap(post) : post };
+}
+function fullText(card){ const p = split(card, card.a); return p.pre + p.word + p.post; }
+function exText(en){ return en.replace(/\|\w\]/g, "]").replace(/[\[\]]/g, ""); }
+function richText(s){
+  const f = document.createDocumentFragment();
+  String(s).replace(/ → /g, "\u00a0→\u00a0").split(/(-[a-z]+)/).forEach(part => { if (/^-[a-z]+$/.test(part)) f.append(el("span", "nw", part)); else if (part) f.append(part); });
+  return f;
+}
+// [текст|x] — форма в фокусе: без метки used to — оранжевый, |b be used to — зелёный, |g get used to — синий, |w would и |p пассив — подчёркнуты
+const MARK_CLS = { b: "good", g: "st", w: "hl", p: "hl" };
+function modalCls(t){ const i = t.lastIndexOf("|"); return i > 0 ? (MARK_CLS[t.slice(i + 1)] || "pr") : "pr"; }
+function markText(t){ const i = t.lastIndexOf("|"); return i > 0 ? t.slice(0, i) : t; }
+function marked(s){
+  const f = document.createDocumentFragment();
+  const re = /\[([^\]]+)\]/g;
+  let last = 0, m;
+  while ((m = re.exec(s))){
+    if (m.index > last) f.append(richText(s.slice(last, m.index)));
+    f.append(el("span", modalCls(m[1]), markText(m[1])));
+    last = re.lastIndex;
+  }
+  if (last < s.length) f.append(richText(s.slice(last)));
+  return f;
+}
+
+// ——— Синхронизация прогресса между устройствами (личная, у каждого зрителя своя)
+function schedulePush(){
+  if (!cloudDoc) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(pushCloud, 700);
+}
+async function pushCloud(){
+  if (!cloudDoc) return;
+  if (writing){ dirty = true; return; }
+  writing = true; dirty = false;
+  try{
+    await cloudDoc.set({ progress: progress, v: 1 });
+    retried = false;
+  }catch(e){
+    const c = e && e.code;
+    if (c === "unavailable" && !retried){ retried = true; setTimeout(pushCloud, 1200 + Math.random() * 1200); }
+    else if (c !== "unavailable" && c !== "resource_exhausted") cloudDoc = null;
+  }
+  writing = false;
+  if (dirty) pushCloud();
+}
+async function connectCloud(){
+  try{
+    if (!window.claude || typeof window.claude.use !== "function") return;
+    const [db, user] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+    if (!db || !user) return;
+    const uid = await user.id();
+    if (!uid) return;
+    let ref;
+    try{ ref = db.doc("data/users/" + uid + "/progress"); }catch(e){ return; }
+    const snap = await ref.get();
+    const body = snap.exists ? (snap.data() || {}) : {};
+    const remote = (body.progress && typeof body.progress === "object") ? body.progress : {};
+    const before = JSON.stringify(progress);
+    progress = mergeProgress(progress, remote);
+    saveLocal();
+    cloudDoc = ref;
+    if (JSON.stringify(progress) !== JSON.stringify(remote)) schedulePush();
+    if (JSON.stringify(progress) !== before){
+      renderTopics();
+      if (mode === "main" && stats.first === 0 && !answered){ buildMain(); render(); }
+    }
+  }catch(e){ /* офлайн-режим */ }
+}
+
+function stopAudio(){}   // озвучки в этом приложении нет
+
+// ——— Очередь
+// Новые карточки идут вперемешку по темам: уровни, КР, НМГ, ПОАК, АСК, ДААТ, ТЛТ, ГИТ чередуются.
+const FRESH_ORDER = (function(){
+  const pools = {};
+  CARDS.forEach(c => { const k = "t" + c.t; (pools[k] = pools[k] || []).push(c); });
+  // темы «сверх основы» (late) вступают позже
+  const late = {};
+  TOPICS.forEach(t => { if (t.late) late["t" + t.n] = t.late; });
+  const keys = Object.keys(pools), list = keys.map(k => pools[k]), used = list.map(() => 0), out = [];
+  while (out.length < CARDS.length){
+    let best = -1, bestR = 9;
+    list.forEach((p, i) => {
+      if (used[i] >= p.length) return;
+      const r = (used[i] + 0.5) / p.length + (late[keys[i]] || 0);
+      if (r < bestR){ bestR = r; best = i; }
+    });
+    out.push(list[best][used[best]++]);
+  }
+  return out;
+})();
+function resetSession(){ lapsed = {}; seen = new Set(); stats = { first: 0, correct: 0 }; index = 0; }
+function buildMain(){
+  const now = Date.now();
+  const due = CARDS.filter(c => progress[c.id] && progress[c.id].due <= now);
+  const fresh = FRESH_ORDER.filter(c => !progress[c.id]).slice(0, NEW_PER_SESSION);
+  queue = shuffle(due).concat(shuffle(fresh));
+  mode = "main"; topicN = null;
+  resetSession();
+}
+function buildTopic(n){
+  if (n === MIXED_TOPIC){
+    queue = shuffle(CARDS.slice()).slice(0, MIXED_SIZE);
+    mode = "mixed";
+  } else {
+    queue = shuffle(CARDS.filter(c => c.t === n));
+    mode = "topic";
+  }
+  topicN = n;
+  resetSession();
+}
+
+function setBar(done, total){
+  $("barFill").style.width = (total ? Math.min(100, Math.round(done / total * 100)) : 100) + "%";
+}
+function show(id, on){ $(id).hidden = !on; }
+
+function renderOpts(card){
+  const box = $("opts");
+  box.textContent = "";
+  shownOpts = shuffle(card.opts.slice());
+  const longest = Math.max.apply(null, shownOpts.map(o => o.length));
+  const n = shownOpts.length;
+  const cols = longest > 8 ? 1 : (n === 3 ? (longest <= 5 ? 3 : 1) : 2);   // три в ряд — только короткие: 25, 3-й; два — до 8 знаков
+  box.className = "opts c" + cols;
+  shownOpts.forEach(o => {
+    const b = el("button", "opt" + (longest > 9 ? " long" : ""));
+    b.type = "button";
+    if (o === ""){
+      b.setAttribute("aria-label", "Ничего не нужно");
+      b.append(el("span", null, "—"), el("small", null, "ничего"));
+    } else {
+      if (!/[а-яё]/i.test(o)) b.lang = "en";
+      b.textContent = o;
+    }
+    b.addEventListener("click", () => choose(o));
+    box.append(b);
+  });
+}
+
+function render(){
+  stopAudio();
+  answered = false;
+  const card = queue[index];
+  $("card").scrollTop = 0;
+  if (!card){ renderDone(); return; }
+  show("kind", true);
+  $("kind").textContent = topicLabel(card.t);
+  const q = $("q");
+  q.textContent = "";
+  const i = card.q.indexOf("___");
+  // пропуск и знак препинания после него не разрываются переносом строки
+  const post = card.q.slice(i + 3), pm = post.match(/^[?.!,;:]+/);
+  const gapBox = el("span", "nw");
+  gapBox.append(el("span", "gap"));
+  if (pm) gapBox.append(pm[0]);
+  q.append(card.q.slice(0, i), gapBox, pm ? post.slice(pm[0].length) : post);
+  q.setAttribute("aria-label", card.q.replace("___", "пропуск"));
+  show("hint", true);
+  $("hint").textContent = card.ru ? card.ru : "Выбери вариант";
+  show("back", false);
+  renderOpts(card);
+  show("opts", true);
+  show("actNext", false);
+  show("actDone", false);
+  const prefix = mode === "topic" ? "Тема " + topicN + " · " : mode === "mixed" ? "Всё вместе · " : "";
+  $("status").textContent = prefix + "Карточка " + (index + 1) + " из " + queue.length;
+  setBar(index, queue.length);
+}
+
+function renderDone(){
+  show("kind", false);
+  const q = $("q");
+  q.removeAttribute("aria-label");
+  q.textContent = mode === "main" ? "На сегодня всё" : mode === "mixed" ? "Итог пройден" : "Тема " + topicN + " пройдена";
+  const left = unseenCount();
+  let text = stats.first ? "Верно с первого раза: " + stats.correct + " из " + stats.first + ". " : "";
+  if (mode === "main") text += left ? "Новых карточек в запасе: " + left + ". " : "Все карточки уже в работе. ";
+  text += "Повторы вернутся сами — завтра, через 3, 7 и 16 дней.";
+  $("hint").textContent = text;
+  show("hint", true);
+  show("back", false);
+  show("opts", false);
+  show("actNext", false);
+  const more = $("more");
+  if (mode === "main"){
+    more.hidden = !left;
+    const k = Math.min(NEW_PER_SESSION, left);
+    more.textContent = "Ещё " + k + " " + plural(k, "новая", "новых", "новых");
+  } else {
+    more.hidden = false;
+    more.textContent = "Обычная тренировка";
+  }
+  show("actDone", true);
+  $("status").textContent = "Готово";
+  setBar(1, 1);
+}
+
+function choose(opt){
+  if (answered) return;
+  const card = queue[index];
+  if (!card) return;
+  answered = true;
+  const exact = opt === card.a;
+  const alsoNote = !exact && card.also && Object.prototype.hasOwnProperty.call(card.also, opt) ? card.also[opt] : null;
+  const ok = exact || alsoNote !== null;
+
+  if (!seen.has(card.id)){
+    seen.add(card.id);
+    stats.first++;
+    if (ok) stats.correct++;
+  }
+  const prev = progress[card.id];
+  let step = prev ? prev.step : -1;
+  if (!ok){
+    step = 0;
+    lapsed[card.id] = true;
+    queue.splice(Math.min(queue.length, index + 4), 0, card);   // вернётся через несколько карточек
+  } else if (step < 0 || lapsed[card.id]){
+    step = 0;
+  } else {
+    step = Math.min(INTERVALS.length - 1, step + 1);
+  }
+  progress[card.id] = { step: step, due: dayStart(Date.now()) + INTERVALS[step] * DAY, ts: Date.now() };
+  saveLocal();
+  schedulePush();
+
+  const q = $("q");
+  q.textContent = "";
+  q.removeAttribute("aria-label");
+  const p = split(card, card.a);
+  if (p.word) q.append(p.pre, el("span", "good", p.word), p.post);
+  else q.append(p.pre, el("span", "zero", "∅"), p.post);
+
+  const v = $("verdict");
+  v.textContent = "";
+  if (exact){
+    v.className = "verdict ok";
+    v.append("Верно");
+  } else if (ok){
+    v.className = "verdict ok";
+    v.append("Тоже верно: ", el("b", null, opt), ". " + alsoNote.charAt(0).toUpperCase() + alsoNote.slice(1) + ".");
+  } else {
+    v.className = "verdict bad";
+    v.append("Нужно ", el("b", "good", label(card.a)), " · твой ответ: ", el("b", null, label(opt)));
+  }
+  const why = $("why"); why.textContent = ""; why.append(richText(card.why));
+  show("hint", false);
+  show("back", true);
+  show("opts", false);
+  show("actNext", true);
+}
+
+function next(){
+  if (!answered) return;
+  index++;
+  render();
+}
+
+// ——— Правила
+function learnedIn(n){
+  const cards = CARDS.filter(c => c.t === n);
+  const done = cards.filter(c => progress[c.id] && progress[c.id].step >= 1).length;
+  return done + "/" + cards.length;
+}
+const PLAY_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6"/></svg>';
+let openTopic = null;
+function renderTopics(){
+  const box = $("topics");
+  box.textContent = "";
+  let group = null;
+  TOPICS.forEach(t => {
+    if (t.group !== group){
+      group = t.group;
+      box.append(el("p", "t-group", GROUPS[group]));
+    }
+    const item = el("div", "t-item");
+    const head = el("button", "t-head");
+    head.type = "button";
+    head.setAttribute("aria-expanded", String(openTopic === t.n));
+    const txt = el("span", "t-txt");
+    const title = el("span", "t-title", t.title);
+    if (/[a-z]/.test(t.title) && !/[а-я]/i.test(t.title)) title.lang = "en";
+    txt.append(title);
+    if (t.sub) txt.append(el("span", "t-sub", t.sub));
+    head.append(el("span", "t-n", String(t.n)), txt,
+                el("span", "t-count", t.n === MIXED_TOPIC ? "" : learnedIn(t.n)), el("span", "t-chev", "›"));
+    head.addEventListener("click", () => {
+      openTopic = openTopic === t.n ? null : t.n;
+      lsSet(LS_OPEN, openTopic ? String(openTopic) : "");
+      stopAudio();
+      renderTopics();
+    });
+    item.append(head);
+    if (openTopic === t.n){
+      const body = el("div", "t-body");
+      String(t.rule).split("\n\n").forEach(par => { const rule = el("p", "t-rule"); rule.append(richText(par)); body.append(rule); });
+      t.ex.forEach((ex, i) => {
+        const row = el("div", "ex");
+        const en = el("p", "ex-en"); en.append(marked(ex.en));
+        row.append(en, el("p", "ex-ru", ex.ru));
+        body.append(row);
+      });
+      const train = el("button", "t-train", t.n === MIXED_TOPIC ? "Начать итоговую тренировку" : "Потренировать эту тему");
+      train.type = "button";
+      train.addEventListener("click", () => { buildTopic(t.n); setTab("drill"); render(); });
+      body.append(train);
+      item.append(body);
+    }
+    box.append(item);
+  });
+}
+
+function setTab(name){
+  const drill = name === "drill";
+  $("drill").hidden = !drill;
+  $("rule").hidden = drill;
+  $("meta").hidden = !drill;
+  $("barWrap").hidden = !drill;
+  $("tabDrill").setAttribute("aria-selected", String(drill));
+  $("tabRule").setAttribute("aria-selected", String(!drill));
+  if (!drill){ stopAudio(); renderTopics(); }
+  lsSet(LS_TAB, name);
+}
+
+// ——— События
+$("tabDrill").addEventListener("click", () => setTab("drill"));
+$("tabRule").addEventListener("click", () => setTab("rule"));
+$("go").addEventListener("click", () => {
+  if (mode !== "main" || !queue[index]){ buildMain(); render(); }
+  setTab("drill");
+});
+$("toRule").addEventListener("click", () => setTab("rule"));
+$("more").addEventListener("click", () => { buildMain(); render(); });
+$("next").addEventListener("click", next);
+// Клавиатура на компьютере: 1, 2, 3 — варианты по порядку на экране; пробел или Enter — дальше
+document.addEventListener("keydown", e => {
+  if ($("drill").hidden || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (e.target && e.target.closest && e.target.closest("button")) return;
+  if (!answered){
+    const i = parseInt(e.key, 10) - 1;
+    if (i >= 0 && i < shownOpts.length && queue[index]) choose(shownOpts[i]);
+  } else if (e.key === " " || e.key === "Enter"){
+    e.preventDefault(); next();
+  }
+});
+
+
+// ——— Переход к разделам справочника
+document.querySelectorAll(".jump button").forEach(b => b.addEventListener("click", () => {
+  const t = document.getElementById(b.dataset.to);
+  if (!t) return;
+  const smooth = !(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  try{ t.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" }); }catch(e){ t.scrollIntoView(); }
+}));
+
+// ——— Помощники
+const pc = { tr: "st", vhr: false, bleed: false, icas: false, hit: false };
+function tp(s){
+  return String(s)
+    .replace(/севдотромбоцитопени/g, "севдо\u00adтромбо\u00adцитопени").replace(/ромбоцитопени/g, "ромбо\u00adцитопени")
+    .replace(/рофилактическ/g, "рофилакти\u00adческ").replace(/невмокомпресси/g, "невмо\u00adкомпресси")
+    .replace(/нтракраниальн/g, "нтра\u00adкраниальн")
+    .replace(/10⁹\/л/g, "10⁹/\u2060л").replace(/½ /g, "½\u00a0")
+    .replace(/(\d)–(\d)/g, "$1–⁠$2")
+    .replace(/(\d) (?=(?:мг|мл|мин|лет|ч(?![а-яё])|дн|сут|кг|недел|месяц|балл|000|%))/g, "$1 ")
+    .replace(/ ([×<>≤≥=≈−→]) /g, " $1 ")
+    .replace(/ \+ /g, " + ")
+    .replace(/(^|[\s(])([<>≤≥≈]) (?=\d)/g, "$1$2 ")
+    .replace(/(ОР|ОШ|КР по|EHA|EHRA|ESC|ISTH|SCAI|ASH|AABB|AHA\/ASA|рек\.) (?=[\d<>≤≥=≈А-ЯA-Z])/g, "$1 ")
+    .replace(/(^|[\s(«])(не|в|с|к|и|а|о|у|на|по|за|из|от|до|со|но|же|ли|при|без|для) /g, "$1$2 ")
+    .replace(/ — /g, " — ");
+}
+function line(k, v, n, cls){
+  const box = el("div", "rl" + (cls ? " " + cls : ""));
+  box.append(el("p", "rk", tp(k)));
+  box.append(el("p", "rv", tp(v)));
+  if (n) box.append(el("p", "rn", tp(n)));
+  return box;
+}
+function row(name, dose, cls, why){
+  const li = el("li");
+  li.append(el("span", "n", tp(name)), el("span", "d" + (cls ? " " + cls : ""), tp(dose)));
+  if (why) li.append(el("span", "w", tp(why)));
+  return li;
+}
+function numv(id){ const v = String($(id).value).replace(",", ".").trim(); return v === "" ? NaN : Number(v); }
+function fmtN(p){ return (Math.round(p * 10) / 10).toLocaleString("ru-RU"); }
+function ehaGrade(p){
+  if (p > 100) return "не ТЦП (> 100)";
+  if (p >= 75) return "1-я степень (75–100)";
+  if (p >= 50) return "2-я степень (50–75)";
+  if (p >= 25) return "3-я степень (25–50)";
+  return "4-я степень (< 25)";
+}
+function ehraBand(p){ return p > 50 ? "> 50 — с осторожностью" : p >= 20 ? "20–50 — с большой осторожностью" : "< 20 — избегать ПОАК"; }
+
+// ——— Решение: EHA 2022, EHRA 2021, ISTH 2018, ESC 2022, ASH 2018, КР по ИИ 2024, AHA/ASA 2026
+function plan(p, st){
+  const R = [], notes = [];
+  const add = (n, d, c, w) => R.push([n, d, c, w]);
+  const { hit, vhr, bleed, icas } = pc;
+  // НМГ, профилактика ТГВ
+  if (hit) add("НМГ профилактически", "отменить", "no", "подозрение на ГИТ: все гепарины отменить (ASH 2018)");
+  else if (p >= 50) add("НМГ профилактически", "стандартная доза", "ok", "у обездвиженных, если польза выше риска — КР по ИИ 2024, УУР A" + (p < 100 ? "; EHA 2022 — и при 50–100" : ""));
+  else if (p >= 25){
+    if (bleed) add("НМГ профилактически", "нет — пневмокомпрессия", "no", "другие факторы кровотечения — EHA 2022; КР по ИИ 2024: < 50 — довод за ППК");
+    else add("НМГ профилактически", "можно рассмотреть", "low", "EHA 2022: только НМГ в стандартной профилактической дозе, при стабильных тромбоцитах или частом контроле; КР по ИИ 2024: < 50 — довод за ППК");
+  } else add("НМГ профилактически", "нет — пневмокомпрессия", "no", "EHA 2022: < 25 — без медикаментозной профилактики");
+  // лечебная антикоагуляция
+  if (hit) add("Лечебная антикоагуляция", "негепариновый антикоагулянт", "low", bleed ? "высокий риск кровотечения — аргатробан или бивалирудин (ASH 2018)" : "стабильным — фондапаринукс или ПОАК; критическое состояние или возможна срочная процедура — аргатробан или бивалирудин (ASH 2018)");
+  else if (p >= 50) add("НМГ лечебно при ВТЭ", "полная доза", "ok", "ISTH 2018, EHA 2022" + (!st && p < 100 ? "; тромбоциты падают — НМГ лучше ПОАК (EHA)" : ""));
+  else if (p >= 25){
+    if (vhr) add("НМГ лечебно при ВТЭ", "полная доза + трансфузия до 40–50", "low", "высокий риск по ISTH 2018, очень высокий по EHA 2022: не дольше 14 дней, не рутинно; без трансфузии — 50% дозы");
+    else add("НМГ лечебно при ВТЭ", "50% дозы или профилактическая", "low", "EHA 2022, ISTH 2018");
+  } else {
+    if (vhr) add("НМГ лечебно при ВТЭ", "только с трансфузией до 40–50", "low", "EHA 2022: очень высокий риск — трансфузии и полная доза НМГ не дольше 14 дней, не рутинно; иначе — пауза");
+    else add("НМГ лечебно при ВТЭ", "пауза", "no", "ISTH 2018, EHA 2022: < 25 — пауза; полная доза — снова при > 50");
+  }
+  // ПОАК
+  if (hit) add("ПОАК", bleed ? "лучше аргатробан" : "вариант лечения ГИТ", "low", bleed ? "ASH 2018: при высоком риске кровотечения — аргатробан или бивалирудин" : "ASH 2018; дозы экстраполированы с лечения ВТЭ; при тяжёлой дисфункции печени — без ПОАК");
+  else if (p >= 100) add("ПОАК", "обычная доза", "ok", "тромбоциты не ограничивают");
+  else if (p === 50) add("ПОАК", "на границе — осторожно", "low", "EHA 2022: 50 — ещё 2-я степень; EHRA 2021: 20–50 — ½ дозы и консилиум");
+  else if (p > 50){
+    if (st) add("ПОАК", "обычная доза, частый контроль", "ok", "EHA 2022: стабильные 50–100 и неклапанная ФП; EHRA 2021 — с осторожностью");
+    else add("ПОАК", "временно НМГ", "low", "тромбоциты падают — EHA 2022: при острой ВТЭ НМГ лучше ПОАК, при ФП НМГ — временный вариант");
+  } else if (p >= 20){
+    add("ПОАК", p >= 25 ? "не назначать" : "отменить", "no", (p >= 25 ? "EHA 2022 (25–50): против ПОАК при ВТЭ и ФП" : "EHA 2022: < 25 — отменить") + "; EHRA 2021 (20–50): ½ дозы — только решением консилиума");
+    if (vhr && p >= 25 && st) notes.push("ФП с очень высоким риском при стабильных 25–50 — можно рассмотреть НМГ 50% лечебной дозы вместо ПОАК (EHA 2022)");
+  } else add("ПОАК", "отменить", "no", "EHRA 2021: < 20 — избегать, риск спонтанных кровотечений");
+  // АСК
+  if (p >= 50) add("АСК", "75–100 мг", "ok", "EHA 2022: продолжать" + (p < 75 && bleed ? "; при факторах кровотечения — АСК без ДААТ" : ""));
+  else if (p >= 25) add("АСК", "низкая доза", "low", "EHA 2022: после ИИ или ТИА в последний месяц — монотерапия низкой дозой АСК");
+  else if (p >= 10) add("АСК", "пауза до > 25", "no", "EHA 2022 после ИИ и ТИА; при > 10 АСК допускают только при очень высоком риске, например ОКС (EHA, ESC 2022, SCAI 2016)");
+  else add("АСК", "отменить", "no", "< 10 — EHA 2022, ESC 2022, SCAI 2016");
+  // клопидогрел
+  if (p >= 50) add("Клопидогрел", "75 мг", "ok", "ESC 2022 (ОКС и ЧКВ): избегать только при < 30");
+  else if (p >= 30) add("Клопидогрел", "допустим", "low", "ESC 2022 (ОКС и ЧКВ): избегать при < 30; после ИИ и ТИА EHA 2022 при 25–50 выбирает АСК");
+  else add("Клопидогрел", "нет", "no", "ESC 2022 (ОКС и ЧКВ): < 30 — избегать" + (icas && p >= 25 ? "; EHA 2022 при стенозе допускает ДААТ с 25" : ""));
+  // ДААТ
+  const dn = icas ? "ДААТ при стенозе" : "ДААТ после малого ИИ или ТИА";
+  if (icas){
+    if (p >= 50) add(dn, "до 90 дней", "ok", "клопидогрел + АСК — EHA 2022, рек. 11a");
+    else if (p >= 25) add(dn, bleed ? "только АСК" : "до 21 дня", bleed ? "no" : "low", bleed ? "факторы кровотечения — EHA 2022, рек. 11b" : "EHA 2022, рек. 11b: если нет дополнительных факторов кровотечения" + (p < 30 ? "; ESC 2022 (ОКС и ЧКВ) избегает клопидогрела при < 30 — решать индивидуально" : ""));
+    else add(dn, "отменить", "no", "EHA 2022, рек. 11c: АСК — индивидуально, когда тромбоциты > 25");
+  } else {
+    if (p >= 100) add(dn, "по общим правилам", "ok", "тромбоциты не ограничивают");
+    else if (p >= 75) add(dn, st ? "21 день" : "решать по динамике", st ? "ok" : "low", st ? "клопидогрел + АСК, затем АСК — EHA 2022, рек. 10a" : "тромбоциты падают — повтор через 1–2 дня; EHA 2022 рекомендует ДААТ при стабильной ТЦП 1-й степени");
+    else if (p >= 50){
+      if (bleed) add(dn, "только АСК", "no", "факторы кровотечения — EHA 2022, рек. 10b");
+      else if (!st) add(dn, "решать по динамике", "low", "тромбоциты падают — повтор через 1–2 дня (EHA 2022); ДААТ — при стабильных");
+      else add(dn, "21 день", "ok", "клопидогрел + АСК, затем АСК — EHA 2022, рек. 10b");
+    }
+    else if (p >= 25) add(dn, "только АСК", "no", "EHA 2022, рек. 10c");
+    else add(dn, "нет", "no", "EHA 2022, рек. 10d: без антиагрегантов до > 25");
+  }
+  // тикагрелор
+  if (p >= 100) add("Тикагрелор", "по общим показаниям", "ok", "тромбоциты не ограничивают");
+  else if (p >= 75) add("Тикагрелор", "лучше клопидогрел", "low", "EHA 2022 при ТЦП называет только клопидогрел");
+  else add("Тикагрелор", "нет", "no", p >= 50 ? "EHA 2022: < 75 — против ДААТ с тикагрелором" : "EHA 2022; ESC 2022 и SCAI 2016 — не при < 50");
+  if (p < 50) add("Антиагрегант + антикоагулянт", "не сочетать", "no", "EHA 2022, рек. 13");
+  // реперфузия
+  if (p >= 100) add("ТЛТ", "тромбоциты не мешают", "ok", p < 150 ? "TRISP: при < 150 сВЧК чаще (ОШ 1,73), но ТЛТ не противопоказана" : "без подозрения на коагулопатию анализ не ждут — КР по ИИ 2024");
+  else add("ТЛТ", "противопоказана", "no", "< 100 000/мкл — инструкция алтеплазы, AHA/ASA 2026; EHA 2022");
+  if (p >= 50) add("Тромбэктомия", "по общим критериям", "ok", "EHA 2022: рассматривать всем подходящим");
+  else if (p >= 25) add("Тромбэктомия", "можно рассмотреть", "low", "EHA 2022: по риску тромбоза и кровотечения");
+  else add("Тромбэктомия", "по каждому случаю", "low", "EHA 2022: с трансфузией тромбоцитов или без");
+  return { R, notes };
+}
+
+function renderPlan(){
+  const box = $("pres");
+  box.textContent = "";
+  const p = numv("plt");
+  if (!(p >= 0 && p <= 1500)){ box.append(line("Тромбоциты", "Введите число: 0–1500", "× 10⁹/л, как в анализе")); return; }
+  const st = pc.tr === "st";
+  const head = p >= 150 ? "норма" : fmtN(p) + " × 10⁹/л — " + (p < 20 ? "меньше 20" : p < 50 ? "20–50" : p === 50 ? "граница 50" : p <= 100 ? "больше 50" : "лёгкая ТЦП");
+  const hn = p >= 150 ? "ограничений по тромбоцитам нет" : (p > 100 ? "EHA 2022: ещё не ТЦП (> 100)" : "EHA 2022: " + ehaGrade(p) + " · EHRA 2021: " + ehraBand(p)) + (st ? "" : " · тромбоциты снижаются");
+  box.append(line("Уровень", head, hn, "lead" + (p < 20 ? " warn" : p >= 150 ? " ok" : "")));
+  const r = plan(p, st);
+  const list = el("ul", "dzr");
+  for (const x of r.R) list.append(row(x[0], x[1], x[2], x[3]));
+  const dw = el("div", "rl");
+  dw.append(el("p", "rk", tp("Препараты и процедуры")));
+  dw.append(list);
+  box.append(dw);
+  if (pc.hit) box.append(line("ГИТ", "Отменить все гепарины", "4Ts ≥ 4 — негепариновый антикоагулянт в лечебной дозе; при 4–5, высоком риске кровотечения и без других показаний — в профилактической; варфарин — после восстановления тромбоцитов; рутинно тромбоциты не переливать (ASH 2018)", "warn"));
+  if (p < 150){
+    const ctl = p >= 100 ? ["по клинической ситуации", ""] : p >= 50 ? ["через 1–2 дня", "EHA 2022; EHRA 2021 — частый контроль клиники и тромбоцитов"] : ["очень частый", "EHRA 2021: очень частый контроль клиники и тромбоцитов; решение — мультидисциплинарной командой"];
+    box.append(line("Контроль тромбоцитов", ctl[0], ctl[1]));
+  }
+  if (p < 10 && !pc.hit) box.append(line("Трансфузия тромбоцитов", "обсудить профилактически", "AABB 2025: < 10 у некровоточащих на химиотерапии или после аллогенной трансплантации и при ТЦП потребления без большого кровотечения; при ИТП — с гематологом", "warn"));
+  else if (pc.vhr && p < 50 && !pc.hit) box.append(line("Трансфузия тромбоцитов", "обсудить до 40–50", "только ради полной дозы НМГ при очень высоком риске, не дольше 14 дней (EHA 2022)"));
+  if (p < 100){
+    r.notes.push("неожиданный результат без кровоточивости — мазок и повторный подсчёт: псевдотромбоцитопения");
+    r.notes.push("всем на антитромботиках при ТЦП — ИПП, с клопидогрелом — пантопразол; без НПВП (EHA 2022)");
+    r.notes.push("EHA 2022 написаны для онкобольных; при другой причине ТЦП — по аналогии");
+  }
+  for (const n of r.notes) box.append(el("p", "res-note", tp(n.charAt(0).toUpperCase() + n.slice(1) + ".")));
+}
+
+// ——— 4Ts
+const t4 = [2, 2, 0, 1];
+function balls(n){ const m = n % 10, h = n % 100; return n + " " + (m === 1 && h !== 11 ? "балл" : m >= 2 && m <= 4 && (h < 12 || h > 14) ? "балла" : "баллов"); }
+function render4T(){
+  const box = $("tres");
+  box.textContent = "";
+  const sum = t4.reduce((a, b) => a + b, 0);
+  let v, n, cls;
+  if (sum <= 3){ v = "низкая вероятность ГИТ"; n = "лабораторные тесты не нужны; гепарин продолжают, если он показан (ASH 2018)"; cls = "ok"; }
+  else if (sum <= 5){ v = "средняя вероятность ГИТ"; n = "отменить все гепарины, начать негепариновый антикоагулянт, иммуноанализ на антитела; при высоком риске кровотечения и без других показаний — профилактическая доза (ASH 2018)"; cls = "warn"; }
+  else { v = "высокая вероятность ГИТ"; n = "отменить все гепарины, негепариновый антикоагулянт в лечебной дозе, иммуноанализ на антитела (ASH 2018)"; cls = "warn"; }
+  box.append(line("4Ts", balls(sum) + " — " + v, n, "lead " + cls));
+}
+
+function pressOne(sel, attr, val){
+  document.querySelectorAll(sel).forEach(b => b.setAttribute("aria-pressed", String(b.dataset[attr] === val)));
+}
+function initCalc(){
+  document.querySelectorAll("[data-tr]").forEach(b => b.addEventListener("click", () => { pc.tr = b.dataset.tr; pressOne("[data-tr]", "tr", pc.tr); renderPlan(); }));
+  document.querySelectorAll("[data-flag]").forEach(b => b.addEventListener("click", () => {
+    const k = b.dataset.flag; pc[k] = !pc[k]; b.setAttribute("aria-pressed", String(pc[k])); renderPlan();
+  }));
+  ["input", "change"].forEach(ev => $("plt").addEventListener(ev, renderPlan));
+  document.querySelectorAll("[data-tq]").forEach(b => b.addEventListener("click", () => {
+    const q = +b.dataset.tq; t4[q] = +b.dataset.tv;
+    document.querySelectorAll('[data-tq="' + q + '"]').forEach(x => x.setAttribute("aria-pressed", String(+x.dataset.tv === t4[q])));
+    render4T();
+  }));
+  renderPlan();
+  render4T();
+}
+
+function boot(){
+  progress = loadLocal();
+  const o = parseInt(lsGet(LS_OPEN) || "", 10);
+  openTopic = TOPIC_BY[o] ? o : null;
+  buildMain();
+  render();
+  const saved = lsGet(LS_TAB);
+  setTab(saved === "drill" || saved === "rule" ? saved : (Object.keys(progress).length ? "drill" : "rule"));
+  renderTopics();
+  initCalc();
+  connectCloud();
+}
+boot();
+</script>
+
+</body></html>

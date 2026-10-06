@@ -1,0 +1,836 @@
+<title>Английский B2</title>
+<style>
+  :root{
+    --k:1; --kb:1;
+    color-scheme:dark;
+    --bg:#0e1113;
+    --surface:#171c1f;
+    --raise:#1f262a;
+    --line:#252c30;
+    --line-2:#343d42;
+    --text:#e8e8e8;
+    --soft:#c3cbcf;
+    --muted:#939ea3;
+    --accent:#d97757;
+    --accent-soft:rgba(217,119,87,.12);
+    --on-accent:#14181a;
+    --blue:#7cc0dd;
+    --blue-soft:rgba(124,192,221,.13);
+    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);overflow:hidden}
+  body{font-family:var(--sans);font-size:calc(17px*var(--k));line-height:1.5}
+  button{font:inherit;color:inherit}
+  .shell{position:relative;height:100%;overflow:hidden}
+
+  /* ——— Каталог тем */
+  .home{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .wrap{max-width:calc(1080px*var(--k));margin:0 auto;padding:calc(14px*var(--k)) calc(16px*var(--k)) calc(34px*var(--k));display:flex;flex-direction:column;gap:calc(18px*var(--k))}
+  .hd{display:flex;flex-direction:column;gap:calc(4px*var(--k));padding-top:calc(6px*var(--k))}
+  .eyebrow,.lbl{margin:0;font-size:calc(13px*var(--k));font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+  h1{margin:0;font-family:var(--serif);font-weight:400;font-size:calc(44px*var(--k));line-height:1.08;text-wrap:balance}
+  .sum{margin:calc(2px*var(--k)) 0 0;font-size:calc(18px*var(--k));line-height:1.45;color:var(--soft);text-wrap:pretty}
+  .sum b{font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums}
+
+  .today{display:grid;grid-template-columns:repeat(auto-fit,minmax(calc(240px*var(--k)),1fr));gap:calc(10px*var(--k))}
+  .tcard{position:relative;display:flex;flex-direction:column;gap:calc(6px*var(--k));min-width:0;padding:calc(16px*var(--k)) calc(16px*var(--k)) calc(15px*var(--k));border-radius:calc(20px*var(--k));border:calc(1px*var(--k)) solid var(--line);background:var(--surface);text-align:left;cursor:pointer}
+  .tcard:active{background:var(--raise)}
+  .tcard.is-due{border-color:rgba(217,119,87,.55);background:linear-gradient(180deg,rgba(217,119,87,.10),rgba(217,119,87,.02) 70%),var(--surface);cursor:default}
+  .big{margin:0;font-family:var(--serif);font-size:calc(46px*var(--k));line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+  .tsub{margin:0;font-size:calc(16px*var(--k));line-height:1.4;color:var(--soft)}
+  .term{margin:0;font-family:var(--serif);font-size:calc(28px*var(--k));line-height:1.15;text-wrap:balance;overflow-wrap:anywhere}
+  .term.sm{font-size:calc(21px*var(--k));line-height:1.25}
+  .terms{display:flex;flex-direction:column;gap:calc(8px*var(--k))}
+  .terms p{margin:0}
+  .ru{margin:0;font-size:calc(16px*var(--k));line-height:1.4;color:var(--muted)}
+  .chips{display:flex;flex-wrap:wrap;gap:calc(6px*var(--k));margin-top:calc(4px*var(--k))}
+  .chip{min-height:calc(44px*var(--k));display:inline-flex;align-items:center;gap:calc(8px*var(--k));padding:0 calc(12px*var(--k)) 0 calc(14px*var(--k));border-radius:calc(12px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:var(--bg);font-size:calc(16px*var(--k));cursor:pointer;max-width:100%}
+  .chip span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chip b{font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums}
+  .chip:active{background:var(--raise)}
+
+  .search{position:relative;display:flex;align-items:center}
+  .search svg{position:absolute;left:calc(14px*var(--k));width:calc(20px*var(--k));height:calc(20px*var(--k));color:var(--muted);pointer-events:none}
+  .search input{width:100%;min-height:calc(52px*var(--k));padding:0 calc(48px*var(--k)) 0 calc(44px*var(--k));border-radius:calc(14px*var(--k));border:calc(1px*var(--k)) solid var(--line-2);background:var(--surface);color:var(--text);font:inherit;font-size:max(16px,calc(17px*var(--k)));outline:none;-webkit-appearance:none;appearance:none}
+  .search input::placeholder{color:var(--muted)}
+  .search input:focus{border-color:var(--accent)}
+  .search input::-webkit-search-cancel-button{display:none}
+  .qx{position:absolute;right:calc(4px*var(--k));width:calc(44px*var(--k));height:calc(44px*var(--k));border:0;border-radius:calc(10px*var(--k));background:transparent;color:var(--muted);font-size:calc(24px*var(--k));line-height:1;cursor:pointer}
+
+  .grp{display:flex;flex-direction:column;gap:calc(8px*var(--k))}
+  .grp .lbl{margin-top:calc(6px*var(--k))}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(calc(240px*var(--k)),1fr));gap:calc(10px*var(--k))}
+  .tile{display:flex;flex-direction:column;gap:calc(6px*var(--k));min-width:0;padding:calc(14px*var(--k)) calc(16px*var(--k)) calc(14px*var(--k));border-radius:calc(18px*var(--k));border:calc(1px*var(--k)) solid var(--line);background:var(--surface);text-align:left;cursor:pointer}
+  .tile:active{background:var(--raise);transform:scale(.99)}
+  .tile:focus-visible,.tcard:focus-visible,.chip:focus-visible,.backb:focus-visible{outline:calc(2px*var(--k)) solid var(--accent);outline-offset:calc(2px*var(--k))}
+  .t-top{display:flex;align-items:flex-start;gap:calc(10px*var(--k))}
+  .t-name{flex:1;min-width:0;font-family:var(--serif);font-size:calc(22px*var(--k));line-height:1.2;text-wrap:balance}
+  .t-due{flex:0 0 auto;min-width:calc(30px*var(--k));height:calc(30px*var(--k));padding:0 calc(8px*var(--k));border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:calc(15px*var(--k));font-weight:700;line-height:calc(30px*var(--k));text-align:center;font-variant-numeric:tabular-nums}
+  .t-desc{font-size:calc(15px*var(--k));line-height:1.4;color:var(--muted);text-wrap:pretty}
+  .t-foot{display:flex;align-items:center;gap:calc(10px*var(--k));margin-top:auto;padding-top:calc(4px*var(--k))}
+  .bar{flex:1;height:calc(4px*var(--k));border-radius:calc(2px*var(--k));background:var(--line);overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:inherit}
+  .cnt{font-size:calc(14px*var(--k));color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tag{font-size:calc(12px*var(--k));font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);white-space:nowrap}
+  .empty{margin:0;padding:calc(18px*var(--k)) calc(4px*var(--k));font-size:calc(17px*var(--k));color:var(--soft)}
+  .foot{margin:calc(8px*var(--k)) 0 0;font-size:calc(14px*var(--k));line-height:1.5;color:var(--muted);text-wrap:pretty}
+
+  /* ——— Открытая тема */
+  .course{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;background:var(--bg);transform:translateX(100%);visibility:hidden;transition:transform .22s ease,visibility 0s linear .22s}
+  .course.open{transform:none;visibility:visible;transition:transform .22s ease,visibility 0s}
+  .cbar{flex:0 0 auto;display:grid;grid-template-columns:minmax(calc(96px*var(--kb)),1fr) auto minmax(calc(96px*var(--kb)),1fr);align-items:center;min-height:calc(50px*var(--kb));padding:0 calc(6px*var(--kb));border-bottom:calc(1px*var(--kb)) solid var(--line)}
+  .backb{justify-self:start;min-height:44px;min-width:44px;display:inline-flex;align-items:center;gap:calc(2px*var(--kb));padding:0 calc(12px*var(--kb)) 0 calc(4px*var(--kb));border:0;border-radius:calc(12px*var(--kb));background:transparent;color:var(--accent);font-size:calc(17px*var(--kb));cursor:pointer}
+  .backb svg{width:calc(26px*var(--kb));height:calc(26px*var(--kb))}
+  .backb:active{background:var(--raise)}
+  .ctitle{margin:0;min-width:0;font-family:var(--serif);font-weight:400;font-size:calc(19px*var(--kb));line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
+  .cbody{position:relative;flex:1;min-height:0}
+  .cbody iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:var(--bg);opacity:0;transition:opacity .15s ease}
+  .cbody iframe.ready{opacity:1}
+  .cmsg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(12px*var(--k));padding:calc(24px*var(--k));text-align:center;color:var(--muted);font-size:calc(17px*var(--k))}
+  .cmsg p{margin:0;max-width:28em}
+  .retry{min-height:calc(50px*var(--k));padding:0 calc(22px*var(--k));border-radius:calc(14px*var(--k));border:0;background:var(--accent);color:var(--on-accent);font-weight:600;cursor:pointer}
+
+  @media (prefers-reduced-motion:reduce){ .course,.course.open{transition:none} .cbody iframe{transition:none} .tile:active{transform:none} }
+</style>
+<script>
+// Масштаб под экран, как в самих тренажёрах: телефон — как есть, планшет — крупнее
+(function(){
+  function fit(){
+    var w = window.innerWidth || 390, h = window.innerHeight || 760;
+    var wide = w >= 900 && w / h > 1.15;
+    var k = wide ? h / 600 : Math.min(w / 440, h / 780);
+    if (w < 600) k = 1;
+    k = Math.max(1, Math.min(k, 1.9));
+    document.documentElement.style.setProperty("--k", k.toFixed(3));
+    document.documentElement.style.setProperty("--kb", Math.min(k, 1.3).toFixed(3));
+  }
+  fit();
+  window.addEventListener("resize", fit);
+  window.addEventListener("orientationchange", function(){ setTimeout(fit, 150); });
+})();
+</script>
+
+<div class="shell">
+  <main class="home" id="home">
+    <div class="wrap">
+      <header class="hd">
+        <p class="eyebrow" id="eyebrow">Английский · B1–B2</p>
+        <h1>Английский</h1>
+        <p class="sum" id="sum">Считаю, что повторить сегодня…</p>
+      </header>
+      <section class="today" id="today" aria-label="Сегодня"></section>
+      <div class="search" role="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="search" placeholder="Найти тему: would, предлоги, артикли" aria-label="Найти тему">
+        <button class="qx" id="qx" type="button" aria-label="Очистить поиск" hidden>×</button>
+      </div>
+      <div id="groups"></div>
+      <p class="empty" id="empty" hidden>Ничего не нашлось. Попробуйте иначе: would, into, make или «предлоги».</p>
+      <p class="foot" id="foot">Прогресс общий для iPhone и iPad. Озвучка — голос Microsoft Ryan, в «Фразах из Breaking Bad» — Andrew.</p>
+    </div>
+  </main>
+
+  <section class="course" id="course" aria-label="Тема" aria-hidden="true">
+    <div class="cbar">
+      <button class="backb" id="back" type="button" aria-label="Все темы">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
+        <span>Темы</span>
+      </button>
+      <h2 class="ctitle" id="ctitle"></h2>
+      <span aria-hidden="true"></span>
+    </div>
+    <div class="cbody">
+      <div class="cmsg" id="cmsg"><p id="cmsgText">Открываю тему…</p><button class="retry" id="retry" type="button" hidden>Попробовать ещё раз</button></div>
+      <iframe id="frame" title="Тема"></iframe>
+    </div>
+  </section>
+</div>
+
+<script>
+// ——— Каталог: 46 тренажёров по группам. ids — карточки (для счётчиков), ls — ключ локального прогресса тренажёра
+const CAT = /*__CATALOG__*/;
+// ——— Звук: записи каждого тренажёра склеены в packs/<ключ>.mp3; здесь смещение, длина и обрезанная тишина в начале
+const PACKS = /*__PACKS__*/;
+// Самые большие пакеты лежат в хранилище файлов приложения (в одну версию страницы все записи не помещаются)
+const ASSET_PACKS = /*__ASSETS__*/;
+
+const APPS = {}; CAT.apps.forEach(a => { APPS[a.key] = a; });
+const GROUP_TITLE = {}; CAT.groups.forEach(g => { GROUP_TITLE[g[0]] = g[1]; });
+const DECKS = CAT.apps.filter(a => a.deck).map(a => a.key);
+const $ = id => document.getElementById(id);
+const fmt = n => Number(n).toLocaleString("ru-RU");
+function plural(n, one, few, many){
+  const a = n % 10, b = n % 100;
+  if (a === 1 && b !== 11) return one;
+  if (a >= 2 && a <= 4 && (b < 12 || b > 14)) return few;
+  return many;
+}
+function el(tag, cls, text){ const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// ——— Платформа: база прогресса и ученик
+const RT = () => (window.claude && typeof window.claude.use === "function") ? window.claude : null;
+let dbP = null, uidP = null;
+function getDb(){
+  if (!dbP) dbP = (async () => { try{ const r = RT(); return r ? await r.use("db") : null; }catch(e){ return null; } })();
+  return dbP;
+}
+function getUid(){
+  if (!uidP) uidP = (async () => {
+    try{ const r = RT(); if (!r) return null; const u = await r.use("user"); return u ? (await u.id()) || null : null; }catch(e){ return null; }
+  })();
+  return uidP;
+}
+// У каждого тренажёра был свой документ прогресса с одинаковым именем. В общем приложении — у каждого свой.
+function mapPath(key, uid, p){
+  const m = /^data\/users\/([^/]+)\/progress$/.exec(p);
+  if (m) return "data/users/" + m[1] + "/progress-" + key;
+  if (p === "progress/main") return uid ? "data/users/" + uid + "/progress-" + key : "progress/" + key;
+  return p;
+}
+function claudeFor(key){
+  return Object.freeze({
+    use: async name => {
+      const r = RT(); if (!r) return null;
+      const ns = await r.use(name);
+      if (!ns || name !== "db") return ns;
+      const uid = await getUid();
+      return new Proxy({}, { get(_, prop){
+        if (prop === "doc") return p => ns.doc(mapPath(key, uid, String(p)));
+        const v = ns[prop];
+        return typeof v === "function" ? v.bind(ns) : v;
+      } });
+    }
+  });
+}
+
+// ——— Колоды, которые пополняются каждый день: новые карточки и их озвучка лежат в базе
+const EXTRAS = {};                                   // key -> [card]
+const deckAudioCache = new Map();
+function b64buf(s){ const bin = atob(s); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u.buffer; }
+async function loadDecks(){
+  const db = await getDb();
+  if (!db) return;
+  await Promise.all(DECKS.map(async key => {
+    try{
+      const snap = await db.collection("data/decks/" + key).get();
+      const known = new Set(APPS[key].ids);
+      EXTRAS[key] = snap.docs.filter(d => d.exists && !known.has(d.id)).map(d => {
+        const c = JSON.parse(JSON.stringify(d.data() || {})); c.id = c.id || d.id; return c;
+      }).filter(c => c.term).sort((a, b) => String(a.added || "").localeCompare(String(b.added || "")) || a.id.localeCompare(b.id));
+    }catch(e){ EXTRAS[key] = EXTRAS[key] || []; }
+  }));
+}
+async function deckClip(app, key){
+  const m = /^(.*)-([tx])$/.exec(key); if (!m) return null;
+  const id = m[1], field = m[2], ck = app + "/" + id;
+  if (!deckAudioCache.has(ck)) deckAudioCache.set(ck, (async () => {
+    const db = await getDb(); if (!db) return null;
+    const s = await db.doc("data/decks/" + app + "-audio/" + id).get();
+    return s.exists ? (s.data() || null) : null;
+  })().catch(() => { deckAudioCache.delete(ck); return null; }));
+  const d = await deckAudioCache.get(ck);
+  return d && typeof d[field] === "string" ? b64buf(d[field]) : null;
+}
+
+// ——— Звук. Как в самих тренажёрах — обычный <audio>: он играет и при беззвучном режиме iPhone.
+//     Записи тренажёра лежат одним файлом packs/<ключ>.mp3; нужная вырезается по смещению и играет как отдельный mp3.
+//     Если страница не пустит blob:, пробуем data:, а в крайнем случае — Web Audio.
+function named(n){ const e = new Error(n); e.name = n; return e; }
+function clipKey(src){
+  const m = /(?:^|\/)audio\/(?:us\/)?([^\/?#]+)\.mp3(?:[?#].*)?$/.exec(String(src || ""));
+  return m ? decodeURIComponent(m[1]) : "";
+}
+function b64enc(buf){
+  const u = new Uint8Array(buf); let s = "";
+  for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000));
+  return btoa(s);
+}
+const SILENT_B64 = "/*__SILENT__*/";               // 0,25 с тишины: разблокировать звук первым касанием
+const AE = {
+  mode: "blob", packs: new Map(), ready: new Map(), urls: new Map(), current: null, log: [], silentBlob: null,
+  note(app, key, how){ this.log.push([app, key, how]); if (this.log.length > 60) this.log.shift(); },
+  pack(app){
+    let p = this.packs.get(app);
+    if (p){ this.packs.delete(app); this.packs.set(app, p); return p; }
+    p = fetch(ASSET_PACKS[app] ? ASSET_PACKS[app].u : ("packs/" + app + ".mp3")).then(r => { if (!r.ok) throw new Error("pack " + r.status); return r.arrayBuffer(); });
+    p.then(b => { if (this.packs.get(app) === p) this.ready.set(app, b); }, () => { if (this.packs.get(app) === p) this.packs.delete(app); });
+    this.packs.set(app, p);
+    while (this.packs.size > 8){
+      const k = this.packs.keys().next().value; if (k === curKey) break;
+      this.packs.delete(k); this.ready.delete(k);
+    }
+    return p;
+  },
+  async bytes(app, key){
+    const ix = PACKS[app] && PACKS[app][key];
+    if (ix){ const buf = await this.pack(app), o = this.base(app); return buf.slice(o + ix[0], o + ix[0] + ix[1]); }
+    if (APPS[app] && APPS[app].deck) return deckClip(app, key);
+    return null;
+  },
+  base(app){ return ASSET_PACKS[app] ? ASSET_PACKS[app].o : 0; },
+  lead(app, key){ const ix = PACKS[app] && PACKS[app][key]; return ix ? ix[2] : 0; },
+  makeUrl(bytes){
+    return this.mode === "data" ? "data:audio/mpeg;base64," + b64enc(bytes) : URL.createObjectURL(new Blob([bytes], { type: "audio/mpeg" }));
+  },
+  urlSync(app, key){
+    const id = app + "/" + key;
+    if (this.urls.has(id)) return this.urls.get(id);
+    const ix = PACKS[app] && PACKS[app][key], buf = this.ready.get(app);
+    if (!ix || !buf) return null;
+    const o = this.base(app), u = this.makeUrl(buf.slice(o + ix[0], o + ix[0] + ix[1]));
+    this.urls.set(id, u);
+    return u;
+  },
+  async url(app, key){
+    const s = this.urlSync(app, key); if (s) return s;
+    const bytes = await this.bytes(app, key); if (!bytes) return null;
+    const id = app + "/" + key;
+    if (!this.urls.has(id)) this.urls.set(id, this.makeUrl(bytes));
+    return this.urls.get(id);
+  },
+  silentUrl(){
+    if (this.mode !== "blob") return "data:audio/mpeg;base64," + SILENT_B64;
+    if (!this.silentBlob) this.silentBlob = URL.createObjectURL(new Blob([Uint8Array.from(atob(SILENT_B64), c => c.charCodeAt(0))], { type: "audio/mpeg" }));
+    return this.silentBlob;
+  },
+  degrade(){
+    this.mode = this.mode === "blob" ? "data" : "webaudio";
+    this.urls.forEach(u => { if (u.startsWith("blob:")) try{ URL.revokeObjectURL(u); }catch(e){} });
+    this.urls.clear();
+    this.note("-", "-", "mode " + this.mode);
+  },
+  stopAll(){ const c = this.current; if (c) c.pause(); this.waStop(); },
+
+  // — запасной путь: Web Audio
+  ctx: null, bufs: new Map(), wa: null, tick: 0,
+  ctx0(){
+    if (!this.ctx){
+      const C = window.AudioContext || window.webkitAudioContext;
+      if (!C) return null;
+      try{ this.ctx = new C(); }catch(e){ return null; }
+    }
+    try{ if (navigator.audioSession && navigator.audioSession.type !== "playback") navigator.audioSession.type = "playback"; }catch(e){}
+    if (this.ctx.state !== "running"){ try{ const p = this.ctx.resume(); if (p && p.catch) p.catch(() => {}); }catch(e){} }
+    return this.ctx;
+  },
+  async buffer(app, key){
+    const id = app + "/" + key;
+    if (this.bufs.has(id)){ const b = this.bufs.get(id); this.bufs.delete(id); this.bufs.set(id, b); return b; }
+    const bytes = await this.bytes(app, key);
+    if (!bytes) return null;
+    const ctx = this.ctx0(); if (!ctx) return null;
+    const ab = await new Promise((res, rej) => {
+      try{ const p = ctx.decodeAudioData(bytes, res, rej); if (p && typeof p.then === "function") p.then(res, rej); }catch(e){ rej(e); }
+    });
+    this.bufs.set(id, ab);
+    while (this.bufs.size > 60) this.bufs.delete(this.bufs.keys().next().value);
+    return ab;
+  },
+  waTime(owner){
+    const c = this.wa;
+    if (c && c.owner === owner && this.ctx) return c.lead + c.off + Math.max(0, this.ctx.currentTime - c.t0);
+    return owner._t;
+  },
+  waStop(){
+    const c = this.wa;
+    clearInterval(this.tick);
+    if (!c) return;
+    this.wa = null;
+    try{ c.src.onended = null; c.src.stop(); }catch(e){}
+    if (!c.owner.paused){ c.owner._t = c.lead + c.off + Math.max(0, (this.ctx ? this.ctx.currentTime : c.t0) - c.t0); c.owner.paused = true; }
+  },
+  playWA(app, owner, key, tok){
+    const ctx = this.ctx0();
+    return (async () => {
+      try{
+        if (!ctx) throw named("NotSupportedError");
+        const buf = await this.buffer(app, key);
+        if (tok !== owner._tok) return;
+        if (!buf) throw named("NotSupportedError");
+        if (ctx.state !== "running"){ try{ await Promise.race([ctx.resume(), sleep(400)]); }catch(e){} }
+        if (tok !== owner._tok) return;
+        if (ctx.state !== "running") throw named("NotAllowedError");
+        const lead = this.lead(app, key);
+        const off = Math.max(0, Math.min(buf.duration, owner._t - lead));
+        const src = ctx.createBufferSource();
+        src.buffer = buf; src.connect(ctx.destination);
+        const cur = { owner: owner, src: src, t0: ctx.currentTime, off: off, lead: lead };
+        this.waStop();
+        this.wa = cur;
+        src.onended = () => {
+          if (this.wa !== cur) return;
+          this.wa = null; clearInterval(this.tick);
+          owner._t = lead + buf.duration; owner.paused = true;
+          if (this.current === owner) this.current = null;
+          owner._emit("timeupdate"); owner._emit("ended");
+        };
+        src.start(0, off);
+        this.note(app, key, "webaudio");
+        if (owner._ls.timeupdate) this.tick = setInterval(() => { if (this.wa === cur) owner._emit("timeupdate"); }, 80);
+      }catch(err){
+        if (tok === owner._tok) owner.paused = true;
+        throw err;
+      }
+    })();
+  },
+};
+function audioFor(app, win){
+  // Та же поверхность, что у new Audio() в тренажёрах: src, play, pause, currentTime, paused, load и события.
+  // Внутри — настоящий <audio> в документе тренажёра: касание и звук в одном документе, как было.
+  const doc = win.document;
+  const list = win.__engPlayers = win.__engPlayers || [];
+  return class EngAudio {
+    constructor(src){
+      this._src = src ? String(src) : ""; this._t = 0; this._tok = 0; this._ls = {}; this._lead = 0; this._el = null; this._unlocked = false;
+      this.paused = true; this.preload = "auto"; this.playbackRate = 1; this.volume = 1; this.muted = false;
+      list.push(this);
+    }
+    _real(){
+      if (!this._el){
+        const a = doc.createElement("audio");
+        a.preload = "auto"; a.setAttribute("playsinline", ""); a.setAttribute("webkit-playsinline", "");
+        a.addEventListener("timeupdate", () => { if (!this.paused && !a.hasAttribute("data-silent")) this._emit("timeupdate"); });
+        a.addEventListener("ended", () => {
+          if (a.hasAttribute("data-silent") || this.paused) return;
+          this.paused = true; this._t = this._lead + (a.duration || 0);
+          if (AE.current === this) AE.current = null;
+          this._emit("timeupdate"); this._emit("ended");
+        });
+        this._el = a;
+      }
+      return this._el;
+    }
+    get src(){ return this._src; }
+    set src(v){ this._src = String(v || ""); this._t = 0; }
+    setAttribute(n, v){ if (n === "src"){ this._src = String(v); this._t = 0; } }
+    getAttribute(n){ return n === "src" ? (this._src || null) : null; }
+    removeAttribute(n){ if (n === "src") this._src = ""; }
+    addEventListener(t, f){ (this._ls[t] = this._ls[t] || []).push(f); }
+    removeEventListener(t, f){ if (this._ls[t]) this._ls[t] = this._ls[t].filter(x => x !== f); }
+    _emit(t){
+      const ev = { type: t, target: this };
+      (this._ls[t] || []).slice().forEach(f => { try{ f.call(this, ev); }catch(e){ setTimeout(() => { throw e; }); } });
+      const h = this["on" + t]; if (typeof h === "function"){ try{ h.call(this, ev); }catch(e){} }
+    }
+    get currentTime(){
+      if (AE.wa && AE.wa.owner === this) return AE.waTime(this);
+      const a = this._el;
+      if (a && !this.paused && !a.hasAttribute("data-silent")) return this._lead + (a.currentTime || 0);
+      return this._t;
+    }
+    set currentTime(v){
+      const t = Math.max(0, +v || 0); this._t = t;
+      const a = this._el;
+      if (a && !this.paused && !a.hasAttribute("data-silent") && !(AE.wa && AE.wa.owner === this)){ try{ a.currentTime = Math.max(0, t - this._lead); }catch(e){} }
+    }
+    get ended(){ return this.paused && this._t > 0; }
+    load(){ const k = clipKey(this._src); if (k && PACKS[app] && PACKS[app][k]) AE.pack(app).catch(() => {}); }
+    pause(){
+      this._tok++;
+      if (AE.wa && AE.wa.owner === this) AE.waStop();
+      const a = this._el;
+      if (a && !a.paused){
+        if (!a.hasAttribute("data-silent")) this._t = this._lead + (a.currentTime || 0);
+        try{ a.pause(); }catch(e){}
+      }
+      this.paused = true;
+      if (AE.current === this) AE.current = null;
+    }
+    unlock(){
+      if (this._unlocked || !this.paused || AE.mode === "webaudio") return;
+      const a = this._real();
+      this._unlocked = true;
+      try{
+        a.setAttribute("data-silent", "1"); a.src = AE.silentUrl();
+        const p = a.play();
+        if (p && p.then) p.then(() => { if (a.hasAttribute("data-silent")) try{ a.pause(); }catch(e){} }, () => { this._unlocked = false; });
+      }catch(e){ this._unlocked = false; }
+    }
+    play(){ return this._play(0); }
+    _play(attempt){
+      const key = clipKey(this._src), tok = ++this._tok;
+      if (AE.current && AE.current !== this) AE.current.pause();
+      AE.waStop();
+      AE.current = this;
+      this.paused = false;
+      if (!key){ this.paused = true; return Promise.reject(named("NotSupportedError")); }
+      if (AE.mode === "webaudio") return AE.playWA(app, this, key, tok);
+      const a = this._real(), lead = AE.lead(app, key);
+      const go = u => {
+        a.removeAttribute("data-silent");
+        this._lead = lead;
+        if (a.getAttribute("src") !== u) a.src = u;
+        const t = Math.max(0, this._t - lead);
+        if (t > 0) try{ a.currentTime = t; }catch(e){}
+        const p = a.play();
+        // сторож: если запись так и не открылась (ни звука, ни ошибки) — перейти к следующему способу
+        const dog = new Promise((_, rej) => {
+          let fired = false;
+          const ok = () => { fired = true; };
+          a.addEventListener("playing", ok, { once: true });
+          a.addEventListener("loadedmetadata", ok, { once: true });
+          setTimeout(() => { if (!fired && tok === this._tok && !this.paused && a.readyState < 1) rej(named("NotSupportedError")); }, 3500);
+        });
+        return Promise.race([p, dog]);
+      };
+      const onErr = err => {
+        if (tok !== this._tok) return;
+        const n = err && err.name;
+        if (err && err.missing){ this.paused = true; throw named("NotSupportedError"); }
+        if (n === "NotAllowedError" || n === "AbortError"){ this.paused = true; throw err; }
+        if (attempt < 2){ AE.degrade(); return this._play(attempt + 1); }
+        this.paused = true; throw err;
+      };
+      const done = () => { if (tok === this._tok) AE.note(app, key, AE.mode); };
+      const u0 = AE.urlSync(app, key);
+      if (u0){
+        let p; try{ p = go(u0); }catch(e){ p = Promise.reject(e); }
+        return Promise.resolve(p).then(done, onErr);
+      }
+      this.unlock();                                   // пакет ещё грузится: разблокировать звук прямо в касании
+      return AE.url(app, key).then(u => {
+        if (tok !== this._tok) return;
+        if (!u){ const e = named("NotSupportedError"); e.missing = true; throw e; }
+        return go(u);
+      }).then(done, onErr);
+    }
+    canPlayType(){ return "probably"; }
+  };
+}
+
+// ——— Мост для тренажёров: вызывается из первой строки каждого тренажёра, до его скриптов
+window.__eng = {
+  attach(key, win){
+    if (!APPS[key]) return;
+    try{ win.claude = claudeFor(key); }catch(e){}
+    try{ win.Audio = audioFor(key, win); }catch(e){}
+    win.__EXTRA_CARDS = (EXTRAS[key] || []).map(c => Object.assign({}, c));
+    const unlock = () => {
+      (win.__engPlayers || []).forEach(p => p.unlock());
+      if (AE.mode === "webaudio") AE.ctx0();
+    };
+    ["pointerdown", "touchend", "keydown"].forEach(t => win.addEventListener(t, unlock, { capture: true, passive: true }));
+  }
+};
+
+// ——— Прогресс: локальный из каждого тренажёра + облачный, сливаем по времени ответа
+const CLOUD = {};
+function localProgress(a){
+  try{ const s = JSON.parse(lsGet(a.ls) || "null"); return (s && s.progress && typeof s.progress === "object") ? s.progress : {}; }catch(e){ return {}; }
+}
+function progressOf(a){
+  const l = localProgress(a), c = CLOUD[a.key] || {}, out = Object.assign({}, c);
+  Object.keys(l).forEach(k => { const x = l[k], y = c[k]; out[k] = (!y || ((x && x.ts) || 0) >= (y.ts || 0)) ? x : y; });
+  return out;
+}
+function idsOf(a){ return a.deck ? a.ids.concat((EXTRAS[a.key] || []).map(c => c.id)) : a.ids; }
+function statsOf(a){
+  const p = progressOf(a), ids = idsOf(a), now = Date.now();
+  let seen = 0, due = 0, known = 0;
+  ids.forEach(id => {
+    const x = p[id]; if (!x) return;
+    seen++;
+    if (typeof x.due === "number" && x.due <= now) due++;
+    if ((x.step | 0) >= 1) known++;
+  });
+  return { total: ids.length, seen: seen, due: due, known: known };
+}
+async function loadCloud(onlyKey){
+  const db = await getDb(), uid = await getUid();
+  if (!db || !uid) return false;
+  try{
+    if (onlyKey){
+      const s = await db.doc("data/users/" + uid + "/progress-" + onlyKey).get();
+      const b = s.exists ? (s.data() || {}) : {};
+      CLOUD[onlyKey] = (b.progress && typeof b.progress === "object") ? b.progress : {};
+    }else{
+      const snap = await db.collection("data/users/" + uid).get();
+      snap.docs.forEach(d => {
+        if (!d.exists || d.id.indexOf("progress-") !== 0) return;
+        const key = d.id.slice(9); if (!APPS[key]) return;
+        const b = d.data() || {};
+        CLOUD[key] = (b.progress && typeof b.progress === "object") ? b.progress : {};
+      });
+    }
+    return true;
+  }catch(e){ return false; }
+}
+
+// ——— Каталог
+const STATS = {};
+function computeAll(){ CAT.apps.forEach(a => { STATS[a.key] = statsOf(a); }); }
+function todayStr(){ const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+const MONTHS = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"];
+function dateRu(s){ const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ""); return m ? (+m[3]) + " " + MONTHS[+m[2] - 1] : ""; }
+function deckItems(key){
+  const a = APPS[key]; const extra = (EXTRAS[key] || []).map(c => ({ id: c.id, term: c.term, ru: String(c.ru || "").split(" — ")[0].split(". ")[0].replace(/\.$/, ""), added: c.added || "" }));
+  return a.items.concat(extra);
+}
+function latest(key, n){
+  const items = deckItems(key).filter(x => x.added);
+  items.sort((x, y) => x.added.localeCompare(y.added));
+  return items.slice(-n).reverse();
+}
+
+function renderSummary(){
+  let due = 0, withDue = 0, fresh = 0, total = 0;
+  CAT.apps.forEach(a => { const s = STATS[a.key]; due += s.due; if (s.due) withDue++; fresh += s.total - s.seen; total += s.total; });
+  $("eyebrow").textContent = CAT.apps.length + " " + plural(CAT.apps.length, "тема", "темы", "тем") + " · " + fmt(total) + " " + plural(total, "карточка", "карточки", "карточек");
+  const sum = $("sum"); sum.textContent = "";
+  if (due){
+    sum.append("Сегодня к\u00a0повторению ", el("b", null, fmt(due)), "\u00a0" + plural(due, "карточка", "карточки", "карточек") + " в\u00a0" + withDue + "\u00a0" + (withDue === 1 ? "теме" : "темах") + ".");
+  }else{
+    sum.append("Сегодня всё повторено. Новых карточек ждёт ", el("b", null, fmt(fresh)), ".");
+  }
+}
+
+function openBtn(node, key){ node.addEventListener("click", () => openCourse(key)); return node; }
+
+function renderToday(){
+  const box = $("today"); box.textContent = "";
+  // 1) что повторить
+  const dueList = CAT.apps.filter(a => STATS[a.key].due > 0).sort((x, y) => STATS[y.key].due - STATS[x.key].due);
+  const c1 = el("div", "tcard is-due");
+  c1.append(el("p", "lbl", "К повторению"));
+  if (dueList.length){
+    const n = dueList.reduce((s, a) => s + STATS[a.key].due, 0);
+    c1.append(el("p", "big", fmt(n)));
+    const chips = el("div", "chips");
+    dueList.slice(0, 8).forEach(a => {
+      const b = el("button", "chip"); b.type = "button";
+      b.setAttribute("aria-label", a.title + ": " + STATS[a.key].due + " к повторению");
+      b.append(el("span", null, a.title), el("b", null, String(STATS[a.key].due)));
+      chips.append(openBtn(b, a.key));
+    });
+    if (dueList.length > 8) chips.append(el("span", "tsub", "и ещё " + (dueList.length - 8)));
+    c1.append(chips);
+  }else{
+    c1.classList.remove("is-due");
+    c1.append(el("p", "term", "Всё повторено"));
+    const next = CAT.apps.filter(a => STATS[a.key].seen > 0 && STATS[a.key].seen < STATS[a.key].total)[0] || CAT.apps.filter(a => STATS[a.key].seen === 0)[0];
+    if (next){
+      c1.append(el("p", "tsub", "Можно взять новые карточки:"));
+      const chips = el("div", "chips"), b = el("button", "chip"); b.type = "button";
+      b.append(el("span", null, next.title), el("b", null, "+" + (STATS[next.key].total - STATS[next.key].seen)));
+      chips.append(openBtn(b, next.key)); c1.append(chips);
+    }
+  }
+  box.append(c1);
+  // 2) глагол дня и 3) фразы дня — из колод, которые пополняются по расписанию
+  const today = todayStr();
+  [["phrasal", 1, "Глагол дня", "Последний глагол"], ["bbapp", 2, "Фразы дня", "Последние фразы"]].forEach(([key, n, lblToday, lblLast]) => {
+    const a = APPS[key]; if (!a) return;
+    const items = latest(key, n); if (!items.length) return;
+    const fresh = items[0].added === today;
+    const card = el("button", "tcard"); card.type = "button";
+    card.append(el("p", "lbl", fresh ? lblToday : lblLast + " · " + dateRu(items[0].added)));
+    if (n === 1){
+      card.append(el("p", "term", items[0].term), el("p", "ru", items[0].ru));
+    }else{
+      const t = el("div", "terms");
+      items.forEach(x => { const p = el("p"); p.append(el("span", "term sm", x.term)); t.append(p); });
+      card.append(t);
+    }
+    card.setAttribute("aria-label", a.title + ": " + items.map(x => x.term).join("; "));
+    box.append(openBtn(card, key));
+  });
+  // 4) продолжить
+  const last = lsGet("eng:last");
+  if (last && APPS[last] && !APPS[last].deck){
+    const a = APPS[last], s = STATS[last];
+    const card = el("button", "tcard"); card.type = "button";
+    card.append(el("p", "lbl", "Продолжить"), el("p", "term", a.title));
+    card.append(el("p", "ru", s.due ? s.due + " " + plural(s.due, "карточка", "карточки", "карточек") + " к повторению" : "изучено " + s.known + " из " + s.total));
+    box.append(openBtn(card, last));
+  }
+}
+
+const TILES = {};
+function tileFoot(t, a){
+  const s = STATS[a.key];
+  t.due.hidden = !s.due; t.due.textContent = String(s.due);
+  t.fill.style.width = (s.total ? Math.round(100 * s.known / s.total) : 0) + "%";
+  t.cnt.textContent = s.seen ? s.known + " из " + s.total : s.total + " " + plural(s.total, "карточка", "карточки", "карточек");
+  t.btn.setAttribute("aria-label", a.title + ". " + a.desc + ". " + (s.due ? s.due + " к повторению, " : "") + "изучено " + s.known + " из " + s.total);
+}
+function renderGroups(){
+  const box = $("groups"); box.textContent = "";
+  CAT.groups.forEach(([g, title]) => {
+    const apps = CAT.apps.filter(a => a.group === g);
+    const sec = el("section", "grp"); sec.dataset.g = g;
+    sec.append(el("h2", "lbl", title));
+    const grid = el("div", "grid");
+    apps.forEach(a => {
+      const btn = el("button", "tile"); btn.type = "button"; btn.dataset.k = a.key;
+      const top = el("span", "t-top"), name = el("span", "t-name", a.title), due = el("span", "t-due");
+      due.setAttribute("aria-hidden", "true");
+      top.append(name, due);
+      const foot = el("span", "t-foot"), bar = el("span", "bar"), fill = el("i"), cnt = el("span", "cnt");
+      bar.append(fill); foot.append(bar, cnt);
+      if (a.deck) foot.append(el("span", "tag", "каждый день"));
+      btn.append(top, el("span", "t-desc", a.desc), foot);
+      TILES[a.key] = { btn: btn, due: due, fill: fill, cnt: cnt, sec: sec, hay: norm(a.title + " " + a.desc + " " + (a.en || "") + " " + (a.kw || "") + " " + title + " " + a.key) };
+      tileFoot(TILES[a.key], a);
+      grid.append(openBtn(btn, a.key));
+    });
+    sec.append(grid);
+    box.append(sec);
+  });
+}
+function refreshTiles(){ CAT.apps.forEach(a => { if (TILES[a.key]) tileFoot(TILES[a.key], a); }); }
+function renderAll(){ computeAll(); renderSummary(); renderToday(); refreshTiles(); }
+
+// ——— Поиск по названию, описанию и темам внутри тренажёра
+function norm(s){ return String(s || "").toLowerCase().replace(/ё/g, "е").trim(); }
+function applySearch(){
+  const q = norm($("q").value);
+  $("qx").hidden = !q;
+  $("today").hidden = !!q;
+  const words = q.split(/[\s\/,;+]+/).filter(Boolean);
+  let shown = 0;
+  const secs = {};
+  CAT.apps.forEach(a => {
+    const t = TILES[a.key];
+    const ok = !words.length || words.every(w => t.hay.indexOf(w) >= 0);
+    t.btn.hidden = !ok;
+    if (ok){ shown++; secs[a.group] = true; }
+  });
+  document.querySelectorAll(".grp").forEach(s => { s.hidden = !secs[s.dataset.g]; });
+  $("empty").hidden = shown > 0;
+}
+$("q").addEventListener("input", applySearch);
+$("qx").addEventListener("click", () => { $("q").value = ""; applySearch(); $("q").focus(); });
+
+// ——— Открыть тему
+const HEAD = '<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:dark;box-sizing:border-box}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#0e1113;color:#e8e8e8}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>';
+const htmlCache = new Map();
+let curKey = null, loadedKey = null, decksP = null;
+function getHtml(key){
+  let p = htmlCache.get(key);
+  if (!p){
+    p = fetch("apps/" + key + ".html").then(r => { if (!r.ok) throw new Error("html " + r.status); return r.text(); });
+    p.catch(() => htmlCache.delete(key));
+    htmlCache.set(key, p);
+  }
+  return p;
+}
+function courseMsg(text, retry){
+  $("cmsg").hidden = !text; $("cmsgText").textContent = text || ""; $("retry").hidden = !retry;
+}
+async function openCourse(key){
+  const a = APPS[key]; if (!a) return;
+  lsSet("eng:last", key);
+  $("ctitle").textContent = a.title;
+  const frame = $("frame");
+  frame.title = a.title;
+  const course = $("course");
+  course.classList.add("open"); course.setAttribute("aria-hidden", "false");
+  $("home").setAttribute("aria-hidden", "true");
+  curKey = key;
+  if (loadedKey === key && frame.classList.contains("ready")){ $("back").focus({ preventScroll: true }); return; }
+  AE.stopAll();
+  loadedKey = null;
+  frame.classList.remove("ready");
+  courseMsg("Открываю тему…", false);
+  AE.pack(key).catch(() => {});
+  try{
+    const html = await getHtml(key);
+    if (a.deck && decksP) await Promise.race([decksP, sleep(3000)]);
+    if (curKey !== key) return;
+    loadedKey = key;
+    frame.srcdoc = HEAD + html + "\n</body></html>";
+  }catch(e){
+    if (curKey !== key) return;
+    courseMsg("Тема не открылась. Проверьте интернет и попробуйте ещё раз.", true);
+  }
+}
+$("frame").addEventListener("load", () => {
+  const f = $("frame");
+  if (!loadedKey) return;
+  f.classList.add("ready");
+  courseMsg("", false);
+});
+$("retry").addEventListener("click", () => { const k = curKey; loadedKey = null; if (k) openCourse(k); });
+function closeCourse(){
+  const course = $("course");
+  if (!course.classList.contains("open")) return;
+  AE.stopAll();
+  try{ const w = $("frame").contentWindow; if (w && w.speechSynthesis) w.speechSynthesis.cancel(); }catch(e){}
+  course.classList.remove("open"); course.setAttribute("aria-hidden", "true");
+  $("home").removeAttribute("aria-hidden");
+  const key = curKey;
+  renderAll();
+  if (key) loadCloud(key).then(ok => { if (ok) renderAll(); });
+  if (key && TILES[key]) try{ TILES[key].btn.focus({ preventScroll: true }); }catch(e){}
+}
+$("back").addEventListener("click", closeCourse);
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeCourse(); });
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && !$("course").classList.contains("open")) renderAll(); });
+
+function probeMedia(url, doc){
+  return new Promise(res => {
+    const a = (doc || document).createElement("audio"); let done = false;
+    const fin = v => { if (!done){ done = true; res(v); } };
+    a.preload = "auto";
+    a.addEventListener("loadedmetadata", () => fin("ok " + (a.duration || 0).toFixed(2)));
+    a.addEventListener("error", () => fin("error " + (a.error ? a.error.code : "?")));
+    setTimeout(() => fin("timeout"), 6000);
+    try{ a.src = url; a.load(); }catch(e){ fin("throw " + e); }
+  });
+}
+// ——— Самопроверка по ссылке с #selftest: открыть тему, проверить мост, пакет звука и базу, записать итог
+async function selfTest(){
+  const r = { at: new Date().toISOString(), ua: navigator.userAgent };
+  const key = "artikli", t0 = Date.now();
+  try{
+    openCourse(key);
+    for (let i = 0; i < 150 && !$("frame").classList.contains("ready"); i++) await sleep(100);
+    r.frameReady = $("frame").classList.contains("ready");
+    const w = $("frame").contentWindow;
+    r.bridge = !!(w && w.claude && w.Audio && w.Audio.name === "EngAudio");
+    r.subText = w && w.document && w.document.body ? w.document.body.innerText.length : 0;
+    const ab = await AE.pack(key); r.packBytes = ab.byteLength;
+    const buf = await AE.buffer(key, Object.keys(PACKS[key])[0]); r.decoded = buf ? +buf.duration.toFixed(2) : null;
+    const ix = PACKS[key][Object.keys(PACKS[key])[0]], bytes = ab.slice(AE.base(key) + ix[0], AE.base(key) + ix[0] + ix[1]), mdoc = w ? w.document : document;
+    r.csp = [];
+    const onv = e => r.csp.push(String(e.violatedDirective || "") + " " + String(e.blockedURI || "").slice(0, 12));
+    document.addEventListener("securitypolicyviolation", onv); if (w) w.document.addEventListener("securitypolicyviolation", onv);
+    r.mBlob = await probeMedia(URL.createObjectURL(new Blob([bytes], { type: "audio/mpeg" })), mdoc);
+    r.mData = await probeMedia("data:audio/mpeg;base64," + b64enc(bytes), mdoc);
+    r.mFile = await probeMedia(ASSET_PACKS[key] ? ASSET_PACKS[key].u : ("packs/" + key + ".mp3"), mdoc);
+    const big = Object.keys(ASSET_PACKS)[0];
+    if (big){ try{ const ab2 = await AE.pack(big); r.assetPack = big + " " + ab2.byteLength; const b2 = await AE.bytes(big, Object.keys(PACKS[big])[0]); r.assetClip = await probeMedia(URL.createObjectURL(new Blob([b2], { type: "audio/mpeg" })), mdoc); }catch(e){ r.assetPack = big + " ERR " + e; } }
+    r.ctx = AE.ctx ? AE.ctx.state : null;
+    const uid = await getUid(); r.uid = !!uid;
+    const db = w && w.claude ? await w.claude.use("db") : null; r.subDb = !!db;
+    if (db && uid){ const s = await db.doc("data/users/" + uid + "/progress").get(); r.subDocExists = s.exists; }
+  }catch(e){ r.error = String((e && (e.message || e.name)) || e); }
+  r.ms = Date.now() - t0;
+  try{ const db = await getDb(), uid = await getUid(); if (db && uid) await db.doc("data/users/" + uid + "/selftest").set(r); }catch(e){}
+  closeCourse();
+  return r;
+}
+
+// ——— Старт
+function start(data){
+  computeAll();
+  renderGroups();
+  renderAll();
+  decksP = loadDecks().then(() => renderAll());
+  loadCloud().then(ok => { if (ok) renderAll(); });
+  if (data && data.open && APPS[data.open]) openCourse(data.open);
+  if (data && typeof data.q === "string" && data.q){ $("q").value = data.q; applySearch(); }
+  if (location.hash === "#selftest") selfTest();
+}
+const hot = window.claude && window.claude.hot;
+try{ if (hot && typeof hot.snapshot === "function") hot.snapshot(() => ({ open: $("course").classList.contains("open") ? curKey : null, q: $("q").value })); }catch(e){}
+try{
+  if (hot && typeof hot.ready === "function") hot.ready(d => start(d || {}));
+  else start((hot && hot.data) || {});
+}catch(e){ start({}); }
+</script>
