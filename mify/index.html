@@ -351,6 +351,18 @@ body { background: radial-gradient(900px 520px at -10% -8%, rgba(255,79,216,.13)
 .step:not(:last-child)::before { background: linear-gradient(var(--a, #23253A), transparent); opacity: .7; }
 details.src, .footer-note, .switch-row { box-shadow: 0 0 18px -10px var(--neon); }
 .score .num { text-shadow: 0 0 14px var(--neon); }
+/* Длинные слова и длинные карточки: ничего не вылезает вбок, карточка растёт под свой текст */
+main { overflow-x: hidden; }
+main, .face { overflow-wrap: break-word; }
+.face { overflow-x: hidden; }
+h1, h2, h3, .f-front .meaning, .opt, .step h3 { -webkit-hyphens: auto; hyphens: auto; }
+.cheat-row span { white-space: normal; }
+.mc-name h3, .f-back .nm h2, .g-head h2 { min-width: 0; }
+.f-back .nm h2.long { font-size: 2rem; }
+.face > * { max-width: 100%; }
+h1, h2, h3, .f-front .meaning, .cov, .cheat-row span, .opt { overflow-wrap: anywhere; }
+.tabs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.tab { min-width: 0; overflow: hidden; font-size: min(.8125rem, 4.2vw); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
@@ -906,6 +918,7 @@ function deviceK() {
 function applyFont() {
   document.documentElement.classList.toggle('wide', (window.innerWidth || 390) >= 700);
   document.documentElement.style.setProperty('--k', (state.settings.font / 100 * deviceK()).toFixed(3));
+  fitCard();
 }
 window.addEventListener('resize', applyFont);
 window.addEventListener('orientationchange', () => setTimeout(applyFont, 150));
@@ -958,7 +971,7 @@ let settingsUI = { confirmReset: false };
 /* ---------- Циклы ---------- */
 function renderGroups() {
   const cheat = GROUPS.map(g =>
-    `<div class="cheat-row g-${g.id}">${g.members.map(m => `<span>${m.emoji} ${esc(m.name)}</span>`).join('')}</div>`).join('');
+    `<div class="cheat-row g-${g.id}">${g.members.map(m => `<span>${m.emoji}&nbsp;${esc(m.name)}</span>`).join('')}</div>`).join('');
   const tiles = GROUPS.map(g => {
     const n = g.members.filter(m => isLearned(m.id)).length;
     return `<button class="tile g-${g.id}" type="button" data-act="group" data-id="${g.id}">
@@ -1043,7 +1056,7 @@ function renderCards() {
           <p class="who">Кто это?</p>
         </div>
         <div class="face f-back" aria-hidden="${!cards.flipped}">
-          <div class="nm"><h2>${esc(m.name)}</h2>${speakBtn(m.name)}</div>
+          <div class="nm"><h2${longWord(m.name) ? ' class="long"' : ''}>${esc(m.name)}</h2>${speakBtn(m.name)}</div>
           <p>${fmt(m.fact)}</p>
           <hr>
           <p class="hook">${fmt(m.hook)}</p>
@@ -1064,7 +1077,22 @@ function renderCards() {
     ${body}
   </div>`;
   bindSwipe();
+  fitCard();
 }
+function fitCard() {
+  // Карточка не короче своего текста: иначе текст пришлось бы листать внутри неё, а это сбивает свайп
+  const card = document.getElementById('flip');
+  if (!card) return;
+  card.style.minHeight = '';
+  // Считаем по сумме блоков: у центрированного текста scrollHeight занижен
+  const need = Math.max(...Array.from(card.querySelectorAll('.face'), f => {
+    const cs = getComputedStyle(f), kids = Array.from(f.children);
+    return kids.reduce((s, k) => s + k.offsetHeight, 0) + Math.max(0, kids.length - 1) * (parseFloat(cs.rowGap) || 0)
+      + parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom) + parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth) + 2;
+  }));
+  if (need > card.offsetHeight) card.style.minHeight = Math.ceil(need) + 'px';
+}
+const longWord = s => String(s).length > 16 || Math.max(...String(s).split(/[\s\-—]+/).map(w => w.length)) >= 11;
 function flipCard() {
   if (!cards || !cards.queue.length) return;
   cards.flipped = !cards.flipped;
