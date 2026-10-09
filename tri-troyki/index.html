@@ -316,6 +316,11 @@ details.src ol { margin: 0; padding: 0 16px 16px 2.25rem; display: flex; flex-di
 .danger.fill { background: var(--bad); color: var(--bg); }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
+/* iPad: на всю ширину экрана, всё крупнее — масштаб --k задаёт applyFont() */
+html.wide .wrap { max-width: none; }
+html.wide .tiles, html.wide .mcards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+html.wide .sheet-panel { max-width: calc(560px * var(--k)); }
+html.wide .plate { border-radius: 12px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
@@ -544,9 +549,20 @@ function pick(arr, n, except) { return shuffle(arr.filter(x => !except.includes(
 const reduceMotion = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ---------- Шрифт ---------- */
-function applyFont() {
-  document.documentElement.style.setProperty('--k', String(state.settings.font / 100));
+// iPad: приложение на всю ширину и крупнее (как в «Английском B2»), телефон — как есть.
+// Портрет — по ширине экрана, альбом — по высоте, чтобы карточка и кнопки помещались.
+function deviceK() {
+  const w = window.innerWidth || 390, h = window.innerHeight || 760;
+  if (w < 700) return 1;
+  const k = (w >= 900 && w / h > 1.15) ? h / 600 : Math.min(w / 440, h / 780);
+  return Math.max(1, Math.min(k, 1.9));
 }
+function applyFont() {
+  document.documentElement.classList.toggle('wide', (window.innerWidth || 390) >= 700);
+  document.documentElement.style.setProperty('--k', (state.settings.font / 100 * deviceK()).toFixed(3));
+}
+window.addEventListener('resize', applyFont);
+window.addEventListener('orientationchange', () => setTimeout(applyFont, 150));
 
 /* ---------- Озвучка ---------- */
 let ruVoice = null;

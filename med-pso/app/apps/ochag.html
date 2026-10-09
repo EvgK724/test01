@@ -204,6 +204,10 @@ details.more > div { padding: 0 16px 16px; display: flex; flex-direction: column
 .mist .y { color: var(--bad); font-size: .9375rem; }
 .mist .r { color: var(--ok); font-size: .9375rem; }
 
+/* iPad: на всю ширину экрана, всё крупнее — масштаб --k задаёт fit() */
+html.wide .wrap { max-width: none; }
+html.wide .rows { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+html.wide .diagram { max-width: calc(560px * var(--k)); margin-inline: auto; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
 </style>
 <script>
@@ -216,6 +220,7 @@ details.more > div { padding: 0 16px 16px; display: flex; flex-direction: column
     if (w < 600) k = 1;
     k = Math.max(1, Math.min(k, 1.9));
     document.documentElement.style.setProperty('--k', k.toFixed(3));
+    document.documentElement.classList.toggle('wide', w >= 700);
     try { if (window.parent !== window && window.parent.__pso) document.documentElement.classList.add('embedded'); } catch (e) { /* открыт сам по себе */ }
   }
   fit();
