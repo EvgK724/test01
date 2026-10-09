@@ -1137,5 +1137,73 @@ document.addEventListener('click', e => {
 render(true);
 </script>
 <!--/APP-BODY-->
+<script>
+/* ---------- Автообновление: при открытии и при возврате в приложение сверяем код страницы с версией на сайте ---------- */
+(function () {
+  if (location.protocol !== 'https:' || window.parent !== window) return;
+  const KEY = 'app-update:' + location.pathname;
+  const ss = {
+    get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
+  };
+  const texts = doc => Array.from(doc.querySelectorAll('script, style'), n => n.textContent);
+  const hash = list => { let h = 5381; const s = list.join('\n'); for (let i = 0; i < s.length; i++) h = (h * 33 + s.charCodeAt(i)) | 0; return (h >>> 0) + ':' + s.length; };
+  const mine = new Set(texts(document));
+  let last = 0, box = null;
+  // Не перезагружаем посреди теста — тогда только предлагаем обновиться
+  function busy() {
+    try { return state.tab === 'test' && !!test && test.i < test.qs.length && (test.i > 0 || !!test.answered || test.pick != null); } catch (e) { return false; }
+  }
+  function toast(text, onUpdate) {
+    if (box) box.remove();
+    box = document.createElement('div');
+    box.setAttribute('role', 'status');
+    box.style.cssText = 'position:fixed;z-index:60;left:12px;right:12px;top:calc(env(safe-area-inset-top, 0px) + 64px * var(--k, 1));max-width:520px;margin:0 auto;display:flex;align-items:center;gap:8px;padding:6px 6px 6px 16px;border-radius:14px;background:var(--surface, #0E0F17);color:var(--text, #EEEEF8);border:1px solid var(--neon, #3BE8FF);box-shadow:0 0 18px -5px var(--neon, #3BE8FF);font-size:1rem;font-weight:600;min-height:56px';
+    const label = document.createElement('span');
+    label.style.flex = '1';
+    label.textContent = text;
+    box.append(label);
+    const btn = (t, fn, extra) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = t;
+      b.style.cssText = 'min-width:44px;min-height:44px;border-radius:10px;border:0;font:inherit;padding:0 12px;cursor:pointer;' + extra;
+      b.addEventListener('click', fn);
+      box.append(b);
+    };
+    if (onUpdate) {
+      btn('Обновить', onUpdate, 'background:var(--neon, #3BE8FF);color:#06060B');
+      btn('✕', () => box.remove(), 'background:none;color:inherit');
+      box.querySelector('button').setAttribute('aria-label', 'Обновить приложение');
+      box.lastChild.setAttribute('aria-label', 'Скрыть');
+    } else {
+      setTimeout(() => box && box.remove(), 2500);
+    }
+    document.body.append(box);
+  }
+  function apply(fresh) {
+    ss.set(KEY, fresh);
+    ss.set(KEY + ':done', '1');
+    location.reload();
+  }
+  async function check() {
+    if (Date.now() - last < 60000) return;
+    last = Date.now();
+    try {
+      const r = await fetch(location.href.split('#')[0], { cache: 'reload' });
+      if (!r.ok) return;
+      const list = texts(new DOMParser().parseFromString(await r.text(), 'text/html'));
+      if (!list.length || list.every(t => mine.has(t))) return;
+      const fresh = hash(list);
+      // Уже перезагружались ради этой версии, а пришла старая — не зацикливаемся, предлагаем кнопку
+      if (busy() || ss.get(KEY) === fresh) toast('Вышла новая версия', () => apply(fresh));
+      else apply(fresh);
+    } catch (e) {}
+  }
+  if (ss.get(KEY + ':done')) { ss.set(KEY + ':done', ''); toast('Приложение обновлено'); }
+  setTimeout(check, 1500);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') check(); });
+  window.addEventListener('pageshow', e => { if (e.persisted) check(); });
+})();
+</script>
 </body>
 </html>
