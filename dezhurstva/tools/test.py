@@ -105,7 +105,19 @@ with sync_playwright() as p:
     pg.fill("#note", "Не ставить подряд с выходными")
     s = pg.locator("#summary").inner_text()
     check("Не ставить: пн; 1–5" in s and "Хочу: пт; 19" in s and "всего не больше 5" in s and "Комментарий: Не ставить подряд" in s, f"итог пожеланий: {s!r}")
-    check(pg.locator('button[data-act="send"]').is_disabled(), "отправка выключена, пока форма не настроена")
+    cfg = json.loads((ROOT / "data" / "config.json").read_text())["form"]
+    if cfg.get("action"):
+        posted = []
+        pg.route(cfg["action"], lambda route: (posted.append(route.request.post_data or ""), route.fulfill(status=200, body="ok")))
+        pg.locator('button[data-act="send"]').click()
+        pg.wait_for_selector(".sent")
+        from urllib.parse import parse_qs
+        body = parse_qs(posted[0]) if posted else {}
+        val = (body.get(cfg["entry"]) or [""])[0]
+        check(len(posted) == 1 and "#DEZH " in val and '"who":"omutov"' in val and '"m":"2026-12"' in val,
+              f"отправка в Google Форму: поле {cfg['entry']}, {len(val)} симв.")
+    else:
+        check(pg.locator('button[data-act="send"]').is_disabled(), "отправка выключена, пока форма не настроена")
     pg.screenshot(path=str(OUT / "05-wish.png"), full_page=True)
     ctx.close()
     # 4. Excel

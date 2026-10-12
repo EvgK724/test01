@@ -1,5 +1,8 @@
 {
  "_": "Приём пожеланий: Google Форма организатора. action — адрес …/formResponse, entry — поле вопроса «Пожелание» (entry.ЧИСЛО). Пусто — кнопка «Отправить» выключена, работает «Скопировать текст».",
- "form": {"action": "", "entry": ""},
+ "form": {
+  "action": "https://docs.google.com/forms/d/e/1FAIpQLSckx3uIATXOmUh2wJz7j__M4bGN3njeDHmYOOHhZ89C1V-dMQ/formResponse",
+  "entry": "entry.107621685"
+ },
  "deadline": 15
 }
