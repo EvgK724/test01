@@ -192,15 +192,14 @@ main {
 .cal .wd { text-align: center; font-size: min(.72rem, 3.2vw); font-weight: 700; color: var(--text-3); text-transform: uppercase; padding-bottom: 2px; }
 .cal .wd.we { color: #B9A6F5; }
 .day {
-  position: relative; min-height: 58px; padding: 4px 2px 5px; border-radius: 10px; border: 1px solid var(--border);
+  position: relative; min-height: 60px; padding: 5px 1px 12px; border-radius: 10px; border: 1px solid var(--border);
   background: var(--surface); display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; overflow: hidden;
 }
 .day .n { font-size: min(.82rem, 3.7vw); font-weight: 700; color: var(--text-2); line-height: 1.2; }
-.day .w { font-size: min(.7rem, 3.2vw); font-weight: 700; line-height: 1.15; color: var(--c); text-shadow: 0 0 6px color-mix(in srgb, var(--c) 70%, transparent); white-space: nowrap; }
-.day .w.f { display: none; }
+.day .w { font-size: clamp(.68rem, 4.2vw, 1.15rem); font-weight: 800; line-height: 1.1; color: var(--c); text-shadow: 0 0 6px color-mix(in srgb, var(--c) 70%, transparent); white-space: nowrap; }
 .day.off { background: var(--off-fill); border-color: var(--off-line); }
 .day.off .n { color: #D9CCFF; }
-.day.hol::after { content: ""; position: absolute; top: 5px; right: 5px; width: 6px; height: 6px; border-radius: 50%; background: var(--neon-2); box-shadow: 0 0 8px var(--neon-2); }
+.day.hol::after { content: ""; position: absolute; bottom: 5px; left: 50%; margin-left: -3px; width: 6px; height: 6px; border-radius: 50%; background: var(--neon-2); box-shadow: 0 0 8px var(--neon-2); }
 .day.today { outline: 2px solid #fff; outline-offset: -2px; }
 .day.mine { border-color: var(--neon); box-shadow: 0 0 14px -3px var(--neon), inset 0 0 12px -6px var(--neon); }
 .day.sel { border-color: var(--neon-2); box-shadow: 0 0 16px -2px var(--neon-2); }
@@ -208,10 +207,14 @@ main {
 .cal.focus .day:not(.hit) .w { opacity: .28; text-shadow: none; }
 .cal.focus .day.hit { border-color: var(--fc); box-shadow: 0 0 14px -4px var(--fc); }
 @media (min-width: 640px) {
-  .day { min-height: 66px; }
-  .day .w.s { display: none; }
-  .day .w.f { display: block; font-size: .74rem; }
+  .day { min-height: 70px; }
 }
+.dlist li.ag { grid-template-columns: 3rem minmax(0, 1fr); }
+.dlist b.nm { white-space: nowrap; overflow-wrap: normal; word-break: keep-all; -webkit-hyphens: none; hyphens: none;
+  color: color-mix(in srgb, var(--c, #fff) 35%, #fff); text-shadow: 0 0 10px color-mix(in srgb, var(--c, transparent) 70%, transparent); }
+.dlist li.ag > div { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.dlist li.ag b.nm { flex-basis: 100%; }
+.dlist li.ag .pill { padding: 1px 8px; font-size: .75rem; }
 .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; color: var(--text-2); font-size: .82rem; }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .legend i { width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface); }
@@ -428,15 +431,21 @@ function relText(day, now) {
 }
 function myKeys(id, mk) { return Object.keys(DAY).filter(k => (!mk || DAY[k].mk === mk) && DAY[k].who.includes(id)).sort(); }
 function nextDuty(id, now) { return myKeys(id).map(k => DAY[k]).find(d => d.end > now) || null; }
-function shortNames(mk) {
-  const ids = [...new Set(Object.values(D.months[mk].duty).flat())];
-  const names = ids.map(nameOf);
-  let L = 4;
-  while (L < 8 && new Set(names.map(n => n.slice(0, L))).size < names.length) L++;
-  const out = {};
-  ids.forEach((id, i) => { out[id] = names[i].length <= L + 1 ? names[i] : names[i].slice(0, L); });
+// Три буквы для сетки: «Кле», «Кар», «Ому»… Если начало совпадает — третья буква берётся дальше по фамилии
+const CODE = (() => {
+  const out = {}, taken = new Set();
+  const letters = id => nameOf(id).replace(/[^A-Za-zА-Яа-яЁё]/g, '');
+  const first3 = id => { const n = letters(id); return n.slice(0, 1).toUpperCase() + n.slice(1, 3).toLowerCase(); };
+  for (const id of IDS) {
+    const n = letters(id);
+    let code = first3(id);
+    if (taken.has(code)) {
+      for (let i = 3; i < n.length; i++) { const c = code.slice(0, 2) + n[i].toLowerCase(); if (!taken.has(c) && !IDS.some(o => o !== id && first3(o) === c)) { code = c; break; } }
+    }
+    taken.add(code); out[id] = code;
+  }
   return out;
-}
+})();
 
 // Ссылки на календари
 const BASE = location.href.split(/[?#]/)[0].replace(/[^/]*$/, '');
@@ -577,7 +586,7 @@ function updatedText() {
 function grid(mk, focus, now) {
   const [y, m] = mk.split('-').map(Number);
   const first = (new Date(y, m - 1, 1).getDay() + 6) % 7;
-  const sn = shortNames(mk), tk = ymd(now);
+  const tk = ymd(now);
   let h = WD_MON.map((w, i) => `<div class="wd ${i > 4 ? 'we' : ''}">${w}</div>`).join('') + '<div></div>'.repeat(first);
   for (let d = 1; d <= daysIn(mk); d++) {
     const k = mk + '-' + pad(d), day = DAY[k];
@@ -585,8 +594,7 @@ function grid(mk, focus, now) {
     const cls = ['day', day.off && 'off', day.hol && 'hol', k === tk && 'today', state.me && who.includes(state.me) && 'mine', state.sel === k && 'sel', !who.length && 'empty', focus && who.includes(focus) && 'hit'].filter(Boolean).join(' ');
     const label = dateText(day) + (who.length ? ', ' + who.map(nameOf).join(', ') : ', нет дежурного') + (day.off ? ', ' + kind(day) : '');
     h += `<button type="button" class="${cls}" data-act="day" data-k="${k}" aria-label="${esc(label)}" style="${focus ? '--fc:' + color(focus) : ''}">
-      <span class="n">${d}</span>${who.map(id => `<span class="w s" style="--c:${color(id)}">${esc(sn[id])}</span><span class="w f" style="--c:${color(id)}">${esc(nameOf(id))}</span>`).join('')}
-</button>`;
+      <span class="n">${d}</span>${who.map(id => `<span class="w" style="--c:${color(id)}">${esc(CODE[id])}</span>`).join('')}</button>`;
   }
   return `<div class="cal ${focus ? 'focus' : ''}">${h}</div>`;
 }
@@ -597,11 +605,10 @@ function agenda(mk, focus, now) {
     const k = mk + '-' + pad(d), day = DAY[k];
     if (focus && !day.who.includes(focus)) continue;
     const mine = state.me && day.who.includes(state.me);
-    h += `<li class="${day.off ? 'off' : ''} ${day.end <= now ? 'past' : ''} ${mine || k === tk ? 'next' : ''}">
+    h += `<li class="ag ${day.off ? 'off' : ''} ${day.end <= now ? 'past' : ''} ${mine || k === tk ? 'next' : ''}">
       <span class="dd">${d}<small>${WD[day.wd]}</small></span>
-      <div>${day.who.length ? day.who.map(id => `<b style="color:color-mix(in srgb, ${color(id)} 35%, #fff);text-shadow:0 0 10px color-mix(in srgb, ${color(id)} 70%, transparent)">${esc(nameOf(id))}</b>`).join('') : '<b class="lead">нет дежурного</b>'}
-      <span class="sub">${hhmm(day.start)} → ${hhmm(day.end)} · ${dur(day.mins)}</span></div>
-      <span class="pill ${day.off ? 'off' : ''}">${kind(day)}</span></li>`;
+      <div>${day.who.length ? day.who.map(id => `<b class="nm" style="--c:${color(id)}">${esc(nameOf(id))}</b>`).join('') : '<b class="nm lead">нет дежурного</b>'}
+      <span class="sub">${hhmm(day.start)} → ${hhmm(day.end)} · ${dur(day.mins)}</span><span class="pill ${day.off ? 'off' : ''}">${kind(day)}</span></div></li>`;
   }
   return `<ul class="dlist">${h || '<li><span></span><div class="lead">Нет дежурств</div></li>'}</ul>`;
 }

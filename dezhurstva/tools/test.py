@@ -56,12 +56,12 @@ def hscroll(pg):
 
 def clipped(pg):
     return pg.evaluate("""() => { const out = [];
-      const sel = '.tab, .brush button, .seg button, .wdrow button, .btn, .chip, .mbar h2, .day .w.s, .day .n, .wcal .day .t, .pill, .stepper output';
+      const sel = '.tab, .brush button, .seg button, .wdrow button, .btn, .chip, .mbar h2, .day .w, .day .n, .wcal .day .t, .pill, .stepper output, .dlist b.nm';
       for (const el of document.querySelectorAll(sel)) { const st = getComputedStyle(el);
         if (st.display === 'none' || !el.getClientRects().length) continue;
         if (el.scrollWidth > el.clientWidth + 1) out.push((el.className || el.tagName) + ': ' + el.textContent.trim().slice(0, 20));
         const pr = el.parentElement.getBoundingClientRect(), r = el.getBoundingClientRect();
-        if (el.matches('.day .w.s, .day .n, .wcal .day .t') && (r.left < pr.left - 1 || r.right > pr.right + 1)) out.push('клетка: ' + el.textContent.trim()); }
+        if (el.matches('.day .w, .day .n, .wcal .day .t, .dlist b.nm') && (r.left < pr.left - 1 || r.right > pr.right + 1)) out.push('клетка: ' + el.textContent.trim()); }
       return out.slice(0, 6); }""")
 
 
@@ -87,6 +87,13 @@ with sync_playwright() as p:
     check(pg.locator(".cal .day.off").count() == 10, "выходных и праздников 10 (9 сб/вс + 4 ноября)")
     check(pg.locator(".cal .day.hol").count() == 1, "праздник 4 ноября отмечен")
     check(pg.locator(".cal .day.mine").count() == 7, "мои дни подсвечены")
+    codes = pg.eval_on_selector_all(".cal .day .w", "els => [...new Set(els.map(e => e.textContent))]")
+    check(all(len(c) == 3 and c[0].isupper() and c[1:].islower() for c in codes) and len(codes) == len(set(codes)) == 7,
+          f"в сетке по три буквы, без совпадений: {sorted(codes)}")
+    gap = pg.evaluate("""() => { let worst = 99; for (const d of document.querySelectorAll('.cal .day')) {
+        const n = d.querySelector('.n'), w = d.querySelector('.w'); if (!w) continue;
+        worst = Math.min(worst, w.getBoundingClientRect().top - n.getBoundingClientRect().bottom); } return worst; }""")
+    check(gap >= 0, f"число и буквы в клетке не наезжают (зазор {gap:.1f}px)")
     pg.screenshot(path=str(OUT / "03-grid.png"), full_page=False)
     pg.locator('.cal .day[data-k="2026-11-01"]').click()
     dc = pg.locator(".daycard").inner_text()
@@ -95,6 +102,9 @@ with sync_playwright() as p:
     check(pg.locator(".cal .day.hit").count() == 4, "подсветка Леонарда: 4 пятницы")
     pg.locator('.seg button[data-v="list"]').click()
     check(pg.locator(".dlist li").count() == 4, "список с фильтром: 4 строки")
+    pg.locator('.chip[data-id=""]').click()
+    one = pg.evaluate("""() => [...document.querySelectorAll('.dlist b.nm')].every(b => b.getClientRects().length === 1 && b.scrollWidth <= b.clientWidth + 1)""")
+    check(one, "в списке фамилии в одну строку, без переноса")
     pg.screenshot(path=str(OUT / "04-list.png"), full_page=False)
     ctx.close()
     # 3. Пожелания (сегодня 12 октября → декабрь, до 15 ноября)
@@ -180,6 +190,14 @@ with sync_playwright() as p:
                     pg.locator("details.org > summary").click()
                 if tab == "all":
                     pg.locator('.cal .day[data-k="2026-11-02"]').click()
+                    r = hscroll(pg)
+                    c = clipped(pg)
+                    check(not r["doc"] and not r["main"] and not r["bad"] and not c, f"{w}px сетка{' +15%' if scale else ''} {r['bad'] or ''} {c or ''}")
+                    if w in (320, 390) and not scale:
+                        pg.screenshot(path=str(OUT / f"w{w}-grid.png"), full_page=False)
+                    pg.locator('.seg button[data-v="list"]').click()
+                    one = pg.evaluate("() => [...document.querySelectorAll('.dlist b.nm')].every(b => b.getClientRects().length === 1)")
+                    check(one, f"{w}px список{' +15%' if scale else ''}: фамилии без переноса")
                 r = hscroll(pg)
                 c = clipped(pg)
                 check(not r["doc"] and not r["main"] and not r["bad"] and not c,
