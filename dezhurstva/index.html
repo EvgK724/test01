@@ -273,6 +273,21 @@ textarea::placeholder { color: var(--text-3); }
 .file .ic { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: rgba(57,255,136,.10); border: 1px solid rgba(57,255,136,.5); color: #C9FFE0; font-weight: 800; font-size: .8rem; box-shadow: 0 0 14px -6px var(--ok); }
 .file > div { min-width: 0; }
 
+/* Для печати */
+.orgbody { display: flex; flex-direction: column; gap: 12px; padding-top: 8px; }
+details.org { display: block; }
+details.org > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; font-weight: 700; }
+details.org > summary::-webkit-details-marker { display: none; }
+details.org > summary::after { content: "›"; font-size: 1.5rem; color: var(--text-2); transition: transform .2s; }
+details.org[open] > summary::after { transform: rotate(90deg); }
+.phones { display: flex; flex-direction: column; gap: 8px; }
+.phones label { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 10px; align-items: center; }
+.phones label span { overflow-wrap: anywhere; font-weight: 600; }
+.phones input { min-height: 44px; width: 100%; min-width: 0; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); padding: 6px 10px; font-size: 1rem; }
+.phones input:focus { outline: 2px solid var(--neon); outline-offset: 1px; }
+.prow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.prow > * { flex: 1 1 140px; }
+
 /* Справка и всплывашка */
 .sheet { position: fixed; inset: 0; z-index: 50; background: rgba(3,3,8,.72); display: flex; align-items: flex-end; justify-content: center; }
 .sheet .panel {
@@ -306,7 +321,7 @@ textarea::placeholder { color: var(--text-3); }
     <li><b>«Мои»</b> — выберите себя: увидите свои дежурства и сколько до ближайшего.</li>
     <li><b>Напоминания:</b> «Мои» → «Добавить в Календарь» → «Подписаться». Календарь напомнит накануне в 19:00 и за час до начала и сам подтянет изменения графика.</li>
     <li><b>«Пожелания»</b> — до 15 числа на следующий месяц: дни и интервалы «не ставить», «хочу», отпуск, сколько дежурств, комментарий. Можно поправить и отправить заново — учитывается последнее.</li>
-    <li><b>«График»</b> — весь месяц, <b>«Excel»</b> — файл графика.</li>
+    <li><b>«График»</b> — весь месяц, <b>«Excel»</b> — файл графика; «Для печати» — с телефонами для оперативного отдела (телефоны хранятся только на этом телефоне).</li>
   </ol>
   <p class="lead small">Если календарь не напоминает: Настройки → Календарь → Учётные записи → Подписные календари → «Дежурства ПСО» → выключите «Удалить предупреждения».</p>
   <button class="btn primary" type="button" id="helpClose">Понятно</button>
@@ -695,18 +710,100 @@ function renderWish() {
 }
 
 // ---------- «Excel» ----------
+// Версия для печати (в оперативный отдел): телефоны хранятся только на этом устройстве, файл собирается здесь же
+const PH_KEY = 'dezh:phones';
+function phones() { try { return JSON.parse(store.get(PH_KEY) || '{}') || {}; } catch (e) { return {}; } }
+let printReady = null; // {mk, file, url}
+let orgOpen = false;
 function renderFiles() {
   const now = new Date(), t = wishTarget(now);
   const files = D.files || {};
   const pend = shiftMonth(t.mk, -1);
   let status = '';
   if (!D.months[pend] && pend > mkOf(now)) status = `<section class="card"><p class="eyebrow">${esc(monthTitle(pend))}</p><p>Пожелания собраны, график составляется. Появится здесь после утверждения организатором.</p></section>`;
-  const list = MK.slice().reverse().filter(mk => files[mk]).map(mk => `<section class="card file"><span class="ic">XLSX</span>
+  const months = MK.slice().reverse().filter(mk => files[mk]);
+  const list = months.map(mk => `<section class="card file"><span class="ic">XLSX</span>
     <div><h3>${esc(monthTitle(mk))}</h3><p class="lead small">График дежурств ПСО · без телефонов</p></div>
     <a class="btn primary" href="${esc(files[mk])}" download>Скачать</a></section>`).join('');
+  const ph = phones();
+  const ids = [...new Set(months.flatMap(mk => D.months[mk].order))];
+  const have = ids.filter(id => ph[id]).length;
+  const ready = printReady ? `<div class="prow"><button type="button" class="btn primary" data-act="pshare">Отправить</button>
+      <a class="btn" href="${printReady.url}" download="${esc(printReady.file.name)}">Скачать</a></div>
+      <p class="sent small">✓ Готов: ${esc(printReady.file.name)}</p>` : '';
+  const org = `<details class="card org" ${orgOpen ? 'open' : ''}><summary>Для печати — с телефонами</summary><div class="orgbody">
+    <p class="lead small">Для оперативного отдела: тот же график, у фамилий — телефоны для экстренной связи с дежурным. Телефоны хранятся только на этом телефоне и никуда не отправляются; файл собирается здесь же.</p>
+    <p class="small">Телефоны: <b>${have} из ${ids.length}</b></p>
+    <div class="prow"><button type="button" class="btn" data-act="phimport">Взять из файла графика</button></div>
+    <input type="file" id="phfile" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
+    <div class="phones">${ids.map(id => `<label><span>${esc(nameOf(id))}</span><input type="tel" inputmode="tel" autocomplete="off" data-ph="${id}" value="${esc(ph[id] || '')}" placeholder="телефон"></label>`).join('')}</div>
+    <div class="prow">${months.map(mk => `<button type="button" class="btn pink" data-act="pprep" data-mk="${mk}">Для печати: ${esc(monthTitle(mk).toLowerCase())}</button>`).join('')}</div>
+    ${ready}</div></details>`;
   return `${status}<section class="card"><p class="eyebrow">Пожелания</p><p>${esc(monthTitle(t.mk))}: приём ${t.open ? 'до ' + t.deadline.getDate() + NB + GEN[t.deadline.getMonth()] : 'закрыт'}.</p></section>
     ${list || '<section class="card"><p class="lead">Файлов пока нет.</p></section>'}
+    ${months.length ? org : ''}
     <p class="lead small">Файл в формате общего графика: дни, отметки «+», отпуска, выходные и праздники по календарю РФ, итоги. Версия с листом пожеланий и нагрузкой — у организатора.</p>`;
+}
+let zipLib = null;
+function loadZip() {
+  if (window.JSZip) return Promise.resolve(window.JSZip);
+  if (!zipLib) zipLib = new Promise((res, rej) => {
+    const sc = document.createElement('script');
+    sc.src = 'vendor/jszip.min.js'; // JSZip 3.10.1 (MIT), npm
+    sc.onload = () => res(window.JSZip);
+    sc.onerror = () => { zipLib = null; rej(new Error('jszip')); };
+    document.head.append(sc);
+  });
+  return zipLib;
+}
+const xmlEsc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const xmlUnesc = t => t.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&amp;/g, '&');
+async function preparePrint(mk) {
+  const ph = phones();
+  const JSZip = await loadZip();
+  const r = await fetch(D.files[mk], { cache: 'no-cache' });
+  if (!r.ok) throw new Error('файл');
+  const zip = await JSZip.loadAsync(await r.arrayBuffer());
+  const path = 'xl/worksheets/sheet1.xml';
+  let xml = await zip.file(path).async('string');
+  const byName = {};
+  for (const id of IDS) byName[nameOf(id).toUpperCase()] = id;
+  let n = 0;
+  xml = xml.replace(/(<c r="A\d+"[^>]*t="inlineStr"[^>]*><is><t[^>]*>)([^<]*)(<\/t>)/g, (m, a, text, b) => {
+    const tx = xmlUnesc(text);
+    if (tx === 'Врач') return a + 'Врач, телефон' + b;
+    const id = byName[tx];
+    if (id && ph[id]) { n++; return a + xmlEsc(tx + ' ' + ph[id]) + b; }
+    return m;
+  });
+  zip.file(path, xml);
+  const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const name = 'График дежурств ПСО — ' + monthTitle(mk).toLowerCase() + ' (для печати).xlsx';
+  if (printReady) URL.revokeObjectURL(printReady.url);
+  printReady = { mk, file: new File([blob], name, { type: blob.type }), url: URL.createObjectURL(blob) };
+  return n;
+}
+async function importPhones(file) {
+  const JSZip = await loadZip();
+  const zip = await JSZip.loadAsync(await file.arrayBuffer());
+  const texts = [];
+  for (const nm of Object.keys(zip.files)) {
+    if (!/^xl\/(sharedStrings|worksheets\/[^/]+)\.xml$/.test(nm)) continue;
+    const xml = await zip.file(nm).async('string');
+    for (const m of xml.matchAll(/<(t|v)(?:\s[^>]*)?>([^<]*)<\/\1>/g)) texts.push(xmlUnesc(m[2]).trim());
+  }
+  const bySur = {};
+  for (const id of IDS) bySur[nameOf(id).split(/\s+/)[0].toUpperCase()] = id;
+  const ph = phones();
+  let n = 0;
+  for (const t of texts) {
+    const m = t.match(/^([A-Za-zА-Яа-яЁё-]+)[^\d+]*?(\+?[78][\d\s()\-]{9,}\d)\s*$/);
+    if (!m) continue;
+    const id = bySur[m[1].toUpperCase()];
+    if (id) { ph[id] = m[2].replace(/\s+/g, ' ').trim(); n++; }
+  }
+  store.set(PH_KEY, JSON.stringify(ph));
+  return n;
 }
 
 // ---------- Отрисовка и действия ----------
@@ -781,6 +878,32 @@ view.addEventListener('click', e => {
   if (a === 'copywish') { copy(wishPayload(wishTarget(new Date()).mk), 'Текст пожеланий скопирован'); return; }
   if (a === 'resetwish') { if (confirm('Очистить все отметки и комментарий?')) { W = W_EMPTY(); saveWish(); anchor = null; render(true); } return; }
   if (a === 'send') { send(); return; }
+  // Для печати
+  if (a === 'phimport') { const f = document.getElementById('phfile'); if (f) f.click(); return; }
+  if (a === 'pprep') {
+    b.disabled = true; b.textContent = 'Собираю файл…';
+    preparePrint(b.dataset.mk).then(n => { orgOpen = true; render(true); toast(n ? 'Файл для печати готов, телефонов: ' + n : 'Файл готов, но телефоны не заданы'); })
+      .catch(() => { toast('Не получилось — нужна связь с интернетом'); render(true); });
+    return;
+  }
+  if (a === 'pshare') {
+    const f = printReady && printReady.file;
+    if (f && navigator.canShare && navigator.canShare({ files: [f] })) navigator.share({ files: [f], title: f.name }).catch(() => {});
+    else if (printReady) { const l = document.createElement('a'); l.href = printReady.url; l.download = f.name; document.body.append(l); l.click(); l.remove(); }
+    return;
+  }
+});
+view.addEventListener('toggle', e => { if (e.target.matches && e.target.matches('details.org')) orgOpen = e.target.open; }, true);
+view.addEventListener('input', e => {
+  const el = e.target.closest('[data-ph]'); if (!el) return;
+  const ph = phones(); const v = el.value.trim();
+  if (v) ph[el.dataset.ph] = v; else delete ph[el.dataset.ph];
+  store.set(PH_KEY, JSON.stringify(ph));
+});
+view.addEventListener('change', e => {
+  if (e.target.id !== 'phfile' || !e.target.files[0]) return;
+  importPhones(e.target.files[0]).then(n => { orgOpen = true; render(true); toast(n ? 'Телефонов найдено: ' + n : 'В файле не нашлось «ФАМИЛИЯ телефон»'); })
+    .catch(() => toast('Не удалось прочитать файл'));
 });
 const help = document.getElementById('help');
 document.getElementById('helpBtn').addEventListener('click', () => { help.hidden = false; document.getElementById('helpClose').focus(); });
@@ -788,8 +911,8 @@ document.getElementById('helpClose').addEventListener('click', () => { help.hidd
 help.addEventListener('click', e => { if (e.target === help) help.hidden = true; });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') help.hidden = true; });
 // Обратный отсчёт и «сейчас дежурит» обновляем раз в минуту и при возвращении в приложение
-setInterval(() => { if (state.tab !== 'wish') render(true); }, 60000);
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && state.tab !== 'wish') render(true); });
+setInterval(() => { if (state.tab === 'me' || state.tab === 'all') render(true); }, 60000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && (state.tab === 'me' || state.tab === 'all')) render(true); });
 render();
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
@@ -806,8 +929,8 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.se
   const hash = list => { let h = 5381; const s = list.join('\n'); for (let i = 0; i < s.length; i++) h = (h * 33 + s.charCodeAt(i)) | 0; return (h >>> 0) + ':' + s.length; };
   const mine = new Set(texts(document));
   let last = 0, box = null;
-  // Не перезагружаем, пока человек заполняет пожелания, — тогда только предлагаем обновиться
-  function busy() { try { return state.tab === 'wish'; } catch (e) { return false; } }
+  // Не перезагружаем, пока человек заполняет пожелания или телефоны, — тогда только предлагаем обновиться
+  function busy() { try { return state.tab === 'wish' || state.tab === 'files'; } catch (e) { return false; } }
   function toast(text, onUpdate) {
     if (box) box.remove();
     box = document.createElement('div');

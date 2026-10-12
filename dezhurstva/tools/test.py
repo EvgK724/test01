@@ -116,6 +116,36 @@ with sync_playwright() as p:
     check(r.ok and len(r.body()) > 3000, "файл Excel скачивается")
     pg.screenshot(path=str(OUT / "06-files.png"), full_page=False)
     ctx.close()
+    # 4а. Для печати: телефоны из файла графика (вымышленные), сборка файла в браузере
+    import base64, io, subprocess, tempfile, zipfile
+    tmp = pathlib.Path(tempfile.mkdtemp())
+    fake = {d: f"8900000{i:04d}" for i, d in enumerate(data["doctors"])}
+    (tmp / "ph.json").write_text(json.dumps(fake))
+    subprocess.run([sys.executable, str(ROOT / "tools" / "make_xlsx.py"), "2026-11", "--full", str(tmp / "src.xlsx"),
+                    "--phones", str(tmp / "ph.json")], check=True, capture_output=True)
+    ctx, pg = page_at(b, "2026-10-12T21:00:00+05:00", me="klepikov", tab="files")
+    pg.locator("details.org > summary").click()
+    pg.set_input_files("#phfile", str(tmp / "src.xlsx"))
+    pg.wait_for_function("document.querySelectorAll('[data-ph]')[0].value !== ''")
+    vals = pg.eval_on_selector_all("[data-ph]", "els => els.map(e => [e.dataset.ph, e.value])")
+    check(all(v == fake[k] for k, v in vals) and len(vals) == len(fake), "телефоны взяты из файла графика")
+    pg.fill('[data-ph="omutov"]', "8 900 111-22-33")
+    pg.locator('button[data-act="pprep"]').first.click()
+    pg.wait_for_selector('button[data-act="pshare"]')
+    b64 = pg.evaluate("""async () => { const buf = new Uint8Array(await printReady.file.arrayBuffer()); let s = '';
+      for (let i = 0; i < buf.length; i++) s += String.fromCharCode(buf[i]); return btoa(s); }""")
+    z = zipfile.ZipFile(io.BytesIO(base64.b64decode(b64)))
+    import openpyxl
+    ws = openpyxl.load_workbook(io.BytesIO(base64.b64decode(b64))).worksheets[0]
+    a_col = [ws.cell(r, 1).value for r in range(3, 13)]
+    check(a_col[0] == "Врач, телефон" and a_col[2] == f"КЛЕПИКОВ {fake['klepikov']}" and "ОМУТОВ 8 900 111-22-33" in a_col,
+          f"файл для печати: телефоны у фамилий {a_col[:3]}")
+    check(ws.cell(5, 6).value == "+", "в файле для печати те же «+»")
+    pg.screenshot(path=str(OUT / "07-print.png"), full_page=False)
+    ctx.close()
+    for f in tmp.iterdir():
+        f.unlink()
+    tmp.rmdir()
     # 5. Ширины
     for w in (320, 375, 390, 430, 820, 1180):
         for tab in ("me", "all", "wish", "files"):
