@@ -54,6 +54,17 @@ def hscroll(pg):
       return { doc: document.documentElement.scrollWidth > innerWidth, main: m.scrollWidth > m.clientWidth, bad: bad.slice(0, 5) }; }""")
 
 
+def clipped(pg):
+    return pg.evaluate("""() => { const out = [];
+      const sel = '.tab, .brush button, .seg button, .wdrow button, .btn, .chip, .mbar h2, .day .w.s, .day .n, .wcal .day .t, .pill, .stepper output';
+      for (const el of document.querySelectorAll(sel)) { const st = getComputedStyle(el);
+        if (st.display === 'none' || !el.getClientRects().length) continue;
+        if (el.scrollWidth > el.clientWidth + 1) out.push((el.className || el.tagName) + ': ' + el.textContent.trim().slice(0, 20));
+        const pr = el.parentElement.getBoundingClientRect(), r = el.getBoundingClientRect();
+        if (el.matches('.day .w.s, .day .n, .wcal .day .t') && (r.left < pr.left - 1 || r.right > pr.right + 1)) out.push('клетка: ' + el.textContent.trim()); }
+      return out.slice(0, 6); }""")
+
+
 with sync_playwright() as p:
     b = p.chromium.launch()
     # 1. Первый запуск: выбор себя
@@ -158,15 +169,28 @@ with sync_playwright() as p:
     for f in tmp.iterdir():
         f.unlink()
     tmp.rmdir()
-    # 5. Ширины
-    for w in (320, 375, 390, 430, 820, 1180):
-        for tab in ("me", "all", "wish", "files"):
-            ctx, pg = page_at(b, "2026-11-05T12:00:00+05:00" if tab != "wish" else "2026-10-12T21:00:00+05:00", width=w, height=900, me="khamatnurova", tab=tab)
-            r = hscroll(pg)
-            check(not r["doc"] and not r["main"] and not r["bad"], f"{w}px {tab}: без горизонтальной прокрутки {r['bad'] if r['bad'] else ''}")
-            if w in (320, 820) and tab in ("all", "wish"):
-                pg.screenshot(path=str(OUT / f"w{w}-{tab}.png"), full_page=False)
-            ctx.close()
+    # 5. Ширины: ничего не вылезает за экран и не обрезается внутри кнопок и клеток; ещё раз с текстом крупнее на 15%
+    for scale in ("", "129.4%"):
+        for w in (320, 360, 375, 390, 393, 402, 430, 440, 820, 1180):
+            for tab in ("me", "all", "wish", "files"):
+                ctx, pg = page_at(b, "2026-11-05T12:00:00+05:00" if tab != "wish" else "2026-10-12T21:00:00+05:00", width=w, height=900, me="khamatnurova", tab=tab)
+                if scale:
+                    pg.evaluate(f"document.documentElement.style.fontSize = '{scale}'")
+                if tab == "files":
+                    pg.locator("details.org > summary").click()
+                if tab == "all":
+                    pg.locator('.cal .day[data-k="2026-11-02"]').click()
+                r = hscroll(pg)
+                c = clipped(pg)
+                check(not r["doc"] and not r["main"] and not r["bad"] and not c,
+                      f"{w}px {tab}{' +15%' if scale else ''}: без сдвига вбок и обрезки {r['bad'] or ''} {c or ''}")
+                if not scale and w in (320, 390) and tab in ("me", "all", "wish", "files"):
+                    pg.screenshot(path=str(OUT / f"w{w}-{tab}.png"), full_page=False)
+                if tab == "me" and w in (320, 390):
+                    pg.click("#helpBtn")
+                    r = pg.evaluate("() => { const p = document.querySelector('#help .panel'); return p.scrollWidth > p.clientWidth; }")
+                    check(not r, f"{w}px справка «?» помещается{' +15%' if scale else ''}")
+                ctx.close()
     b.close()
 check(not errors, f"ошибок JS нет {errors[:3]}")
 srv.shutdown()
