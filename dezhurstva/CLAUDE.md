@@ -30,8 +30,9 @@ tools/test.py         Playwright: вкладки, сетка, пожелания
 ## Ежемесячно, 16-го: черновик на следующий месяц (задача «Дежурства ПСО: черновик графика»)
 
 1. Месяц — следующий за текущим (16 ноября → декабрь). Если он уже есть в `data/schedule.json` — ничего не делать.
-2. Пожелания. Google Drive: `search_files` по `title contains 'Пожелания к дежурствам ПСО'` (таблица ответов формы) →
-   `download_file_content` с `exportMimeType: text/csv` → раскодировать base64 в `dezhurstva/private/answers.csv` →
+2. Пожелания. Google Drive: таблица ответов формы организатора («Untitled form (Responses)», её fileId — в тексте
+   ежемесячной задачи) → `download_file_content` с `exportMimeType: text/csv` → раскодировать base64 в
+   `dezhurstva/private/answers.csv` →
    `python3 dezhurstva/tools/wishes.py 2026-12 dezhurstva/private/answers.csv > dezhurstva/private/2026-12-wishes.json`.
    Берётся последняя отправка каждого врача до 15-го 23:59 (Екатеринбург); поздние — в `late`, решает организатор.
    Пожелания, пришедшие иначе (организатор переслал текст), — дописать в тот же JSON в том же формате.
