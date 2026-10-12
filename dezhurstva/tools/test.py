@@ -54,6 +54,19 @@ def hscroll(pg):
       return { doc: document.documentElement.scrollWidth > innerWidth, main: m.scrollWidth > m.clientWidth, bad: bad.slice(0, 5) }; }""")
 
 
+def split_words(pg):
+    """Слова, разорванные между строками (перенос внутри слова)."""
+    return pg.evaluate("""() => { const bad = [], range = document.createRange();
+      const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); let node;
+      while ((node = w.nextNode())) { const el = node.parentElement;
+        if (!el || el.closest('script, style, textarea, [hidden], .chips') || !el.getClientRects().length) continue;
+        const re = /[A-Za-zА-Яа-яЁё0-9]{2,}/g; let m;
+        while ((m = re.exec(node.textContent))) { range.setStart(node, m.index); range.setEnd(node, m.index + m[0].length);
+          const tops = new Set([...range.getClientRects()].filter(r => r.width > 0).map(r => Math.round(r.bottom)));
+          if (tops.size > 1) bad.push(m[0]); } }
+      return bad.slice(0, 8); }""")
+
+
 def clipped(pg):
     return pg.evaluate("""() => { const out = [];
       const sel = '.tab, .brush button, .seg button, .wdrow button, .btn, .chip, .mbar h2, .day .w, .day .n, .wcal .day .t, .pill, .stepper output, .dlist b.nm';
@@ -195,6 +208,8 @@ with sync_playwright() as p:
                     check(not r["doc"] and not r["main"] and not r["bad"] and not c, f"{w}px сетка{' +15%' if scale else ''} {r['bad'] or ''} {c or ''}")
                     if w in (320, 390) and not scale:
                         pg.screenshot(path=str(OUT / f"w{w}-grid.png"), full_page=False)
+                    sw = split_words(pg)
+                    check(not sw, f"{w}px сетка и карточка дня{' +15%' if scale else ''}: без переносов внутри слов {sw or ''}")
                     pg.locator('.seg button[data-v="list"]').click()
                     one = pg.evaluate("() => [...document.querySelectorAll('.dlist b.nm')].every(b => b.getClientRects().length === 1)")
                     check(one, f"{w}px список{' +15%' if scale else ''}: фамилии без переноса")
@@ -202,8 +217,15 @@ with sync_playwright() as p:
                 c = clipped(pg)
                 check(not r["doc"] and not r["main"] and not r["bad"] and not c,
                       f"{w}px {tab}{' +15%' if scale else ''}: без сдвига вбок и обрезки {r['bad'] or ''} {c or ''}")
+                sw = split_words(pg)
+                check(not sw, f"{w}px {tab}{' +15%' if scale else ''}: без переносов внутри слов {sw or ''}")
                 if not scale and w in (320, 390) and tab in ("me", "all", "wish", "files"):
                     pg.screenshot(path=str(OUT / f"w{w}-{tab}.png"), full_page=False)
+                if tab == "me":
+                    pg.locator('[data-act="change"]').click()
+                    sw = split_words(pg)
+                    check(not sw and not hscroll(pg)["bad"], f"{w}px выбор себя{' +15%' if scale else ''}: без переносов внутри слов {sw or ''}")
+                    pg.locator('[data-act="cancelpick"]').click()
                 if tab == "me" and w in (320, 390):
                     pg.click("#helpBtn")
                     r = pg.evaluate("() => { const p = document.querySelector('#help .panel'); return p.scrollWidth > p.clientWidth; }")
