@@ -188,11 +188,11 @@ with sync_playwright() as p:
         return cs; }; })()""")
     pg.goto(URL); pg.wait_for_selector("#view > *")
     fs = pg.evaluate("[document.documentElement.style.fontSize, getComputedStyle(document.documentElement).fontSize]")
-    check(fs[0] == "152.21%", f"крупный текст на iPhone увеличивает шрифт приложения: {fs}")
+    check(fs[0] == "142.06%", f"крупный текст на iPhone увеличивает шрифт приложения: {fs}")
     ctx.close()
     ctx, pg = page_at(b, "2026-11-05T12:00:00+05:00", tab="me")
     fs = pg.evaluate("[document.documentElement.style.fontSize, getComputedStyle(document.documentElement).fontSize]")
-    check(fs[0] in ("112.5%", "112.50%") and fs[1] == "18px", f"обычный размер текста — шрифт как раньше: {fs}")
+    check(fs[0] in ("105%", "105.00%") and fs[1] == "16.8px", f"обычный размер текста — шрифт как раньше: {fs}")
     ctx.close()
     # 4а. Для печати: телефоны из файла графика (вымышленные), сборка файла в браузере
     import base64, io, subprocess, tempfile, zipfile
@@ -255,7 +255,7 @@ with sync_playwright() as p:
         f.unlink()
     tmp.rmdir()
     # 5. Ширины: ничего не вылезает за экран и не обрезается внутри кнопок и клеток; ещё раз с текстом крупнее на 15%
-    for scale in ("", "129.4%", "157.5%"):
+    for scale in ("", "120.75%", "147%"):
         for w in (320, 360, 375, 390, 393, 402, 430, 440, 820, 1180):
             for tab in ("me", "all", "wish", "files"):
                 ctx, pg = page_at(b, "2026-11-05T12:00:00+05:00" if tab != "wish" else "2026-10-12T21:00:00+05:00", width=w, height=900, me="khamatnurova", tab=tab)
