@@ -45,6 +45,16 @@ body {
     var(--bg);
 }
 button, input, textarea, select { font: inherit; color: inherit; }
+/* Поля ввода тёмные и на iPhone: без системного светлого оформления и светлой подсветки автозаполнения */
+input, textarea {
+  -webkit-appearance: none; appearance: none; background-color: var(--surface-2); color: var(--text);
+  caret-color: var(--neon); color-scheme: dark; box-shadow: none;
+}
+input::placeholder, textarea::placeholder { color: var(--text-3); opacity: 1; }
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text); caret-color: var(--neon);
+  -webkit-box-shadow: 0 0 0 100px var(--surface-2) inset; transition: background-color 9999s;
+}
 button { cursor: pointer; }
 button:focus-visible, a:focus-visible, textarea:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
 h1, h2, h3, p, ul { margin: 0; }
@@ -262,7 +272,7 @@ main {
 .toggle[aria-checked="true"] .sw::after { transform: translateX(20px); background: var(--bg); }
 textarea {
   width: 100%; min-height: 96px; resize: vertical; border-radius: 14px; border: 1px solid var(--border);
-  background: var(--surface); padding: 10px 12px; font-size: 1rem; line-height: 1.4;
+  background-color: var(--surface-2); padding: 10px 12px; font-size: 1rem; line-height: 1.4;
 }
 textarea::placeholder { color: var(--text-3); }
 .ranges { display: flex; flex-direction: column; gap: 6px; }
@@ -288,9 +298,9 @@ details.org > summary::after { content: "›"; font-size: 1.5rem; color: var(--t
 details.org[open] > summary::after { transform: rotate(90deg); }
 .phones { display: flex; flex-direction: column; gap: 8px; }
 .phones label { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
-.phones label span { flex: 1 1 auto; white-space: nowrap; font-weight: 600; }
-.phones input { flex: 1 1 9em; min-height: 44px; width: 100%; min-width: 0; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); padding: 6px 10px; font-size: 1rem; }
-.phones input:focus { outline: 2px solid var(--neon); outline-offset: 1px; }
+.phones label span { flex: 0 0 auto; min-width: 7em; white-space: nowrap; font-weight: 600; }
+.phones input { flex: 1 1 9em; min-height: 44px; width: 100%; min-width: 0; border-radius: 12px; border: 1px solid var(--border); background-color: var(--surface-2); padding: 6px 10px; font-size: 1rem; }
+.phones input:focus { outline: none; border-color: var(--neon); box-shadow: 0 0 12px -4px var(--neon); }
 .prow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .prow > * { flex: 1 1 140px; }
 
