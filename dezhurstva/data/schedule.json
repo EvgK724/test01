@@ -8,13 +8,15 @@
    "name": "Кардашина"
   },
   "lekerova": {
-   "name": "Лекерова"
+   "name": "Лекерова",
+   "code": "Лк"
   },
   "khamatnurova": {
    "name": "Хаматнурова"
   },
   "leonard": {
-   "name": "Леонард"
+   "name": "Леонард",
+   "code": "Ло"
   },
   "alekeshova": {
    "name": "Алекешова"

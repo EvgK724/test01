@@ -88,8 +88,8 @@ with sync_playwright() as p:
     check(pg.locator(".cal .day.hol").count() == 1, "праздник 4 ноября отмечен")
     check(pg.locator(".cal .day.mine").count() == 7, "мои дни подсвечены")
     codes = pg.eval_on_selector_all(".cal .day .w", "els => [...new Set(els.map(e => e.textContent))]")
-    check(all(len(c) == 3 and c[0].isupper() and c[1:].islower() for c in codes) and len(codes) == len(set(codes)) == 7,
-          f"в сетке по три буквы, без совпадений: {sorted(codes)}")
+    check(all(len(c) == 2 and c[0].isupper() and c[1].islower() for c in codes) and len(codes) == len(set(codes)) == 7
+          and {"Лк", "Ло", "Кл", "Ка", "Ом"} <= set(codes), f"в сетке по две буквы, без совпадений: {sorted(codes)}")
     gap = pg.evaluate("""() => { let worst = 99; for (const d of document.querySelectorAll('.cal .day')) {
         const n = d.querySelector('.n'), w = d.querySelector('.w'); if (!w) continue;
         worst = Math.min(worst, w.getBoundingClientRect().top - n.getBoundingClientRect().bottom); } return worst; }""")

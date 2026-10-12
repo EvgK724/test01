@@ -196,7 +196,7 @@ main {
   background: var(--surface); display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 0; overflow: hidden;
 }
 .day .n { font-size: min(.82rem, 3.7vw); font-weight: 700; color: var(--text-2); line-height: 1.2; }
-.day .w { font-size: clamp(.68rem, 4.2vw, 1.15rem); font-weight: 800; line-height: 1.1; color: var(--c); text-shadow: 0 0 6px color-mix(in srgb, var(--c) 70%, transparent); white-space: nowrap; }
+.day .w { font-size: clamp(.8rem, 5vw, 1.4rem); font-weight: 800; line-height: 1.1; letter-spacing: .02em; color: var(--c); text-shadow: 0 0 6px color-mix(in srgb, var(--c) 70%, transparent); white-space: nowrap; }
 .day.off { background: var(--off-fill); border-color: var(--off-line); }
 .day.off .n { color: #C5D8FF; }
 .day.hol::after { content: ""; position: absolute; bottom: 5px; left: 50%; margin-left: -3px; width: 6px; height: 6px; border-radius: 50%; background: var(--neon-2); box-shadow: 0 0 8px var(--neon-2); }
@@ -431,16 +431,19 @@ function relText(day, now) {
 }
 function myKeys(id, mk) { return Object.keys(DAY).filter(k => (!mk || DAY[k].mk === mk) && DAY[k].who.includes(id)).sort(); }
 function nextDuty(id, now) { return myKeys(id).map(k => DAY[k]).find(d => d.end > now) || null; }
-// Три буквы для сетки: «Кле», «Кар», «Ому»… Если начало совпадает — третья буква берётся дальше по фамилии
+// Две буквы для сетки: заглавная и строчная — «Кл», «Ка», «Ом». Своё сокращение можно задать в data/schedule.json
+// (doctors.<id>.code); если первые две буквы совпадают с чужими — вторая берётся дальше по фамилии (Лекерова «Лк», Леонард «Ло»)
 const CODE = (() => {
   const out = {}, taken = new Set();
   const letters = id => nameOf(id).replace(/[^A-Za-zА-Яа-яЁё]/g, '');
-  const first3 = id => { const n = letters(id); return n.slice(0, 1).toUpperCase() + n.slice(1, 3).toLowerCase(); };
+  const first2 = id => { const n = letters(id); return n.slice(0, 1).toUpperCase() + n.slice(1, 2).toLowerCase(); };
+  for (const id of IDS) if (D.doctors[id].code) { out[id] = D.doctors[id].code; taken.add(out[id]); }
   for (const id of IDS) {
-    const n = letters(id);
-    let code = first3(id);
-    if (taken.has(code)) {
-      for (let i = 3; i < n.length; i++) { const c = code.slice(0, 2) + n[i].toLowerCase(); if (!taken.has(c) && !IDS.some(o => o !== id && first3(o) === c)) { code = c; break; } }
+    if (out[id]) continue;
+    const n = letters(id), a = n.slice(0, 1).toUpperCase();
+    let code = first2(id);
+    if (taken.has(code) || IDS.some(o => o !== id && !D.doctors[o].code && first2(o) === code)) {
+      for (let i = 2; i < n.length; i++) { const c = a + n[i].toLowerCase(); if (!taken.has(c) && !IDS.some(o => o !== id && first2(o) === c)) { code = c; break; } }
     }
     taken.add(code); out[id] = code;
   }
