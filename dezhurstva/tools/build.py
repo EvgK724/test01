@@ -8,7 +8,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import make_xlsx, ru_calendar
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-COLORS = ["#3BE8FF", "#FF4FD8", "#39FF88", "#FFD166", "#B08CFF", "#FF7A2F", "#6FB4FF", "#FF6B81", "#7CFFD4", "#F5F57A"]
+# Цвета врачей — только синие и голубые оттенки
+COLORS = ["#3BE8FF", "#4D9BFF", "#8FD3FF", "#62B6FF", "#8A9BFF", "#5CC8FF", "#B8E6FF", "#5B7DFF", "#6FF0FF", "#A0B4FF"]
 # Напоминания: накануне в 19:00 и за час до начала
 EVE_HOUR = 19
 
