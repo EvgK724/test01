@@ -21,9 +21,6 @@
   "alekeshova": {
    "name": "Алекешова"
   },
-  "davydova": {
-   "name": "Давыдова"
-  },
   "omutov": {
    "name": "Омутов"
   }
@@ -38,7 +35,6 @@
     "khamatnurova",
     "leonard",
     "alekeshova",
-    "davydova",
     "omutov"
    ],
    "shift": {

@@ -356,7 +356,9 @@ def main():
     raw = json.loads(pathlib.Path(a.wishes).read_text())
     wishes = raw.get("wishes", raw)
     fixes = dict(x.split("=", 1) for x in a.fix)
-    P = Problem(a.month, data, wishes, a.exclude, fixes, a.zero)
+    cfg = ROOT / "data" / "config.json"
+    exclude = list(a.exclude) + (json.loads(cfg.read_text()).get("exclude", []) if cfg.exists() else [])
+    P = Problem(a.month, data, wishes, exclude, fixes, a.zero)
     runs = [a.seed] if a.seed else range(1, 7)
     best = min((P.solve(s) for s in runs), key=lambda r: r[1])
     month = P.month(best[0])

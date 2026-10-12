@@ -98,6 +98,9 @@ def main():
         mine = [x for x in all_items if x[1] == did]
         (cal / f"{did}.ics").write_bytes(ics(data, f"Дежурства ПСО — {data['doctors'][did]['name']}", mine, True,
                                              COLORS[i % len(COLORS)]).encode())
+    for old in cal.glob("*.ics"):
+        if old.stem != "all" and old.stem not in ids:
+            old.unlink()
     (cal / "all.ics").write_bytes(ics(data, "Дежурства ПСО — все", all_items, False, COLORS[0]).encode())
     # Excel для вкладки «Excel»: пересобираем только изменившиеся месяцы
     hp = ROOT / "files" / "hashes.json"

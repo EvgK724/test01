@@ -195,6 +195,8 @@ def main(paths):
         by_surname[surname].append(did)
         return did
 
+    cfg = ROOT / "data" / "config.json"
+    exclude = set(json.loads(cfg.read_text()).get("exclude", [])) if cfg.exists() else set()
     done = 0
     for p in paths:
         wb = openpyxl.load_workbook(p)
@@ -202,6 +204,15 @@ def main(paths):
             res = parse_sheet(ws)
             if not res:
                 continue
+            skipped = [n for n in res["doctors"] if slug(n.split()[0]) in exclude]
+            if skipped:
+                print("  исключены из приложения (config.json → exclude):", ", ".join(skipped))
+                bad = [day for day, names in res["duty"].items() if any(n in skipped for n in names)]
+                if bad:
+                    print("  ! у исключённых есть дежурства:", ", ".join(bad), "— проверьте")
+                res["doctors"] = [n for n in res["doctors"] if n not in skipped]
+                res["duty"] = {k: [n for n in v if n not in skipped] for k, v in res["duty"].items()}
+                res["marks"] = [m for m in res["marks"] if m["name"] not in skipped]
             key = f"{res['year']}-{res['month']:02d}"
             order = [doc_id(n) for n in res["doctors"]]
             duty = {d: [doc_id(n) for n in names] for d, names in sorted(res["duty"].items())}

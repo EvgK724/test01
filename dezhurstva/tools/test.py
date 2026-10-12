@@ -124,7 +124,7 @@ with sync_playwright() as p:
     check("Часов в неделю\n39" in nt and "Рабочих дней\n20" in nt and "Сокращено, ч\n1" in nt and "155" in nt and "3 ноября" in nt,
           f"норма ноября: 39 ч, 20 дней, −1 ч, 155 ч {nt[:120]!r}")
     shares = pg.eval_on_selector_all(".load li", "els => els.map(e => e.querySelector('.nm').textContent + ' ' + e.querySelector('.sh').textContent)")
-    check(len(shares) == 8 and "Клепиков 0,87" in shares and "Давыдова 0,00" in shares, f"доли ставки: {shares}")
+    check(len(shares) == len(data["doctors"]) and "Клепиков 0,87" in shares, f"доли ставки: {shares}")
     check("3,57 ставки" in text(pg.locator(".load ~ .sum")), "итого 3,57 ставки")
     pg.screenshot(path=str(OUT / "04b-load.png"), full_page=False)
     ctx.close()
@@ -170,6 +170,30 @@ with sync_playwright() as p:
     check(r.ok and len(r.body()) > 3000, "файл Excel скачивается")
     pg.screenshot(path=str(OUT / "06-files.png"), full_page=False)
     ctx.close()
+    # Врачи, исключённые в config.json, нигде не показываются
+    excl = json.loads((ROOT / "data" / "config.json").read_text()).get("exclude", [])
+    ctx, pg = page_at(b, "2026-11-05T12:00:00+05:00", tab="me")
+    body = pg.inner_text("body")
+    check(not any(x in body for x in ("Давыдова", "ДАВЫДОВА")) and "davydova" not in data["doctors"] and "davydova" in excl, "Давыдовой нет в приложении")
+    ctx.close()
+    # Размер текста iPhone (Dynamic Type): -apple-system-body 23 px вместо 17 → шрифт приложения ×1,35
+    ctx = b.new_context(viewport={"width": 390, "height": 844})
+    pg = ctx.new_page()
+    pg.add_init_script("""(() => { const s = CSS.supports.bind(CSS);
+      CSS.supports = (a, v) => (a === 'font' && v === '-apple-system-body') ? true : s(a, v);
+      const g = window.getComputedStyle;
+      window.getComputedStyle = function (el, ...r) { const cs = g.call(window, el, ...r);
+        if (el && el.textContent === 'x' && el.style && el.style.visibility === 'hidden')
+          return new Proxy(cs, { get: (o, k) => k === 'fontSize' ? '23px' : (typeof o[k] === 'function' ? o[k].bind(o) : o[k]) });
+        return cs; }; })()""")
+    pg.goto(URL); pg.wait_for_selector("#view > *")
+    fs = pg.evaluate("[document.documentElement.style.fontSize, getComputedStyle(document.documentElement).fontSize]")
+    check(fs[0] == "152.21%", f"крупный текст на iPhone увеличивает шрифт приложения: {fs}")
+    ctx.close()
+    ctx, pg = page_at(b, "2026-11-05T12:00:00+05:00", tab="me")
+    fs = pg.evaluate("[document.documentElement.style.fontSize, getComputedStyle(document.documentElement).fontSize]")
+    check(fs[0] in ("112.5%", "112.50%") and fs[1] == "18px", f"обычный размер текста — шрифт как раньше: {fs}")
+    ctx.close()
     # 4а. Для печати: телефоны из файла графика (вымышленные), сборка файла в браузере
     import base64, io, subprocess, tempfile, zipfile
     tmp = pathlib.Path(tempfile.mkdtemp())
@@ -196,16 +220,19 @@ with sync_playwright() as p:
           f"файл для печати: телефоны у фамилий {a_col[:3]}")
     check(ws.cell(5, 6).value == "+", "в файле для печати те же «+»")
     wv = openpyxl.load_workbook(io.BytesIO(base64.b64decode(b64)), data_only=True).worksheets[0]
-    check([wv.cell(r, 32).value for r in range(5, 13)] == [7, 6, 3, 1, 4, 4, 0, 5] and all(wv.cell(13, c).value == 1 for c in range(2, 32))
-          and wv.cell(13, 32).value == 30, "в файле для печати посчитаны «Всего» и «Дежурных за день» (видно и без пересчёта)")
-    check(wv.max_row == 13, f"в файле для печати под таблицей ничего нет (строк {wv.max_row})")
+    M11 = data["months"]["2026-11"]
+    want = [sum(d in v for v in M11["duty"].values()) for d in M11["order"]]
+    last = 4 + len(want) + 1
+    check([wv.cell(r, 32).value for r in range(5, 5 + len(want))] == want and all(wv.cell(last, c).value == 1 for c in range(2, 32))
+          and wv.cell(last, 32).value == 30, f"в файле для печати посчитаны «Всего» {want} и «Дежурных за день» (видно и без пересчёта)")
+    check(wv.max_row == last, f"в файле для печати под таблицей ничего нет (строк {wv.max_row})")
     pg.screenshot(path=str(OUT / "07-print.png"), full_page=False)
     ctx.close()
     for f in tmp.iterdir():
         f.unlink()
     tmp.rmdir()
     # 5. Ширины: ничего не вылезает за экран и не обрезается внутри кнопок и клеток; ещё раз с текстом крупнее на 15%
-    for scale in ("", "129.4%"):
+    for scale in ("", "129.4%", "157.5%"):
         for w in (320, 360, 375, 390, 393, 402, 430, 440, 820, 1180):
             for tab in ("me", "all", "wish", "files"):
                 ctx, pg = page_at(b, "2026-11-05T12:00:00+05:00" if tab != "wish" else "2026-10-12T21:00:00+05:00", width=w, height=900, me="khamatnurova", tab=tab)
@@ -217,37 +244,37 @@ with sync_playwright() as p:
                     pg.locator('.cal .day[data-k="2026-11-02"]').click()
                     r = hscroll(pg)
                     c = clipped(pg)
-                    check(not r["doc"] and not r["main"] and not r["bad"] and not c, f"{w}px сетка{' +15%' if scale else ''} {r['bad'] or ''} {c or ''}")
+                    check(not r["doc"] and not r["main"] and not r["bad"] and not c, f"{w}px сетка{(' ×' + scale) if scale else ''} {r['bad'] or ''} {c or ''}")
                     if w in (320, 390) and not scale:
                         pg.screenshot(path=str(OUT / f"w{w}-grid.png"), full_page=False)
                     sw = split_words(pg)
-                    check(not sw, f"{w}px сетка и карточка дня{' +15%' if scale else ''}: без переносов внутри слов {sw or ''}")
+                    check(not sw, f"{w}px сетка и карточка дня{(' ×' + scale) if scale else ''}: без переносов внутри слов {sw or ''}")
                     pg.locator('.seg button[data-v="list"]').click()
                     one = pg.evaluate("() => [...document.querySelectorAll('.dlist b.nm')].every(b => b.getClientRects().length === 1)")
-                    check(one, f"{w}px список{' +15%' if scale else ''}: фамилии без переноса")
+                    check(one, f"{w}px список{(' ×' + scale) if scale else ''}: фамилии без переноса")
                     pg.locator('.seg button[data-v="load"]').click()
                     r, c, sw = hscroll(pg), clipped(pg), split_words(pg)
                     one = pg.evaluate("() => [...document.querySelectorAll('.load b.nm')].every(b => b.getClientRects().length === 1)")
                     check(not r["doc"] and not r["main"] and not r["bad"] and not c and not sw and one,
-                          f"{w}px нагрузка{' +15%' if scale else ''}: помещается {r['bad'] or ''} {c or ''} {sw or ''}")
+                          f"{w}px нагрузка{(' ×' + scale) if scale else ''}: помещается {r['bad'] or ''} {c or ''} {sw or ''}")
                     pg.locator('.seg button[data-v="grid"]').click()
                 r = hscroll(pg)
                 c = clipped(pg)
                 check(not r["doc"] and not r["main"] and not r["bad"] and not c,
-                      f"{w}px {tab}{' +15%' if scale else ''}: без сдвига вбок и обрезки {r['bad'] or ''} {c or ''}")
+                      f"{w}px {tab}{(' ×' + scale) if scale else ''}: без сдвига вбок и обрезки {r['bad'] or ''} {c or ''}")
                 sw = split_words(pg)
-                check(not sw, f"{w}px {tab}{' +15%' if scale else ''}: без переносов внутри слов {sw or ''}")
+                check(not sw, f"{w}px {tab}{(' ×' + scale) if scale else ''}: без переносов внутри слов {sw or ''}")
                 if not scale and w in (320, 390) and tab in ("me", "all", "wish", "files"):
                     pg.screenshot(path=str(OUT / f"w{w}-{tab}.png"), full_page=False)
                 if tab == "me":
                     pg.locator('[data-act="change"]').click()
                     sw = split_words(pg)
-                    check(not sw and not hscroll(pg)["bad"], f"{w}px выбор себя{' +15%' if scale else ''}: без переносов внутри слов {sw or ''}")
+                    check(not sw and not hscroll(pg)["bad"], f"{w}px выбор себя{(' ×' + scale) if scale else ''}: без переносов внутри слов {sw or ''}")
                     pg.locator('[data-act="cancelpick"]').click()
                 if tab == "me" and w in (320, 390):
                     pg.click("#helpBtn")
                     r = pg.evaluate("() => { const p = document.querySelector('#help .panel'); return p.scrollWidth > p.clientWidth; }")
-                    check(not r, f"{w}px справка «?» помещается{' +15%' if scale else ''}")
+                    check(not r, f"{w}px справка «?» помещается{(' ×' + scale) if scale else ''}")
                 ctx.close()
     b.close()
 check(not errors, f"ошибок JS нет {errors[:3]}")
