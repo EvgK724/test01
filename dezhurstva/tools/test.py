@@ -207,6 +207,29 @@ with sync_playwright() as p:
     pg.wait_for_function("document.querySelectorAll('[data-ph]')[0].value !== ''")
     vals = pg.eval_on_selector_all("[data-ph]", "els => els.map(e => [e.dataset.ph, e.value])")
     check(all(v == fake[k] for k, v in vals) and len(vals) == len(fake), "телефоны взяты из файла графика")
+    # Файл «как попало»: номер в соседней ячейке, +7 (…), без восьмёрки, числом, с припиской, ячейка из частей с разным шрифтом
+    import openpyxl
+    from openpyxl.cell.rich_text import CellRichText, TextBlock
+    from openpyxl.cell.text import InlineFont
+    wbx = openpyxl.Workbook(); wsx = wbx.active
+    wsx.append(["График", None, None])
+    wsx.append(["1. Клепиков Е.В.", "+7 (900) 000-00-01", "+"])
+    wsx.append([CellRichText([TextBlock(InlineFont(b=True), "КАРДАШИНА "), "89000000002"]), None, "+"])
+    wsx.append(["Лекерова", 89000000003, None])
+    wsx.append(["Хаматнурова, моб.", "900 000 00 04", None])
+    wsx.append(["ЛЕОНАРД 8-900-000-00-05 (моб.)", None, "+"])
+    wsx.append(["Алекешова", "тел.: 8 (900) 000 00 06", None])
+    wsx.append(["Лекерова вместо Омутова 01.11", None, None])
+    wsx.append(["Омутов", "8 900 000 00 07", None])
+    wbx.save(tmp / "messy.xlsx")
+    pg.set_input_files("#phfile", str(tmp / "messy.xlsx"))
+    pg.wait_for_function("document.querySelector('[data-ph=\"omutov\"]').value.includes('07')")
+    got = dict(pg.eval_on_selector_all("[data-ph]", "els => els.map(e => [e.dataset.ph, e.value.replace(/\\D/g, '')])"))
+    want = {"klepikov": "79000000001", "kardashina": "89000000002", "lekerova": "89000000003", "khamatnurova": "89000000004",
+            "leonard": "89000000005", "alekeshova": "89000000006", "omutov": "89000000007"}
+    check(got == want, f"телефоны из «неудобного» файла: {got}")
+    pg.set_input_files("#phfile", str(tmp / "src.xlsx"))
+    pg.wait_for_function("document.querySelector('[data-ph=\"omutov\"]').value === '" + fake["omutov"] + "'")
     pg.fill('[data-ph="omutov"]', "8 900 111-22-33")
     pg.locator('button[data-act="pprep"]').first.click()
     pg.wait_for_selector('button[data-act="pshare"]')

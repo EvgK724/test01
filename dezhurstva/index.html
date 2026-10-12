@@ -887,27 +887,47 @@ async function preparePrint(mk) {
   printReady = { mk, file: new File([blob], name, { type: blob.type }), url: URL.createObjectURL(blob) };
   return n;
 }
+// Телефоны из любого Excel с графиком: читаем таблицу по строкам; в строке ищем фамилию врача и номер — в той же ячейке
+// или в соседней, в любом виде (8…, +7 (…) …-…-…, без восьмёрки, числом), текст ячейки может быть разбит Excel на части
 async function importPhones(file) {
   const JSZip = await loadZip();
   const zip = await JSZip.loadAsync(await file.arrayBuffer());
-  const texts = [];
-  for (const nm of Object.keys(zip.files)) {
-    if (!/^xl\/(sharedStrings|worksheets\/[^/]+)\.xml$/.test(nm)) continue;
-    const xml = await zip.file(nm).async('string');
-    for (const m of xml.matchAll(/<(t|v)(?:\s[^>]*)?>([^<]*)<\/\1>/g)) texts.push(xmlUnesc(m[2]).trim());
+  const parse = async n => new DOMParser().parseFromString(await zip.file(n).async('string'), 'application/xml');
+  const tags = (el, name) => Array.from(el.getElementsByTagNameNS('*', name));
+  const text = el => tags(el, 't').map(t => t.textContent).join('');
+  const shared = zip.file('xl/sharedStrings.xml') ? tags(await parse('xl/sharedStrings.xml'), 'si').map(text) : [];
+  const sheets = Object.keys(zip.files).filter(n => /^xl\/worksheets\/[^/]+\.xml$/i.test(n))
+    .sort((a, b) => (+(a.match(/\d+/) || [0])[0]) - (+(b.match(/\d+/) || [0])[0]));
+  const up = s => s.toUpperCase().replace(/Ё/g, 'Е');
+  const docs = IDS.map(id => ({ id, re: new RegExp('(^|[^А-ЯA-Z])' + up(nameOf(id).split(/\s+/)[0]) + '([^А-ЯA-Z]|$)') }));
+  const SEP = '[\\s\\u00A0\\-\\u2010-\\u2015.]*';
+  const PH = new RegExp('(?:\\+\\s*7|8|7)?' + SEP + '\\(?' + SEP + '[3-9]\\d{2}' + SEP + '\\)?' + SEP + '\\d{3}' + SEP + '\\d{2}' + SEP + '\\d{2}(?!\\d)');
+  const tidy = m => {
+    const t = m.replace(/[\s ]+/g, ' ').trim(), d = t.replace(/\D/g, '');
+    return d.length === 10 ? '8' + d : t;
+  };
+  const ph = phones(), found = {};
+  let named = 0;
+  for (const n of sheets) {
+    for (const row of tags(await parse(n), 'row')) {
+      const cells = tags(row, 'c').map(c => {
+        const t = c.getAttribute('t'), v = tags(c, 'v')[0], val = v ? v.textContent : '';
+        if (t === 's') return shared[+val] || '';
+        if (t === 'inlineStr') return text(c);
+        if (t === 'b' || t === 'e') return '';
+        return /^\d+(\.\d+)?E\+?\d+$/i.test(val) ? Number(val).toFixed(0) : val;
+      }).map(x => x.trim()).filter(Boolean);
+      if (!cells.length) continue;
+      const who = docs.filter(d => d.re.test(up(cells.join(' '))));
+      if (who.length !== 1) continue;
+      named++;
+      if (found[who[0].id]) continue;
+      for (const c of cells) { const m = c.match(PH); if (m) { found[who[0].id] = tidy(m[0]); break; } }
+    }
   }
-  const bySur = {};
-  for (const id of IDS) bySur[nameOf(id).split(/\s+/)[0].toUpperCase()] = id;
-  const ph = phones();
-  let n = 0;
-  for (const t of texts) {
-    const m = t.match(/^([A-Za-zА-Яа-яЁё-]+)[^\d+]*?(\+?[78][\d\s()\-]{9,}\d)\s*$/);
-    if (!m) continue;
-    const id = bySur[m[1].toUpperCase()];
-    if (id) { ph[id] = m[2].replace(/\s+/g, ' ').trim(); n++; }
-  }
+  Object.assign(ph, found);
   store.set(PH_KEY, JSON.stringify(ph));
-  return n;
+  return { n: Object.keys(found).length, named };
 }
 
 // ---------- Отрисовка и действия ----------
@@ -1006,8 +1026,13 @@ view.addEventListener('input', e => {
 });
 view.addEventListener('change', e => {
   if (e.target.id !== 'phfile' || !e.target.files[0]) return;
-  importPhones(e.target.files[0]).then(n => { orgOpen = true; render(true); toast(n ? 'Телефонов найдено: ' + n : 'В файле не нашлось «ФАМИЛИЯ телефон»'); })
-    .catch(() => toast('Не удалось прочитать файл'));
+  const f = e.target.files[0];
+  e.target.value = '';
+  importPhones(f).then(r => {
+    orgOpen = true; render(true);
+    const all = [...new Set(MK.flatMap(mk => D.months[mk].order))].length;
+    toast(r.n ? 'Телефонов найдено: ' + r.n + ' из ' + all : r.named ? 'Фамилии в файле есть, а номеров рядом с ними нет' : 'В файле не нашлось фамилий врачей');
+  }).catch(() => toast('Не удалось прочитать файл — нужен Excel (.xlsx)'));
 });
 const help = document.getElementById('help');
 document.getElementById('helpBtn').addEventListener('click', () => { help.hidden = false; document.getElementById('helpClose').focus(); });
