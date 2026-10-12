@@ -8,7 +8,8 @@
    → второй лист «Пожелания и итоги»: пожелания, сутки, даты, часы, доля ставки, норма по календарю РФ.
 phones.json: {"klepikov": "89…", …}; wishes.json: {"klepikov": "текст пожеланий", …}.
 Выходные и праздники — по производственному календарю РФ (ru_calendar.py)."""
-import argparse, calendar, datetime as dt, io, json, pathlib, sys, zipfile
+import argparse, calendar, datetime as dt, io, json, pathlib, re, sys, zipfile
+from xml.sax.saxutils import escape
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import ru_calendar
@@ -25,7 +26,16 @@ INK, INK2, MUTED, TEAL, BROWN = "FF213C56", "FF203449", "FF637386", "FF126E69", 
 HEAD, OFF, WHITE, ZEBRA, TOTAL, VAC, NOTE = "FFD5E0EA", "FFCFD9E2", "FFFFFFFF", "FFF8FAFC", "FFE8EFF5", "FFEAD4A3", "FFFBF0D9"
 thin = Side(style="thin", color="FFFFFFFF")
 thin_d = Side(style="thin")
-WEEK_HOURS = 39
+_cfg = ROOT / "data" / "config.json"
+WEEK_HOURS = json.loads(_cfg.read_text()).get("week_hours", 39) if _cfg.exists() else 39
+WD_RU = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+
+
+def formula(ws, row, col, f, value):
+    """Формула + её готовое значение: Excel пересчитает сам, а просмотр на iPhone покажет значение сразу."""
+    c = ws.cell(row, col, f)
+    ws.parent._dz_cache.setdefault(ws.title, {})[c.coordinate] = value
+    return c
 
 
 def fill(c):
@@ -85,6 +95,7 @@ def build(mk, data, full=False, phones=None, wishes=None, notes=()):
     title = f"{MON[m - 1].capitalize()} {y}"
 
     wb = Workbook()
+    wb._dz_cache = {}
     ws = wb.active
     ws.title = title
     ws.sheet_view.showGridLines = False
@@ -105,7 +116,7 @@ def build(mk, data, full=False, phones=None, wishes=None, notes=()):
         c = ws.cell(3, col, dt.datetime(d.year, d.month, d.day))
         c.number_format, c.font, c.alignment, c.fill = "d", font(11, True, INK), C, fill(OFF if isoff else HEAD)
         c.border = Border(left=thin, right=thin, bottom=thin)
-        c = ws.cell(4, col, f'=CHOOSE(WEEKDAY({L(col)}3,2),"Пн","Вт","Ср","Чт","Пт","Сб","Вс")')
+        c = formula(ws, 4, col, f'=CHOOSE(WEEKDAY({L(col)}3,2),"Пн","Вт","Ср","Чт","Пт","Сб","Вс")', WD_RU[d.weekday()])
         c.font, c.alignment, c.fill, c.border = font(9, True, INK), C, fill(OFF if isoff else HEAD), BOX
         ws.column_dimensions[L(col)].width = 3.7
     ws.merge_cells(start_row=3, start_column=lastc, end_row=4, end_column=lastc)
@@ -141,17 +152,18 @@ def build(mk, data, full=False, phones=None, wishes=None, notes=()):
             for cc in range(c1, c2 + 1):
                 ws.cell(r, cc).border = BOX
                 ws.cell(r, cc).fill = fill(VAC)
-        t = ws.cell(r, lastc, f'=COUNTIF(B{r}:{L(lastc - 1)}{r},"+")')
+        t = formula(ws, r, lastc, f'=COUNTIF(B{r}:{L(lastc - 1)}{r},"+")', sum(did in M["duty"].get(d.isoformat(), []) for d in days))
         t.font, t.alignment, t.fill = font(12, True, INK), C, fill(TOTAL)
         t.border = Border(left=thin, top=thin, bottom=thin)
     tr = last + 1
     ws.row_dimensions[tr].height = 23
     c = ws.cell(tr, 1, "Дежурных за день")
     c.font, c.alignment, c.fill, c.border = font(10, True, INK), V, fill(HEAD), Border(top=thin_d, right=thin_d, bottom=thin_d)
+    per_day = [sum(x in order for x in M["duty"].get(d.isoformat(), [])) for d in days]
     for col in range(2, lastc):
-        c = ws.cell(tr, col, f'=COUNTIF({L(col)}{first}:{L(col)}{last},"+")')
+        c = formula(ws, tr, col, f'=COUNTIF({L(col)}{first}:{L(col)}{last},"+")', per_day[col - 2])
         c.font, c.alignment, c.fill, c.border = font(10, True, INK), C, fill(HEAD), BOX
-    c = ws.cell(tr, lastc, f"=SUM(B{tr}:{L(lastc - 1)}{tr})")
+    c = formula(ws, tr, lastc, f"=SUM(B{tr}:{L(lastc - 1)}{tr})", sum(per_day))
     c.font, c.alignment, c.fill, c.border = font(10, True, INK), C, fill(HEAD), Border(left=thin, top=thin, bottom=thin)
     red = dict(font=Font(color="FFA52C2C"), fill=PatternFill(bgColor="FFFCE2DF"))
     ws.conditional_formatting.add(f"B{tr}:{L(lastc - 1)}{tr}", CellIsRule(operator="notEqual", formula=["1"], **red))
@@ -167,7 +179,8 @@ def build(mk, data, full=False, phones=None, wishes=None, notes=()):
              + (f"; {vac_txt}." if vac_txt else "."),
              f"Будни: {'–'.join(M['shift']['work'])} ({dur_text(w_min)}). Выходные и праздники: {'–'.join(M['shift']['off'])} ({dur_text(o_min)})."
              + (" Расчёт нагрузки — на втором листе." if full else "")]
-    for i, text in enumerate(lines):
+    # Под таблицей — только в версии организатора; файл для оперативного отдела — одна таблица
+    for i, text in enumerate(lines if full else []):
         r = tr + 2 + i
         ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=lastc)
         c = ws.cell(r, 1, text)
@@ -207,6 +220,8 @@ def sheet2(wb, ws1, title, mk, data, M, order, names, days, off, hol, short, cal
     off_cols = [L(d.day + 1) for d in days if d.isoformat() in off]
     w_h, w_m = divmod(w_min, 60)
     norm_row = 4 + len(order) + 6  # строка «Норма, ч»: ИТОГО, пустая, примечание, пустая, часы, дни, норма
+    norm = WEEK_HOURS / 5 * cal["workdays"] - len(short)
+    tot = [0, 0, 0.0, 0.0]
     for j, did in enumerate(order):
         r = 4 + j
         r1 = first + j
@@ -216,8 +231,15 @@ def sheet2(wb, ws1, title, mk, data, M, order, names, days, off, hol, short, cal
                 "=" + "+".join(f'COUNTIF({q}!{c}{r1},"+")' for c in off_cols) if off_cols else "=0",
                 f'=IF(C{r}=0,"—",REPLACE(' + "&".join(f'IF({q}!{L(d.day + 1)}{r1}="+",", "&TEXT(DAY({q}!{L(d.day + 1)}$3),"00"),"")' for d in days) + ',1,2,""))',
                 f"=(C{r}-D{r})*TIME({w_h},{w_m},0)+D{r}", f"=F{r}*24/$G${norm_row}"]
+        mine = [d for d in days if did in M["duty"].get(d.isoformat(), [])]
+        cnt, fu = len(mine), sum(d.isoformat() in off for d in mine)
+        hours = ((cnt - fu) * w_min + fu * 1440) / 1440
+        share = hours * 24 / norm if norm else 0
+        cached = {3: cnt, 4: fu, 5: ", ".join(f"{d.day:02d}" for d in mine) or "—", 6: hours, 7: share}
+        for k, v in zip(range(4), (cnt, fu, hours, share)):
+            tot[k] += v
         for i, v in enumerate(vals, 1):
-            c = s.cell(r, i, v)
+            c = formula(s, r, i, v, cached[i]) if i in cached else s.cell(r, i, v)
             c.font = font(10.5 if i in (1, 5) else 10 if i == 2 else 11)
             c.alignment = VW if i in (1, 2) else (CW if i == 5 else C)
             c.fill = fill(TOTAL if i in (6, 7) else base)
@@ -228,8 +250,9 @@ def sheet2(wb, ws1, title, mk, data, M, order, names, days, off, hol, short, cal
     r = 4 + len(order)
     s.merge_cells(f"A{r}:B{r}")
     s.row_dimensions[r].height = 25
+    sums = {3: tot[0], 4: tot[1], 6: tot[2], 7: tot[3]}
     for i, v in enumerate(["ИТОГО", None, f"=SUM(C4:C{r - 1})", f"=SUM(D4:D{r - 1})", f"{len(days)} {plural(len(days), 'день', 'дня', 'дней')}", f"=SUM(F4:F{r - 1})", f"=SUM(G4:G{r - 1})"], 1):
-        c = s.cell(r, i, v)
+        c = formula(s, r, i, v, sums[i]) if i in sums else s.cell(r, i, v)
         c.font, c.fill, c.alignment = font(11, True, INK), fill(HEAD), V if i == 1 else C
     s.cell(r, 6).number_format, s.cell(r, 7).number_format = "[h]:mm", "0.00"
     hol_txt = ", ".join(f"{d.day} {GEN[d.month - 1]}" for d in hol)
@@ -253,12 +276,13 @@ def sheet2(wb, ws1, title, mk, data, M, order, names, days, off, hol, short, cal
         if a:
             s.merge_cells(f"A{rr}:B{rr}")
             s.cell(rr, 1, a).font = font(10)
-            c = s.cell(rr, 3, f_)
+            per = [sum(x in order for x in M["duty"].get(d.isoformat(), [])) for d in days]
+            c = formula(s, rr, 3, f_, sum(n == 0 for n in per) if k == 0 else sum(n > 1 for n in per))
             c.font, c.alignment = font(11, True, TEAL), C
         bold = lbl == "Норма, ч"
         c = s.cell(rr, 6, lbl)
         c.font, c.fill, c.alignment = font(11 if bold else 10, bold, INK if bold else INK2), fill(HEAD if bold else TOTAL), V
-        c = s.cell(rr, 7, v)
+        c = formula(s, rr, 7, v, norm) if bold else s.cell(rr, 7, v)
         c.font, c.fill, c.alignment = font(11 if bold else 10, bold, INK if bold else INK2), fill(HEAD if bold else TOTAL), C
     s.conditional_formatting.add(f"C{r + 2}:C{r + 3}", CellIsRule(operator="notEqual", formula=["0"], **red))
     info = []
@@ -285,17 +309,35 @@ def sheet2(wb, ws1, title, mk, data, M, order, names, days, off, hol, short, cal
     s.sheet_properties.pageSetUpPr = PageSetupProperties(fitToPage=True)
 
 
+def with_values(xml, cells):
+    """Вписать готовые значения формул (<v>) — openpyxl оставляет их пустыми."""
+    for ref, v in cells.items():
+        if isinstance(v, str):
+            t, val = ' t="str"', escape(v)
+        else:
+            t, val = "", repr(round(float(v), 10)) if isinstance(v, float) else str(int(v))
+        xml, n = re.subn(r'(<c r="%s")([^>]*)(><f>.*?</f>)<v\s*/>' % ref, lambda m: f"{m.group(1)}{m.group(2)}{t}{m.group(3)}<v>{val}</v>", xml, count=1)
+        if not n:
+            raise RuntimeError(f"нет формулы в ячейке {ref}")
+    return xml
+
+
 def save(wb, path, stamp):
-    """Сохранение с постоянными отметками времени внутри архива — без лишних изменений в git."""
+    """Сохранение с готовыми значениями формул и постоянными отметками времени внутри архива."""
     buf = io.BytesIO()
     wb.save(buf)
     zin = zipfile.ZipFile(io.BytesIO(buf.getvalue()))
+    cache = getattr(wb, "_dz_cache", {})
+    sheets = {f"xl/worksheets/sheet{i + 1}.xml": cache.get(ws.title, {}) for i, ws in enumerate(wb.worksheets)}
     out = io.BytesIO()
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
         for info in zin.infolist():
             ni = zipfile.ZipInfo(info.filename, date_time=stamp.timetuple()[:6])
             ni.compress_type = zipfile.ZIP_DEFLATED
-            z.writestr(ni, zin.read(info.filename))
+            data = zin.read(info.filename)
+            if sheets.get(info.filename):
+                data = with_values(data.decode(), sheets[info.filename]).encode()
+            z.writestr(ni, data)
     pathlib.Path(path).parent.mkdir(parents=True, exist_ok=True)
     pathlib.Path(path).write_bytes(out.getvalue())
 

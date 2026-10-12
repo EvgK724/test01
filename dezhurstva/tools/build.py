@@ -10,6 +10,8 @@ import make_xlsx, ru_calendar
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 # Цвета врачей — только синие и голубые оттенки
 COLORS = ["#3BE8FF", "#4D9BFF", "#8FD3FF", "#62B6FF", "#8A9BFF", "#5CC8FF", "#B8E6FF", "#5B7DFF", "#6FF0FF", "#A0B4FF"]
+# Версия оформления Excel: поменяли make_xlsx.py — увеличьте, чтобы файлы пересобрались
+XLSX_FORMAT = 3
 # Напоминания: накануне в 19:00 и за час до начала
 EVE_HOUR = 19
 
@@ -102,7 +104,7 @@ def main():
     hashes = json.loads(hp.read_text()) if hp.exists() else {}
     files = {}
     for mk, m in data["months"].items():
-        h = hashlib.sha1(json.dumps([m, {i: data["doctors"][i] for i in m["order"]}], ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:12]
+        h = hashlib.sha1(json.dumps([XLSX_FORMAT, m, {i: data["doctors"][i]["name"] for i in m["order"]}], ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:12]
         path = ROOT / "files" / f"{mk}.xlsx"
         if hashes.get(mk) != h or not path.exists():
             make_xlsx.public(mk, data)
@@ -124,7 +126,8 @@ def main():
     config = json.loads(cfg_path.read_text()) if cfg_path.exists() else {}
     tpl = (ROOT / "tools" / "template.html").read_text()
     payload = json.dumps({**data, "colors": COLORS, "cal": cal, "files": files,
-                          "config": {"form": config.get("form", {}), "deadline": config.get("deadline", 15)}},
+                          "config": {"form": config.get("form", {}), "deadline": config.get("deadline", 15),
+                                     "weekHours": config.get("week_hours", 39)}},
                          ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     (ROOT / "index.html").write_text(tpl.replace("__DATA__", payload))
     print(f"→ dezhurstva/index.html, cal/: {len(ids)} врачей + all.ics, смен {len(all_items)}, Excel: {', '.join(files)}")

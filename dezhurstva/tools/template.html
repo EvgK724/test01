@@ -234,6 +234,22 @@ main {
 
 .daycard .big { font: 700 1.5rem/1.2 var(--serif); color: color-mix(in srgb, var(--c) 30%, #fff); text-shadow: 0 0 12px color-mix(in srgb, var(--c) 75%, transparent); overflow-wrap: break-word; }
 
+/* Нагрузка */
+.norm dl { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; margin: 0; }
+.norm dt { color: var(--text-2); }
+.norm dd { margin: 0; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+.norm dt.big, .norm dd.big { color: var(--text); font-size: 1.25rem; font-weight: 700; padding-top: 6px; border-top: 1px solid var(--border); }
+.norm dd.big { color: #BCE9FA; text-shadow: 0 0 10px rgba(59,232,255,.3); }
+.load { display: flex; flex-direction: column; gap: 8px; }
+.load li { display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--border); }
+.load li.me { border-color: var(--neon); box-shadow: 0 0 14px -6px var(--neon); }
+.load .lh { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.load b.nm { white-space: nowrap; color: color-mix(in srgb, var(--c) 35%, #fff); }
+.load .sh { font: 700 1.25rem/1 var(--serif); color: #BCE9FA; font-variant-numeric: tabular-nums; }
+.load .sub { color: var(--text-2); font-size: .9rem; }
+.load .bar { display: block; height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
+.load .bar i { display: block; height: 100%; border-radius: 3px; background: var(--c); box-shadow: 0 0 8px var(--c); }
+
 /* Сейчас */
 .now { display: grid; grid-template-columns: 1fr; gap: 10px; }
 .now .line { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
@@ -346,7 +362,7 @@ h1, h2, h3, p, b, .name, .summary { overflow-wrap: break-word; word-break: norma
     <li><b>«Мои»</b> — выберите себя: увидите свои дежурства и сколько до ближайшего.</li>
     <li><b>Напоминания:</b> «Мои» → «Добавить в Календарь» → «Подписаться». Календарь напомнит накануне в 19:00 и за час до начала и сам подтянет изменения графика.</li>
     <li><b>«Пожелания»</b> — до 15 числа на следующий месяц: дни и интервалы «не ставить», «хочу», отпуск, сколько дежурств, комментарий. Можно поправить и отправить заново — учитывается последнее.</li>
-    <li><b>«График»</b> — весь месяц, <b>«Excel»</b> — файл графика; «Для печати» — с телефонами для оперативного отдела (телефоны хранятся только на этом телефоне).</li>
+    <li><b>«График»</b> — весь месяц: календарь, список и нагрузка (норма часов, доля ставки); <b>«Excel»</b> — файл графика; «Для печати» — с телефонами для оперативного отдела (телефоны хранятся только на этом телефоне).</li>
   </ol>
   <p class="lead small">Если календарь не напоминает: Настройки → Календарь → Учётные записи → Подписные календари → «Дежурства ПСО» → выключите «Удалить предупреждения».</p>
   <button class="btn primary" type="button" id="helpClose">Понятно</button>
@@ -580,21 +596,58 @@ function renderAll() {
   for (const who of Object.values(M.duty)) for (const id of who) cnt[id] = (cnt[id] || 0) + 1;
   const focus = state.focus && order.includes(state.focus) ? state.focus : null;
   parts.push(`<section class="card">${monthBar()}
-    <div class="chips" role="group" aria-label="Подсветить врача">
+    ${state.view === 'load' ? '' : `<div class="chips" role="group" aria-label="Подсветить врача">
       <button type="button" class="chip" data-act="focus" data-id="" aria-pressed="${!focus}">Все</button>
       ${order.map(id => `<button type="button" class="chip" data-act="focus" data-id="${id}" style="--c:${color(id)}" aria-pressed="${focus === id}"><i></i>${esc(nameOf(id))} ${cnt[id] || 0}</button>`).join('')}
-    </div>
-    <div class="seg" role="group" aria-label="Вид"><button type="button" data-act="view" data-v="grid" aria-pressed="${state.view === 'grid'}">Календарь</button><button type="button" data-act="view" data-v="list" aria-pressed="${state.view === 'list'}">Список</button></div>
-    ${state.view === 'grid' ? grid(mk, focus, now) : agenda(mk, focus, now)}
-    <div class="legend"><span><i class="off"></i>выходной, праздник — сутки ${M.shift.off.join('–')}</span><span><i></i>будни ${M.shift.work.join('–')}</span><span><i class="hol"></i>праздник по календарю РФ</span>${state.me ? '<span><i class="mine"></i>ваши</span>' : ''}</div>
+    </div>`}
+    <div class="seg" role="group" aria-label="Вид"><button type="button" data-act="view" data-v="grid" aria-pressed="${state.view === 'grid'}">Календарь</button><button type="button" data-act="view" data-v="list" aria-pressed="${state.view === 'list'}">Список</button><button type="button" data-act="view" data-v="load" aria-pressed="${state.view === 'load'}">Нагрузка</button></div>
+    ${state.view === 'grid' ? grid(mk, focus, now) : state.view === 'list' ? agenda(mk, focus, now) : ''}
+    ${state.view === 'load' ? '' : `<div class="legend"><span><i class="off"></i>выходной, праздник — сутки ${M.shift.off.join('–')}</span><span><i></i>будни ${M.shift.work.join('–')}</span><span><i class="hol"></i>праздник по календарю РФ</span>${state.me ? '<span><i class="mine"></i>ваши</span>' : ''}</div>`}
     </section>`);
   if (state.view === 'grid') parts.push(dayCard());
+  if (state.view === 'load') parts.push(loadCards(mk));
   parts.push(`<section class="card"><h3>Весь график в календарь</h3>
     <p class="lead small">Все дежурства отделения одним календарём, без напоминаний.</p>
     <div class="row2"><a class="btn" href="${esc(webcal('all'))}">Подписаться</a><button type="button" class="btn" data-act="copyall">Скопировать ссылку</button></div>
     <p class="lead small">Обновлено ${esc(updatedText())}.</p></section>`);
   return parts.join('');
 }
+// Норма 1 ставки за месяц: часы в неделю / 5 × рабочие дни месяца по календарю РФ − сокращённые предпраздничные часы
+function normOf(mk) {
+  const cal = calOf(mk), wh = C.weekHours || 39;
+  const workdays = daysIn(mk) - cal.off.length, short = cal.short.length;
+  return { wh, workdays, short, shortDays: cal.short, norm: wh / 5 * workdays - short, verified: cal.verified };
+}
+const num1 = x => String(Math.round(x * 10) / 10).replace('.', ',');
+function loadCards(mk) {
+  const M = D.months[mk], N = normOf(mk);
+  const sd = N.shortDays.map(k => +k.slice(8) + NB + GEN[+k.slice(5, 7) - 1]).join(', ');
+  const rows = M.order.map(id => {
+    const ks = Object.keys(M.duty).filter(k => M.duty[k].includes(id));
+    const mins = ks.reduce((t, k) => t + DAY[k].mins, 0), full = ks.filter(k => DAY[k].off).length;
+    return { id, n: ks.length, full, mins, share: N.norm ? mins / 60 / N.norm : 0 };
+  });
+  const tot = rows.reduce((t, r) => ({ n: t.n + r.n, full: t.full + r.full, mins: t.mins + r.mins, share: t.share + r.share }), { n: 0, full: 0, mins: 0, share: 0 });
+  const fmt = x => x.toFixed(2).replace('.', ',');
+  const wdMins = (Object.values(DAY).find(d => d.mk === mk && !d.off) || { mins: 0 }).mins;
+  const list = rows.map(r => `<li class="${r.id === state.me ? 'me' : ''}" style="--c:${color(r.id)}">
+      <div class="lh"><b class="nm">${esc(nameOf(r.id))}</b><span class="sh">${fmt(r.share)}</span></div>
+      <span class="sub">${r.n}${NB}${plural(r.n, 'дежурство', 'дежурства', 'дежурств')}${r.full ? ' · сутки: ' + r.full : ''} · ${dur(r.mins)}</span>
+      <span class="bar" aria-hidden="true"><i style="width:${Math.min(100, r.share * 100).toFixed(1)}%"></i></span></li>`).join('');
+  return `<section class="card norm"><p class="eyebrow">Норма 1 ставки · ${esc(monthTitle(mk).toLowerCase())}</p>
+      <dl>
+        <dt>Часов в неделю</dt><dd>${N.wh}</dd>
+        <dt>Рабочих дней</dt><dd>${N.workdays}</dd>
+        <dt>Сокращено, ч</dt><dd>${N.short}</dd>
+        <dt class="big">Норма, ч</dt><dd class="big">${num1(N.norm)}</dd>
+      </dl>
+      <p class="lead small">${N.wh}${NB}/${NB}5${NB}×${NB}${N.workdays}${N.short ? NB + '−' + NB + N.short : ''} = ${num1(N.norm)}${NB}ч. Рабочие дни — по производственному календарю РФ${N.short ? '; сокращённый предпраздничный день: ' + sd : ''}.${N.verified ? '' : ' Переносы этого года ещё сверяются.'}</p></section>
+    <section class="card"><h3>Доля ставки</h3>
+      <ul class="load">${list}</ul>
+      <p class="sum">Всего: ${tot.n}${NB}${plural(tot.n, 'дежурство', 'дежурства', 'дежурств')} · ${dur(tot.mins)} <span>· ${fmt(tot.share)} ставки</span></p>
+      <p class="lead small">Доля ставки = часы дежурств / норму месяца. Смена учитывается целиком по дате начала: будни — ${dur(wdMins)}, выходные и праздники — 24${NB}ч. Дневная работа не учитывается.</p></section>`;
+}
+
 function updatedText() {
   const d = new Date(D.updated);
   return isNaN(d) ? '' : d.getDate() + NB + GEN[d.getMonth()] + ' ' + d.getFullYear();

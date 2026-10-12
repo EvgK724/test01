@@ -25,7 +25,8 @@ MON = ["Январь", "Февраль", "Март", "Апрель", "Май", "
 GEN = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
 WDN = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"]
 MODE = {"eq": "ровно", "max": "не больше", "min": "не меньше"}
-WEEK_HOURS = 39
+_cfg = ROOT / "data" / "config.json"
+WEEK_HOURS = json.loads(_cfg.read_text()).get("week_hours", 39) if _cfg.exists() else 39
 EMPTY = {"no": [], "vac": [], "yes": [], "noWd": [], "yesWd": [], "only": False,
          "total": {"mode": "any", "n": 0}, "full": {"mode": "any", "n": 0}, "freeWe": 0, "note": ""}
 

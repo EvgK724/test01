@@ -119,6 +119,14 @@ with sync_playwright() as p:
     one = pg.evaluate("""() => [...document.querySelectorAll('.dlist b.nm')].every(b => b.getClientRects().length === 1 && b.scrollWidth <= b.clientWidth + 1)""")
     check(one, "в списке фамилии в одну строку, без переноса")
     pg.screenshot(path=str(OUT / "04-list.png"), full_page=False)
+    pg.locator('.seg button[data-v="load"]').click()
+    nt = text(pg.locator(".norm"))
+    check("Часов в неделю\n39" in nt and "Рабочих дней\n20" in nt and "Сокращено, ч\n1" in nt and "155" in nt and "3 ноября" in nt,
+          f"норма ноября: 39 ч, 20 дней, −1 ч, 155 ч {nt[:120]!r}")
+    shares = pg.eval_on_selector_all(".load li", "els => els.map(e => e.querySelector('.nm').textContent + ' ' + e.querySelector('.sh').textContent)")
+    check(len(shares) == 8 and "Клепиков 0,87" in shares and "Давыдова 0,00" in shares, f"доли ставки: {shares}")
+    check("3,57 ставки" in text(pg.locator(".load ~ .sum")), "итого 3,57 ставки")
+    pg.screenshot(path=str(OUT / "04b-load.png"), full_page=False)
     ctx.close()
     # 3. Пожелания (сегодня 12 октября → декабрь, до 15 ноября)
     ctx, pg = page_at(b, "2026-10-12T21:00:00+05:00", me="omutov", tab="wish")
@@ -187,6 +195,10 @@ with sync_playwright() as p:
     check(a_col[0] == "Врач, телефон" and a_col[2] == f"КЛЕПИКОВ {fake['klepikov']}" and "ОМУТОВ 8 900 111-22-33" in a_col,
           f"файл для печати: телефоны у фамилий {a_col[:3]}")
     check(ws.cell(5, 6).value == "+", "в файле для печати те же «+»")
+    wv = openpyxl.load_workbook(io.BytesIO(base64.b64decode(b64)), data_only=True).worksheets[0]
+    check([wv.cell(r, 32).value for r in range(5, 13)] == [7, 6, 3, 1, 4, 4, 0, 5] and all(wv.cell(13, c).value == 1 for c in range(2, 32))
+          and wv.cell(13, 32).value == 30, "в файле для печати посчитаны «Всего» и «Дежурных за день» (видно и без пересчёта)")
+    check(wv.max_row == 13, f"в файле для печати под таблицей ничего нет (строк {wv.max_row})")
     pg.screenshot(path=str(OUT / "07-print.png"), full_page=False)
     ctx.close()
     for f in tmp.iterdir():
@@ -213,6 +225,12 @@ with sync_playwright() as p:
                     pg.locator('.seg button[data-v="list"]').click()
                     one = pg.evaluate("() => [...document.querySelectorAll('.dlist b.nm')].every(b => b.getClientRects().length === 1)")
                     check(one, f"{w}px список{' +15%' if scale else ''}: фамилии без переноса")
+                    pg.locator('.seg button[data-v="load"]').click()
+                    r, c, sw = hscroll(pg), clipped(pg), split_words(pg)
+                    one = pg.evaluate("() => [...document.querySelectorAll('.load b.nm')].every(b => b.getClientRects().length === 1)")
+                    check(not r["doc"] and not r["main"] and not r["bad"] and not c and not sw and one,
+                          f"{w}px нагрузка{' +15%' if scale else ''}: помещается {r['bad'] or ''} {c or ''} {sw or ''}")
+                    pg.locator('.seg button[data-v="grid"]').click()
                 r = hscroll(pg)
                 c = clipped(pg)
                 check(not r["doc"] and not r["main"] and not r["bad"] and not c,
