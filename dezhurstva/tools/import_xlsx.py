@@ -217,8 +217,13 @@ def main(paths):
             order = [doc_id(n) for n in res["doctors"]]
             duty = {d: [doc_id(n) for n in names] for d, names in sorted(res["duty"].items())}
             marks = [{"who": doc_id(m.pop("name")), **m} for m in res["marks"]]
+            old = data["months"].get(key, {})
             data["months"][key] = {"title": f"{MONTHS[res['month'] - 1]} {res['year']}", "order": order,
                                    "shift": res["shift"], "off": res["off"], "duty": duty, "marks": marks}
+            # Статус согласования и номер версии сохраняем: после правки — publish.py <месяц> --again (версия +1)
+            for k in ("status", "version", "confirm", "final_at"):
+                if k in old:
+                    data["months"][key][k] = old[k]
             done += 1
             # Сводка для проверки глазами
             n_days = calendar.monthrange(res["year"], res["month"])[1]

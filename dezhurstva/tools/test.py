@@ -254,6 +254,75 @@ with sync_playwright() as p:
     for f in tmp.iterdir():
         f.unlink()
     tmp.rmdir()
+    # 6. Согласование: подставляем предварительный декабрь (версия 2; организатор уже согласен)
+    import re as _re
+    html = (ROOT / "index.html").read_text()
+    mm = _re.search(r'(<script id="data" type="application/json">)(.*?)(</script>)', html, _re.S)
+    DD = json.loads(mm.group(2).replace("<\\/", "</"))
+    order = DD["months"]["2026-11"]["order"]
+    dec_days = [f"2026-12-{d:02d}" for d in range(1, 32)]
+    DD["months"]["2026-12"] = {"title": "Декабрь 2026", "order": order, "shift": DD["months"]["2026-11"]["shift"],
+        "off": DD["cal"]["2026-12"]["off"], "duty": {k: [order[i % len(order)]] for i, k in enumerate(dec_days)}, "marks": [],
+        "status": "preliminary", "version": 2,
+        "confirm": {"version": 2, "published": "2026-11-20T05:00:00Z", "need": order, "confirmed": ["klepikov"], "disagreed": 0}}
+    DD["files"]["2026-12"] = DD["files"]["2026-11"]
+    pre_html = html.replace(mm.group(2), json.dumps(DD, ensure_ascii=False).replace("</", "<\\/"))
+
+    def pre_page(me, width=390):
+        ctx = b.new_context(viewport={"width": width, "height": 844}, timezone_id="Asia/Yekaterinburg", locale="ru-RU")
+        ctx.route("**/index.html", lambda r: r.fulfill(body=pre_html, content_type="text/html; charset=utf-8"))
+        pg = ctx.new_page()
+        pg.on("pageerror", lambda e: errors.append(str(e)))
+        pg.clock.install(time="2026-11-21T10:00:00+05:00")
+        pg.add_init_script(f"localStorage.setItem('dezh:me', '{me}'); localStorage.setItem('dezh:tab', 'all')")
+        pg.goto(URL)
+        pg.wait_for_selector("#view > *")
+        return ctx, pg
+
+    ctx, pg = pre_page("omutov")
+    check(pg.is_visible("#ackSheet") and "декабрь 2026 (версия 2)" in pg.inner_text("#ackTitle"), "при открытии — уведомление о предварительном графике")
+    check(pg.locator('.tab[data-tab="me"] .badge').count() == 1, "точка на вкладке «Мои»")
+    pg.click("#ackOpen")
+    card = text(pg.locator(".ack"))
+    check("Согласны 1 из 7" in card and pg.locator(".ack .mine span").count() >= 4, f"карточка: свои дежурства и «согласны 1 из 7» {card[:80]!r}")
+    cfg = json.loads((ROOT / "data" / "config.json").read_text())["form"]
+    posted = []
+    pg.route(cfg["action"], lambda route: (posted.append(route.request.post_data or ""), route.fulfill(status=200, body="ok")))
+    pg.click('.ack [data-act="ackno"]')
+    pg.click('.ack [data-act="acksend"]')
+    check(not posted and pg.is_visible("[data-acknote]"), "без причины «Не согласен» не отправляется")
+    pg.fill("[data-acknote]", "Не могу 24-го — конференция")
+    pg.click('.ack [data-act="acksend"]')
+    pg.wait_for_selector(".ack .done.no")
+    from urllib.parse import parse_qs
+    val = (parse_qs(posted[-1]).get(cfg["entry"]) or [""])[0] if posted else ""
+    check('"kind":"ack"' in val and '"ok":false' in val and '"ver":2' in val and "конференция" in val and "НЕ СОГЛАСЕН" in val,
+          "несогласие с причиной ушло организатору (в форму)")
+    check(pg.locator('.tab[data-tab="me"] .badge').count() == 0, "после ответа точка пропала")
+    shot = OUT / "08-ack.png"
+    pg.click('.ack [data-act="ackchange"]')
+    pg.click('.ack [data-act="acksend"][data-ok="1"]')
+    pg.wait_for_selector(".ack .done:not(.no)")
+    val = (parse_qs(posted[-1]).get(cfg["entry"]) or [""])[0]
+    check('"ok":true' in val and "СОГЛАСЕН" in val, "«Изменить ответ» → «Согласен» отправлено")
+    pg.evaluate("document.querySelector('main').scrollTop = 0")
+    pg.screenshot(path=str(shot))
+    for w in (320, 390):
+        pg.set_viewport_size({"width": w, "height": 844})
+        r, c, sw = hscroll(pg), clipped(pg), split_words(pg)
+        check(not r["bad"] and not c and not sw, f"{w}px карточка согласования помещается {r['bad'] or ''} {c or ''} {sw or ''}")
+    pg.click('.tab[data-tab="all"]')
+    pg.locator('.mbar [data-act="next"]').click()
+    st = text(pg.locator(".status").first)
+    check("предварительный · версия 2" in st and "согласны 1 из 7" in st, f"в «Графике» статус месяца: {st!r}")
+    pg.click('.tab[data-tab="files"]')
+    check(pg.locator(".file .pill.pre").count() == 1, "в «Excel» у декабря пометка «предварительный»")
+    ctx.close()
+    ctx, pg = pre_page("klepikov")
+    check(not pg.is_visible("#ackSheet") and pg.locator('.tab[data-tab="me"] .badge').count() == 0, "у организатора (уже согласен) уведомления нет")
+    pg.click('.tab[data-tab="me"]')
+    check("Ваше согласие учтено" in text(pg.locator(".ack")), "организатору — «согласие учтено»")
+    ctx.close()
     # 5. Ширины: ничего не вылезает за экран и не обрезается внутри кнопок и клеток; ещё раз с текстом крупнее на 15%
     for scale in ("", "120.75%", "147%"):
         for w in (320, 360, 375, 390, 393, 402, 430, 440, 820, 1180):

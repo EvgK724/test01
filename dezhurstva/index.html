@@ -235,6 +235,21 @@ main {
 
 .daycard .big { font: 700 1.5rem/1.2 var(--serif); color: color-mix(in srgb, var(--c) 30%, #fff); text-shadow: 0 0 12px color-mix(in srgb, var(--c) 75%, transparent); overflow-wrap: break-word; }
 
+/* Согласование предварительного графика */
+.ack { border-color: color-mix(in srgb, var(--neon-2) 60%, transparent); box-shadow: 0 0 0 1px rgba(61,139,255,.18), 0 0 26px -12px var(--neon-2); }
+.ack h2 { font: 700 1.2rem/1.25 var(--serif); }
+.ack .mine { display: flex; flex-wrap: wrap; gap: 6px; }
+.ack .mine span { padding: 4px 10px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--border); font-weight: 600; white-space: nowrap; }
+.ack .mine span.off { background: var(--off-fill); border-color: var(--off-line); }
+.ack .done { color: #D2F6FF; }
+.ack .done.no { color: #FFC3C9; }
+.btn.no { background: rgba(255,77,94,.10); color: #FFDDE1; border-color: color-mix(in srgb, var(--no) 70%, transparent); }
+.status { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: -4px; }
+.pill.pre { border-color: color-mix(in srgb, var(--neon-2) 70%, transparent); color: #CFE0FF; background: rgba(61,139,255,.10); }
+.pill.fin { border-color: color-mix(in srgb, var(--neon) 60%, transparent); color: #D2F6FF; }
+.tab { position: relative; }
+.tab .badge { position: absolute; top: 8px; left: calc(50% + 12px); width: 10px; height: 10px; border-radius: 50%; background: var(--no); box-shadow: 0 0 8px var(--no); }
+
 /* Нагрузка */
 .norm dl { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; margin: 0; }
 .norm dt { color: var(--text-2); }
@@ -362,11 +377,19 @@ h1, h2, h3, p, b, .name, .summary { overflow-wrap: break-word; word-break: norma
     <li><b>На экран «Домой»:</b> в Safari «Поделиться» → «На экран Домой».</li>
     <li><b>«Мои»</b> — выберите себя: увидите свои дежурства и сколько до ближайшего.</li>
     <li><b>Напоминания:</b> «Мои» → «Добавить в Календарь» → «Подписаться». Календарь напомнит накануне в 19:00 и за час до начала и сам подтянет изменения графика.</li>
+    <li><b>Новый график:</b> когда организатор одобрит его, придёт уведомление «Предварительный график» — проверьте свои дежурства в «Мои» и нажмите «Согласен» или «Не согласен» с причиной. Когда согласятся все, график станет окончательным.</li>
     <li><b>«Пожелания»</b> — до 15 числа на следующий месяц: дни и интервалы «не ставить», «хочу», отпуск, сколько дежурств, комментарий. Можно поправить и отправить заново — учитывается последнее.</li>
     <li><b>«График»</b> — весь месяц: календарь, список и нагрузка (норма часов, доля ставки); <b>«Excel»</b> — файл графика; «Для печати» — с телефонами для оперативного отдела (телефоны хранятся только на этом телефоне).</li>
   </ol>
   <p class="lead small">Если календарь не напоминает: Настройки → Календарь → Учётные записи → Подписные календари → «Дежурства ПСО» → выключите «Удалить предупреждения».</p>
   <button class="btn primary" type="button" id="helpClose">Понятно</button>
+</div></div>
+<div class="sheet" id="ackSheet" hidden><div class="panel" role="dialog" aria-modal="true" aria-labelledby="ackTitle">
+  <p class="eyebrow">Новый график</p>
+  <h2 id="ackTitle" style="font:700 1.25rem/1.25 var(--serif)"></h2>
+  <p class="lead" id="ackText"></p>
+  <button class="btn primary" type="button" id="ackOpen">Ознакомиться и ответить</button>
+  <button class="link" type="button" id="ackLater">Позже</button>
 </div></div>
 <div class="toast" id="toast" role="status" hidden></div>
 <script id="data" type="application/json">{"tz":"Asia/Yekaterinburg","doctors":{"klepikov":{"name":"Клепиков"},"kardashina":{"name":"Кардашина"},"lekerova":{"name":"Лекерова","code":"Лк"},"khamatnurova":{"name":"Хаматнурова"},"leonard":{"name":"Леонард","code":"Ло"},"alekeshova":{"name":"Алекешова"},"omutov":{"name":"Омутов"}},"months":{"2026-11":{"title":"Ноябрь 2026","order":["klepikov","kardashina","lekerova","khamatnurova","leonard","alekeshova","omutov"],"shift":{"work":["16:18","08:00"],"off":["08:00","08:00"]},"off":["2026-11-01","2026-11-04","2026-11-07","2026-11-08","2026-11-14","2026-11-15","2026-11-21","2026-11-22","2026-11-28","2026-11-29"],"duty":{"2026-11-01":["lekerova"],"2026-11-02":["khamatnurova"],"2026-11-03":["kardashina"],"2026-11-04":["alekeshova"],"2026-11-05":["klepikov"],"2026-11-06":["leonard"],"2026-11-07":["klepikov"],"2026-11-08":["omutov"],"2026-11-09":["kardashina"],"2026-11-10":["omutov"],"2026-11-11":["kardashina"],"2026-11-12":["klepikov"],"2026-11-13":["leonard"],"2026-11-14":["klepikov"],"2026-11-15":["alekeshova"],"2026-11-16":["kardashina"],"2026-11-17":["lekerova"],"2026-11-18":["omutov"],"2026-11-19":["klepikov"],"2026-11-20":["leonard"],"2026-11-21":["klepikov"],"2026-11-22":["alekeshova"],"2026-11-23":["omutov"],"2026-11-24":["kardashina"],"2026-11-25":["lekerova"],"2026-11-26":["klepikov"],"2026-11-27":["leonard"],"2026-11-28":["omutov"],"2026-11-29":["alekeshova"],"2026-11-30":["kardashina"]},"marks":[{"who":"lekerova","from":"2026-11-04","to":"2026-11-16","label":"Отпуск"}]}},"updated":"2026-10-12T18:39:22Z","colors":["#3BE8FF","#4D9BFF","#8FD3FF","#62B6FF","#8A9BFF","#5CC8FF","#B8E6FF","#5B7DFF","#6FF0FF","#A0B4FF"],"cal":{"2026-10":{"off":["2026-10-03","2026-10-04","2026-10-10","2026-10-11","2026-10-17","2026-10-18","2026-10-24","2026-10-25","2026-10-31"],"hol":[],"work":[],"short":[],"verified":true},"2026-11":{"off":["2026-11-01","2026-11-04","2026-11-07","2026-11-08","2026-11-14","2026-11-15","2026-11-21","2026-11-22","2026-11-28","2026-11-29"],"hol":["2026-11-04"],"work":[],"short":["2026-11-03"],"verified":true},"2026-12":{"off":["2026-12-05","2026-12-06","2026-12-12","2026-12-13","2026-12-19","2026-12-20","2026-12-26","2026-12-27","2026-12-31"],"hol":["2026-12-31"],"work":[],"short":[],"verified":true},"2027-01":{"off":["2027-01-01","2027-01-02","2027-01-03","2027-01-04","2027-01-05","2027-01-06","2027-01-07","2027-01-08","2027-01-09","2027-01-10","2027-01-16","2027-01-17","2027-01-23","2027-01-24","2027-01-30","2027-01-31"],"hol":["2027-01-01","2027-01-04","2027-01-05","2027-01-06","2027-01-07","2027-01-08"],"work":[],"short":[],"verified":false},"2027-02":{"off":["2027-02-06","2027-02-07","2027-02-13","2027-02-14","2027-02-21","2027-02-22","2027-02-23","2027-02-27","2027-02-28"],"hol":["2027-02-22","2027-02-23"],"work":["2027-02-20"],"short":[],"verified":false},"2027-03":{"off":["2027-03-06","2027-03-07","2027-03-08","2027-03-13","2027-03-14","2027-03-20","2027-03-21","2027-03-27","2027-03-28"],"hol":["2027-03-08"],"work":[],"short":[],"verified":false},"2027-04":{"off":["2027-04-03","2027-04-04","2027-04-10","2027-04-11","2027-04-17","2027-04-18","2027-04-24","2027-04-25"],"hol":[],"work":[],"short":["2027-04-30"],"verified":false},"2027-05":{"off":["2027-05-01","2027-05-02","2027-05-03","2027-05-08","2027-05-09","2027-05-10","2027-05-15","2027-05-16","2027-05-22","2027-05-23","2027-05-29","2027-05-30"],"hol":["2027-05-03","2027-05-10"],"work":[],"short":[],"verified":false},"2027-06":{"off":["2027-06-05","2027-06-06","2027-06-12","2027-06-13","2027-06-14","2027-06-19","2027-06-20","2027-06-26","2027-06-27"],"hol":["2027-06-14"],"work":[],"short":["2027-06-11"],"verified":false},"2027-07":{"off":["2027-07-03","2027-07-04","2027-07-10","2027-07-11","2027-07-17","2027-07-18","2027-07-24","2027-07-25","2027-07-31"],"hol":[],"work":[],"short":[],"verified":false},"2027-08":{"off":["2027-08-01","2027-08-07","2027-08-08","2027-08-14","2027-08-15","2027-08-21","2027-08-22","2027-08-28","2027-08-29"],"hol":[],"work":[],"short":[],"verified":false},"2027-09":{"off":["2027-09-04","2027-09-05","2027-09-11","2027-09-12","2027-09-18","2027-09-19","2027-09-25","2027-09-26"],"hol":[],"work":[],"short":[],"verified":false},"2027-10":{"off":["2027-10-02","2027-10-03","2027-10-09","2027-10-10","2027-10-16","2027-10-17","2027-10-23","2027-10-24","2027-10-30","2027-10-31"],"hol":[],"work":[],"short":[],"verified":false},"2027-11":{"off":["2027-11-04","2027-11-05","2027-11-06","2027-11-07","2027-11-13","2027-11-14","2027-11-20","2027-11-21","2027-11-27","2027-11-28"],"hol":["2027-11-04","2027-11-05"],"work":[],"short":["2027-11-03"],"verified":false},"2027-12":{"off":["2027-12-04","2027-12-05","2027-12-11","2027-12-12","2027-12-18","2027-12-19","2027-12-25","2027-12-26","2027-12-31"],"hol":["2027-12-31"],"work":[],"short":[],"verified":false},"2028-01":{"off":["2028-01-01","2028-01-02","2028-01-03","2028-01-04","2028-01-05","2028-01-06","2028-01-07","2028-01-08","2028-01-09","2028-01-15","2028-01-16","2028-01-22","2028-01-23","2028-01-29","2028-01-30"],"hol":["2028-01-03","2028-01-04","2028-01-05","2028-01-06","2028-01-07"],"work":[],"short":[],"verified":false},"2028-02":{"off":["2028-02-05","2028-02-06","2028-02-12","2028-02-13","2028-02-19","2028-02-20","2028-02-23","2028-02-26","2028-02-27"],"hol":["2028-02-23"],"work":[],"short":["2028-02-22"],"verified":false},"2028-03":{"off":["2028-03-04","2028-03-05","2028-03-08","2028-03-11","2028-03-12","2028-03-18","2028-03-19","2028-03-25","2028-03-26"],"hol":["2028-03-08"],"work":[],"short":["2028-03-07"],"verified":false},"2028-04":{"off":["2028-04-01","2028-04-02","2028-04-08","2028-04-09","2028-04-15","2028-04-16","2028-04-22","2028-04-23","2028-04-29","2028-04-30"],"hol":[],"work":[],"short":[],"verified":false},"2028-05":{"off":["2028-05-01","2028-05-06","2028-05-07","2028-05-09","2028-05-13","2028-05-14","2028-05-20","2028-05-21","2028-05-27","2028-05-28"],"hol":["2028-05-01","2028-05-09"],"work":[],"short":["2028-05-08"],"verified":false},"2028-06":{"off":["2028-06-03","2028-06-04","2028-06-10","2028-06-11","2028-06-12","2028-06-17","2028-06-18","2028-06-24","2028-06-25"],"hol":["2028-06-12"],"work":[],"short":[],"verified":false},"2028-07":{"off":["2028-07-01","2028-07-02","2028-07-08","2028-07-09","2028-07-15","2028-07-16","2028-07-22","2028-07-23","2028-07-29","2028-07-30"],"hol":[],"work":[],"short":[],"verified":false},"2028-08":{"off":["2028-08-05","2028-08-06","2028-08-12","2028-08-13","2028-08-19","2028-08-20","2028-08-26","2028-08-27"],"hol":[],"work":[],"short":[],"verified":false},"2028-09":{"off":["2028-09-02","2028-09-03","2028-09-09","2028-09-10","2028-09-16","2028-09-17","2028-09-23","2028-09-24","2028-09-30"],"hol":[],"work":[],"short":[],"verified":false},"2028-10":{"off":["2028-10-01","2028-10-07","2028-10-08","2028-10-14","2028-10-15","2028-10-21","2028-10-22","2028-10-28","2028-10-29"],"hol":[],"work":[],"short":[],"verified":false},"2028-11":{"off":["2028-11-04","2028-11-05","2028-11-06","2028-11-11","2028-11-12","2028-11-18","2028-11-19","2028-11-25","2028-11-26"],"hol":["2028-11-06"],"work":[],"short":["2028-11-03"],"verified":false},"2028-12":{"off":["2028-12-02","2028-12-03","2028-12-09","2028-12-10","2028-12-16","2028-12-17","2028-12-23","2028-12-24","2028-12-30","2028-12-31"],"hol":[],"work":[],"short":[],"verified":false}},"files":{"2026-11":"files/2026-11.xlsx?v=cb6e90f36612"},"config":{"form":{"action":"https://docs.google.com/forms/d/e/1FAIpQLSckx3uIATXOmUh2wJz7j__M4bGN3njeDHmYOOHhZ89C1V-dMQ/formResponse","entry":"entry.107621685"},"deadline":15,"weekHours":39}}</script>
@@ -531,10 +554,88 @@ const view = document.getElementById('view');
 const main = document.getElementById('main');
 
 function monthBar() {
-  const i = MK.indexOf(state.month);
+  const i = MK.indexOf(state.month), st = D.months[state.month] ? statusPills(state.month) : '';
   return `<div class="mbar"><button type="button" data-act="prev" aria-label="Предыдущий месяц" ${i <= 0 ? 'disabled' : ''}>‹</button>
     <h2>${esc(monthTitle(state.month))}</h2>
-    <button type="button" data-act="next" aria-label="Следующий месяц" ${i >= MK.length - 1 ? 'disabled' : ''}>›</button></div>`;
+    <button type="button" data-act="next" aria-label="Следующий месяц" ${i >= MK.length - 1 ? 'disabled' : ''}>›</button></div>
+    ${st ? `<div class="status">${st}</div>` : ''}`;
+}
+
+// ---------- Согласование предварительного графика ----------
+const PRE = MK.filter(mk => D.months[mk].status === 'preliminary' && D.months[mk].confirm);
+const ackNote = {};
+let ackNo = {};
+function ackKey(mk) { return 'dezh:ack:' + state.me + ':' + mk + ':' + D.months[mk].version; }
+function ackState(mk) {
+  const c = D.months[mk].confirm;
+  if (c.confirmed.includes(state.me)) return { done: true, ok: true, server: true };
+  try { const v = JSON.parse(store.get(ackKey(mk)) || 'null'); if (v) return Object.assign({ done: true }, v); } catch (e) {}
+  return { done: false };
+}
+function pendingAcks() { return state.me ? PRE.filter(mk => D.months[mk].confirm.need.includes(state.me) && !ackState(mk).done) : []; }
+function statusPills(mk) {
+  const M = D.months[mk];
+  if (M.status === 'preliminary' && M.confirm) {
+    const c = M.confirm;
+    return `<span class="pill pre">предварительный${M.version > 1 ? ' · версия ' + M.version : ''}</span><span class="pill">согласны ${c.confirmed.length} из ${c.need.length}</span>`;
+  }
+  return M.status === 'final' ? '<span class="pill fin">окончательный</span>' : '';
+}
+function monthGen(mk) { const [y, m] = mk.split('-').map(Number); return MON[m - 1].toLowerCase() + ' ' + y; }
+function ackCards() {
+  return PRE.filter(mk => D.months[mk].confirm.need.includes(state.me)).map(mk => {
+    const M = D.months[mk], a = ackState(mk), keys = myKeys(state.me, mk);
+    const mine = keys.length ? keys.map(k => `<span class="${DAY[k].off ? 'off' : ''}">${DAY[k].d}${NB}${WD[DAY[k].wd]}${DAY[k].off ? ' · сутки' : ''}</span>`).join('') : '<span>дежурств нет</span>';
+    let tail;
+    if (a.done && a.ok) tail = `<p class="done">✓ ${a.server ? 'Ваше согласие учтено.' : 'Вы согласились — отправлено.'} Когда согласятся все, график станет окончательным.</p>`;
+    else if (a.done) tail = `<p class="done no">Вы не согласны: «${esc(a.note || '')}». Организатор увидит; после правок придёт новая версия.</p>
+      <button type="button" class="link" data-act="ackchange" data-mk="${mk}">Изменить ответ</button>`;
+    else if (ackNo[mk]) tail = `<label class="field"><span class="lbl">Что не так?</span>
+        <textarea data-acknote="${mk}" maxlength="500" placeholder="Например: не могу 24-го — конференция; прошу поменять 17-е на 18-е">${esc(ackNote[mk] || '')}</textarea></label>
+      <div class="row2"><button type="button" class="btn no" data-act="acksend" data-mk="${mk}" data-ok="0">Отправить</button><button type="button" class="btn" data-act="ackcancel" data-mk="${mk}">Отмена</button></div>`;
+    else tail = `<div class="row2"><button type="button" class="btn primary" data-act="acksend" data-mk="${mk}" data-ok="1">Согласен</button><button type="button" class="btn no" data-act="ackno" data-mk="${mk}">Не согласен</button></div>`;
+    return `<section class="card ack"><p class="eyebrow">Предварительный график${M.version > 1 ? ' · версия ' + M.version : ''}</p>
+      <h2>${esc(M.title)}: ознакомьтесь и подтвердите</h2>
+      <p class="lead small">Организатор одобрил черновик. Когда согласятся все, график станет окончательным. Согласны ${M.confirm.confirmed.length} из ${M.confirm.need.length}.</p>
+      <div class="field"><span class="lbl">Ваши дежурства</span><div class="mine">${mine}</div></div>
+      <button type="button" class="link" data-act="ackview" data-mk="${mk}">Посмотреть весь график →</button>
+      ${tail}</section>`;
+  }).join('');
+}
+async function sendAck(mk, ok) {
+  const M = D.months[mk], note = ok ? '' : (ackNote[mk] || '').trim();
+  if (!ok && !note) { toast('Напишите, что не так'); return; }
+  const p = { v: 1, kind: 'ack', m: mk, ver: M.version, who: state.me, name: nameOf(state.me), ok, note, ts: new Date().toISOString() };
+  const text = nameOf(state.me) + ' — ' + M.title.toLowerCase() + ', версия ' + M.version + ': ' + (ok ? 'СОГЛАСЕН' : 'НЕ СОГЛАСЕН — ' + note) + '\n#DEZH ' + JSON.stringify(p);
+  if (!(C.form && C.form.action && C.form.entry)) { copy(text, 'Ответ скопирован — перешлите организатору'); return; }
+  const body = new URLSearchParams();
+  body.set(C.form.entry, text);
+  try {
+    await fetch(C.form.action, { method: 'POST', mode: 'no-cors', body });
+    store.set(ackKey(mk), JSON.stringify({ ok, note, at: p.ts }));
+    delete ackNo[mk];
+    toast(ok ? 'Спасибо, согласие отправлено' : 'Отправлено организатору');
+    render(true); badge();
+  } catch (e) { toast('Нет связи — попробуйте ещё раз'); }
+}
+function badge() {
+  const b = document.querySelector('.tab[data-tab="me"]');
+  let d = b.querySelector('.badge');
+  const need = pendingAcks().length > 0;
+  if (need && !d) { d = document.createElement('span'); d.className = 'badge'; d.setAttribute('aria-label', 'нужно подтвердить график'); b.append(d); }
+  if (!need && d) d.remove();
+}
+function ackNotice() {
+  const p = pendingAcks();
+  if (!p.length) return;
+  const mk = p[0], M = D.months[mk], key = 'dezh:ack-seen:' + mk + ':' + M.version;
+  try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key, '1'); } catch (e) {}
+  document.getElementById('ackTitle').textContent = 'Предварительный график на ' + monthGen(mk) + (M.version > 1 ? ' (версия ' + M.version + ')' : '');
+  document.getElementById('ackText').textContent = 'Организатор одобрил черновик. Посмотрите свои дежурства и нажмите «Согласен» или напишите, что не так. Когда согласятся все, график станет окончательным.';
+  const sh = document.getElementById('ackSheet');
+  sh.hidden = false;
+  document.getElementById('ackOpen').onclick = () => { sh.hidden = true; state.tab = 'me'; state.picking = false; store.set('dezh:tab', 'me'); render(); };
+  document.getElementById('ackLater').onclick = () => { sh.hidden = true; };
 }
 
 // ---------- «Мои» ----------
@@ -560,7 +661,7 @@ function renderMe() {
     hero = `<section class="card hero" style="--c:${c}"><p class="eyebrow">${live ? 'Вы на дежурстве' : 'Ближайшее дежурство'}</p>
       <p class="when">${esc(live ? 'до ' + hhmm(nx.end) : relText(nx, now))}</p>
       <p class="date">${esc(dateText(nx))}</p>
-      <p class="meta"><span>${hhmm(nx.start)} → ${hhmm(nx.end)} · ${dur(nx.mins)}</span><span class="pill ${nx.off ? 'off' : ''}">${kind(nx)}</span></p></section>`;
+      <p class="meta"><span>${hhmm(nx.start)} → ${hhmm(nx.end)} · ${dur(nx.mins)}</span><span class="pill ${nx.off ? 'off' : ''}">${kind(nx)}</span>${D.months[nx.mk].status === 'preliminary' ? '<span class="pill pre">предварительно</span>' : ''}</p></section>`;
   } else {
     hero = `<section class="card hero" style="--c:${c}"><p class="eyebrow">Ближайшее дежурство</p>
       <p class="date">Впереди дежурств нет</p><p class="meta">В приложении график по ${esc(monthTitle(MK[MK.length - 1]).toLowerCase())}. Новый месяц появится после утверждения.</p></section>`;
@@ -579,6 +680,7 @@ function renderMe() {
       <span class="dd">${d.d}<small>${WD[d.wd]}</small></span><div><b>${hhmm(d.start)} → ${hhmm(d.end)}</b><span class="sub">${dur(d.mins)}</span><span class="pill ${d.off ? 'off' : ''}">${kind(d)}</span></div></li>`; }).join('')
     + marks.map(x => `<li class="mark"><span class="dd" style="color:var(--vac)">✦</span><div><b>${esc(x.label)}</b><span class="sub">${esc(rangeText(x.from, x.to))}</span></div></li>`).join('');
   return `<div class="who-row" style="--c:${c}"><span class="dotc"></span><h2>${esc(nameOf(id))}</h2><button type="button" class="link" data-act="change">Сменить</button></div>
+    ${ackCards()}
     ${hero}
     <section class="card"><h3>Напоминания</h3>
       <p class="lead small">Через Календарь телефона: накануне в 19:00 и за час до начала. Работают и при закрытом приложении, изменения графика календарь подтянет сам.</p>
@@ -827,7 +929,7 @@ function renderFiles() {
   if (!D.months[pend] && pend > mkOf(now)) status = `<section class="card"><p class="eyebrow">${esc(monthTitle(pend))}</p><p>Пожелания собраны, график составляется. Появится здесь после утверждения организатором.</p></section>`;
   const months = MK.slice().reverse().filter(mk => files[mk]);
   const list = months.map(mk => `<section class="card file"><span class="ic">XLSX</span>
-    <div><h3>${esc(monthTitle(mk))}</h3><p class="lead small">График дежурств ПСО · без телефонов</p></div>
+    <div><h3>${esc(monthTitle(mk))}</h3><p class="lead small">График дежурств ПСО · без телефонов</p>${statusPills(mk) ? `<div class="status" style="justify-content:flex-start;margin-top:4px">${statusPills(mk)}</div>` : ''}</div>
     <a class="btn primary" href="${esc(files[mk])}" download>Скачать</a></section>`).join('');
   const ph = phones();
   const ids = [...new Set(months.flatMap(mk => D.months[mk].order))];
@@ -969,7 +1071,7 @@ document.querySelector('.tabs').addEventListener('click', e => {
 view.addEventListener('click', e => {
   const b = e.target.closest('[data-act]'); if (!b) return;
   const a = b.dataset.act;
-  if (a === 'me') { state.me = b.dataset.id; state.picking = false; store.set('dezh:me', state.me); W = null; wKey = null; render(); return; }
+  if (a === 'me') { state.me = b.dataset.id; state.picking = false; store.set('dezh:me', state.me); W = null; wKey = null; render(); badge(); ackNotice(); return; }
   if (a === 'change') { state.picking = true; render(); return; }
   if (a === 'cancelpick') { state.picking = false; render(); return; }
   if (a === 'tab') { state.tab = b.dataset.tab; store.set('dezh:tab', state.tab); render(); return; }
@@ -1002,6 +1104,12 @@ view.addEventListener('click', e => {
   if (a === 'copywish') { copy(wishPayload(wishTarget(new Date()).mk), 'Текст пожеланий скопирован'); return; }
   if (a === 'resetwish') { if (confirm('Очистить все отметки и комментарий?')) { W = W_EMPTY(); saveWish(); anchor = null; render(true); } return; }
   if (a === 'send') { send(); return; }
+  // Согласование
+  if (a === 'ackno') { ackNo[b.dataset.mk] = true; render(true); const t = view.querySelector(`[data-acknote="${b.dataset.mk}"]`); if (t) t.focus(); return; }
+  if (a === 'ackcancel') { delete ackNo[b.dataset.mk]; render(true); return; }
+  if (a === 'acksend') { sendAck(b.dataset.mk, b.dataset.ok === '1'); return; }
+  if (a === 'ackchange') { store.del(ackKey(b.dataset.mk)); render(true); badge(); return; }
+  if (a === 'ackview') { state.tab = 'all'; state.month = b.dataset.mk; state.view = 'grid'; store.set('dezh:tab', 'all'); render(); return; }
   // Для печати
   if (a === 'phimport') { const f = document.getElementById('phfile'); if (f) f.click(); return; }
   if (a === 'pprep') {
@@ -1019,6 +1127,8 @@ view.addEventListener('click', e => {
 });
 view.addEventListener('toggle', e => { if (e.target.matches && e.target.matches('details.org')) orgOpen = e.target.open; }, true);
 view.addEventListener('input', e => {
+  const n = e.target.closest('[data-acknote]');
+  if (n) { ackNote[n.dataset.acknote] = n.value; return; }
   const el = e.target.closest('[data-ph]'); if (!el) return;
   const ph = phones(); const v = el.value.trim();
   if (v) ph[el.dataset.ph] = v; else delete ph[el.dataset.ph];
@@ -1040,9 +1150,11 @@ document.getElementById('helpClose').addEventListener('click', () => { help.hidd
 help.addEventListener('click', e => { if (e.target === help) help.hidden = true; });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') help.hidden = true; });
 // Обратный отсчёт и «сейчас дежурит» обновляем раз в минуту и при возвращении в приложение
-setInterval(() => { if (state.tab === 'me' || state.tab === 'all') render(true); }, 60000);
+setInterval(() => { if ((state.tab === 'me' && !Object.keys(ackNo).length) || state.tab === 'all') render(true); }, 60000);
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && (state.tab === 'me' || state.tab === 'all')) render(true); });
 render();
+badge();
+ackNotice();
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 <script>

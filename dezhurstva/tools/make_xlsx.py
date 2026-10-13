@@ -101,7 +101,7 @@ def build(mk, data, full=False, phones=None, wishes=None, notes=()):
     ws.sheet_view.showGridLines = False
     # Шапка
     ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=lastc)
-    ws["A1"] = f"ГРАФИК ДЕЖУРСТВ ПСО — {MON[m - 1]} {y}"
+    ws["A1"] = f"ГРАФИК ДЕЖУРСТВ ПСО — {MON[m - 1]} {y}" + (" (ПРЕДВАРИТЕЛЬНЫЙ)" if M.get("status") == "preliminary" else "")
     ws["A1"].font, ws["A1"].alignment = font(16, True, INK), C
     ws.row_dimensions[1].height, ws.row_dimensions[2].height = 30, 7
     ws.row_dimensions[3].height, ws.row_dimensions[4].height = 19, 16

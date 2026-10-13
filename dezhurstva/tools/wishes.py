@@ -31,7 +31,8 @@ def texts(path):
             yield from row
 
 
-def payloads(text):
+def payloads(text, kind=None):
+    """Ответы из текста: kind=None — пожелания, kind="ack" — подтверждения предварительного графика."""
     dec = json.JSONDecoder()
     variants = {text, text.replace('""', '"'), text.replace('\\"', '"')}
     for t in variants:
@@ -40,7 +41,7 @@ def payloads(text):
                 obj, _ = dec.raw_decode(t, m.end())
             except ValueError:
                 continue
-            if isinstance(obj, dict) and obj.get("v") == 1 and obj.get("who") and obj.get("m"):
+            if isinstance(obj, dict) and obj.get("v") == 1 and obj.get("who") and obj.get("m") and obj.get("kind") == kind:
                 yield obj
 
 

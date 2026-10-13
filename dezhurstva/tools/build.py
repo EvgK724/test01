@@ -44,8 +44,9 @@ def dur_text(mins):
 
 
 def shifts(data):
-    """Все смены: (дата, врач, начало, конец, выходной ли)."""
+    """Все смены: (дата, врач, начало, конец, выходной ли, предварительный ли график)."""
     for mk, m in data["months"].items():
+        pre = m.get("status") == "preliminary"
         off = set(m["off"])
         for day, who in m["duty"].items():
             d = dt.date.fromisoformat(day)
@@ -55,10 +56,29 @@ def shifts(data):
             if end <= start:
                 end += dt.timedelta(days=1)
             for w in who:
-                yield d, w, start, end, day in off
+                yield d, w, start, end, day in off, pre
 
 
-def ics(data, name, items, alarms, color):
+def ack_events(data, who, tz, stamp):
+    """Предварительный график, а врач ещё не согласился: событие-напоминание «подтвердите» на следующий день в 10:00."""
+    out = []
+    for mk, m in data["months"].items():
+        c = m.get("confirm") or {}
+        if m.get("status") != "preliminary" or who not in c.get("need", []) or who in c.get("confirmed", []):
+            continue
+        pub = dt.datetime.fromisoformat(c["published"].replace("Z", "+00:00")).astimezone(dt.timezone(dt.timedelta(hours=5)))
+        at = dt.datetime.combine(pub.date() + dt.timedelta(days=1), dt.time(10))
+        title = m["title"].split()[0].lower() + " " + m["title"].split()[1]
+        out += ["BEGIN:VEVENT", f"UID:ack-{mk}-v{c['version']}-{who}@dezhurstva.evgk724.github.io", f"DTSTAMP:{stamp}",
+                f"DTSTART;TZID={tz}:{at:%Y%m%dT%H%M%S}", f"DTEND;TZID={tz}:{at + dt.timedelta(minutes=15):%Y%m%dT%H%M%S}",
+                f"SUMMARY:{esc(f'Дежурства ПСО: подтвердите график на {title}')}",
+                f"DESCRIPTION:{esc('Предварительный график опубликован. Откройте приложение «Дежурства» → «Мои» и нажмите «Согласен» или напишите, что не так.')}",
+                "TRANSP:TRANSPARENT", "BEGIN:VALARM", "ACTION:DISPLAY",
+                f"DESCRIPTION:{esc(f'Подтвердите график дежурств на {title}')}", "TRIGGER:PT0M", "END:VALARM", "END:VEVENT"]
+    return out
+
+
+def ics(data, name, items, alarms, color, who=None):
     stamp = data["updated"].replace("-", "").replace(":", "")
     tz = data["tz"]
     lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//evgk724//dezhurstva//RU", "CALSCALE:GREGORIAN",
@@ -66,12 +86,12 @@ def ics(data, name, items, alarms, color):
              "REFRESH-INTERVAL;VALUE=DURATION:PT6H", "X-PUBLISHED-TTL:PT6H",
              "BEGIN:VTIMEZONE", f"TZID:{tz}", "BEGIN:STANDARD", "DTSTART:19700101T000000",
              "TZOFFSETFROM:+0500", "TZOFFSETTO:+0500", "TZNAME:+05", "END:STANDARD", "END:VTIMEZONE"]
-    for d, who, start, end, off in sorted(items, key=lambda x: (x[2], x[1])):
+    for d, doc, start, end, off, pre in sorted(items, key=lambda x: (x[2], x[1])):
         mins = int((end - start).total_seconds() // 60)
         kind = ("праздник" if d.weekday() < 5 else "выходной") if off else "будний день"
         t = f"{start:%H:%M}–{end:%H:%M}"
-        summary = "Дежурство ПСО" + ("" if alarms else f": {data['doctors'][who]['name']}")
-        lines += ["BEGIN:VEVENT", f"UID:{d.isoformat()}-{who}@dezhurstva.evgk724.github.io", f"DTSTAMP:{stamp}",
+        summary = "Дежурство ПСО" + ("" if alarms else f": {data['doctors'][doc]['name']}") + (" (предварительно)" if pre else "")
+        lines += ["BEGIN:VEVENT", f"UID:{d.isoformat()}-{doc}@dezhurstva.evgk724.github.io", f"DTSTAMP:{stamp}",
                   f"DTSTART;TZID={tz}:{start:%Y%m%dT%H%M%S}", f"DTEND;TZID={tz}:{end:%Y%m%dT%H%M%S}",
                   f"SUMMARY:{esc(summary)}", f"DESCRIPTION:{esc(f'{kind.capitalize()}, {t} ({dur_text(mins)}).')}",
                   "TRANSP:OPAQUE"]
@@ -84,6 +104,8 @@ def ics(data, name, items, alarms, color):
                       "BEGIN:VALARM", "ACTION:DISPLAY", f"DESCRIPTION:{esc(f'Через час дежурство ПСО, {start:%H:%M}')}",
                       "TRIGGER:-PT1H", "END:VALARM"]
         lines.append("END:VEVENT")
+    if who:
+        lines += ack_events(data, who, tz, stamp)
     lines.append("END:VCALENDAR")
     return "\r\n".join(fold(l) for l in lines) + "\r\n"
 
@@ -97,7 +119,7 @@ def main():
     for i, did in enumerate(ids):
         mine = [x for x in all_items if x[1] == did]
         (cal / f"{did}.ics").write_bytes(ics(data, f"Дежурства ПСО — {data['doctors'][did]['name']}", mine, True,
-                                             COLORS[i % len(COLORS)]).encode())
+                                             COLORS[i % len(COLORS)], did).encode())
     for old in cal.glob("*.ics"):
         if old.stem != "all" and old.stem not in ids:
             old.unlink()
