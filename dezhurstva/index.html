@@ -377,7 +377,7 @@ h1, h2, h3, p, b, .name, .summary { overflow-wrap: break-word; word-break: norma
     <li><b>На экран «Домой»:</b> в Safari «Поделиться» → «На экран Домой».</li>
     <li><b>«Мои»</b> — выберите себя: увидите свои дежурства и сколько до ближайшего.</li>
     <li><b>Напоминания:</b> «Мои» → «Добавить в Календарь» → «Подписаться». Календарь напомнит накануне в 19:00 и за час до начала и сам подтянет изменения графика.</li>
-    <li><b>Новый график:</b> когда организатор одобрит его, придёт уведомление «Предварительный график» — проверьте свои дежурства в «Мои» и нажмите «Согласен» или «Не согласен» с причиной. Когда согласятся все, график станет окончательным.</li>
+    <li><b>Новый график:</b> когда ЕЮ одобрит его, придёт уведомление «Предварительный график» — проверьте свои дежурства в «Мои» и нажмите «Согласен» или «Не согласен» с причиной. Когда согласятся все, график станет окончательным.</li>
     <li><b>«Пожелания»</b> — до 15 числа на следующий месяц: дни и интервалы «не ставить», «хочу», отпуск, сколько дежурств, комментарий. Можно поправить и отправить заново — учитывается последнее.</li>
     <li><b>«График»</b> — весь месяц: календарь, список и нагрузка (норма часов, доля ставки); <b>«Excel»</b> — файл графика; «Для печати» — с телефонами для оперативного отдела (телефоны хранятся только на этом телефоне).</li>
   </ol>
@@ -588,7 +588,7 @@ function ackCards() {
     const mine = keys.length ? keys.map(k => `<span class="${DAY[k].off ? 'off' : ''}">${DAY[k].d}${NB}${WD[DAY[k].wd]}${DAY[k].off ? ' · сутки' : ''}</span>`).join('') : '<span>дежурств нет</span>';
     let tail;
     if (a.done && a.ok) tail = `<p class="done">✓ ${a.server ? 'Ваше согласие учтено.' : 'Вы согласились — отправлено.'} Когда согласятся все, график станет окончательным.</p>`;
-    else if (a.done) tail = `<p class="done no">Вы не согласны: «${esc(a.note || '')}». Организатор увидит; после правок придёт новая версия.</p>
+    else if (a.done) tail = `<p class="done no">Вы не согласны: «${esc(a.note || '')}». ЕЮ увидит; после правок придёт новая версия.</p>
       <button type="button" class="link" data-act="ackchange" data-mk="${mk}">Изменить ответ</button>`;
     else if (ackNo[mk]) tail = `<label class="field"><span class="lbl">Что не так?</span>
         <textarea data-acknote="${mk}" maxlength="500" placeholder="Например: не могу 24-го — конференция; прошу поменять 17-е на 18-е">${esc(ackNote[mk] || '')}</textarea></label>
@@ -596,7 +596,7 @@ function ackCards() {
     else tail = `<div class="row2"><button type="button" class="btn primary" data-act="acksend" data-mk="${mk}" data-ok="1">Согласен</button><button type="button" class="btn no" data-act="ackno" data-mk="${mk}">Не согласен</button></div>`;
     return `<section class="card ack"><p class="eyebrow">Предварительный график${M.version > 1 ? ' · версия ' + M.version : ''}</p>
       <h2>${esc(M.title)}: ознакомьтесь и подтвердите</h2>
-      <p class="lead small">Организатор одобрил черновик. Когда согласятся все, график станет окончательным. Согласны ${M.confirm.confirmed.length} из ${M.confirm.need.length}.</p>
+      <p class="lead small">ЕЮ одобрил черновик. Когда согласятся все, график станет окончательным. Согласны ${M.confirm.confirmed.length} из ${M.confirm.need.length}.</p>
       <div class="field"><span class="lbl">Ваши дежурства</span><div class="mine">${mine}</div></div>
       <button type="button" class="link" data-act="ackview" data-mk="${mk}">Посмотреть весь график →</button>
       ${tail}</section>`;
@@ -607,14 +607,14 @@ async function sendAck(mk, ok) {
   if (!ok && !note) { toast('Напишите, что не так'); return; }
   const p = { v: 1, kind: 'ack', m: mk, ver: M.version, who: state.me, name: nameOf(state.me), ok, note, ts: new Date().toISOString() };
   const text = nameOf(state.me) + ' — ' + M.title.toLowerCase() + ', версия ' + M.version + ': ' + (ok ? 'СОГЛАСЕН' : 'НЕ СОГЛАСЕН — ' + note) + '\n#DEZH ' + JSON.stringify(p);
-  if (!(C.form && C.form.action && C.form.entry)) { copy(text, 'Ответ скопирован — перешлите организатору'); return; }
+  if (!(C.form && C.form.action && C.form.entry)) { copy(text, 'Ответ скопирован — перешлите ЕЮ'); return; }
   const body = new URLSearchParams();
   body.set(C.form.entry, text);
   try {
     await fetch(C.form.action, { method: 'POST', mode: 'no-cors', body });
     store.set(ackKey(mk), JSON.stringify({ ok, note, at: p.ts }));
     delete ackNo[mk];
-    toast(ok ? 'Спасибо, согласие отправлено' : 'Отправлено организатору');
+    toast(ok ? 'Спасибо, согласие отправлено' : 'Отправлено ЕЮ');
     render(true); badge();
   } catch (e) { toast('Нет связи — попробуйте ещё раз'); }
 }
@@ -631,7 +631,7 @@ function ackNotice() {
   const mk = p[0], M = D.months[mk], key = 'dezh:ack-seen:' + mk + ':' + M.version;
   try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key, '1'); } catch (e) {}
   document.getElementById('ackTitle').textContent = 'Предварительный график на ' + monthGen(mk) + (M.version > 1 ? ' (версия ' + M.version + ')' : '');
-  document.getElementById('ackText').textContent = 'Организатор одобрил черновик. Посмотрите свои дежурства и нажмите «Согласен» или напишите, что не так. Когда согласятся все, график станет окончательным.';
+  document.getElementById('ackText').textContent = 'ЕЮ одобрил черновик. Посмотрите свои дежурства и нажмите «Согласен» или напишите, что не так. Когда согласятся все, график станет окончательным.';
   const sh = document.getElementById('ackSheet');
   sh.hidden = false;
   document.getElementById('ackOpen').onclick = () => { sh.hidden = true; state.tab = 'me'; state.picking = false; store.set('dezh:tab', 'me'); render(); };
@@ -910,7 +910,7 @@ function renderWish() {
       <span class="lead small">Пишите как удобно — прочитаю и учту при составлении.</span></section>
     <section class="card"><h3>Итог</h3><div class="summary" id="summary">${esc(wishText(mk))}</div>
       ${t.open ? `<button type="button" class="btn primary" data-act="send" ${formReady ? '' : 'disabled'}>Отправить пожелания</button>
-      ${formReady ? '' : '<p class="lead small">Отправка ещё настраивается. Пока можно скопировать текст и переслать организатору.</p>'}
+      ${formReady ? '' : '<p class="lead small">Отправка ещё настраивается. Пока можно скопировать текст и переслать ЕЮ.</p>'}
       <button type="button" class="btn" data-act="copywish">Скопировать текст</button>` : `<p class="lead">Приём на этот месяц закрыт.</p>`}
       <button type="button" class="link" data-act="resetwish">Очистить всё</button></section>`;
 }
@@ -926,7 +926,7 @@ function renderFiles() {
   const files = D.files || {};
   const pend = shiftMonth(t.mk, -1);
   let status = '';
-  if (!D.months[pend] && pend > mkOf(now)) status = `<section class="card"><p class="eyebrow">${esc(monthTitle(pend))}</p><p>Пожелания собраны, график составляется. Появится здесь после утверждения организатором.</p></section>`;
+  if (!D.months[pend] && pend > mkOf(now)) status = `<section class="card"><p class="eyebrow">${esc(monthTitle(pend))}</p><p>Пожелания собраны, график составляется. Появится здесь после утверждения ЕЮ.</p></section>`;
   const months = MK.slice().reverse().filter(mk => files[mk]);
   const list = months.map(mk => `<section class="card file"><span class="ic">XLSX</span>
     <div><h3>${esc(monthTitle(mk))}</h3><p class="lead small">График дежурств ПСО · без телефонов</p>${statusPills(mk) ? `<div class="status" style="justify-content:flex-start;margin-top:4px">${statusPills(mk)}</div>` : ''}</div>
@@ -948,7 +948,7 @@ function renderFiles() {
   return `${status}<section class="card"><p class="eyebrow">Пожелания</p><p>${esc(monthTitle(t.mk))}: приём ${t.open ? 'до ' + t.deadline.getDate() + NB + GEN[t.deadline.getMonth()] : 'закрыт'}.</p></section>
     ${list || '<section class="card"><p class="lead">Файлов пока нет.</p></section>'}
     ${months.length ? org : ''}
-    <p class="lead small">Файл в формате общего графика: дни, отметки «+», отпуска, выходные и праздники по календарю РФ, итоги. Версия с листом пожеланий и нагрузкой — у организатора.</p>`;
+    <p class="lead small">Файл в формате общего графика: дни, отметки «+», отпуска, выходные и праздники по календарю РФ, итоги. Версия с листом пожеланий и нагрузкой — у ЕЮ.</p>`;
 }
 let zipLib = null;
 function loadZip() {
