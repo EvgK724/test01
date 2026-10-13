@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Проверка «Футы и фунты» в Chromium: вкладки, скрытые ответы, контекст, раунд тренировки (с ошибкой и повтором),
-интервалы повторения, ширины 320–1180 и крупный текст: без сдвига вбок, обрезки и переносов внутри слов.
+интервалы повторения, телефоны 320–430 и iPad (портрет и альбом, на весь экран) с обычным и крупным текстом:
+без сдвига вбок, обрезки и переносов внутри слов; на iPad в альбоме вопрос, варианты и «Дальше» — без прокрутки.
 Запуск из корня репозитория: python3 edinitsy/tools/test.py [папка для скриншотов]"""
 import functools, http.server, json, pathlib, re, sys, threading
 from playwright.sync_api import sync_playwright
@@ -27,16 +28,16 @@ def check(cond, msg):
         fails.append(msg)
 
 
-def page(b, tab="table", width=390, scale=None, init=""):
-    ctx = b.new_context(viewport={"width": width, "height": 844}, locale="ru-RU", device_scale_factor=2)
+def page(b, tab="table", width=390, scale=None, init="", height=844):
+    ctx = b.new_context(viewport={"width": width, "height": height}, locale="ru-RU", device_scale_factor=2)
     pg = ctx.new_page()
     pg.on("pageerror", lambda e: errors.append(str(e)))
     pg.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
     pg.add_init_script(f"localStorage.setItem('fut:tab', '{tab}');" + init)
     pg.goto(URL)
     pg.wait_for_selector("#view > *")
-    if scale:
-        pg.evaluate(f"document.documentElement.style.fontSize = '{scale}'")
+    if scale:  # крупный текст телефона: как applyTextSize(), с множителем iPad
+        pg.evaluate(f"document.documentElement.style.fontSize = (105 * Math.min({scale} * deviceK(), 2.2)).toFixed(2) + '%'")
     return ctx, pg
 
 
@@ -113,28 +114,72 @@ with sync_playwright() as p:
     pg.screenshot(path=str(OUT / "u4-end.png"))
     pg.click('[data-act="stop"]')
     ctx.close()
+    # iPad: на всю ширину, крупнее; в альбоме группы по две, варианты в один ряд
+    for w, h in ((390, 844), (820, 1180), (1180, 820)):
+        ctx, pg = page(b, "table", w, height=h)
+        info = pg.evaluate("""() => ({ wide: document.documentElement.classList.contains('wide'),
+          land: document.documentElement.classList.contains('land'),
+          root: parseFloat(getComputedStyle(document.documentElement).fontSize),
+          view: document.getElementById('view').getBoundingClientRect().width,
+          tops: [...document.querySelectorAll('.grp')].slice(0, 2).map(e => Math.round(e.getBoundingClientRect().top)) })""")
+        if w < 700:
+            check(not info["wide"] and abs(info["root"] - 16.8) < 0.1, f"телефон {w}px — как раньше: шрифт {info['root']}")
+        else:
+            check(info["wide"] and info["view"] >= w - 50 and info["root"] > 21,
+                  f"iPad {w}×{h}: на всю ширину ({info['view']:.0f} из {w}), шрифт {info['root']:.1f}px")
+            two = info["tops"][0] == info["tops"][1]
+            check(two == info["land"], f"iPad {w}×{h}: группы {'по две в ряд' if two else 'в одну колонку'}")
+            pg.screenshot(path=str(OUT / f"u-ipad{w}-table.png"))
+        ctx.close()
+    for w, h in ((1180, 820), (1366, 1024), (1024, 768)):
+        ctx, pg = page(b, "train", w, height=h)
+        r = pg.evaluate("""() => { const out = []; const cards = CARDS;
+          for (const c of cards) {
+            round = { qs: [{ c, opts: [c.w[0], c.a, c.w[1], c.w[2]] }], i: 0, pick: null, ok: 0, miss: [], again: new Set() };
+            answer(0); render();
+            const m = document.getElementById('main').getBoundingClientRect(), nx = document.querySelector('[data-act="next"]').getBoundingClientRect();
+            const tops = new Set([...document.querySelectorAll('.opt')].map(e => Math.round(e.getBoundingClientRect().top)));
+            if (nx.bottom > m.bottom || tops.size !== 1) out.push(c.id + ' ' + Math.round(nx.bottom - m.bottom) + ' ' + tops.size);
+          }
+          round = null; localStorage.removeItem('fut:srs'); return out; }""")
+        check(not r, f"iPad {w}×{h} альбом: все 78 вопросов — варианты в ряд, «Дальше» без прокрутки {r[:5]}")
+        ctx.close()
+    # Все 78 вопросов с ответом при крупном тексте: узкий телефон и iPad в альбоме
+    for w, h in ((320, 844), (1024, 768), (1180, 820), (1366, 1024)):
+        ctx, pg = page(b, "train", w, 1.4, height=h)
+        bad = []
+        for i in range(len(pg.evaluate("CARDS"))):
+            pg.evaluate(f"""() => {{ const c = CARDS[{i}];
+              round = {{ qs: [{{ c, opts: [c.w[0], c.a, c.w[1], c.w[2]] }}], i: 0, pick: null, ok: 0, miss: [], again: new Set() }};
+              answer(0); render(); }}""")
+            r = pg.evaluate(LAYOUT)
+            if r["doc"] or r["bad"] or r["clip"] or r["split"]:
+                bad.append(f"{pg.evaluate(f'CARDS[{i}].id')}: {r['bad'] or ''}{r['clip'] or ''}{r['split'] or ''}")
+        check(not bad, f"{w}×{h} ×1.4: все вопросы и варианты помещаются {bad[:3]}")
+        ctx.close()
     # Ширины и крупный текст
-    for scale in (None, "120.75%", "147%"):
-        for w in (320, 375, 390, 430, 820, 1180):
+    SIZES = [(320, 844), (375, 844), (390, 844), (430, 932), (744, 1133), (820, 1180), (1024, 1366), (1180, 820), (1366, 1024), (1024, 768)]
+    for scale in (None, 1.15, 1.4):
+        for w, h in SIZES:
             for tab in ("table", "ctx", "train"):
-                ctx, pg = page(b, tab, w, scale, "localStorage.setItem('fut:cover', '0');")
+                ctx, pg = page(b, tab, w, scale, "localStorage.setItem('fut:cover', '0');", h)
                 if tab == "ctx":
                     pg.click('.toggle[data-act="all"]')
                 if tab == "table":
                     pg.click('.row[data-id="acre"]')
                 r = pg.evaluate(LAYOUT)
                 check(not r["doc"] and not r["bad"] and not r["clip"] and not r["split"],
-                      f"{w}px {tab}{' ×' + scale if scale else ''}: помещается {r['bad'] or ''}{r['clip'] or ''}{r['split'] or ''}")
+                      f"{w}×{h} {tab}{' ×' + str(scale) if scale else ''}: помещается {r['bad'] or ''}{r['clip'] or ''}{r['split'] or ''}")
                 if tab == "train":
                     pg.click('[data-act="start"]')
                     for _ in range(3):
                         pg.locator(".opt").first.click()
                         r = pg.evaluate(LAYOUT)
                         check(not r["doc"] and not r["bad"] and not r["clip"] and not r["split"],
-                              f"{w}px вопрос{' ×' + scale if scale else ''}: помещается {r['bad'] or ''}{r['clip'] or ''}{r['split'] or ''}")
+                              f"{w}×{h} вопрос{' ×' + str(scale) if scale else ''}: помещается {r['bad'] or ''}{r['clip'] or ''}{r['split'] or ''}")
                         pg.click('[data-act="next"]')
-                if w == 320 and not scale:
-                    pg.screenshot(path=str(OUT / f"u-w320-{tab}.png"))
+                if w in (320, 1180) and not scale:
+                    pg.screenshot(path=str(OUT / f"u-w{w}-{tab}.png"))
                 ctx.close()
     b.close()
 check(not errors, f"ошибок JS нет {errors[:3]}")
