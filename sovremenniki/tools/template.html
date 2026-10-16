@@ -1,0 +1,957 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Современники</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="text-scale" content="scale">
+<meta name="theme-color" content="#05070F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Современники">
+<meta name="application-name" content="Современники">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+/* Тёмная сине-голубая неоновая тема — как у «Футов и фунтов» и «Дежурств ПСО». */
+:root {
+  --bg: #05070F; --surface: #0A1020; --surface-2: #0F182D; --border: #1A2845;
+  --text: #E6F0FF; --text-2: #9BB0D4; --text-3: #6A7EA6;
+  --neon: #3BE8FF; --neon-2: #3D8BFF; --ok: #3BE8FF; --no: #FF4D5E;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --serif: Georgia, "Times New Roman", serif;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html {
+  font-size: 105%; height: 100%; overflow-x: hidden;
+  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+  background: var(--bg); -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent;
+}
+body {
+  margin: 0; height: 100%; width: 100%; display: flex; flex-direction: column; overflow: hidden;
+  color: var(--text); font: 500 1.0625rem/1.45 var(--sans);
+  background:
+    radial-gradient(900px 420px at -10% -8%, rgba(61,139,255,.16), transparent 62%),
+    radial-gradient(800px 420px at 110% 0%, rgba(59,232,255,.10), transparent 60%),
+    var(--bg);
+}
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3, p, b { overflow-wrap: break-word; -webkit-hyphens: manual; hyphens: manual; }
+.wrap { width: 100%; max-width: 720px; margin-inline: auto; }
+.num { font-variant-numeric: tabular-nums lining-nums; letter-spacing: .01em; }
+.nw { white-space: nowrap; }
+
+/* Шапка */
+.top {
+  flex: none; height: 4rem; display: flex; align-items: center;
+  padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(8px, env(safe-area-inset-right, 0px));
+  border-bottom: 1px solid rgba(59,232,255,.25); box-shadow: 0 1px 18px -6px rgba(59,232,255,.6);
+}
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.top h1 {
+  font: 700 min(2rem, 8.4vw)/1 var(--serif); letter-spacing: .03em; color: #C9DDF7; white-space: nowrap;
+  text-shadow: 0 0 2px rgba(61,139,255,.5), 0 0 10px rgba(61,139,255,.3);
+}
+.top h1 b { color: #BCE9FA; text-shadow: 0 0 2px rgba(59,232,255,.45), 0 0 10px rgba(59,232,255,.25); }
+.icon-btn {
+  min-width: 44px; min-height: 44px; border: 1px solid rgba(59,232,255,.4); background: rgba(59,232,255,.06);
+  border-radius: 50%; font-size: 1.125rem; font-weight: 700; color: #DFFBFF;
+  display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 0 14px -6px var(--neon);
+}
+
+/* Экран */
+main {
+  flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  padding: 16px max(16px, env(safe-area-inset-right, 0px)) 28px max(16px, env(safe-area-inset-left, 0px));
+}
+.stack { display: flex; flex-direction: column; gap: 16px; }
+.eyebrow { font-size: .78rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--text-2); }
+.lead { color: var(--text-2); }
+.small { font-size: .9rem; }
+.card {
+  background: rgba(10,16,32,.92); border: 1px solid var(--border); border-radius: 18px; padding: 16px;
+  display: flex; flex-direction: column; gap: 12px; min-width: 0;
+  box-shadow: 0 0 0 1px rgba(59,232,255,.05), 0 0 26px -16px var(--neon);
+}
+.card > * { min-width: 0; max-width: 100%; }
+.card h2 { font: 700 1.25rem/1.25 var(--serif); color: #BCE9FA; }
+
+/* Нижняя панель */
+.tabs {
+  flex: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  background: rgba(10,16,32,.94); border-top: 1px solid rgba(59,232,255,.25); box-shadow: 0 -1px 18px -6px rgba(59,232,255,.5);
+  padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
+}
+.tab {
+  min-height: 62px; border: 0; background: none; padding: 6px 2px; min-width: 0; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  color: var(--text-2); font-size: min(.8rem, 3.5vw); font-weight: 600;
+}
+.tab svg { width: 24px; height: 24px; padding: 3px 12px; box-sizing: content-box; border-radius: 999px; }
+.tab[aria-current="page"] { color: #DFFBFF; text-shadow: 0 0 8px var(--neon); }
+.tab[aria-current="page"] svg { background: rgba(59,232,255,.14); box-shadow: 0 0 14px rgba(59,232,255,.5); }
+
+/* Кнопки, переключатели, фильтры */
+.btn {
+  min-height: 50px; padding: 10px 16px; border-radius: 14px; border: 1px solid var(--border);
+  background: var(--surface-2); color: var(--text); font-weight: 600; text-align: center;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn.primary { background: rgba(59,232,255,.10); color: #DFFBFF; border-color: var(--neon); box-shadow: 0 0 18px -5px var(--neon), inset 0 0 12px -6px var(--neon); }
+.link { border: 0; background: none; color: var(--neon); padding: 8px 0; min-height: 44px; font-weight: 600; text-align: left; align-self: flex-start; }
+.chips { display: flex; gap: 8px; overflow-x: auto; overscroll-behavior-x: contain; touch-action: pan-x pan-y; scrollbar-width: none; margin-inline: -16px; padding: 2px 16px 6px; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex: none; min-height: 40px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--text-2); font-size: .9rem; font-weight: 600; white-space: nowrap; }
+.chip[aria-pressed="true"] { color: #fff; border-color: var(--neon); background: rgba(59,232,255,.12); box-shadow: 0 0 14px -4px var(--neon); }
+.toggle { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 6px 12px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); width: 100%; text-align: left; }
+.sw { width: 50px; height: 30px; flex: none; border-radius: 15px; background: var(--border); position: relative; transition: background .2s; }
+.sw::after { content: ""; position: absolute; top: 4px; left: 4px; width: 22px; height: 22px; border-radius: 50%; background: var(--text-2); transition: transform .2s, background .2s; }
+.toggle[aria-checked="true"] .sw { background: var(--neon); box-shadow: 0 0 12px -2px var(--neon); }
+.toggle[aria-checked="true"] .sw::after { transform: translateX(20px); background: var(--bg); }
+.pill { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: .8rem; font-weight: 700; border: 1px solid var(--border); color: var(--text-2); align-self: flex-start; }
+
+/* Лента времени: общая шкала лет, полоса жизни, ◆ — событие */
+.tlcard { padding: 10px 14px 12px; gap: 0; }
+.tl { position: relative; display: flex; flex-direction: column; }
+.axis { position: sticky; top: -16px; z-index: 3; height: 1.7rem; margin-bottom: 2px; background: #0A1020; border-bottom: 1px solid var(--border); }
+.axis span { position: absolute; top: .32rem; font-size: .72rem; line-height: 1.2; font-weight: 700; color: var(--text-3); white-space: nowrap; }
+.gl { position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(61,139,255,.13); pointer-events: none; }
+.gl.zero { background: rgba(59,232,255,.4); }
+.band { position: absolute; top: 0; bottom: 0; background: rgba(59,232,255,.08); border-inline: 1px solid rgba(59,232,255,.5); box-shadow: inset 0 0 18px -8px var(--neon); pointer-events: none; }
+.now { position: absolute; top: 0; bottom: 0; z-index: 2; width: 2px; margin-left: -1px; background: var(--neon); box-shadow: 0 0 10px var(--neon); pointer-events: none; }
+.tr { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 4px; width: 100%; min-width: 0; padding: 8px 0; border: 0; background: none; color: inherit; text-align: left; font: inherit; }
+.tr + .tr { border-top: 1px solid rgba(26,40,69,.55); }
+.tr .lab, .tr .kev, .tr .note { padding-inline-start: clamp(0px, var(--x, 0%), max(0px, 100% - 15em)); }
+.tr .lab { font-size: .98rem; line-height: 1.3; }
+.tr .kev, .tr .note { font-size: .84rem; line-height: 1.3; color: var(--text-2); }
+.tr .note { color: #CFE0FF; font-weight: 600; }
+.yrs { color: #BCE9FA; font-weight: 600; }
+.dia { color: var(--neon); font-style: normal; text-shadow: 0 0 6px var(--neon); }
+.track { position: relative; height: 10px; }
+.bar { position: absolute; top: 0; height: 10px; min-width: 4px; border-radius: 5px; background: linear-gradient(90deg, var(--neon-2), var(--neon)); box-shadow: 0 0 10px -1px rgba(59,232,255,.7); }
+.bar.apb { background: linear-gradient(90deg, rgba(61,139,255,.15), var(--neon-2) 30%, var(--neon)); }
+.bar.apd { background: linear-gradient(90deg, var(--neon-2), var(--neon) 70%, rgba(59,232,255,.15)); }
+.bar.apb.apd { background: linear-gradient(90deg, rgba(61,139,255,.15), var(--neon-2) 30%, var(--neon) 70%, rgba(59,232,255,.15)); }
+.kmk, .mk { position: absolute; top: 1px; width: 8px; height: 8px; margin-left: -4px; transform: rotate(45deg); background: #F2FDFF; box-shadow: 0 0 8px #BFF6FF; }
+.mk { background: #9FD8FF; }
+.rng { position: absolute; top: 3px; height: 4px; min-width: 4px; border-radius: 2px; background: rgba(159,216,255,.75); box-shadow: 0 0 6px rgba(159,216,255,.6); }
+.tr.ev { padding: 6px 0; }
+.tr.ev .lab { font-size: .86rem; color: var(--text-2); }
+.tr.ev .track { height: 8px; }
+.tr.on .bar { box-shadow: 0 0 16px 1px var(--neon); }
+.tr.on .lab b { color: #DFFBFF; text-shadow: 0 0 8px rgba(59,232,255,.6); }
+.hint { color: var(--text-2); font-size: .88rem; }
+.focus { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 4px 4px 12px; border-radius: 12px; border: 1px solid rgba(59,232,255,.35); background: rgba(59,232,255,.06); font-size: .9rem; }
+.focus .x { min-width: 44px; min-height: 44px; border: 0; background: none; color: var(--text-2); font-size: 1.1rem; }
+
+/* Год */
+.yin-row { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; }
+.yin {
+  width: 4.6em; min-height: 56px; padding: 4px 8px; text-align: center; font: 800 2rem/1 var(--sans); color: #DFF6FF;
+  background: var(--surface-2); border: 1px solid var(--neon); border-radius: 14px; box-shadow: 0 0 16px -6px var(--neon);
+}
+.slider { width: 100%; height: 34px; margin: 0; accent-color: var(--neon); }
+.steps { display: flex; flex-wrap: wrap; gap: 8px; }
+.steps > div { flex: 1 1 11em; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.steps .btn { min-height: 46px; padding: 6px 2px; font-size: .95rem; }
+
+/* Списки фактов и событий */
+.facts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.facts li { padding: 10px 12px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 2px; }
+.facts .k { color: var(--text-2); font-size: .86rem; font-weight: 700; }
+.facts .v { font-weight: 700; }
+.plink { border: 0; background: none; padding: 0; color: var(--neon); font: inherit; font-weight: 700; text-align: left; display: inline; }
+.pchips { display: flex; flex-wrap: wrap; gap: 6px; }
+.pchip { min-height: 40px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-2); font-size: .9rem; font-weight: 600; color: var(--text); text-align: left; max-width: 100%; }
+.pchip span { color: var(--text-2); font-weight: 500; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 8px; }
+.btnrow .btn { flex: 1 1 10em; }
+
+/* Пара */
+.sel { width: 100%; min-height: 50px; padding: 8px 12px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font: 600 1.0625rem/1.2 var(--sans); }
+.selrow { display: flex; flex-direction: column; gap: 4px; }
+.selrow span { font-size: .84rem; font-weight: 700; color: var(--text-2); }
+
+/* Карточка «годы жизни — событие» */
+.trip { display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 16px; border: 1px solid rgba(59,232,255,.3); background: rgba(59,232,255,.05); box-shadow: inset 0 0 22px -14px var(--neon); }
+.trip .tn { font: 700 min(1.75rem, max(1.15rem, 6.2vw))/1.2 var(--serif); }
+.trip .tw { color: var(--text-2); font-size: .9rem; }
+.trip .tyy { font: 800 min(2.1rem, max(1.2rem, 7.4vw))/1.2 var(--sans); color: #DFF6FF; text-shadow: 0 0 12px rgba(59,232,255,.35); }
+.trip .te { color: #CFE0FF; }
+.slot { display: inline-block; min-width: 2.4em; padding: 0 .3em; border-radius: 8px; text-align: center; color: var(--neon); background: rgba(59,232,255,.12); border: 1px dashed var(--neon); }
+.slot.ok { border-style: solid; color: #fff; }
+.slot.bad { border-style: solid; }
+
+/* Тренировка */
+.meter { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; }
+.meter i { display: block; height: 100%; background: var(--neon); box-shadow: 0 0 10px var(--neon); border-radius: 4px; }
+.big { font: 800 2.4rem/1 var(--sans); color: #DFF6FF; text-shadow: 0 0 12px rgba(59,232,255,.35); }
+.qt { font: 700 clamp(1.15rem, 5.4vw, 1.5rem)/1.3 var(--sans); }
+.qt b { color: #BCE9FA; }
+.qs { color: var(--text-2); font-size: .92rem; }
+.opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.opt {
+  min-height: 72px; padding: 8px 6px; border-radius: 16px; border: 1px solid var(--border); background: var(--surface-2);
+  font: 800 clamp(1.1rem, 5.2vw, 1.5rem)/1.15 var(--sans); color: #E6F4FF; min-width: 0;
+}
+.opts.names .opt, .opts.duo .opt { font: 700 clamp(1rem, 4.4vw, 1.25rem)/1.25 var(--sans); padding: 8px 10px; }
+.opts.txt { grid-template-columns: minmax(0, 1fr); }
+.opts.txt .opt { font: 600 1.02rem/1.3 var(--sans); text-align: left; min-height: 56px; padding: 10px 14px; }
+.opt.ok { border-color: var(--ok); background: rgba(59,232,255,.14); box-shadow: 0 0 18px -4px var(--ok); color: #fff; }
+.opt.bad { border-color: var(--no); background: rgba(255,77,94,.14); box-shadow: 0 0 16px -5px var(--no); }
+.opt[disabled] { cursor: default; }
+.fb { border-radius: 14px; padding: 12px; background: var(--surface-2); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+.fb.ok { border-color: color-mix(in srgb, var(--ok) 60%, transparent); }
+.fb.bad { border-color: color-mix(in srgb, var(--no) 60%, transparent); }
+.fb > b { font-size: 1.1rem; }
+.fb .tl { margin-top: 2px; }
+.exl { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.miss { display: flex; flex-direction: column; gap: 6px; padding: 0; margin: 0; }
+.miss li { list-style: none; padding: 8px 12px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border); }
+
+/* Листы: справка и человек */
+.sheet { position: fixed; inset: 0; z-index: 50; background: rgba(2,4,10,.75); display: flex; align-items: flex-end; justify-content: center; }
+.sheet .panel {
+  width: 100%; max-width: 560px; max-height: 90%; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; background: var(--surface); border: 1px solid rgba(59,232,255,.35);
+  border-radius: 22px 22px 0 0; padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -8px 40px -10px rgba(59,232,255,.45);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.sheet .panel > * { min-width: 0; max-width: 100%; }
+.sheet ol { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 8px; }
+.sheet h3 { font: 700 1.05rem/1.25 var(--serif); color: #BCE9FA; margin-top: 4px; }
+.ph { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.ph .x { flex: none; }
+.hook { color: #CFE0FF; }
+.sheet .tl { margin-inline: -4px; }
+
+/* iPad: на всю ширину экрана и всё крупнее — корневой шрифт умножает applyTextSize() (deviceK) */
+.cols { display: flex; flex-direction: column; gap: 16px; }
+html.wide .wrap { max-width: none; }
+html.wide .top { padding-inline: max(24px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); }
+html.wide main { padding: 20px max(24px, env(safe-area-inset-right, 0px)) 32px max(24px, env(safe-area-inset-left, 0px)); }
+html.wide .axis { top: -20px; }
+html.wide .stack, html.wide .cols { gap: 20px; }
+html.wide .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 21rem), 1fr)); align-items: start; }
+html.wide .chips { flex-wrap: wrap; overflow: visible; margin-inline: 0; padding: 0; }
+html.wide .tab { min-height: 4rem; }
+html.wide .tab svg { width: 1.4rem; height: 1.4rem; padding: .2rem .8rem; }
+html.wide .icon-btn { min-width: 2.6rem; min-height: 2.6rem; }
+html.wide .btn { min-height: 3rem; }
+html.wide .opt { min-height: 4.4rem; }
+html.wide .opts.txt { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+html.wide .sw { width: 2.9rem; height: 1.7rem; border-radius: .85rem; }
+html.wide .sw::after { top: .22rem; left: .22rem; width: 1.26rem; height: 1.26rem; }
+html.wide .toggle[aria-checked="true"] .sw::after { transform: translateX(1.2rem); }
+html.wide .sheet .panel { max-width: 38rem; }
+html.wide .toast { max-width: 30rem; }
+html.wide .track { height: .62rem; }
+html.wide .bar { height: .62rem; border-radius: .31rem; }
+html.land .opts:not(.two):not(.one):not(.duo):not(.txt) { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.opts.one { grid-template-columns: minmax(0, 1fr) !important; }
+.toast {
+  position: fixed; z-index: 60; left: 12px; right: 12px; bottom: calc(env(safe-area-inset-bottom, 0px) + 76px); max-width: 520px; margin: 0 auto;
+  padding: 12px 16px; border-radius: 14px; background: #0A1A2E; border: 1px solid var(--neon); color: #DFFBFF; box-shadow: 0 0 22px -6px var(--neon); text-align: center;
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <h1>Совре<b>менники</b></h1>
+  <button class="icon-btn" id="helpBtn" type="button" aria-label="Как пользоваться">?</button>
+</div></header>
+<main id="main"><div class="wrap stack" id="view"></div></main>
+<nav class="tabs" aria-label="Разделы">
+  <button class="tab" type="button" data-tab="feed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h9M8 12h13M5 18h10"/></svg>Лента</button>
+  <button class="tab" type="button" data-tab="year"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h8M9 12h12M5 17h8"/><path d="M14.5 3v18" stroke-width="2.2"/></svg>Год</button>
+  <button class="tab" type="button" data-tab="pair"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg>Пара</button>
+  <button class="tab" type="button" data-tab="train"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>Тренировка</button>
+</nav>
+<div class="sheet" id="help" hidden><div class="panel" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <h2 id="helpTitle" style="font:700 1.25rem/1.2 var(--serif)">Как пользоваться</h2>
+  <p class="lead">Для каждого человека — <b>год рождения – год смерти</b> и <b>◆ известное событие</b>, случившееся при его жизни.</p>
+  <ol>
+    <li><b>На экран «Домой»:</b> в Safari «Поделиться» → «На экран Домой».</li>
+    <li><b>«Лента»</b> — люди эпохи на общей шкале лет: полоса — жизнь, ◆ — событие тех лет. Нажмите на имя — откроются совпадения (ровесники, «родился в год смерти…»), события при жизни и кто жил в то же время; годы этого человека подсветятся на ленте.</li>
+    <li><b>«Год»</b> — выберите год: кто тогда был жив и сколько им исполнилось, кто родился и умер, что происходило рядом.</li>
+    <li><b>«Пара»</b> — два человека на одной шкале: сколько лет жили одновременно или на сколько разминулись, сколько было одному, когда родился или умер другой.</li>
+    <li><b>«Тренировка»</b> — 10 вопросов: год рождения, год смерти, событие и его год, кто родился раньше, могли ли встретиться, кто был жив. Что знаете — повторится через 1, 3, 7, 16 дней; ошибки — ещё раз в этом же раунде.</li>
+    <li><b>Возраст</b> считается по годам — сколько исполнилось в тот год. <b>«ок.»</b> — точный год неизвестен.</li>
+  </ol>
+  <button class="btn primary" type="button" id="helpClose">Понятно</button>
+</div></div>
+<div class="sheet" id="pers" hidden><div class="panel" role="dialog" aria-modal="true" aria-labelledby="pTitle" id="persPanel"></div></div>
+<div class="toast" id="toast" role="status" hidden></div>
+<script>
+/*__DATA__*/
+</script>
+<script>
+'use strict';
+// iPad (от 700 px): на всю ширину и крупнее. Портрет — по ширине экрана, альбом — по высоте. Телефон — как есть.
+function deviceK() {
+  const w = window.innerWidth || 390, h = window.innerHeight || 760;
+  if (w < 700) return 1;
+  const k = (w >= 900 && w / h > 1.15) ? h / 600 : Math.min(w / 440, h / 780);
+  return Math.max(1, Math.min(k, 1.9));
+}
+// Размер текста телефона (iPhone: Dynamic Type через -apple-system-body, 17 px при обычном размере)
+function applyTextSize() {
+  let k = 1;
+  try {
+    if (window.CSS && CSS.supports('font', '-apple-system-body')) {
+      const p = document.createElement('span');
+      p.style.cssText = 'font:-apple-system-body;position:absolute;visibility:hidden;pointer-events:none';
+      p.textContent = 'x';
+      document.body.append(p);
+      k = parseFloat(getComputedStyle(p).fontSize) / 17 || 1;
+      p.remove();
+    }
+  } catch (e) {}
+  k = Math.min(1.5, Math.max(0.85, k));
+  const w = window.innerWidth || 390, h = window.innerHeight || 760, root = document.documentElement;
+  root.classList.toggle('wide', w >= 700);
+  root.classList.toggle('land', w >= 900 && w / h > 1.15);
+  root.style.fontSize = (105 * Math.min(k * deviceK(), 2.2)).toFixed(2) + '%';
+}
+applyTextSize();
+
+// ---------- Данные ----------
+const P = window.PEOPLE, E = window.EVENTS, ERAS = window.ERAS, FIELDS = window.FIELDS;
+const byId = {}, EV = {};
+E.forEach(e => { EV[e.id] = e; });
+P.forEach(p => { byId[p.id] = p; p.era = (ERAS.find(e => p.b >= e.from && p.b < e.to) || ERAS[ERAS.length - 1]).id; });
+const eraName = id => (ERAS.find(e => e.id === id) || {}).t || '';
+const NOW = new Date().getFullYear();
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+};
+const esc = s => String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+const NB = ' ', BCs = 'до' + NB + 'н.' + NB + 'э.', ADs = 'н.' + NB + 'э.';
+// Неразрывные пробелы: после коротких предлогов, между числом и словом, перед тире
+function ty(s) {
+  const prep = /(^|[\s(«])([вкосуиаВКОСУИА]|во|на|за|по|до|от|из|не|ни|об|со|ко) /g;
+  return esc(s).replace(prep, '$1$2' + NB).replace(prep, '$1$2' + NB)
+    .replace(/(\d) (?=\d{3}(?!\d))/g, '$1' + NB)
+    .replace(/(\d) (?=[^\s\d–—-])/g, '$1' + NB)
+    .replace(/ (—|–) /g, NB + '$1 ')
+    .replace(/ок\. /g, 'ок.' + NB)
+    .replace(/н\. э\./g, ADs);
+}
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+function plural(n, one, few, many) {
+  const a = Math.abs(n) % 100, b = a % 10;
+  if (a > 10 && a < 20) return many;
+  if (b > 1 && b < 5) return few;
+  return b === 1 ? one : many;
+}
+const yrs = n => n + NB + plural(n, 'год', 'года', 'лет');
+// Годы до н. э. — отрицательные, нулевого года нет: 1 до н. э. → 1 н. э. — разница в 1 год
+const astro = y => (y < 0 ? y + 1 : y), civil = a => (a <= 0 ? a - 1 : a);
+const shift = (y, k) => civil(astro(y) + k);
+const dy = (a, b) => astro(b) - astro(a);
+const ageIn = (p, y) => dy(p.b, y);                 // сколько исполнилось в году y
+const lived = p => p.age || dy(p.b, p.d);           // сколько прожил (age — если умер до дня рождения)
+const alive = (p, y) => p.b <= y && y <= p.d;
+const overlap = (p, q) => dy(Math.max(p.b, q.b), Math.min(p.d, q.d));   // < 0 — разминулись
+const evIn = (p, e) => e.y <= p.d && (e.y2 || e.y) >= p.b;
+const fz = p => (p.ab || p.ad ? 15 : 0);
+const gw = (p, m, f) => (p.fe ? f : m);
+const pre = ap => (ap ? 'ок.' + NB : '');
+const Y = (y, ap) => pre(ap) + (y < 0 ? (-y) + NB + BCs : String(y));
+const yearIn = y => (y < 0 ? 'в' + NB + (-y) + NB + 'году' + NB + BCs : 'в' + NB + y + NB + 'году');
+function spanStr(b, d, ab, ad) {
+  const D = NB + '– ';
+  if (b < 0 && d < 0) return pre(ab) + (-b) + D + pre(ad) + (-d) + NB + BCs;
+  if (b < 0) return Y(b, ab) + D + pre(ad) + d + NB + ADs;
+  return pre(ab) + b + D + pre(ad) + d;
+}
+const spanH = (b, d, ab, ad, cls) => `<span class="num${b < 0 ? '' : ' nw'}${cls ? ' ' + cls : ''}">${spanStr(b, d, ab, ad)}</span>`;
+const lifeH = (p, cls) => spanH(p.b, p.d, p.ab, p.ad, cls);
+const loose = s => s.replace(/(\d)\u00A0(?=до\u00A0н)/g, '$1 ');
+const evYear = e => (e.y2 ? spanStr(e.y, e.y2, e.a, 0) : Y(e.y, e.a));
+const evH = e => `<span class="num${e.y < 0 ? '' : ' nw'}">${evYear(e)}</span>`;
+const ageTxt = (n, ap) => (ap ? '≈' + NB : '') + yrs(n);
+// Что исполнилось в год события (или «шла при жизни», если началось до рождения)
+function evAge(p, e) {
+  if (e.y < p.b) return 'шла при ' + gw(p, 'его', 'её') + ' жизни';
+  return gw(p, 'ему', 'ей') + ' ' + ageTxt(ageIn(p, e.y), p.ab);
+}
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const near = (list, f, n) => list.slice().sort((a, b) => f(a) - f(b)).slice(0, n);
+const remPx = () => parseFloat(getComputedStyle(document.documentElement).fontSize) || 16.8;
+
+const state = {
+  tab: store.get('sovr:tab') || 'feed',
+  era: store.get('sovr:era') ?? 'ren', ev: store.get('sovr:ev') === '1', focus: store.get('sovr:focus') || '',
+  year: parseInt(store.get('sovr:year'), 10) || 1519,
+  pa: store.get('sovr:pa') || 'napoleon', pb: store.get('sovr:pb') || 'pushkin',
+  te: store.get('sovr:te') || ''
+};
+if (!['feed', 'year', 'pair', 'train'].includes(state.tab)) state.tab = 'feed';
+if (state.era && !ERAS.some(e => e.id === state.era)) state.era = 'ren';
+if (!byId[state.pa]) state.pa = 'napoleon';
+if (!byId[state.pb] || state.pb === state.pa) state.pb = state.pa === 'pushkin' ? 'napoleon' : 'pushkin';
+let round = null;
+const view = document.getElementById('view'), main = document.getElementById('main');
+
+// ---------- Лента времени ----------
+// o: lo, hi — годы краёв; items — [{p, on, note, kev}] или [{e, note}]; band — [от, до]; line — год; w — ширина
+function tl(o) {
+  const lo = o.lo, hi = o.hi, sp = (hi - lo) || 1, rem = remPx();
+  const w = Math.max(200, o.w || view.clientWidth - 30);
+  const maxT = Math.max(2, Math.floor(w / ((lo < 0 ? 6.4 : 3.3) * rem)));
+  const st = [1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000].find(s => sp / s <= maxT) || 1000;
+  const X = y => Math.max(0, Math.min(100, (y - lo) / sp * 100));
+  const f = v => v.toFixed(2) + '%';
+  const ticks = [];
+  for (let t = Math.ceil(lo / st) * st; t <= hi; t += st) ticks.push(t);
+  let h = '<div class="tl"><div class="axis" aria-hidden="true">' + ticks.map(t => {
+    const x = X(t);
+    return `<span style="left:${f(x)};transform:translateX(${x < 7 ? 0 : x > 93 ? -100 : -50}%)">${t < 0 ? (-t) + NB + BCs : t === 0 ? ADs : t}</span>`;
+  }).join('') + '</div>';
+  h += ticks.map(t => `<i class="gl${t === 0 ? ' zero' : ''}" style="left:${f(X(t))}"></i>`).join('');
+  if (o.band) h += `<i class="band" style="left:${f(X(o.band[0]))};width:${f(X(o.band[1]) - X(o.band[0]))}"></i>`;
+  if (o.line != null) h += `<i class="now" style="left:${f(X(o.line))}"></i>`;
+  h += o.items.map(it => (it.p ? rowP(it, X, f) : rowE(it, X, f))).join('');
+  return h + '</div>';
+}
+function rowP(it, X, f) {
+  const p = it.p, x0 = X(p.b), x1 = X(p.d), e = it.kev === false ? null : EV[p.e];
+  return `<button type="button" class="tr p${it.on ? ' on' : ''}" data-act="person" data-id="${p.id}" style="--x:${f(x0)}">`
+    + `<span class="lab"><b>${ty(p.n)}</b> ${lifeH(p, 'yrs')}</span>`
+    + `<span class="track"><i class="bar${p.ab ? ' apb' : ''}${p.ad ? ' apd' : ''}" style="left:${f(x0)};width:${f(x1 - x0)}"></i>`
+    + (e ? `<i class="kmk" style="left:${f(X(Math.max(e.y, p.b)))}"></i>` : '') + '</span>'
+    + (it.note ? `<span class="note">${it.note}</span>` : '')
+    + (e ? `<span class="kev"><i class="dia">◆</i> ${evH(e)} — ${ty(e.t)}</span>` : '')
+    + '</button>';
+}
+function rowE(it, X, f) {
+  const e = it.e, x0 = X(e.y);
+  return `<button type="button" class="tr ev" data-act="year" data-y="${e.y}" style="--x:${f(x0)}">`
+    + `<span class="lab">${evH(e)} — ${ty(e.t)}${it.note ? ` · <b class="nw">${it.note}</b>` : ''}</span>`
+    + `<span class="track">${e.y2 ? `<i class="rng" style="left:${f(x0)};width:${f(X(e.y2) - x0)}"></i>` : `<i class="mk" style="left:${f(x0)}"></i>`}</span></button>`;
+}
+// Шкала по людям и событиям с запасом по краям
+function range(people, events) {
+  let lo = Math.min(...people.map(p => p.b), ...events.map(e => e.y));
+  let hi = Math.max(...people.map(p => p.d), ...events.map(e => e.y2 || e.y));
+  const pad = Math.max(3, Math.round((hi - lo) * 0.04));
+  return [lo - pad, hi + pad];
+}
+function byYear(people, events) {
+  return [...people.map(p => ({ y: p.b, it: { p } })), ...events.map(e => ({ y: e.y, it: { e } }))].sort((a, b) => a.y - b.y).map(x => x.it);
+}
+
+function eraChips(cur, act, all) {
+  return `<div class="chips" role="group" aria-label="Эпоха">${all ? `<button type="button" class="chip" data-act="${act}" data-v="" aria-pressed="${!cur}">Все</button>` : ''}${ERAS.map(e => `<button type="button" class="chip" data-act="${act}" data-v="${e.id}" aria-pressed="${cur === e.id}">${e.t}</button>`).join('')}</div>`;
+}
+function renderFeed() {
+  const ps = P.filter(p => !state.era || p.era === state.era);
+  let [lo, hi] = range(ps, []);
+  const evs = state.ev ? E.filter(e => e.y >= lo && e.y <= hi) : [];
+  const fo = byId[state.focus];
+  const band = fo && fo.d >= lo && fo.b <= hi ? [Math.max(lo, fo.b), Math.min(hi, fo.d)] : null;
+  const items = byYear(ps, evs).map(it => (it.p && fo && it.p === fo ? { p: it.p, on: true } : it));
+  return `${eraChips(state.era, 'era', true)}
+    <button type="button" class="toggle" role="switch" data-act="ev" aria-checked="${state.ev}"><span><b>Все события</b><br><span class="lead small">${state.ev ? 'События эпохи — отдельными строками' : 'У каждого человека — ◆ одно событие его времени'}</span></span><span class="sw"></span></button>
+    ${fo ? `<div class="focus"><span>Подсвечены годы: <b>${ty(fo.n)}</b> ${lifeH(fo)}</span><button type="button" class="x" data-act="unfocus" aria-label="Убрать подсветку">✕</button></div>` : `<p class="hint">Нажмите на имя — совпадения, события при жизни и современники; годы жизни подсветятся на ленте.</p>`}
+    <section class="card tlcard">${tl({ lo, hi, items, band })}</section>`;
+}
+
+// ---------- Год ----------
+const PRESETS = [-490, -44, 476, 988, 1066, 1242, 1453, 1492, 1519, 1564, 1612, 1703, 1789, 1812, 1861, 1917, 1945, 1961];
+const YMIN = -560;
+function renderYear() {
+  const y = state.year;
+  const steps = k => `<button type="button" class="btn" data-act="ystep" data-k="${k}" aria-label="${k > 0 ? 'На ' + yrs(k) + ' позже' : 'На ' + yrs(-k) + ' раньше'}">${k > 0 ? '+' + k : '−' + (-k)}</button>`;
+  return `<div class="cols"><section class="card"><p class="eyebrow">Выберите год</p>
+      <div class="yin-row"><input id="yin" class="yin num" inputmode="numeric" enterkeyhint="done" autocomplete="off" aria-label="Год" value="${Math.abs(y)}">
+        <button type="button" class="chip" id="ybc" data-act="bc" aria-pressed="${y < 0}">до н.${NB}э.</button></div>
+      <input type="range" id="yr" class="slider" min="${YMIN}" max="${NOW}" step="1" value="${Math.max(YMIN, y)}" aria-label="Год на шкале">
+      <div class="steps"><div>${steps(-100)}${steps(-10)}${steps(-1)}</div><div>${steps(1)}${steps(10)}${steps(100)}</div></div>
+      <div class="chips" role="group" aria-label="Годы-ориентиры">${PRESETS.map(v => `<button type="button" class="chip num" data-act="year" data-y="${v}" aria-pressed="${v === y}">${Y(v)}</button>`).join('')}</div>
+    </section><div id="yres" class="stack">${yearRes(y)}</div></div>`;
+}
+function yearRes(y) {
+  const al = P.filter(p => alive(p, y));
+  const born = al.filter(p => p.b === y), died = al.filter(p => p.d === y);
+  const same = E.filter(e => e.y === y || (e.y2 && e.y <= y && y <= e.y2));
+  const nearE = E.filter(e => !same.includes(e) && Math.abs(dy(e.y, y)) <= 25);
+  const L = p => `<button type="button" class="plink" data-act="person" data-id="${p.id}">${ty(p.n)}</button>`;
+  const rel = n => (n > 0 ? 'через ' + yrs(n) : 'за ' + yrs(-n) + ' до');
+  let h = `<section class="card"><h2>${cap(yearIn(y))}</h2><ul class="facts">`;
+  h += same.map(e => `<li><span class="k">◆ ${e.y2 ? 'Шло: ' + evYear(e) : 'Событие'}</span><span class="v">${ty(cap(e.t))}</span></li>`).join('');
+  if (born.length) h += `<li><span class="k">${born.length > 1 ? 'Родились' : gw(born[0], 'Родился', 'Родилась')}</span><span>${born.map(L).join(', ')}</span></li>`;
+  if (died.length) h += `<li><span class="k">${died.length > 1 ? 'Умерли' : gw(died[0], 'Умер', 'Умерла')}</span><span>${died.map(p => `${L(p)} <span class="lead">(${ageTxt(lived(p), p.ab)})</span>`).join(', ')}</span></li>`;
+  if (!same.length && !born.length && !died.length) h += '<li><span class="lead">В этот год из нашего списка ничего не случилось — смотрите, кто жил и что было рядом.</span></li>';
+  h += '</ul></section>';
+  if (al.length) {
+    const [lo, hi] = range(al, []);
+    const items = al.map(p => ({ p, kev: false, note: p.d === y ? `${gw(p, 'умер', 'умерла')} в этом году, ${ageTxt(lived(p), p.ab)}` : p.b === y ? `${gw(p, 'родился', 'родилась')} в этом году` : ageTxt(ageIn(p, y), p.ab) }));
+    h += `<section class="card tlcard"><h2 style="margin:4px 0 2px">Живы: ${al.length}</h2><p class="hint" style="margin-bottom:6px">Возраст — сколько исполнилось ${yearIn(y)}.</p>${tl({ lo, hi, items, line: y })}</section>`;
+  } else {
+    const before = P.filter(p => p.d < y).sort((a, b) => b.d - a.d)[0], after = P.filter(p => p.b > y).sort((a, b) => a.b - b.b)[0];
+    h += `<section class="card"><h2>Никого из списка нет в живых</h2><ul class="facts">`
+      + (before ? `<li><span class="k">Ближайший до</span><span>${L(before)} — ${gw(before, 'умер', 'умерла')} ${yearIn(before.d)}, ${rel(-dy(before.d, y))}</span></li>` : '')
+      + (after ? `<li><span class="k">Ближайший после</span><span>${L(after)} — ${gw(after, 'родился', 'родилась')} ${yearIn(after.b)}, ${rel(dy(y, after.b))}</span></li>` : '')
+      + '</ul></section>';
+  }
+  if (nearE.length) h += `<section class="card"><h2>Рядом по времени</h2><ul class="facts">${nearE.map(e => `<li><span class="k">${evYear(e)} · ${rel(dy(y, e.y))}</span><button type="button" class="plink" data-act="year" data-y="${e.y}">${ty(cap(e.t))}</button></li>`).join('')}</ul></section>`;
+  return h;
+}
+function setYear(y, full) {
+  y = Math.max(-3000, Math.min(NOW, y | 0)) || 1;
+  state.year = y; store.set('sovr:year', String(y));
+  if (full || state.tab !== 'year' || !document.getElementById('yres')) { render(true); return; }
+  document.getElementById('yin').value = Math.abs(y);
+  document.getElementById('ybc').setAttribute('aria-pressed', String(y < 0));
+  const r = document.getElementById('yr'); if (+r.value !== y) r.value = Math.max(YMIN, y);
+  document.querySelectorAll('[data-act="year"].chip').forEach(c => c.setAttribute('aria-pressed', String(+c.dataset.y === y)));
+  document.getElementById('yres').innerHTML = yearRes(y);
+}
+
+// ---------- Пара ----------
+function personSelect(id, key, label) {
+  return `<label class="selrow"><span>${label}</span><select class="sel" data-sel="${key}">${ERAS.map(e => `<optgroup label="${e.t}">${P.filter(p => p.era === e.id).map(p => `<option value="${p.id}"${p.id === id ? ' selected' : ''}>${esc(p.n)}</option>`).join('')}</optgroup>`).join('')}</select></label>`;
+}
+function pairFacts(a, b) {
+  const [A, B] = a.b <= b.b ? [a, b] : [b, a], ov = overlap(a, b), ap = fz(a) || fz(b);
+  const out = [];
+  const li = (k, v) => out.push(`<li><span class="k">${k}</span><span class="v">${v}</span></li>`);
+  if (ov > 0) li('Жили одновременно', `${ageTxt(ov, ap)}: ${spanStr(Math.max(a.b, b.b), Math.min(a.d, b.d), 0, 0)}`);
+  else if (ov === 0) li('Разминулись', `${ty(B.n)} ${gw(B, 'родился', 'родилась')} в тот год, когда ${gw(A, 'умер', 'умерла')} ${ty(A.n)} (${Y(A.d)})`);
+  else li('Разминулись', `на ${ageTxt(-ov, ap)}: ${ty(A.n)} ${gw(A, 'умер', 'умерла')} ${yearIn(A.d)}, ${ty(B.n)} ${gw(B, 'родился', 'родилась')} ${yearIn(B.b)}`);
+  if (a.b === b.b) li('Ровесники', 'родились в один год');
+  else li('Кто старше', `${ty(A.n)} — на ${ageTxt(dy(A.b, B.b), ap)}`);
+  if (B.b > A.b && B.b <= A.d) li(`${Y(B.b)} — ${gw(B, 'родился', 'родилась')} ${ty(B.n)}`, `${ty(A.n)} — ${ageTxt(ageIn(A, B.b), A.ab)} в этом году`);
+  const [D, O] = a.d <= b.d ? [a, b] : [b, a];
+  if (a.d === b.d) li('Умерли в один год', Y(a.d));
+  else if (O.b <= D.d) li(`${Y(D.d)} — ${gw(D, 'умер', 'умерла')} ${ty(D.n)}`, `${ty(O.n)} — ${ageTxt(ageIn(O, D.d), O.ab)} в этом году`);
+  li('Прожили', `${ty(a.n)} — ${ageTxt(lived(a), a.ab || a.ad)}; ${ty(b.n)} — ${ageTxt(lived(b), b.ab || b.ad)}`);
+  return out.join('');
+}
+function renderPair() {
+  const a = byId[state.pa], b = byId[state.pb];
+  const ka = EV[a.e], kb = EV[b.e];
+  const [lo, hi] = range([a, b], [ka, kb]);
+  const ov = overlap(a, b), band = ov > 0 ? [Math.max(a.b, b.b), Math.min(a.d, b.d)] : null;
+  const both = E.filter(e => alive(a, e.y) && alive(b, e.y));
+  return `<div class="cols"><section class="card"><p class="eyebrow">Сравнить двоих</p>
+      ${personSelect(a.id, 'pa', 'Первый')}${personSelect(b.id, 'pb', 'Второй')}
+      <div class="btnrow"><button type="button" class="btn" data-act="swap">⇅ Поменять</button><button type="button" class="btn" data-act="rnd">🎲 Случайная пара</button></div></section>
+    <section class="card tlcard">${tl({ lo, hi, items: [a, b].sort((x, y) => x.b - y.b).map(p => ({ p })), band })}</section>
+    <section class="card"><h2>Во времени</h2><ul class="facts">${pairFacts(a, b)}</ul></section>
+    ${both.length ? `<section class="card"><h2>Оба были живы</h2><p class="hint">Сколько исполнилось в тот год</p><ul class="facts">${both.map(e => `<li><span class="k">${evYear(e)}</span><span class="v">${ty(cap(e.t))}</span><span class="lead small">${ty(a.n)} — ${ageTxt(ageIn(a, e.y), a.ab)}, ${ty(b.n)} — ${ageTxt(ageIn(b, e.y), b.ab)}</span></li>`).join('')}</ul></section>` : ''}</div>`;
+}
+
+// ---------- Человек ----------
+function personFacts(p) {
+  const out = [], L = q => `<button type="button" class="plink" data-act="person" data-id="${q.id}">${ty(q.n)}</button>`;
+  const li = (k, v) => out.push(`<li><span class="k">${k}</span><span>${v}</span></li>`);
+  const same = P.filter(q => q !== p && Math.abs(dy(q.b, p.b)) <= 2);
+  if (same.length) li('Ровесники (±2 года)', same.map(q => `${L(q)} <span class="lead num">(${Y(q.b, q.ab)})</span>`).join(', '));
+  const one = (list, m, f, pl) => (list.length > 1 ? pl : gw(list[0], m, f));
+  const bd = P.filter(q => q !== p && q.d === p.b && !q.ad && !p.ab);
+  if (bd.length) li(`В год ${gw(p, 'его', 'её')} рождения ${one(bd, 'умер', 'умерла', 'умерли')}`, bd.map(L).join(', '));
+  const db = P.filter(q => q !== p && q.b === p.d && !q.ab && !p.ad);
+  if (db.length) li(`В год ${gw(p, 'его', 'её')} смерти ${one(db, 'родился', 'родилась', 'родились')}`, db.map(L).join(', '));
+  const dd = P.filter(q => q !== p && q.d === p.d && !q.ad && !p.ad);
+  if (dd.length) li(`В тот же год ${one(dd, 'умер', 'умерла', 'умерли')}`, dd.map(L).join(', '));
+  return out.join('');
+}
+function personHTML(p, w) {
+  const e = EV[p.e];
+  const inLife = E.filter(x => evIn(p, x));
+  const before = E.filter(x => (x.y2 || x.y) < p.b).slice(-1), after = E.filter(x => x.y > p.d).slice(0, 1);
+  const evs = [...before, ...inLife, ...after];
+  const [lo, hi] = range([p], evs);
+  const note = x => (x.y > p.d ? 'через ' + yrs(dy(p.d, x.y)) + ' после смерти' : (x.y2 || x.y) < p.b ? 'за ' + yrs(dy(x.y2 || x.y, p.b)) + ' до рождения' : x.y < p.b ? 'шла при жизни' : ageTxt(ageIn(p, x.y), p.ab));
+  const items = [{ p, kev: false }, ...evs.map(x => ({ e: x, note: note(x) }))].sort((a, b) => (a.p ? a.p.b : a.e.y) - (b.p ? b.p.b : b.e.y));
+  const cont = P.filter(q => q !== p && overlap(p, q) >= 10).sort((a, b) => overlap(p, b) - overlap(p, a)).slice(0, 14);
+  const facts = personFacts(p);
+  return `<div class="ph"><p class="eyebrow">${FIELDS[p.f]} · ${eraName(p.era)}</p><button type="button" class="icon-btn x" data-act="close" aria-label="Закрыть">✕</button></div>
+    <div class="trip"><h2 class="tn" id="pTitle">${ty(p.n)}</h2><p class="tyy">${loose(lifeH(p))}</p><p class="tw">${ty(cap(p.w))}; ${gw(p, 'прожил', 'прожила')} ${ageTxt(lived(p), p.ab || p.ad)}</p>
+      <p class="te"><i class="dia">◆</i> в эти годы: ${evH(e)} — ${ty(e.t)} <span class="lead">(${evAge(p, e)})</span></p></div>
+    ${p.h ? `<p class="hook">💡 ${ty(p.h)}</p>` : ''}
+    ${facts ? `<h3>Совпадения</h3><ul class="facts">${facts}</ul>` : ''}
+    <h3>Жизнь и события</h3><p class="hint">Возраст — сколько исполнилось в тот год. Нажмите на событие — откроется этот год.</p>
+    ${tl({ lo, hi, items, w })}
+    ${cont.length ? `<h3>Жили в одно время</h3><div class="pchips">${cont.map(q => `<button type="button" class="pchip" data-act="person" data-id="${q.id}">${ty(q.n)} <span>· ${yrs(overlap(p, q))} вместе</span></button>`).join('')}</div>` : ''}
+    <div class="btnrow"><button type="button" class="btn primary" data-act="cmp" data-id="${p.id}">Сравнить с…</button>
+      <button type="button" class="btn" data-act="year" data-y="${p.b}">Год рождения: ${Y(p.b, p.ab)}</button>
+      <button type="button" class="btn" data-act="year" data-y="${p.d}">Год смерти: ${Y(p.d, p.ad)}</button></div>`;
+}
+const pers = document.getElementById('pers'), persPanel = document.getElementById('persPanel');
+function openPerson(id) {
+  const p = byId[id]; if (!p) return;
+  pers.hidden = false;
+  persPanel.innerHTML = personHTML(p, persPanel.clientWidth - 32);
+  persPanel.scrollTop = 0;
+  if (state.tab === 'feed' && state.focus !== id) { state.focus = id; store.set('sovr:focus', id); render(true); }
+  const x = persPanel.querySelector('[data-act="close"]'); if (x) x.focus({ preventScroll: true });
+}
+const closePerson = () => { pers.hidden = true; };
+
+// ---------- Тренировка ----------
+// Вопрос — про одного человека (повторение по нему): годы, событие его времени, сравнение с другими
+const mentions = (p, e) => p.n.split(/[\s-]+/).filter(w => w.length >= 3).some(w => e.t.includes(w.slice(0, 5)));
+const inside = (p, e) => e.y >= p.b + 1 + (p.ab ? 15 : 0) && e.y <= p.d - (p.ad ? 15 : 0);
+const distLife = (p, x) => (x.y > p.d ? dy(p.d, x.y) : dy(x.y2 || x.y, p.b));
+const KIND = { b: 'Год рождения', d: 'Год смерти', ev: 'Событие', evy: 'Год события', older: 'Кто раньше', met: 'Встретились бы?', alive: 'Кто был жив', age: 'Сколько лет' };
+function yearOpts(right, cands, fmt) {
+  const out = [], seen = new Set([fmt(right)]);
+  for (const c of cands) { const s = fmt(c); if (!seen.has(s)) { seen.add(s); out.push(c); } if (out.length === 3) break; }
+  return out.length === 3 ? [right, ...out].sort((a, b) => (a.y ?? a) - (b.y ?? b)).map(fmt) : null;
+}
+// Неверные годы — через 10 лет (20 у «ок.»), если не набралось трёх правдоподобных — чаще
+function nearYears(y, st, ok) {
+  for (const s of [st, st / 2, 5, 3]) {
+    const c = [-1, 1, -2, 2, -3, 3, -4, 4, -5, 5, -6, 6].map(k => shift(y, k * s)).filter(ok);
+    if (c.length >= 3) return [...shuffle(c.slice(0, 5)), ...c.slice(5)];
+  }
+  return [];
+}
+function qB(p) {
+  const e = EV[p.e], last = e.y2 || e.y, L = lived(p);
+  const opts = yearOpts(p.b, nearYears(p.b, p.ab ? 20 : 10, b => b <= last - 1 && dy(b, p.d) >= 15 && dy(b, p.d) <= Math.max(100, L + 8)), v => Y(v, p.ab));
+  return opts && { type: 'b', p, trip: 'b', ask: 'В каком году ' + gw(p, 'он родился', 'она родилась') + '?', opts, a: Y(p.b, p.ab),
+    ex: `${gw(p, 'Родился', 'Родилась')} ${yearIn(p.b)}; ${gw(p, 'прожил', 'прожила')} ${ageTxt(lived(p), p.ab || p.ad)}. ◆ ${evYear(e)} — ${ty(e.t)}: ${evAge(p, e)}.`, tl: { people: [p] } };
+}
+function qD(p) {
+  const e = EV[p.e], L = lived(p);
+  const opts = yearOpts(p.d, nearYears(p.d, p.ad ? 20 : 10, d => d >= e.y && d < NOW && dy(p.b, d) >= 15 && dy(p.b, d) <= Math.max(100, L + 8)), v => Y(v, p.ad));
+  return opts && { type: 'd', p, trip: 'd', ask: 'В каком году ' + gw(p, 'он умер', 'она умерла') + '?', opts, a: Y(p.d, p.ad),
+    ex: `${gw(p, 'Умер', 'Умерла')} ${yearIn(p.d)}, ${gw(p, 'прожил', 'прожила')} ${ageTxt(lived(p), p.ab || p.ad)}. ◆ ${evYear(e)} — ${ty(e.t)}: ${evAge(p, e)}.`, tl: { people: [p] } };
+}
+function qEv(p) {
+  const e = EV[p.e], m = 15 + fz(p);
+  const outs = E.filter(x => x !== e && ((x.y2 || x.y) < p.b - m || x.y > p.d + m));
+  if (outs.length < 3) return null;
+  const wrong = shuffle(near(outs, x => distLife(p, x), 7)).slice(0, 3);
+  const all = [e, ...wrong].sort((a, b) => a.y - b.y);
+  const exl = all.map(x => `<li>${evH(x)} — ${ty(x.t)}: <b>${x === e ? evAge(p, x) : x.y > p.d ? 'через ' + yrs(dy(p.d, x.y)) + ' после смерти' : 'за ' + yrs(dy(x.y2 || x.y, p.b)) + ' до рождения'}</b></li>`).join('');
+  return { type: 'ev', p, trip: 'ev', ask: 'Что из этого случилось, пока ' + gw(p, 'он был жив', 'она была жива') + '?', opts: shuffle(all.map(x => cap(x.t))), a: cap(e.t), cls: 'txt',
+    ex: `<ul class="exl">${exl}</ul>`, tl: { people: [p], events: all } };
+}
+function qEvy(p) {
+  const e = EV[p.e];
+  const ks = shuffle([-30, -20, -13, -7, 7, 13, 20, 30]);
+  const mv = k => ({ y: shift(e.y, k), y2: e.y2 && shift(e.y2, k), a: e.a });
+  const inLife = ks.map(mv).filter(x => x.y >= p.b && x.y <= p.d && x.y < NOW), out = ks.map(mv).filter(x => !inLife.includes(x) && x.y < NOW);
+  const opts = yearOpts({ y: e.y, y2: e.y2, a: e.a }, [...inLife, ...out], evYear);
+  return opts && { type: 'evy', p, trip: 'evy', ask: 'В каком году это было?', opts, a: evYear(e),
+    ex: `${ty(cap(e.t))} — ${evYear(e)}; ${evAge(p, e)}.`, tl: { people: [p] } };
+}
+function qOlder(p) {
+  const c = P.filter(q => q !== p && Math.abs(dy(q.b, p.b)) >= 10 + Math.max(fz(p), fz(q)) && Math.abs(dy(q.b, p.b)) <= 120);
+  if (!c.length) return null;
+  const q = pick(near(c, x => Math.abs(dy(x.b, p.b)), 8)), [A, B] = p.b < q.b ? [p, q] : [q, p];
+  return { type: 'older', p, ask: 'Кто родился раньше?', opts: shuffle([p.n, q.n]), a: A.n, cls: 'names duo',
+    ex: `${ty(A.n)} — ${Y(A.b, A.ab)}, ${ty(B.n)} — ${Y(B.b, B.ab)}: разница ${ageTxt(dy(A.b, B.b), fz(A) || fz(B))}.`, tl: { people: [A, B] } };
+}
+function qMet(p) {
+  const m = q => 5 + Math.max(fz(p), fz(q));
+  const c = P.filter(q => q !== p && Math.abs(dy(q.b, p.b)) <= 150);
+  const yes = c.filter(q => overlap(p, q) >= m(q)), no = c.filter(q => overlap(p, q) <= -m(q));
+  if (!yes.length && !no.length) return null;
+  const useYes = yes.length && (!no.length || Math.random() < 0.5);
+  const q = pick(near(useYes ? yes : no, x => Math.abs(overlap(p, x)), 6)), ov = overlap(p, q), [A, B] = p.b <= q.b ? [p, q] : [q, p];
+  const YES = 'Да, жили в одно время', NO = 'Нет, разминулись', ap = fz(p) || fz(q);
+  return { type: 'met', p, ask: `Жили ли в одно время <b>${ty(p.n)}</b> и <b>${ty(q.n)}</b>?`, opts: [YES, NO], a: ov > 0 ? YES : NO, cls: 'duo',
+    ex: ov > 0 ? `Вместе ${ageTxt(ov, ap)}: ${spanStr(Math.max(p.b, q.b), Math.min(p.d, q.d), 0, 0)}.`
+      : `${ty(A.n)} ${gw(A, 'умер', 'умерла')} ${yearIn(A.d)}, ${ty(B.n)} ${gw(B, 'родился', 'родилась')} ${yearIn(B.b)} — через ${ageTxt(-ov, ap)}.`,
+    tl: { people: [A, B], band: ov > 0 ? [Math.max(p.b, q.b), Math.min(p.d, q.d)] : null } };
+}
+function lifeEvent(p, minAge) {
+  const k = EV[p.e], ok = x => inside(p, x) && !mentions(p, x) && ageIn(p, x.y) >= (minAge || 1);
+  const list = E.filter(ok);
+  return ok(k) && Math.random() < 0.6 ? k : list.length ? pick(list) : null;
+}
+function qAlive(p) {
+  const e = lifeEvent(p, 2); if (!e) return null;
+  const y = e.y, dist = q => (q.d < y ? dy(q.d, y) : dy(y, q.b));
+  const outs = P.filter(q => q !== p && (dy(q.d, y) >= 5 + fz(q) || dy(y, q.b) >= 5 + fz(q)));
+  const w = shuffle(near(outs, dist, 8)).slice(0, 3);
+  if (w.length < 3) return null;
+  const all = [p, ...w].sort((a, b) => a.b - b.b);
+  const exl = all.map(q => `<li>${ty(q.n)} ${lifeH(q)}: <b>${q === p ? gw(q, 'ему', 'ей') + ' ' + ageTxt(ageIn(q, y), q.ab) : q.d < y ? gw(q, 'умер', 'умерла') + ' за ' + yrs(dy(q.d, y)) + ' до' : gw(q, 'родился', 'родилась') + ' через ' + yrs(dy(y, q.b))}</b></li>`).join('');
+  return { type: 'alive', p, ask: `Кто из них был жив ${yearIn(y)}?<br><span class="qs">${evYear(e)} — ${ty(e.t)}</span>`, opts: shuffle(all.map(q => q.n)), a: p.n, cls: 'names',
+    ex: `<ul class="exl">${exl}</ul>`, tl: { people: all, line: y } };
+}
+function qAge(p) {
+  const e = lifeEvent(p, 8); if (!e) return null;
+  const n = ageIn(p, e.y), starts = [0, 1, 2, 3].map(j => n - 10 * j).filter(s => s >= 1 && s + 30 <= 105);
+  if (!starts.length) return null;
+  const s = pick(starts), opts = [0, 1, 2, 3].map(j => yrs(s + 10 * j));
+  return { type: 'age', p, ask: `<b>${ty(p.n)}</b>. ${ty(cap(e.t))} — сколько примерно лет ${gw(p, 'ему', 'ей')} было тогда?`, opts, a: yrs(n),
+    ex: `${ty(cap(e.t))} — ${evYear(e)}. ${ty(p.n)}: ${lifeH(p)}, в тот год ${gw(p, 'ему', 'ей')} исполнилось ${ageTxt(n, p.ab)}.`, tl: { people: [p], events: [e] } };
+}
+const GEN = { b: qB, d: qD, ev: qEv, evy: qEvy, older: qOlder, met: qMet, alive: qAlive, age: qAge };
+function makeQ(p, type) {
+  const box = (srs[p.id] || {}).b || 0;
+  const w = box ? { b: 2, d: 2, ev: 2, evy: 2, older: 2, met: 2, alive: 2, age: 1 } : { b: 3, d: 3, ev: 3, evy: 1, older: 1, met: 1, alive: 1, age: 1 };
+  const order = [];
+  const bag = Object.entries(w);
+  while (bag.length) {
+    let r = Math.random() * bag.reduce((s, x) => s + x[1], 0), i = 0;
+    while ((r -= bag[i][1]) > 0 && i < bag.length - 1) i++;
+    order.push(bag.splice(i, 1)[0][0]);
+  }
+  for (const t of (type ? [type, ...order] : order)) { const q = GEN[t](p); if (q) { q.kind = KIND[t]; return q; } }
+  return null;
+}
+const INT = [1, 3, 7, 16];
+let srs = {};
+try { srs = JSON.parse(store.get('sovr:srs') || '{}') || {}; } catch (e) { srs = {}; }
+const saveSrs = () => store.set('sovr:srs', JSON.stringify(srs));
+const dayNum = n => { const d = new Date(); d.setDate(d.getDate() + n); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
+const today = () => dayNum(0);
+const pool = era => P.filter(p => !era || p.era === era);
+const known = list => list.filter(p => (srs[p.id] || {}).b >= 2).length;
+function startRound() {
+  const ps = pool(state.te), t = today();
+  const due = shuffle(ps.filter(p => srs[p.id] && srs[p.id].d <= t)).sort((a, b) => srs[a.id].d - srs[b.id].d);
+  const fresh = shuffle(ps.filter(p => !srs[p.id]));
+  let qs = [...due, ...fresh].slice(0, 10);
+  if (qs.length < 10) qs = qs.concat(shuffle(ps.filter(p => !qs.includes(p))).sort((a, b) => ((srs[a.id] || {}).b || 0) - ((srs[b.id] || {}).b || 0)).slice(0, 10 - qs.length));
+  round = { qs: qs.map(p => makeQ(p)).filter(Boolean), i: 0, pick: null, ok: 0, miss: [], again: new Set() };
+}
+function answer(idx) {
+  const it = round.qs[round.i];
+  if (round.pick != null) return;
+  round.pick = idx;
+  const right = it.opts[idx] === it.a, s = srs[it.p.id] || { b: 0 };
+  if (right) {
+    if (!round.again.has(it.p.id)) round.ok++;
+    s.b = Math.min(4, s.b + 1);
+    s.d = dayNum(INT[s.b - 1]);
+  } else {
+    s.b = 0; s.d = today();
+    if (!round.again.has(it.p.id)) {
+      round.miss.push(it.p);
+      round.again.add(it.p.id);
+      const q = makeQ(it.p, it.type);
+      if (q) round.qs.push(q);
+    }
+  }
+  srs[it.p.id] = s; saveSrs();
+}
+// Карточка «Имя · год – год · ◆ событие» с пропуском (hide) — до ответа «?», после — ответ
+function tripH(p, hide, st) {
+  const e = EV[p.e];
+  const slot = v => `<span class="slot${st ? ' ' + st : ''}">${st ? v : '?'}</span>`;
+  const bT = p.b < 0 && p.d < 0 ? pre(p.ab) + (-p.b) : Y(p.b, p.ab);
+  const dT = p.d < 0 ? Y(p.d, p.ad) : p.b < 0 ? pre(p.ad) + p.d + NB + ADs : pre(p.ad) + p.d;
+  const yrsH = hide === 'b' ? `${slot(Y(p.b, p.ab))}${NB}– ${dT}` : hide === 'd' ? `${bT}${NB}– ${slot(Y(p.d, p.ad))}` : spanStr(p.b, p.d, p.ab, p.ad);
+  const evL = hide === 'ev' ? (st ? `${evH(e)} — ${slot(ty(e.t))}` : slot('')) : hide === 'evy' ? `${slot(evYear(e))} — ${ty(e.t)}` : `${evH(e)} — ${ty(e.t)}`;
+  return `<div class="trip"><p class="tn">${ty(p.n)}</p><p class="tw">${ty(cap(p.w))}</p><p class="tyy num">${loose(yrsH)}</p><p class="te"><i class="dia">◆</i> в эти годы: ${evL}</p></div>`;
+}
+function tlOf(s, w) {
+  const people = s.people.slice().sort((a, b) => a.b - b.b), events = s.events || [];
+  const [lo, hi] = range(people, events);
+  return tl({ lo, hi, items: byYear(people, events).map(it => (it.p ? { p: it.p, kev: events.length === 0 } : it)), band: s.band, line: s.line, w });
+}
+function renderTrain() {
+  const ps = pool(state.te), kn = known(ps);
+  if (!round) {
+    const per = ERAS.map(e => { const l = pool(e.id); return `<span class="pill">${e.t}: ${known(l)}/${l.length}</span>`; }).join(' ');
+    const dueN = ps.filter(p => srs[p.id] && srs[p.id].d <= today()).length;
+    return `${eraChips(state.te, 'te', true)}
+      <div class="cols"><section class="card"><p class="eyebrow">Знаю${state.te ? ' · ' + eraName(state.te) : ''}</p>
+        <p><span class="big num">${kn}</span> <span class="lead">из ${ps.length}</span></p>
+        <div class="meter"><i style="width:${(kn / ps.length * 100).toFixed(1)}%"></i></div>
+        <p class="lead small">${dueN ? 'На повторение сегодня: ' + dueN + '. ' : ''}В раунде 10 человек: годы жизни, событие их времени и кто с кем совпал. Сначала то, что пора повторить, потом новое.</p>
+        <button type="button" class="btn primary" data-act="start">Начать тренировку</button></section>
+      <section class="card"><p class="eyebrow">По эпохам</p><div style="display:flex;flex-wrap:wrap;gap:6px">${per}</div>
+        <button type="button" class="link" data-act="reset">Сбросить прогресс</button></section></div>`;
+  }
+  if (round.i >= round.qs.length) {
+    const n = round.qs.length - round.again.size;
+    return `<section class="card"><p class="eyebrow">Раунд окончен</p>
+      <p><span class="big num">${round.ok}</span> <span class="lead">из ${n} с первого раза</span></p>
+      ${round.miss.length ? `<p class="lead small">Повторите:</p><ul class="miss">${round.miss.map(p => { const e = EV[p.e]; return `<li><b>${ty(p.n)}</b> ${lifeH(p, 'yrs')}<br><span class="lead small"><i class="dia">◆</i> ${evH(e)} — ${ty(e.t)}</span></li>`; }).join('')}</ul>` : '<p>Без ошибок!</p>'}
+      <button type="button" class="btn primary" data-act="start">Ещё раунд</button>
+      <button type="button" class="link" data-act="stop">К прогрессу</button></section>`;
+  }
+  const it = round.qs[round.i], total = round.qs.length, done = round.pick != null;
+  const right = done && it.opts[round.pick] === it.a;
+  const w = view.clientWidth - 60;
+  return `<section class="card qcard"><div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 8px"><span class="pill">${it.kind} · ${eraName(it.p.era)}</span><span class="lead small num">${round.i + 1} / ${total}</span></div>
+      <div class="meter"><i style="width:${(round.i / total * 100).toFixed(1)}%"></i></div>
+      ${it.trip ? tripH(it.p, it.trip, done ? (right ? 'ok' : 'bad') : '') : ''}
+      <p class="qt">${it.ask}</p>
+      <div class="opts ${it.cls || ''}">${it.opts.map((o, k) => {
+        const cls = !done ? '' : o === it.a ? 'ok' : k === round.pick ? 'bad' : '';
+        return `<button type="button" class="opt${it.cls ? '' : ' num'} ${cls}" data-act="opt" data-k="${k}" ${done ? 'disabled' : ''}>${loose(ty(o))}</button>`;
+      }).join('')}</div>
+      ${done ? `<div class="fb ${right ? 'ok' : 'bad'}"><b>${right ? 'Верно!' : 'Правильно: ' + ty(it.a)}</b>
+        <button type="button" class="btn primary" data-act="next">${round.i + 1 < total ? 'Дальше' : 'Итог'}</button>
+        <span>${it.ex}</span>${tlOf(it.tl, w)}${it.p.h ? `<span class="lead small">💡 ${ty(it.p.h)}</span>` : ''}</div>` : ''}
+      <button type="button" class="link" data-act="stop">Закончить</button></section>`;
+}
+
+// ---------- Отрисовка и действия ----------
+function render(keep) {
+  const y = main.scrollTop;
+  document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-current', b.dataset.tab === state.tab ? 'page' : 'false'));
+  view.innerHTML = state.tab === 'feed' ? renderFeed() : state.tab === 'year' ? renderYear() : state.tab === 'pair' ? renderPair() : renderTrain();
+  fitOpts();
+  main.scrollTop = keep ? y : 0;
+}
+// Варианты ответа: в альбоме iPad — четыре в ряд, иначе два; не влезает слово — на ряд меньше
+function fitOpts() {
+  const o = document.querySelector('.opts');
+  if (!o) return;
+  const over = () => [...o.children].some(b => b.scrollWidth > b.clientWidth + 1);
+  o.classList.remove('two', 'one');
+  if (document.documentElement.classList.contains('land') && over()) o.classList.add('two');
+  if (over()) { o.classList.remove('two'); o.classList.add('one'); }
+}
+let toastTimer = 0;
+function toast(t) { const el = document.getElementById('toast'); el.textContent = t; el.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.hidden = true; }, 2400); }
+function go(tab) { state.tab = tab; store.set('sovr:tab', tab); render(); }
+function act(b) {
+  const a = b.dataset.act;
+  if (a === 'person') { openPerson(b.dataset.id); return; }
+  if (a === 'close') { closePerson(); return; }
+  if (a === 'year') { closePerson(); if (state.tab !== 'year') { state.year = +b.dataset.y; store.set('sovr:year', b.dataset.y); go('year'); } else setYear(+b.dataset.y); return; }
+  if (a === 'cmp') {
+    const p = byId[b.dataset.id]; closePerson();
+    state.pa = p.id;
+    if (state.pb === p.id) state.pb = P.filter(q => q !== p).sort((x, y) => overlap(p, y) - overlap(p, x))[0].id;
+    store.set('sovr:pa', state.pa); store.set('sovr:pb', state.pb); go('pair'); return;
+  }
+  if (a === 'era') { state.era = b.dataset.v; store.set('sovr:era', state.era); render(); return; }
+  if (a === 'te') { state.te = b.dataset.v; store.set('sovr:te', state.te); render(true); return; }
+  if (a === 'ev') { state.ev = !state.ev; store.set('sovr:ev', state.ev ? '1' : '0'); render(true); return; }
+  if (a === 'unfocus') { state.focus = ''; store.del('sovr:focus'); render(true); return; }
+  if (a === 'ystep') { setYear(shift(state.year, +b.dataset.k)); return; }
+  if (a === 'bc') { setYear(-state.year); return; }
+  if (a === 'swap') { [state.pa, state.pb] = [state.pb, state.pa]; store.set('sovr:pa', state.pa); store.set('sovr:pb', state.pb); render(true); return; }
+  if (a === 'rnd') {
+    const p = pick(P), c = P.filter(q => q !== p && Math.abs(dy(q.b, p.b)) <= 120);
+    state.pa = p.id; state.pb = pick(c).id; store.set('sovr:pa', state.pa); store.set('sovr:pb', state.pb); render(true); return;
+  }
+  if (a === 'start') { startRound(); render(); return; }
+  if (a === 'stop') { round = null; render(); return; }
+  if (a === 'opt') { answer(+b.dataset.k); render(true); return; }
+  if (a === 'next') { round.i++; round.pick = null; render(); return; }
+  if (a === 'reset') { if (confirm('Сбросить весь прогресс тренировки?')) { srs = {}; saveSrs(); render(true); toast('Прогресс сброшен'); } return; }
+}
+document.querySelector('.tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (b) go(b.dataset.tab); });
+view.addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b) act(b); });
+persPanel.addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b) act(b); });
+pers.addEventListener('click', e => { if (e.target === pers) closePerson(); });
+view.addEventListener('change', e => {
+  const t = e.target;
+  if (t.matches('select[data-sel]')) {
+    state[t.dataset.sel] = t.value;
+    if (state.pa === state.pb) { const o = t.dataset.sel === 'pa' ? 'pb' : 'pa'; state[o] = P.find(q => q.id !== t.value).id; }
+    store.set('sovr:pa', state.pa); store.set('sovr:pb', state.pb); render(true); return;
+  }
+  if (t.id === 'yin') {
+    const n = parseInt(t.value.replace(/\D/g, ''), 10);
+    if (n) setYear(document.getElementById('ybc').getAttribute('aria-pressed') === 'true' ? -n : n); else t.value = Math.abs(state.year);
+  }
+});
+view.addEventListener('input', e => {
+  if (e.target.id !== 'yr') return;
+  let v = +e.target.value;
+  if (v === 0) v = state.year < 0 ? 1 : -1;
+  setYear(v);
+});
+view.addEventListener('keydown', e => { if (e.target.id === 'yin' && e.key === 'Enter') e.target.blur(); });
+const help = document.getElementById('help');
+document.getElementById('helpBtn').addEventListener('click', () => { help.hidden = false; document.getElementById('helpClose').focus(); });
+document.getElementById('helpClose').addEventListener('click', () => { help.hidden = true; });
+help.addEventListener('click', e => { if (e.target === help) help.hidden = true; });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { help.hidden = true; closePerson(); } });
+let rsT = 0;
+function relayout() {
+  applyTextSize();
+  clearTimeout(rsT);
+  rsT = setTimeout(() => { if (document.activeElement && document.activeElement.id === 'yin') return; render(true); if (!pers.hidden) { const id = (persPanel.querySelector('[data-act="cmp"]') || {}).dataset; if (id) persPanel.innerHTML = personHTML(byId[id.id], persPanel.clientWidth - 32); } }, 150);
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') applyTextSize(); });
+window.addEventListener('resize', relayout);
+window.addEventListener('orientationchange', () => setTimeout(relayout, 150));
+render();
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+<script>
+/* ---------- Автообновление: при открытии и при возврате в приложение сверяем код страницы с версией на сайте ---------- */
+(function () {
+  if (location.protocol !== 'https:' || window.parent !== window) return;
+  const KEY = 'app-update:' + location.pathname;
+  const ss = {
+    get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} }
+  };
+  const texts = doc => Array.from(doc.querySelectorAll('script, style'), n => n.textContent);
+  const hash = list => { let h = 5381; const s = list.join('\n'); for (let i = 0; i < s.length; i++) h = (h * 33 + s.charCodeAt(i)) | 0; return (h >>> 0) + ':' + s.length; };
+  const mine = new Set(texts(document));
+  let last = 0, box = null;
+  // Посреди раунда тренировки не перезагружаем — только предлагаем обновиться
+  function busy() { try { return !!round; } catch (e) { return false; } }
+  function toast(text, onUpdate) {
+    if (box) box.remove();
+    box = document.createElement('div');
+    box.setAttribute('role', 'status');
+    box.style.cssText = 'position:fixed;z-index:60;left:12px;right:12px;top:calc(env(safe-area-inset-top, 0px) + 72px);max-width:520px;margin:0 auto;display:flex;align-items:center;gap:8px;padding:8px 8px 8px 16px;border-radius:14px;background:#0A1A2E;border:1px solid #3BE8FF;color:#DFFBFF;box-shadow:0 0 22px -6px #3BE8FF;font-weight:600';
+    const label = document.createElement('span');
+    label.style.flex = '1';
+    label.textContent = text;
+    box.append(label);
+    const btn = (t, fn, extra) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = t;
+      b.style.cssText = 'min-width:44px;min-height:44px;border-radius:10px;border:0;font:inherit;padding:0 12px;cursor:pointer;' + extra;
+      b.addEventListener('click', fn);
+      box.append(b);
+    };
+    if (onUpdate) {
+      btn('Обновить', onUpdate, 'background:#3BE8FF;color:#05070F');
+      btn('✕', () => box.remove(), 'background:none;color:inherit');
+      box.querySelector('button').setAttribute('aria-label', 'Обновить приложение');
+      box.lastChild.setAttribute('aria-label', 'Скрыть');
+    } else {
+      setTimeout(() => box && box.remove(), 2500);
+    }
+    document.body.append(box);
+  }
+  function apply(fresh) {
+    ss.set(KEY, fresh);
+    ss.set(KEY + ':done', '1');
+    location.reload();
+  }
+  async function check() {
+    if (Date.now() - last < 60000) return;
+    last = Date.now();
+    try {
+      const r = await fetch(location.href.split('#')[0], { cache: 'reload' });
+      if (!r.ok) return;
+      const list = texts(new DOMParser().parseFromString(await r.text(), 'text/html'));
+      if (!list.length || list.every(t => mine.has(t))) return;
+      const fresh = hash(list);
+      if (busy() || ss.get(KEY) === fresh) toast('Вышла новая версия', () => apply(fresh));
+      else apply(fresh);
+    } catch (e) {}
+  }
+  if (ss.get(KEY + ':done')) { ss.set(KEY + ':done', ''); toast('Приложение обновлено'); }
+  setTimeout(check, 1500);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') check(); });
+  window.addEventListener('pageshow', e => { if (e.persisted) check(); });
+})();
+</script>
+</body>
+</html>
