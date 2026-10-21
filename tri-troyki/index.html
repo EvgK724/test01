@@ -38,7 +38,7 @@
 html {
   font-size: calc(110% * var(--k));
   height: 100%;
-  padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+  padding: env(safe-area-inset-top, 0px) 0 0;
   background: var(--bg);
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
@@ -88,7 +88,8 @@ main {
 .tabs {
   flex: none; display: grid; grid-template-columns: repeat(4, 1fr);
   border-top: 1px solid var(--border); background: var(--surface);
-  padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
+  /* у нижнего края: фон до самого низа, кнопки — над полоской «Домой» (55% её зоны: iPhone ≈ 19 px, iPad ≈ 11 px) */
+  padding: 0 env(safe-area-inset-right, 0px) calc(env(safe-area-inset-bottom, 0px) * 0.55) env(safe-area-inset-left, 0px);
 }
 .tab {
   min-height: 64px; border: 0; background: none; padding: 6px 2px;
