@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#05070F">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Футы и фунты">
 <meta name="application-name" content="Футы и фунты">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -201,9 +201,11 @@ html.land .opts:not(.two):not(.one) { grid-template-columns: repeat(4, minmax(0,
   position: fixed; z-index: 60; left: 12px; right: 12px; bottom: calc(env(safe-area-inset-bottom, 0px) + 76px); max-width: 520px; margin: 0 auto;
   padding: 12px 16px; border-radius: 14px; background: #0A1A2E; border: 1px solid var(--neon); color: #DFFBFF; box-shadow: 0 0 22px -6px var(--neon); text-align: center;
 }
-/* Экран «Домой» iPhone/iPad: высота 100% у iOS бывает короче экрана — страница закреплена по краям экрана (как в «want you to»),
-   отступ сверху — под строку состояния. Нижнее меню — «плавающая» пилюля над краем: под ней фон страницы, без сплошной полосы */
+/* Экран «Домой» iPhone/iPad: строка состояния сплошная (black, как в «want you to»): с прозрачной (black-translucent) iOS отдаёт
+   странице высоту на строку состояния меньше, и внизу остаётся промежуток. Страница закреплена по краям экрана,
+   отступ сверху — под строку состояния, если она прозрачная. Нижнее меню — «плавающая» пилюля над краем: под ней фон страницы, без сплошной полосы */
 html { height: 100%; padding-top: 0; }
+html, body { overscroll-behavior: none; }   /* страницу нельзя оттянуть пальцем — меню не «прыгает» */
 body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: auto; height: auto; padding-top: env(safe-area-inset-top, 0px); }
 .tabs-wrap { flex: none; padding: 3px max(12px, env(safe-area-inset-right, 0px)) max(6px, calc(env(safe-area-inset-bottom, 0px) - 8px)) max(12px, env(safe-area-inset-left, 0px)); }
 nav.tabs { max-width: 40rem; margin: 0 auto; gap: 4px; padding: 4px; border: 1px solid rgba(59, 232, 255, 0.25); border-radius: 24px; box-shadow: 0 0 18px -6px rgba(59, 232, 255, 0.5), 0 18px 40px -18px rgba(0,0,0,.9); }

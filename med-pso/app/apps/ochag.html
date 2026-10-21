@@ -4,7 +4,7 @@
 <meta name="theme-color" content="#0e1113">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Где очаг">
 <meta name="application-name" content="Где очаг">
 <link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAFOklEQVR42u3d7U4TQRTG8b0DoyCIilESUInFSrRimwBKEIKGomAMRsXELxpvT796CV6GF6AXoI9p0jSlamFnZuec/SfPB4VlO5z9sTuzL7PFmbMThIxMQQkIOAg4CDgIOAg4CDgIOAg4CDgIOAgBBwEHAQcBBwEHAQcBBwEHAQcBByFWcFycnZtfvNNY7qys7nQ2umtbBzv774eiL+pbWkCLaWH9CO10i0NVU/lUx+P1HT/6ca0k6gaw0k4POFSgZmt948lhmVofj1ao1QasvpV2OsGhfezI/XDY6CP0QXVopxMcqkLwP8H//oGeovRW2ukER/pyn670VtrpBMfUzGzJTlyoqBlqjPV2+sFxc6mVQ7kHoybZbacTHBPnL2TyhzjyT1PNs9VOPzg0QqvwyD1OGsudXlP1j5zbqTImG+6mwHFl7vrj7tucK24Ih6JiqqQecKiznXmtzeHoJcEopkCGURwJfBRR+xlWqmwUhxK1/1HEk5F/P8MBDhU5no8i0qg1wTUIcPSvxUQa30bBcbe9aau+pnEoKrgNHNcWbpkrrnUcisqeOw7t32x1NdzgUNmDH1wC4zBaWQc4Bn+FHHFMzcwaLasPHErYi7dFzfuhznCE7ZkW7DY84Qi78yjobTjDEbDnEQxH5lfk64NDGyIvHEbPbbjEEfCcRxgczdY6OPKJNkdGOKwfU5zhCHVkKRin+MMRasxS0OFwiSNIt6NgEOsSR5ABbQAc2d7IX2cc2ijgAEfeOIxeo/eNQxslCxwOSukPhwIOcIADHOAAhzccdEjpkDKUZSgLDnBw+pzT51x448Ibl+zBkecle2724WYfbhPkNkFuMOYGYx5N4NEEHmrioSYehwRHzo9D8iA1D1IzBQNTMDB5S717G0z75AqHgWmfmDDO+rkNppr0hsPMVJNMUps4xiapZXrrlF0NY9NbMzF+spicGJ9XaiSI4Vdq8DIe0zJ4jZdJHH5e45XDCwDbj/aCp8Ir8q5eAFj5Kznd4PD56tBqX+brA4fnlw5X+Bpw6zjq8rrywVFMsl6IXRwqUYJRSXY4UhKxiKNaFlng6BOJei3GFg6VonIWGeHoD3ebrfXgO5LN3TcxcGi1wXcV+vWTDVON4RhU0ljulOy06se1khuNe/fXnsbAodVq5aHamZWJrHEMQdE+VuVbWd1RHUceffRFfUsLaDEt3C/0YvNBDBaD0UeUb2e2yR3HqZNAxpAPfynqI+PT9t6XZ93vL3d/vfoT/UP/1RfxUSMccwtLQxvvaGvv20G3Z+J49C0tUNKHPhQcuWdy+tJQD1Qb/ufh7t9k9KIFSvrQh+qjwWHpgDKOjFA+/B1cCme7jaEN9o+jycjjS8mDi7OdR+G4t6HO5vgyeinZP3XW80iEY7s9nyDvXmx/ONrv5+vH5yfFofFLGRy3Ww/BceL8+Py6kpwUh8a3Jbul4HCLQynZ7QAHOMDBYYXDCh1SOqQMZRnKchKMk2Dg4PQ5OLjwBg4u2YODm33AwW2C4Ki9D8cynONQLl9diPdoglbuu3rOcSjnJqdj4NBq3ZfOPw4lBo461A0c4AAHOMABDnCAAxzgAAc4wAEOcIADHOAABzjAAQ5wgAMc4AAHOMABDnCAAxzgAAc4wAEOcIADHOAABzjAAQ5wgAMc4AAHOMABDnCAAxzgAAc4wAEOcIADHOAABzjAAQ5wgAMc4AAHOMABDnCAAxzgAAc4SI0DDgIOAg4CDgIOAg4CDgIOAg4CDgIOQsBBwEHAQcBBwEHAQcBBwEHAQcBBSD+/AYYlhZJwI2feAAAAAElFTkSuQmCC">
@@ -210,9 +210,11 @@ html.wide .wrap { max-width: none; }
 html.wide .rows { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 html.wide .diagram { max-width: calc(560px * var(--k)); margin-inline: auto; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
-/* Экран «Домой» iPhone/iPad: высота 100% у iOS бывает короче экрана — страница закреплена по краям экрана (как в «want you to»),
-   отступ сверху — под строку состояния. Нижнее меню — «плавающая» пилюля над краем: под ней фон страницы, без сплошной полосы */
+/* Экран «Домой» iPhone/iPad: строка состояния сплошная (black, как в «want you to»): с прозрачной (black-translucent) iOS отдаёт
+   странице высоту на строку состояния меньше, и внизу остаётся промежуток. Страница закреплена по краям экрана,
+   отступ сверху — под строку состояния, если она прозрачная. Нижнее меню — «плавающая» пилюля над краем: под ней фон страницы, без сплошной полосы */
 html { height: 100%; padding-top: 0; }
+html, body { overscroll-behavior: none; }   /* страницу нельзя оттянуть пальцем — меню не «прыгает» */
 body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: auto; height: auto; padding-top: env(safe-area-inset-top, 0px); }
 .tabs-wrap { flex: none; padding: 3px max(12px, env(safe-area-inset-right, 0px)) max(6px, calc(env(safe-area-inset-bottom, 0px) - 8px)) max(12px, env(safe-area-inset-left, 0px)); }
 nav.tabs { max-width: 40rem; margin: 0 auto; gap: 4px; padding: 4px; border: 1px solid rgb(43, 51, 55); border-radius: 24px; box-shadow: 0 18px 40px -18px rgba(0,0,0,.9); }
