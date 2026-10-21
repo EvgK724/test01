@@ -195,7 +195,7 @@ main {
 .meter { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; }
 .meter i { display: block; height: 100%; background: var(--neon); box-shadow: 0 0 10px var(--neon); border-radius: 4px; }
 .big { font: 800 2.4rem/1 var(--sans); color: #DFF6FF; text-shadow: 0 0 12px rgba(59,232,255,.35); }
-.qt { font: 700 clamp(1.15rem, 5.4vw, 1.5rem)/1.3 var(--sans); }
+.qt { font: 700 clamp(min(1.15rem, 6.6vw), 5.4vw, 1.5rem)/1.3 var(--sans); }   /* узкий экран + крупный текст: длинное слово («на Чернобыльской») — целиком */
 .qt b { color: #BCE9FA; }
 .qs { color: var(--text-2); font-size: .92rem; }
 .opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
