@@ -297,7 +297,6 @@ html.wide nav.tabs .tab svg { padding-block: .1rem; }   /* меню не выш�
     <li><b>«Тренировка»</b> — 10 вопросов: год рождения, год смерти, событие и его год, кто родился раньше, могли ли встретиться, кто был жив. Что знаете — повторится через 1, 3, 7, 16 дней; ошибки — ещё раз в этом же раунде.</li>
     <li><b>Возраст</b> считается по годам — сколько исполнилось в тот год. <b>«ок.»</b> — точный год неизвестен.</li>
   </ol>
-  <p class="lead small num" id="diag"></p>
   <button class="btn primary" type="button" id="helpClose">Понятно</button>
 </div></div>
 <div class="sheet" id="pers" hidden><div class="panel" role="dialog" aria-modal="true" aria-labelledby="pTitle" id="persPanel"></div></div>
@@ -1095,22 +1094,7 @@ view.addEventListener('input', e => {
 });
 view.addEventListener('keydown', e => { if (e.target.id === 'yin' && e.key === 'Enter') e.target.blur(); });
 const help = document.getElementById('help');
-// Замеры экрана — для настройки нижнего меню на конкретном iPhone/iPad (присылается снимком)
-function diagText() {
-  const pr = document.createElement('div');
-  pr.style.cssText = 'position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px) 0';
-  document.body.append(pr);
-  const cs = getComputedStyle(pr), t = Math.round(parseFloat(cs.paddingTop)), bt = Math.round(parseFloat(cs.paddingBottom));
-  pr.remove();
-  const nav = document.querySelector('nav.tabs').getBoundingClientRect(), body = document.body.getBoundingClientRect();
-  const vv = window.visualViewport ? Math.round(visualViewport.height) : '—';
-  const home = navigator.standalone ? 'да' : (window.matchMedia && matchMedia('(display-mode: standalone)').matches ? 'да*' : 'нет');
-  const ios = (navigator.userAgent.match(/OS (\d+)_(\d+)/) || []).slice(1).join('.');
-  const sb = (document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]') || {}).content;
-  return `Замеры экрана: окно ${innerWidth}×${innerHeight}, видимо ${vv}, экран ${screen.width}×${screen.height}, страница ${Math.round(body.top)}…${Math.round(body.bottom)}, ` +
-    `вырезы ${t}/${bt}, меню выше низа окна на ${Math.round(innerHeight - nav.bottom)}, с экрана «Домой»: ${home}, строка ${sb}, iOS ${ios || '—'}, v2`;
-}
-document.getElementById('helpBtn').addEventListener('click', () => { document.getElementById('diag').textContent = diagText(); help.hidden = false; document.getElementById('helpClose').focus(); });
+document.getElementById('helpBtn').addEventListener('click', () => { help.hidden = false; document.getElementById('helpClose').focus(); });
 document.getElementById('helpClose').addEventListener('click', () => { help.hidden = true; });
 help.addEventListener('click', e => { if (e.target === help) help.hidden = true; });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { help.hidden = true; closePerson(); } });
