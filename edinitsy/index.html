@@ -205,10 +205,11 @@ html.land .opts:not(.two):not(.one) { grid-template-columns: repeat(4, minmax(0,
    отступ сверху — под строку состояния. Нижнее меню — «плавающая» пилюля над краем: под ней фон страницы, без сплошной полосы */
 html { height: 100%; padding-top: 0; }
 body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: auto; height: auto; padding-top: env(safe-area-inset-top, 0px); }
-.tabs-wrap { flex: none; padding: 4px max(12px, env(safe-area-inset-right, 0px)) max(8px, calc(env(safe-area-inset-bottom, 0px) - 8px)) max(12px, env(safe-area-inset-left, 0px)); }
-nav.tabs { max-width: 40rem; margin: 0 auto; gap: 4px; padding: 5px; border: 1px solid rgba(59, 232, 255, 0.25); border-radius: 24px; box-shadow: 0 0 18px -6px rgba(59, 232, 255, 0.5), 0 18px 40px -18px rgba(0,0,0,.9); }
-nav.tabs .tab { border-radius: 19px; min-height: 56px; }
-html.wide nav.tabs .tab { min-height: 3.6rem; }
+.tabs-wrap { flex: none; padding: 3px max(12px, env(safe-area-inset-right, 0px)) max(6px, calc(env(safe-area-inset-bottom, 0px) - 8px)) max(12px, env(safe-area-inset-left, 0px)); }
+nav.tabs { max-width: 40rem; margin: 0 auto; gap: 4px; padding: 4px; border: 1px solid rgba(59, 232, 255, 0.25); border-radius: 24px; box-shadow: 0 0 18px -6px rgba(59, 232, 255, 0.5), 0 18px 40px -18px rgba(0,0,0,.9); }
+nav.tabs .tab { border-radius: 19px; min-height: 50px; padding-block: 2px; }
+html.wide nav.tabs .tab { min-height: 3rem; }
+html.wide nav.tabs .tab svg { padding-block: .1rem; }   /* меню не выше прежней полосы: на iPad в альбоме вопрос и «Дальше» — без прокрутки */
 </style>
 </head>
 <body>
