@@ -358,10 +358,10 @@ h1, h2, h3, p, b, .name, .summary { overflow-wrap: break-word; word-break: norma
   position: fixed; z-index: 60; left: 12px; right: 12px; bottom: calc(env(safe-area-inset-bottom, 0px) + 76px); max-width: 520px; margin: 0 auto;
   padding: 12px 16px; border-radius: 14px; background: #0A1A2E; border: 1px solid var(--neon); color: #DFFBFF; box-shadow: 0 0 22px -6px var(--neon); text-align: center;
 }
-/* Экран «Домой» iPhone/iPad: то, что ниже страницы, система закрашивает цветом страницы — делаем его цветом меню,
-   чтобы под меню не было пустой полосы; если система не отдаёт странице нижнюю полоску (vp-short) — кнопкам не нужен отступ над ней */
-html { background-color: #0A0F1F; }
-html.vp-short nav.tabs { padding-bottom: 0 !important; }
+/* Экран «Домой» iPhone/iPad: высота 100% у iOS бывает короче экрана — снизу остаётся чёрная полоса. Поэтому страница
+   закреплена по краям экрана (как в «want you to»), отступ сверху — под строку состояния; фон под страницей — цвета меню */
+html { background-color: #0A0F1F; height: 100%; padding-top: 0; }
+body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: auto; height: auto; padding-top: env(safe-area-inset-top, 0px); }
 </style>
 </head>
 <body>
@@ -1227,19 +1227,6 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.se
   setTimeout(check, 1500);
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') check(); });
   window.addEventListener('pageshow', e => { if (e.persisted) check(); });
-})();
-</script>
-<script>
-/* Приложение с экрана «Домой»: страница короче экрана — значит, нижнюю полоску система оставила себе (класс vp-short) */
-(function () {
-  function fit() {
-    var standalone = navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
-    var land = innerWidth > innerHeight, sh = land ? Math.min(screen.width, screen.height) : Math.max(screen.width, screen.height);
-    document.documentElement.classList.toggle('vp-short', !!standalone && sh - innerHeight > 8);
-  }
-  fit();
-  addEventListener('resize', fit);
-  addEventListener('orientationchange', function () { setTimeout(fit, 200); });
 })();
 </script>
 </body>

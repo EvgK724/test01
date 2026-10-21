@@ -369,10 +369,10 @@ h1, h2, h3, .f-front .meaning, .cov, .cheat-row span, .opt { overflow-wrap: anyw
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
-/* Экран «Домой» iPhone/iPad: то, что ниже страницы, система закрашивает цветом страницы — делаем его цветом меню,
-   чтобы под меню не было пустой полосы; если система не отдаёт странице нижнюю полоску (vp-short) — кнопкам не нужен отступ над ней */
-html { background-color: #0D0E16; }
-html.vp-short nav.tabs { padding-bottom: 0 !important; }
+/* Экран «Домой» iPhone/iPad: высота 100% у iOS бывает короче экрана — снизу остаётся чёрная полоса. Поэтому страница
+   закреплена по краям экрана (как в «want you to»), отступ сверху — под строку состояния; фон под страницей — цвета меню */
+html { background-color: #0D0E16; height: 100%; padding-top: 0; }
+body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: auto; height: auto; padding-top: env(safe-area-inset-top, 0px); }
 </style>
 </head>
 <body>
@@ -1514,19 +1514,6 @@ try { if ('speechSynthesis' in window && speechSynthesis.addEventListener) speec
   setTimeout(check, 1500);
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') check(); });
   window.addEventListener('pageshow', e => { if (e.persisted) check(); });
-})();
-</script>
-<script>
-/* Приложение с экрана «Домой»: страница короче экрана — значит, нижнюю полоску система оставила себе (класс vp-short) */
-(function () {
-  function fit() {
-    var standalone = navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
-    var land = innerWidth > innerHeight, sh = land ? Math.min(screen.width, screen.height) : Math.max(screen.width, screen.height);
-    document.documentElement.classList.toggle('vp-short', !!standalone && sh - innerHeight > 8);
-  }
-  fit();
-  addEventListener('resize', fit);
-  addEventListener('orientationchange', function () { setTimeout(fit, 200); });
 })();
 </script>
 </body>
