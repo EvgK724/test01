@@ -369,10 +369,15 @@ h1, h2, h3, .f-front .meaning, .cov, .cheat-row span, .opt { overflow-wrap: anyw
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
-/* Экран «Домой» iPhone/iPad: высота 100% у iOS бывает короче экрана — снизу остаётся чёрная полоса. Поэтому страница
-   закреплена по краям экрана (как в «want you to»), отступ сверху — под строку состояния; фон под страницей — цвета меню */
-html { background-color: #0D0E16; height: 100%; padding-top: 0; }
+/* Экран «Домой» iPhone/iPad: высота 100% у iOS бывает короче экрана — страница закреплена по краям экрана (как в «want you to»),
+   отступ сверху — под строку состояния. Нижнее меню — «плавающая» пилюля над краем: под ней фон страницы, без сплошной полосы */
+html { height: 100%; padding-top: 0; }
 body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: auto; height: auto; padding-top: env(safe-area-inset-top, 0px); }
+.tabs-wrap { flex: none; padding: 4px max(12px, env(safe-area-inset-right, 0px)) max(8px, calc(env(safe-area-inset-bottom, 0px) - 8px)) max(12px, env(safe-area-inset-left, 0px)); }
+nav.tabs { max-width: 40rem; margin: 0 auto; gap: 4px; padding: 5px; border: 1px solid rgba(59, 232, 255, 0.25); border-radius: 24px; box-shadow: 0 0 18px -6px rgba(59, 232, 255, 0.5), 0 18px 40px -18px rgba(0,0,0,.9); }
+nav.tabs .tab { border-radius: 19px; min-height: 56px; }
+html.wide nav.tabs .tab { min-height: 3.6rem; }
+nav.tabs .tab { font-size: min(.8125rem, 3.6vw); padding-inline: 0; }   /* подписи («Хронология») — по ширине пилюли */
 </style>
 </head>
 <body>
@@ -381,12 +386,12 @@ body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: auto; heigh
   <button class="icon-btn" type="button" data-act="settings" aria-label="Settings">⚙️</button>
 </header>
 <main id="main"></main>
-<nav class="tabs" aria-label="Sections">
+<div class="tabs-wrap"><nav class="tabs" aria-label="Sections">
   <button class="tab" type="button" data-act="tab" data-tab="groups"><span class="ti">🗂️</span>Sections</button>
   <button class="tab" type="button" data-act="tab" data-tab="cards"><span class="ti">🃏</span>Cards</button>
   <button class="tab" type="button" data-act="tab" data-tab="test"><span class="ti">❓</span>Quiz</button>
   <button class="tab" type="button" data-act="tab" data-tab="story"><span class="ti">🧭</span>Path</button>
-</nav>
+</nav></div>
 <div class="sheet" id="sheet" hidden></div>
 
 <script>

@@ -210,10 +210,14 @@ html.wide .wrap { max-width: none; }
 html.wide .rows { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 html.wide .diagram { max-width: calc(560px * var(--k)); margin-inline: auto; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
-/* Экран «Домой» iPhone/iPad: высота 100% у iOS бывает короче экрана — снизу остаётся чёрная полоса. Поэтому страница
-   закреплена по краям экрана (как в «want you to»), отступ сверху — под строку состояния; фон под страницей — цвета меню */
-html { background-color: #171C1F; height: 100%; padding-top: 0; }
+/* Экран «Домой» iPhone/iPad: высота 100% у iOS бывает короче экрана — страница закреплена по краям экрана (как в «want you to»),
+   отступ сверху — под строку состояния. Нижнее меню — «плавающая» пилюля над краем: под ней фон страницы, без сплошной полосы */
+html { height: 100%; padding-top: 0; }
 body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: auto; height: auto; padding-top: env(safe-area-inset-top, 0px); }
+.tabs-wrap { flex: none; padding: 4px max(12px, env(safe-area-inset-right, 0px)) max(8px, calc(env(safe-area-inset-bottom, 0px) - 8px)) max(12px, env(safe-area-inset-left, 0px)); }
+nav.tabs { max-width: 40rem; margin: 0 auto; gap: 4px; padding: 5px; border: 1px solid rgb(43, 51, 55); border-radius: 24px; box-shadow: 0 18px 40px -18px rgba(0,0,0,.9); }
+nav.tabs .tab { border-radius: 19px; min-height: 56px; }
+html.wide nav.tabs .tab { min-height: 3.6rem; }
 </style>
 <script>
 /* Масштаб под экран, как в модулях «Медицины ПСО»: телефон — как есть, iPad — крупнее. Внутри «ПСО» своя шапка скрыта. */
@@ -238,12 +242,12 @@ body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: auto; heigh
   <span class="sub">ишемический инсульт</span>
 </header>
 <main id="main"></main>
-<nav class="tabs" aria-label="Разделы">
+<div class="tabs-wrap"><nav class="tabs" aria-label="Разделы">
   <button class="tab" type="button" data-act="tab" data-tab="basics"><span class="ti">🧭</span>Основы</button>
   <button class="tab" type="button" data-act="tab" data-tab="stem"><span class="ti">🧠</span>Ствол</button>
   <button class="tab" type="button" data-act="tab" data-tab="hemi"><span class="ti">🗺️</span>Полушария</button>
   <button class="tab" type="button" data-act="tab" data-tab="test"><span class="ti">❓</span>Тест</button>
-</nav>
+</nav></div>
 
 <script>
 /* ===================== ДАННЫЕ ===================== */
