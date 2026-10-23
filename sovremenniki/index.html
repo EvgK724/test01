@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#05070F">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Современники">
 <meta name="application-name" content="Современники">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -122,7 +122,7 @@ main {
 /* Лента времени: общая шкала лет, полоса жизни, ◆ — событие */
 .tlcard { padding: 10px 14px 12px; gap: 0; }
 .tl { position: relative; display: flex; flex-direction: column; }
-.axis { position: sticky; top: -16px; z-index: 3; height: 1.7rem; margin-bottom: 2px; background: #0A1020; border-bottom: 1px solid var(--border); }
+.axis { position: sticky; top: 0; z-index: 3; height: 1.7rem; margin-bottom: 2px; background: #0A1020; border-bottom: 1px solid var(--border); }
 .axis span { position: absolute; top: .32rem; font-size: .72rem; line-height: 1.2; font-weight: 700; color: var(--text-3); white-space: nowrap; }
 .gl { position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(61,139,255,.13); pointer-events: none; }
 .gl.zero { background: rgba(59,232,255,.4); }
@@ -238,7 +238,7 @@ main {
 html.wide .wrap { max-width: none; }
 html.wide .top { padding-inline: max(24px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); }
 html.wide main { padding: 20px max(24px, env(safe-area-inset-right, 0px)) 32px max(24px, env(safe-area-inset-left, 0px)); }
-html.wide .axis { top: -20px; }
+html.wide .axis { top: 0; }
 html.wide .stack, html.wide .cols { gap: 20px; }
 html.wide .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 21rem), 1fr)); align-items: start; }
 html.wide .chips { flex-wrap: wrap; overflow: visible; margin-inline: 0; padding: 0; }
@@ -261,13 +261,22 @@ html.land .opts:not(.two):not(.one):not(.duo):not(.txt) { grid-template-columns:
   position: fixed; z-index: 60; left: 12px; right: 12px; bottom: calc(env(safe-area-inset-bottom, 0px) + 76px); max-width: 520px; margin: 0 auto;
   padding: 12px 16px; border-radius: 14px; background: #0A1A2E; border: 1px solid var(--neon); color: #DFFBFF; box-shadow: 0 0 22px -6px var(--neon); text-align: center;
 }
-/* Экран «Домой» iPhone/iPad: строка состояния сплошная (black, как в «want you to»): с прозрачной (black-translucent) iOS отдаёт
-   странице высоту на строку состояния меньше, и внизу остаётся промежуток. Страница закреплена по краям экрана,
-   отступ сверху — под строку состояния, если она прозрачная. Нижнее меню — «плавающая» пилюля над краем: под ней фон страницы, без сплошной полосы */
+/* Экран «Домой» iPhone/iPad: строка состояния прозрачная (black-translucent, как в «Английском B2»): текст при прокрутке
+   уходит под часы и под нижнее меню до краёв экрана, под часами — лёгкое затемнение. Шапка прокручивается вместе с экраном,
+   меню — «плавающая» пилюля поверх него. iOS 26–27 укорачивает окно приложения на высоту прозрачной строки (WebKit 301108),
+   и внизу остаётся чёрная полоса, — поэтому в режиме приложения страница не ниже экрана (так проверено в «Английском B2»
+   на iPhone 18 Pro Max, iOS 27). Эти meta-теги iOS запоминает при установке: после их смены плитку ставят заново */
 html { height: 100%; padding-top: 0; }
+@media (display-mode: standalone) { html { min-height: min(100lvh, calc(100% + env(safe-area-inset-top, 0px))); } }
 html, body { overscroll-behavior: none; }   /* страницу нельзя оттянуть пальцем — меню не «прыгает» */
-body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: auto; height: auto; padding-top: env(safe-area-inset-top, 0px); }
-.tabs-wrap { flex: none; padding: 3px max(12px, env(safe-area-inset-right, 0px)) clamp(6px, calc(env(safe-area-inset-bottom, 0px) - 8px), 26px) max(12px, env(safe-area-inset-left, 0px)); }   /* не выше 26 px над краем, даже если iOS сообщит завышенный вырез */
+body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: auto; height: auto; padding-top: 0; }
+main { padding-top: env(safe-area-inset-top, 0px); padding-bottom: calc(var(--tabs-h, 84px) + 24px); }
+html.wide main { padding-top: env(safe-area-inset-top, 0px); padding-bottom: calc(var(--tabs-h, 84px) + 32px); }
+main > .top { margin: 0 calc(-1 * max(16px, env(safe-area-inset-right, 0px))) 16px calc(-1 * max(16px, env(safe-area-inset-left, 0px))); }
+html.wide main > .top { margin: 0 calc(-1 * max(24px, env(safe-area-inset-right, 0px))) 20px calc(-1 * max(24px, env(safe-area-inset-left, 0px))); }
+.sfade { position: fixed; top: 0; left: 0; right: 0; z-index: 20; height: env(safe-area-inset-top, 0px); pointer-events: none; background: linear-gradient(var(--bg), transparent); opacity: .85; }
+.sheet { padding-top: env(safe-area-inset-top, 0px); }
+.tabs-wrap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 10; padding: 3px max(12px, env(safe-area-inset-right, 0px)) clamp(6px, calc(env(safe-area-inset-bottom, 0px) - 8px), 26px) max(12px, env(safe-area-inset-left, 0px)); }   /* не выше 26 px над краем, даже если iOS сообщит завышенный вырез */
 nav.tabs { max-width: 40rem; margin: 0 auto; gap: 4px; padding: 4px; border: 1px solid rgba(59, 232, 255, 0.25); border-radius: 24px; box-shadow: 0 0 18px -6px rgba(59, 232, 255, 0.5), 0 18px 40px -18px rgba(0,0,0,.9); }
 nav.tabs .tab { border-radius: 19px; min-height: 50px; padding-block: 2px; }
 html.wide nav.tabs .tab { min-height: 3rem; }
@@ -275,11 +284,11 @@ html.wide nav.tabs .tab svg { padding-block: .1rem; }   /* меню не выш�
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap">
+<div class="sfade" aria-hidden="true"></div>
+<main id="main"><header class="top"><div class="wrap">
   <h1>Совре<b>менники</b></h1>
   <button class="icon-btn" id="helpBtn" type="button" aria-label="Как пользоваться">?</button>
-</div></header>
-<main id="main"><div class="wrap stack" id="view"></div></main>
+</div></header><div class="wrap stack" id="view"></div></main>
 <div class="tabs-wrap"><nav class="tabs" aria-label="Разделы">
   <button class="tab" type="button" data-tab="feed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h9M8 12h13M5 18h10"/></svg>Лента</button>
   <button class="tab" type="button" data-tab="year"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h8M9 12h12M5 17h8"/><path d="M14.5 3v18" stroke-width="2.2"/></svg>Год</button>
@@ -625,6 +634,11 @@ if (!byId[state.pa]) state.pa = 'napoleon';
 if (!byId[state.pb] || state.pb === state.pa) state.pb = state.pa === 'pushkin' ? 'napoleon' : 'pushkin';
 let round = null;
 const view = document.getElementById('view'), main = document.getElementById('main');
+// Нижнее меню плавает поверх экрана: снизу у экрана отступ на его высоту, чтобы последний блок поднимался выше пилюли
+const tabsWrap = document.querySelector('.tabs-wrap');
+const setTabsH = () => document.documentElement.style.setProperty('--tabs-h', tabsWrap.offsetHeight + 'px');
+setTabsH();
+if (window.ResizeObserver) new ResizeObserver(setTabsH).observe(tabsWrap); else addEventListener('resize', setTabsH);
 
 // ---------- Лента времени ----------
 // o: lo, hi — годы краёв; items — [{p, on, note, kev}] или [{e, note}]; band — [от, до]; line — год; w — ширина
