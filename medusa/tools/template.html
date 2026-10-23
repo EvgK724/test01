@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Медуза Горгона</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="text-scale" content="scale">
+<meta name="theme-color" content="#04060D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Медуза">
+<meta name="application-name" content="Медуза">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+/* Тёмная сине-голубая неоновая тема, как у «Современников»; кнопки — затемнённые, с голубой подсветкой. */
+:root {
+  --bg: #04060D; --surface: #0A1020; --surface-2: #0E1730; --border: #1A2845;
+  --text: #E6F0FF; --text-2: #9BB0D4; --text-3: #6A7EA6;
+  --neon: #3BE8FF; --neon-2: #3D8BFF; --ok: #3BE8FF; --no: #FF4D5E;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --serif: Georgia, "Times New Roman", serif;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { font-size: 110%; height: 100%; overflow-x: hidden; background: var(--bg); -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+body {
+  margin: 0; display: flex; flex-direction: column; overflow: hidden;
+  color: var(--text); font: 500 1.0625rem/1.5 var(--sans);
+  background:
+    radial-gradient(900px 460px at -10% -8%, rgba(61,139,255,.18), transparent 62%),
+    radial-gradient(800px 460px at 110% 0%, rgba(59,232,255,.11), transparent 60%),
+    radial-gradient(700px 520px at 50% 120%, rgba(61,139,255,.10), transparent 60%),
+    var(--bg);
+}
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3, p, b { overflow-wrap: normal; word-break: normal; -webkit-hyphens: manual; hyphens: manual; }
+.wrap { width: 100%; max-width: 720px; margin-inline: auto; }
+.nw { white-space: nowrap; }
+
+/* Шапка — прокручивается вместе с экраном */
+.top { display: flex; align-items: center; padding-block: 2px 8px; padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(8px, env(safe-area-inset-right, 0px));
+  border-bottom: 1px solid rgba(59,232,255,.25); box-shadow: 0 1px 18px -6px rgba(59,232,255,.6); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.top h1 { font: 700 min(2rem, 8.6vw)/1 var(--serif); letter-spacing: .03em; color: #C9DDF7; white-space: nowrap; text-shadow: 0 0 2px rgba(61,139,255,.5), 0 0 10px rgba(61,139,255,.3); }
+.top h1 b { color: #BCE9FA; text-shadow: 0 0 2px rgba(59,232,255,.45), 0 0 10px rgba(59,232,255,.25); }
+.icon-btn { min-width: 44px; min-height: 44px; border: 1px solid rgba(59,232,255,.4); background: rgba(59,232,255,.06); border-radius: 50%; font-size: 1.125rem; font-weight: 700; color: #DFFBFF;
+  display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 0 14px -6px var(--neon); }
+
+/* Экран: прокрутка на весь экран — под часы и под нижнее меню */
+main { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; touch-action: pan-y; -webkit-overflow-scrolling: touch;
+  padding: env(safe-area-inset-top, 0px) max(16px, env(safe-area-inset-right, 0px)) calc(var(--tabs-h, 84px) + 24px) max(16px, env(safe-area-inset-left, 0px)); }
+main > .top { margin: 0 calc(-1 * max(16px, env(safe-area-inset-right, 0px))) 16px calc(-1 * max(16px, env(safe-area-inset-left, 0px))); }
+.stack { display: flex; flex-direction: column; gap: 16px; }
+.eyebrow { font-size: .76rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--text-2); }
+.lead { color: var(--text-2); }
+.small { font-size: .9rem; }
+.card { background: rgba(10,16,32,.92); border: 1px solid var(--border); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0;
+  box-shadow: 0 0 0 1px rgba(59,232,255,.05), 0 0 26px -16px var(--neon); }
+.card > * { min-width: 0; max-width: 100%; }
+.card h2 { font: 700 1.3rem/1.25 var(--serif); color: #BCE9FA; }
+.card p { line-height: 1.55; }
+.card p b { color: #DFF6FF; }
+
+/* Кнопки — затемнённые, с голубой подсветкой */
+.btn { min-height: 50px; padding: 10px 16px; border-radius: 14px; border: 1px solid #1F3360; background: linear-gradient(180deg, #0E1A36, #0A1226); color: #DCEBFF; font-weight: 650; text-align: center;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: inset 0 1px 0 rgba(120,180,255,.08), 0 0 14px -8px var(--neon-2); }
+.btn.primary { background: linear-gradient(180deg, #0D2240, #08142A); color: #DFFBFF; border-color: rgba(59,232,255,.75); box-shadow: 0 0 18px -6px var(--neon), inset 0 0 14px -8px var(--neon); }
+.btn:active { filter: brightness(1.2); }
+.link { border: 0; background: none; color: var(--neon); padding: 8px 0; min-height: 44px; font-weight: 650; text-align: left; align-self: flex-start; }
+.chips { display: flex; gap: 8px; overflow-x: auto; overscroll-behavior-x: contain; touch-action: pan-x pan-y; scrollbar-width: none; margin-inline: -16px; padding: 2px 16px 6px; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex: none; min-height: 42px; padding: 6px 14px; border-radius: 999px; border: 1px solid #1F3360; background: #0A1226; color: var(--text-2); font-size: .9rem; font-weight: 650; white-space: nowrap; }
+.chip[aria-pressed="true"] { color: #fff; border-color: var(--neon); background: rgba(59,232,255,.12); box-shadow: 0 0 14px -4px var(--neon); }
+.pill { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: .8rem; font-weight: 700; border: 1px solid var(--border); color: var(--text-2); }
+
+/* Герой: горгонейон */
+.hero { align-items: center; text-align: center; gap: 10px; padding-top: 18px; background: radial-gradient(circle at 50% 38%, rgba(59,232,255,.10), transparent 60%), rgba(8,13,28,.94); }
+.hero svg { width: min(58vw, 15rem); height: auto; filter: drop-shadow(0 0 18px rgba(59,232,255,.35)); }
+.hero .hl { font: 700 1.2rem/1.35 var(--serif); color: #DFF6FF; max-width: 30rem; }
+.steps { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.step { min-width: 44px; min-height: 44px; border-radius: 12px; border: 1px solid #1F3360; background: #0A1226; color: var(--text-2); font-weight: 700; }
+.step.read { color: #DFFBFF; border-color: rgba(59,232,255,.6); box-shadow: 0 0 10px -4px var(--neon); }
+.meter { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; width: 100%; }
+.meter i { display: block; height: 100%; background: var(--neon); box-shadow: 0 0 10px var(--neon); border-radius: 4px; }
+
+/* Главы */
+.ch { padding: 0; gap: 0; overflow: hidden; }
+.ch-h { display: flex; align-items: flex-start; gap: 12px; width: 100%; padding: 16px; border: 0; background: none; text-align: left; color: inherit; }
+.ch-n { flex: none; width: 2.4rem; height: 2.4rem; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font: 700 1rem/1 var(--serif); color: #BCE9FA;
+  border: 1px solid rgba(59,232,255,.45); background: rgba(59,232,255,.06); box-shadow: 0 0 12px -5px var(--neon); }
+.ch.read .ch-n { background: rgba(59,232,255,.16); }
+.ch-t { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.ch-t b { font: 700 1.2rem/1.25 var(--serif); color: #DFF6FF; }
+.ch-t span { color: var(--text-2); font-size: .95rem; line-height: 1.4; }
+.ch-x { flex: none; width: 1.4rem; height: 1.4rem; margin-top: .5rem; color: var(--text-3); transition: transform .2s; }
+.ch[aria-expanded="true"] .ch-x { transform: rotate(180deg); color: var(--neon); }
+.ch-b { display: flex; flex-direction: column; gap: 12px; padding: 0 16px 16px; }
+.vs { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 14px; border: 1px solid rgba(59,232,255,.28); background: rgba(59,232,255,.04); }
+.vs-sw { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.vs-sw button { min-height: 44px; border-radius: 12px; border: 1px solid #1F3360; background: #0A1226; color: var(--text-2); font-weight: 700; }
+.vs-sw button[aria-pressed="true"] { color: #fff; border-color: var(--neon); background: rgba(59,232,255,.12); box-shadow: 0 0 12px -4px var(--neon); }
+.srcs { display: flex; flex-wrap: wrap; gap: 6px; }
+.src { font-size: .82rem; color: var(--text-2); border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; }
+.ch-f { display: flex; flex-wrap: wrap; gap: 8px; }
+.ch-f .btn { flex: 1 1 12em; }
+
+/* Родословная */
+.tree { list-style: none; margin: 0; padding: 0; }
+.tree ul { list-style: none; margin: 0; padding-left: .7rem; border-left: 1px solid rgba(59,232,255,.3); }
+.tree li { position: relative; padding: 6px 0 2px .6rem; }
+.tree ul > li::before { content: ""; position: absolute; left: -.7rem; top: 1.05rem; width: 1.1rem; height: 1px; background: rgba(59,232,255,.3); }
+.tree .nm { font-weight: 700; color: #DCEBFF; }
+.tree .on > .nm { color: var(--neon); text-shadow: 0 0 8px rgba(59,232,255,.6); }
+.tree .nt { display: block; font-size: .86rem; color: var(--text-2); }
+
+/* Толкования */
+.cons { border-color: rgba(59,232,255,.4); }
+.vw-h { display: flex; flex-direction: column; gap: 2px; }
+.vw-h b { font: 700 1.2rem/1.25 var(--serif); color: #DFF6FF; }
+.vw-h span { color: var(--text-2); font-size: .9rem; }
+.vw-h i { color: #BCE9FA; font-style: italic; font-size: .92rem; }
+.st { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; font-size: .82rem; font-weight: 700; border: 1px solid; }
+.st.s-ok { color: var(--neon); border-color: rgba(59,232,255,.6); background: rgba(59,232,255,.08); }
+.st.s-src { color: #9FD0FF; border-color: rgba(61,139,255,.6); background: rgba(61,139,255,.08); }
+.st.s-dis { color: #B9C8E6; border-color: #2A3E6A; border-style: dashed; }
+.vw-k { font-size: .82rem; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .06em; }
+.vw.flash { animation: flash 1.6s ease-out; }
+@keyframes flash { 0% { box-shadow: 0 0 0 2px var(--neon), 0 0 30px -4px var(--neon); } 100% { box-shadow: 0 0 0 1px rgba(59,232,255,.05), 0 0 26px -16px var(--neon); } }
+
+/* След: вертикальная лента */
+.lg { list-style: none; margin: 0; padding: 0 0 0 1.2rem; border-left: 2px solid rgba(59,232,255,.35); display: flex; flex-direction: column; gap: 14px; }
+.lg li { position: relative; display: flex; flex-direction: column; gap: 4px; }
+.lg li::before { content: ""; position: absolute; left: calc(-1.2rem - 7px); top: .45rem; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); border: 2px solid var(--neon); box-shadow: 0 0 10px var(--neon); }
+.lg .y { font-size: .82rem; font-weight: 800; color: var(--neon); letter-spacing: .03em; }
+.lg .t { font: 700 1.1rem/1.3 var(--serif); color: #DFF6FF; }
+.lg .x { color: #C8D8F2; line-height: 1.5; }
+
+/* Тренировка */
+.big { font: 800 2.4rem/1 var(--sans); color: #DFF6FF; text-shadow: 0 0 12px rgba(59,232,255,.35); }
+.qt { font: 700 clamp(1.15rem, 5.4vw, 1.45rem)/1.35 var(--sans); }
+.opts { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.opt { min-height: 58px; padding: 10px 14px; border-radius: 16px; border: 1px solid #1F3360; background: linear-gradient(180deg, #0E1A36, #0A1226); font: 650 1.05rem/1.35 var(--sans); color: #E6F4FF; text-align: left; min-width: 0; }
+.opt.ok { border-color: var(--ok); background: rgba(59,232,255,.14); box-shadow: 0 0 18px -4px var(--ok); color: #fff; }
+.opt.bad { border-color: var(--no); background: rgba(255,77,94,.14); box-shadow: 0 0 16px -5px var(--no); }
+.opt[disabled] { cursor: default; }
+.fb { border-radius: 14px; padding: 12px; background: var(--surface-2); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+.fb.ok { border-color: color-mix(in srgb, var(--ok) 60%, transparent); }
+.fb.bad { border-color: color-mix(in srgb, var(--no) 60%, transparent); }
+.fb > b { font-size: 1.1rem; }
+.miss { display: flex; flex-direction: column; gap: 6px; padding: 0; margin: 0; }
+.miss li { list-style: none; padding: 10px 12px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 2px; }
+.secs { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* Нижнее меню — плавающая пилюля поверх экрана */
+.tabs-wrap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 10; padding: 3px max(12px, env(safe-area-inset-right, 0px)) clamp(6px, calc(env(safe-area-inset-bottom, 0px) - 8px), 26px) max(12px, env(safe-area-inset-left, 0px)); }
+nav.tabs { max-width: 40rem; margin: 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding: 4px; border: 1px solid rgba(59,232,255,.25); border-radius: 24px;
+  background: rgba(8,13,28,.94); box-shadow: 0 0 18px -6px rgba(59,232,255,.5), 0 18px 40px -18px rgba(0,0,0,.9); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.tab { min-height: 50px; border: 0; border-radius: 19px; background: none; padding: 2px; min-width: 0; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  color: var(--text-2); font-size: min(.8rem, 3.5vw); font-weight: 650; }
+.tab svg { width: 24px; height: 24px; padding: 3px 12px; box-sizing: content-box; border-radius: 999px; }
+.tab[aria-current="page"] { color: #DFFBFF; text-shadow: 0 0 8px var(--neon); }
+.tab[aria-current="page"] svg { background: rgba(59,232,255,.14); box-shadow: 0 0 14px rgba(59,232,255,.5); }
+
+/* Справка */
+.sheet { position: fixed; inset: 0; z-index: 50; background: rgba(2,4,10,.75); display: flex; align-items: flex-end; justify-content: center; padding-top: env(safe-area-inset-top, 0px); }
+.sheet .panel { width: 100%; max-width: 560px; max-height: 90%; overflow-y: auto; overscroll-behavior: contain; background: var(--surface); border: 1px solid rgba(59,232,255,.35);
+  border-radius: 22px 22px 0 0; padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -8px 40px -10px rgba(59,232,255,.45); display: flex; flex-direction: column; gap: 12px; }
+.sheet ol { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 8px; }
+.toast { position: fixed; z-index: 60; left: 12px; right: 12px; bottom: calc(var(--tabs-h, 84px) + 12px); max-width: 520px; margin: 0 auto;
+  padding: 12px 16px; border-radius: 14px; background: #0A1A2E; border: 1px solid var(--neon); color: #DFFBFF; box-shadow: 0 0 22px -6px var(--neon); text-align: center; }
+
+/* Экран «Домой» iPhone/iPad: строка состояния прозрачная — текст уходит под часы и под меню до краёв экрана,
+   под часами — лёгкое затемнение. iOS 26–27 укорачивает окно приложения на высоту прозрачной строки (WebKit 301108) —
+   поэтому в режиме приложения страница не ниже экрана (проверено в «Английском B2» на iPhone 18 Pro Max, iOS 27). */
+html { height: 100%; }
+@media (display-mode: standalone) { html { min-height: min(100lvh, calc(100% + env(safe-area-inset-top, 0px))); } }
+html, body { overscroll-behavior: none; }
+body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; }
+.sfade { position: fixed; top: 0; left: 0; right: 0; z-index: 20; height: env(safe-area-inset-top, 0px); pointer-events: none; background: linear-gradient(var(--bg), transparent); opacity: .85; }
+
+/* iPad: на всю ширину и крупнее — корневой шрифт умножает applyTextSize() */
+html.wide .wrap { max-width: 56rem; }
+html.wide main { padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); padding-bottom: calc(var(--tabs-h, 84px) + 32px); }
+html.wide main > .top { margin-inline: calc(-1 * max(24px, env(safe-area-inset-left, 0px))) calc(-1 * max(24px, env(safe-area-inset-right, 0px))); margin-bottom: 20px; }
+html.wide .chips { flex-wrap: wrap; overflow: visible; margin-inline: 0; padding: 0; }
+html.wide .opts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+html.wide nav.tabs .tab { min-height: 3rem; }
+html.wide .tab svg { width: 1.4rem; height: 1.4rem; padding: .1rem .8rem; }
+html.wide .icon-btn { min-width: 2.6rem; min-height: 2.6rem; }
+html.wide .sheet .panel { max-width: 38rem; }
+</style>
+</head>
+<body>
+<div class="sfade" aria-hidden="true"></div>
+<main id="main"><header class="top"><div class="wrap">
+  <h1>Медуза <b>Горгона</b></h1>
+  <button class="icon-btn" id="helpBtn" type="button" aria-label="Как пользоваться">?</button>
+</div></header><div class="wrap stack" id="view"></div></main>
+<div class="tabs-wrap"><nav class="tabs" aria-label="Разделы">
+  <button class="tab" type="button" data-tab="life"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 3.5c1.5 1.2 0 2.4 0 3.5M20.5 12c-1.2 1.5-2.4 0-3.5 0M12 20.5c-1.5-1.2 0-2.4 0-3.5M3.5 12c1.2-1.5 2.4 0 3.5 0M6 6c1.8.2 1.5 1.8 2.4 2.4M18 6c-.2 1.8-1.8 1.5-2.4 2.4M18 18c-1.8-.2-1.5-1.8-2.4-2.4M6 18c.2-1.8 1.8-1.5 2.4-2.4"/></svg>Жизнь</button>
+  <button class="tab" type="button" data-tab="views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>Толкования</button>
+  <button class="tab" type="button" data-tab="legacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6M3 21h18"/></svg>След</button>
+  <button class="tab" type="button" data-tab="train"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>Тренировка</button>
+</nav></div>
+<div class="sheet" id="help" hidden><div class="panel" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <h2 id="helpTitle" style="font:700 1.25rem/1.2 var(--serif)">Как пользоваться</h2>
+  <ol>
+    <li><b>На экран «Домой»:</b> в Safari «Поделиться» → «На экран Домой».</li>
+    <li><b>«Жизнь»</b> — десять глав: род, сёстры, Посейдон, взгляд, Персей, смерть, дети, голова, кровь, могила. Нажмите на главу, чтобы раскрыть её; где версии расходятся, переключайте источники. Внизу главы — источники и связанное толкование.</li>
+    <li><b>«Толкования»</b> — как миф объясняли античные авторы, Грейвс и Голосовкер, учёные XX века, психоанализ, феминизм и естествознание. У каждого — пометка, насколько это признано.</li>
+    <li><b>«След»</b> — Медуза в искусстве, архитектуре, медицине и на небе: от Гомера до флага Сицилии.</li>
+    <li><b>«Тренировка»</b> — 10 вопросов за раунд. Что знаете — повторится через 1, 3, 7, 16 дней; ошибки — ещё раз в этом же раунде.</li>
+  </ol>
+  <p class="lead small">Источники — античные тексты (номера книг и строк в каждой главе). Пересказы и цитаты — своими словами.</p>
+  <button class="btn primary" type="button" id="helpClose">Понятно</button>
+</div></div>
+<div class="toast" id="toast" role="status" hidden></div>
+<script>
+/*__DATA__*/
+</script>
+<script>
+'use strict';
+// iPad (от 700 px): крупнее. Портрет — по ширине экрана, альбом — по высоте. Телефон — как есть.
+function deviceK() {
+  const w = window.innerWidth || 390, h = window.innerHeight || 760;
+  if (w < 700) return 1;
+  const k = (w >= 900 && w / h > 1.15) ? h / 600 : Math.min(w / 440, h / 780);
+  return Math.max(1, Math.min(k, 1.9));
+}
+// Размер текста телефона (Dynamic Type через -apple-system-body, 17 px при обычном размере)
+function applyTextSize() {
+  let k = 1;
+  try {
+    if (window.CSS && CSS.supports('font', '-apple-system-body')) {
+      const p = document.createElement('span');
+      p.style.cssText = 'font:-apple-system-body;position:absolute;visibility:hidden;pointer-events:none';
+      p.textContent = 'x';
+      document.body.append(p);
+      k = parseFloat(getComputedStyle(p).fontSize) / 17 || 1;
+      p.remove();
+    }
+  } catch (e) {}
+  k = Math.min(1.5, Math.max(0.85, k));
+  const w = window.innerWidth || 390, root = document.documentElement;
+  root.classList.toggle('wide', w >= 700);
+  root.style.fontSize = (110 * Math.min(k * deviceK(), 2.2)).toFixed(2) + '%';
+}
+applyTextSize();
+
+// ---------- Данные и утилиты ----------
+const D = window.MEDUSA, CH = D.CH, VIEWS = D.VIEWS, LEG = D.LEGACY.slice().sort((a, b) => a.s - b.s), Q = D.Q;
+const VBY = {}; VIEWS.forEach(v => { VBY[v.id] = v; });
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+const esc = s => String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+const NB = ' ';
+// Неразрывные пробелы после коротких слов и перед тире, **жирный**
+function ty(s) {
+  const prep = /(^|[\s(«])([вкосуиаяВКОСУИАЯ]|во|на|за|по|до|от|из|не|ни|об|со|ко) /g;
+  return esc(s).replace(prep, '$1$2' + NB).replace(prep, '$1$2' + NB)
+    .replace(/(\d) (?=[^\s\d–—-])/g, '$1' + NB)
+    .replace(/ (—|–) /g, NB + '$1 ')
+    .replace(/н\. э\./g, 'н.' + NB + 'э.').replace(/(г\.|в\.|вв\.) (?=н\.|до)/g, '$1' + NB)   // «до н. э.», «8 г. н. э.» — одним куском
+    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+}
+const ROM = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function plural(n, one, few, many) { const a = Math.abs(n) % 100, b = a % 10; if (a > 10 && a < 20) return many; if (b > 1 && b < 5) return few; return b === 1 ? one : many; }
+const loadJ = (k, d) => { try { return JSON.parse(store.get(k) || '') || d; } catch (e) { return d; } };
+
+const state = {
+  tab: store.get('medusa:tab') || 'life',
+  open: store.get('medusa:open') || '',
+  vs: loadJ('medusa:vs', {}),
+  read: new Set(loadJ('medusa:read', [])),
+  vg: store.get('medusa:vg') || '', lg: store.get('medusa:lg') || '', ts: store.get('medusa:ts') || ''
+};
+if (!['life', 'views', 'legacy', 'train'].includes(state.tab)) state.tab = 'life';
+const saveRead = () => store.set('medusa:read', JSON.stringify([...state.read]));
+let round = null, flashView = '';
+const view = document.getElementById('view'), main = document.getElementById('main');
+// Нижнее меню плавает поверх экрана: снизу отступ на его высоту
+const tabsWrap = document.querySelector('.tabs-wrap');
+const setTabsH = () => document.documentElement.style.setProperty('--tabs-h', tabsWrap.offsetHeight + 'px');
+setTabsH();
+if (window.ResizeObserver) new ResizeObserver(setTabsH).observe(tabsWrap); else addEventListener('resize', setTabsH);
+
+// ---------- Горгонейон (герой и иконка) ----------
+function gorgon() {
+  const C = 100, snakes = [];
+  for (let k = 0; k < 14; k++) {
+    const a = (k / 14) * Math.PI * 2 - Math.PI / 2 + (k % 2 ? 0.08 : -0.08), len = k % 2 ? 36 : 44, pts = [];
+    for (let i = 0; i <= 16; i++) {
+      const t = i / 16, r = 52 + t * len, w = Math.sin(t * Math.PI * 2.4 + k * 1.3) * 5.5 * (0.35 + t);
+      pts.push([C + Math.cos(a) * r - Math.sin(a) * w, C + 4 + Math.sin(a) * r + Math.cos(a) * w]);
+    }
+    const h = pts[pts.length - 1], q = pts[pts.length - 2], ang = Math.atan2(h[1] - q[1], h[0] - q[0]);
+    const tx = h[0] + Math.cos(ang) * 7, ty2 = h[1] + Math.sin(ang) * 7, f = (d) => [tx + Math.cos(ang + d) * 4, ty2 + Math.sin(ang + d) * 4];
+    const [l, r2] = [f(0.6), f(-0.6)];
+    snakes.push(`<path d="M${pts.map(p => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' L')}"/>`
+      + `<ellipse cx="${h[0].toFixed(1)}" cy="${h[1].toFixed(1)}" rx="5.2" ry="3.6" transform="rotate(${(ang * 180 / Math.PI).toFixed(0)} ${h[0].toFixed(1)} ${h[1].toFixed(1)})" fill="#3BE8FF" stroke="none"/>`
+      + `<path d="M${(h[0] + Math.cos(ang) * 5).toFixed(1)} ${(h[1] + Math.sin(ang) * 5).toFixed(1)} L${tx.toFixed(1)} ${ty2.toFixed(1)} M${l[0].toFixed(1)} ${l[1].toFixed(1)} L${tx.toFixed(1)} ${ty2.toFixed(1)} L${r2[0].toFixed(1)} ${r2[1].toFixed(1)}" stroke="#DFFBFF" stroke-width="1.2"/>`);
+  }
+  return `<svg viewBox="-14 -12 228 228" role="img" aria-label="Голова Медузы"><defs>
+    <filter id="gl" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <radialGradient id="fc" cx="50%" cy="42%" r="60%"><stop offset="0" stop-color="#143562"/><stop offset="1" stop-color="#061024"/></radialGradient>
+    <radialGradient id="ir" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#EFFFFF"/><stop offset=".55" stop-color="#3BE8FF"/><stop offset="1" stop-color="#1F6FD6"/></radialGradient>
+    <linearGradient id="sn" x1="0" x2="1"><stop offset="0" stop-color="#3D8BFF"/><stop offset="1" stop-color="#3BE8FF"/></linearGradient></defs>
+    <g filter="url(#gl)" fill="none" stroke="url(#sn)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round">${snakes.join('')}</g>
+    <ellipse cx="100" cy="104" rx="45" ry="51" fill="url(#fc)" stroke="#3BE8FF" stroke-width="2.4" filter="url(#gl)"/>
+    <g filter="url(#gl)" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M72 84 L95 93 M128 84 L105 93" stroke="#BCE9FA" stroke-width="3" fill="none"/>
+      <path d="M74 101 Q86 90 98 101 Q86 108 74 101 Z M126 101 Q114 90 102 101 Q114 108 126 101 Z" fill="#0A1A36" stroke="#BCE9FA" stroke-width="1.6"/>
+      <circle cx="86" cy="100" r="4.6" fill="url(#ir)"/><circle cx="114" cy="100" r="4.6" fill="url(#ir)"/>
+      <circle cx="86" cy="100" r="1.6" fill="#04060D"/><circle cx="114" cy="100" r="1.6" fill="#04060D"/>
+      <path d="M100 104 L96 118 Q100 121 104 118" stroke="#7FB8FF" stroke-width="1.8" fill="none"/>
+      <path d="M82 130 Q100 122 118 130 Q100 143 82 130 Z" fill="#04060D" stroke="#BCE9FA" stroke-width="2"/>
+      <path d="M90 128 L92.5 135 L95 127.2 M105 127.2 L107.5 135 L110 128" fill="#EFFFFF" stroke="#EFFFFF" stroke-width="1"/>
+    </g></svg>`;
+}
+
+// ---------- Жизнь ----------
+function treeH(list) {
+  return '<ul>' + list.map(n => `<li class="${n.on ? 'on' : ''}"><span class="nm">${ty(n.t)}</span>${n.n ? `<span class="nt">${ty(n.n)}</span>` : ''}${n.c ? treeH(n.c) : ''}</li>`).join('') + '</ul>';
+}
+function chapterH(c, i) {
+  const open = state.open === c.id, read = state.read.has(c.id);
+  let h = `<section class="card ch${read ? ' read' : ''}" id="ch-${c.id}" aria-expanded="${open}">
+    <button type="button" class="ch-h" data-act="ch" data-id="${c.id}" aria-expanded="${open}">
+      <span class="ch-n">${ROM[i]}</span><span class="ch-t"><b>${ty(c.t)}</b><span>${ty(c.hook)}</span></span>
+      <svg class="ch-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>`;
+  if (open) {
+    h += '<div class="ch-b">' + c.p.map(t => `<p>${ty(t)}</p>`).join('');
+    if (c.family) h += `<div class="vs"><p class="eyebrow">Род Медузы</p><div class="tree">${treeH(D.FAMILY)}</div></div>`;
+    if (c.vs) {
+      const k = state.vs[c.id] || 'a', v = c.vs[k];
+      h += `<div class="vs"><p class="eyebrow">Версии расходятся</p><div class="vs-sw" role="group" aria-label="Источник">
+        <button type="button" data-act="vs" data-id="${c.id}" data-k="a" aria-pressed="${k === 'a'}">${ty(c.vs.a.t)}</button>
+        <button type="button" data-act="vs" data-id="${c.id}" data-k="b" aria-pressed="${k === 'b'}">${ty(c.vs.b.t)}</button></div><p>${ty(v.x)}</p></div>`;
+    }
+    h += `<div><p class="eyebrow" style="margin-bottom:6px">Источники</p><div class="srcs">${c.src.map(s => `<span class="src">${ty(s)}</span>`).join('')}</div></div>`;
+    const nx = CH[i + 1];
+    h += '<div class="ch-f">' + (c.view ? `<button type="button" class="btn" data-act="toview" data-id="${c.view}">Толкование: ${ty(VBY[c.view].who)}</button>` : '')
+      + (nx ? `<button type="button" class="btn primary" data-act="ch" data-id="${nx.id}">Дальше: ${ty(nx.t)}</button>` : `<button type="button" class="btn primary" data-act="go" data-tab="train">Проверить себя</button>`) + '</div></div>';
+  }
+  return h + '</section>';
+}
+function renderLife() {
+  const n = state.read.size;
+  return `<section class="card hero">${gorgon()}
+      <p class="hl">Смертная сестра бессмертных. Её убили спящей — а её взгляд пережил три тысячи лет.</p>
+      <p class="lead small">Десять глав по античным источникам — от рода до могилы головы. Где авторы спорят, можно переключить версию.</p>
+      <div class="steps" aria-label="Главы">${CH.map((c, i) => `<button type="button" class="step${state.read.has(c.id) ? ' read' : ''}" data-act="ch" data-id="${c.id}" aria-label="Глава ${i + 1}: ${esc(c.t)}">${ROM[i]}</button>`).join('')}</div>
+      <div class="meter" aria-hidden="true"><i style="width:${(n / CH.length * 100).toFixed(1)}%"></i></div>
+      <p class="lead small">Прочитано ${n} из ${CH.length}</p></section>`
+    + CH.map(chapterH).join('');
+}
+
+// ---------- Толкования ----------
+const stCls = st => (/принято/.test(st) ? 's-ok' : st === 'источник' ? 's-src' : 's-dis');
+function viewH(v) {
+  return `<section class="card vw${flashView === v.id ? ' flash' : ''}" id="vw-${v.id}">
+    <div class="vw-h"><b>${ty(v.who)}</b><span>${ty(v.when)}</span><i>${ty(v.work)}</i></div>
+    <span class="st ${stCls(v.st)}">${ty(v.st)}</span>
+    <p class="vw-k">Главная мысль</p><p>${ty(v.idea)}</p>
+    <p class="vw-k">На что опирается</p><p class="lead">${ty(v.basis)}</p>
+    ${v.note ? `<p class="lead small">${ty(v.note)}</p>` : ''}</section>`;
+}
+function renderViews() {
+  const g = state.vg, list = VIEWS.filter(v => !g || v.g === g);
+  return `<section class="card cons"><p class="eyebrow">Сначала главное</p><p>${ty(D.CONSENSUS)}</p></section>
+    <div class="chips" role="group" aria-label="Школы">${[{ id: '', t: 'Все' }].concat(D.VG).map(x => `<button type="button" class="chip" data-act="vg" data-v="${x.id}" aria-pressed="${g === x.id}">${ty(x.t)}</button>`).join('')}</div>`
+    + D.VG.filter(x => !g || x.id === g).map(x => {
+      const vs = list.filter(v => v.g === x.id);
+      return vs.length ? `<p class="eyebrow">${ty(x.t)}</p>` + vs.map(viewH).join('') : '';
+    }).join('');
+}
+
+// ---------- След ----------
+function renderLegacy() {
+  const g = state.lg, list = LEG.filter(x => !g || x.g === g);
+  return `<div class="chips" role="group" aria-label="Эпохи">${[{ id: '', t: 'Все' }].concat(D.LG).map(x => `<button type="button" class="chip" data-act="lg" data-v="${x.id}" aria-pressed="${g === x.id}">${ty(x.t)}</button>`).join('')}</div>
+    <section class="card"><ul class="lg">${list.map(x => `<li><span class="y">${ty(x.y)}</span><span class="t">${ty(x.t)}</span><span class="x">${ty(x.x)}</span></li>`).join('')}</ul></section>`;
+}
+
+// ---------- Тренировка ----------
+const SECS = [{ id: '', t: 'Все' }, { id: 'life', t: 'Жизнь' }, { id: 'views', t: 'Толкования' }, { id: 'legacy', t: 'След' }];
+const INT = [1, 3, 7, 16];
+let srs = loadJ('medusa:srs', {});
+const saveSrs = () => store.set('medusa:srs', JSON.stringify(srs));
+const dayNum = n => { const d = new Date(); d.setDate(d.getDate() + n); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
+const today = () => dayNum(0);
+const pool = s => Q.filter(q => !s || q.s === s);
+const known = list => list.filter(q => (srs[q.id] || {}).b >= 2).length;
+function mkQ(q) { const o = shuffle(q.o.map((t, i) => ({ t, ok: i === q.a }))); return { q, opts: o.map(x => x.t), a: q.o[q.a] }; }
+function startRound() {
+  const ps = pool(state.ts), t = today();
+  const due = shuffle(ps.filter(q => srs[q.id] && srs[q.id].d <= t)).sort((a, b) => srs[a.id].d - srs[b.id].d);
+  const fresh = shuffle(ps.filter(q => !srs[q.id]));
+  let qs = [...due, ...fresh].slice(0, 10);
+  if (qs.length < 10) qs = qs.concat(shuffle(ps.filter(q => !qs.includes(q))).sort((a, b) => ((srs[a.id] || {}).b || 0) - ((srs[b.id] || {}).b || 0)).slice(0, 10 - qs.length));
+  round = { qs: qs.map(mkQ), i: 0, pick: null, ok: 0, miss: [], again: new Set() };
+}
+function answer(idx) {
+  const it = round.qs[round.i];
+  if (round.pick != null) return;
+  round.pick = idx;
+  const right = it.opts[idx] === it.a, s = srs[it.q.id] || { b: 0 };
+  if (right) {
+    if (!round.again.has(it.q.id)) round.ok++;
+    s.b = Math.min(4, s.b + 1); s.d = dayNum(INT[s.b - 1]);
+  } else {
+    s.b = 0; s.d = today();
+    if (!round.again.has(it.q.id)) { round.miss.push(it.q); round.again.add(it.q.id); round.qs.push(mkQ(it.q)); }
+  }
+  srs[it.q.id] = s; saveSrs();
+}
+function renderTrain() {
+  const ps = pool(state.ts), kn = known(ps);
+  if (!round) {
+    const dueN = ps.filter(q => srs[q.id] && srs[q.id].d <= today()).length;
+    const per = SECS.slice(1).map(x => { const l = pool(x.id); return `<span class="pill">${x.t}: ${known(l)}/${l.length}</span>`; }).join(' ');
+    return `<div class="chips" role="group" aria-label="Разделы вопросов">${SECS.map(x => `<button type="button" class="chip" data-act="ts" data-v="${x.id}" aria-pressed="${state.ts === x.id}">${x.t}</button>`).join('')}</div>
+      <section class="card"><p class="eyebrow">Знаю</p>
+        <p><span class="big">${kn}</span> <span class="lead">из ${ps.length}</span></p>
+        <div class="meter"><i style="width:${(kn / ps.length * 100).toFixed(1)}%"></i></div>
+        <p class="lead small">${dueN ? 'На повторение сегодня: ' + dueN + '. ' : ''}В раунде 10 вопросов: сначала то, что пора повторить, потом новое. Ошибка — вопрос вернётся в этом же раунде.</p>
+        <button type="button" class="btn primary" data-act="start">Начать тренировку</button>
+        <div class="secs">${per}</div>
+        <button type="button" class="link" data-act="reset">Сбросить прогресс</button></section>`;
+  }
+  if (round.i >= round.qs.length) {
+    const n = round.qs.length - round.again.size;
+    return `<section class="card"><p class="eyebrow">Раунд окончен</p>
+      <p><span class="big">${round.ok}</span> <span class="lead">из ${n} с первого раза</span></p>
+      ${round.miss.length ? `<p class="lead small">Повторите:</p><ul class="miss">${round.miss.map(q => `<li><b>${ty(q.q)}</b><span class="lead small">${ty(q.o[q.a])}. ${ty(q.x)}</span></li>`).join('')}</ul>` : '<p>Без ошибок!</p>'}
+      <button type="button" class="btn primary" data-act="start">Ещё раунд</button>
+      <button type="button" class="link" data-act="stop">К прогрессу</button></section>`;
+  }
+  const it = round.qs[round.i], total = round.qs.length, done = round.pick != null, right = done && it.opts[round.pick] === it.a;
+  const secT = (SECS.find(x => x.id === it.q.s) || {}).t;
+  return `<section class="card"><div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 8px"><span class="pill">${secT}</span><span class="lead small">${round.i + 1} / ${total}</span></div>
+      <div class="meter"><i style="width:${(round.i / total * 100).toFixed(1)}%"></i></div>
+      <p class="qt">${ty(it.q.q)}</p>
+      <div class="opts">${it.opts.map((o, k) => {
+        const cls = !done ? '' : o === it.a ? 'ok' : k === round.pick ? 'bad' : '';
+        return `<button type="button" class="opt ${cls}" data-act="opt" data-k="${k}" ${done ? 'disabled' : ''}>${ty(o)}</button>`;
+      }).join('')}</div>
+      ${done ? `<div class="fb ${right ? 'ok' : 'bad'}"><b>${right ? 'Верно!' : 'Правильно: ' + ty(it.a)}</b><span>${ty(it.q.x)}</span>
+        <button type="button" class="btn primary" data-act="next">${round.i + 1 < total ? 'Дальше' : 'Итог'}</button></div>` : ''}
+      <button type="button" class="link" data-act="stop">Закончить</button></section>`;
+}
+
+// ---------- Отрисовка и действия ----------
+function render(keep) {
+  const y = main.scrollTop;
+  document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-current', b.dataset.tab === state.tab ? 'page' : 'false'));
+  view.innerHTML = state.tab === 'life' ? renderLife() : state.tab === 'views' ? renderViews() : state.tab === 'legacy' ? renderLegacy() : renderTrain();
+  main.scrollTop = keep ? y : 0;
+}
+// Прокрутить так, чтобы элемент оказался чуть ниже часов
+function scrollToEl(el) {
+  if (!el) return;
+  const top = el.getBoundingClientRect().top - main.getBoundingClientRect().top + main.scrollTop;
+  const inset = parseFloat(getComputedStyle(main).paddingTop) || 0;
+  main.scrollTo({ top: Math.max(0, top - inset - 8), behavior: 'smooth' });
+}
+let toastTimer = 0;
+function toast(t) { const el = document.getElementById('toast'); el.textContent = t; el.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.hidden = true; }, 2400); }
+function go(tab) { state.tab = tab; store.set('medusa:tab', tab); render(); }
+function act(b) {
+  const a = b.dataset.act;
+  if (a === 'ch') {
+    const id = b.dataset.id, wasOpen = state.open === id;
+    state.open = wasOpen && b.classList.contains('ch-h') ? '' : id;
+    store.set('medusa:open', state.open);
+    if (state.open) { state.read.add(id); saveRead(); }
+    render(true);
+    if (state.open) scrollToEl(document.getElementById('ch-' + id));
+    return;
+  }
+  if (a === 'vs') { state.vs[b.dataset.id] = b.dataset.k; store.set('medusa:vs', JSON.stringify(state.vs)); render(true); return; }
+  if (a === 'toview') { flashView = b.dataset.id; state.vg = ''; store.set('medusa:vg', ''); go('views'); scrollToEl(document.getElementById('vw-' + flashView)); flashView = ''; return; }
+  if (a === 'go') { go(b.dataset.tab); return; }
+  if (a === 'vg') { state.vg = b.dataset.v; store.set('medusa:vg', state.vg); render(true); return; }
+  if (a === 'lg') { state.lg = b.dataset.v; store.set('medusa:lg', state.lg); render(true); return; }
+  if (a === 'ts') { state.ts = b.dataset.v; store.set('medusa:ts', state.ts); render(true); return; }
+  if (a === 'start') { startRound(); render(); return; }
+  if (a === 'stop') { round = null; render(); return; }
+  if (a === 'opt') { answer(+b.dataset.k); render(true); return; }
+  if (a === 'next') { round.i++; round.pick = null; render(); return; }
+  if (a === 'reset') { if (confirm('Сбросить весь прогресс тренировки?')) { srs = {}; saveSrs(); render(true); toast('Прогресс сброшен'); } return; }
+}
+document.querySelector('.tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (b) go(b.dataset.tab); });
+view.addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b) act(b); });
+const help = document.getElementById('help');
+document.getElementById('helpBtn').addEventListener('click', () => { help.hidden = false; document.getElementById('helpClose').focus(); });
+document.getElementById('helpClose').addEventListener('click', () => { help.hidden = true; });
+help.addEventListener('click', e => { if (e.target === help) help.hidden = true; });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') help.hidden = true; });
+let rsT = 0;
+function relayout() { applyTextSize(); clearTimeout(rsT); rsT = setTimeout(() => render(true), 150); }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') applyTextSize(); });
+window.addEventListener('resize', relayout);
+window.addEventListener('orientationchange', () => setTimeout(relayout, 150));
+render();
+if (state.tab === 'life' && state.open) scrollToEl(document.getElementById('ch-' + state.open));
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+<script>
+/* ---------- Автообновление: при открытии и при возврате в приложение сверяем код страницы с версией на сайте ---------- */
+(function () {
+  if (location.protocol !== 'https:' || window.parent !== window) return;
+  const KEY = 'app-update:' + location.pathname;
+  const ss = { get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} } };
+  const texts = doc => Array.from(doc.querySelectorAll('script, style'), n => n.textContent);
+  const hash = list => { let h = 5381; const s = list.join('\n'); for (let i = 0; i < s.length; i++) h = (h * 33 + s.charCodeAt(i)) | 0; return (h >>> 0) + ':' + s.length; };
+  const mine = new Set(texts(document));
+  let last = 0, box = null;
+  function busy() { try { return !!round; } catch (e) { return false; } }
+  function note(text, onUpdate) {
+    if (box) box.remove();
+    box = document.createElement('div');
+    box.setAttribute('role', 'status');
+    box.style.cssText = 'position:fixed;z-index:60;left:12px;right:12px;top:calc(env(safe-area-inset-top, 0px) + 72px);max-width:520px;margin:0 auto;display:flex;align-items:center;gap:8px;padding:8px 8px 8px 16px;border-radius:14px;background:#0A1A2E;border:1px solid #3BE8FF;color:#DFFBFF;box-shadow:0 0 22px -6px #3BE8FF;font-weight:600';
+    const label = document.createElement('span'); label.style.flex = '1'; label.textContent = text; box.append(label);
+    const btn = (t, fn, extra) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.style.cssText = 'min-width:44px;min-height:44px;border-radius:10px;border:0;font:inherit;padding:0 12px;cursor:pointer;' + extra; b.addEventListener('click', fn); box.append(b); };
+    if (onUpdate) { btn('Обновить', onUpdate, 'background:#3BE8FF;color:#04060D'); btn('✕', () => box.remove(), 'background:none;color:inherit'); }
+    else setTimeout(() => box && box.remove(), 2500);
+    document.body.append(box);
+  }
+  function apply(fresh) { ss.set(KEY, fresh); ss.set(KEY + ':done', '1'); location.reload(); }
+  async function check() {
+    if (Date.now() - last < 60000) return;
+    last = Date.now();
+    try {
+      const r = await fetch(location.href.split('#')[0], { cache: 'reload' });
+      if (!r.ok) return;
+      const list = texts(new DOMParser().parseFromString(await r.text(), 'text/html'));
+      if (!list.length || list.every(t => mine.has(t))) return;
+      const fresh = hash(list);
+      if (busy() || ss.get(KEY) === fresh) note('Вышла новая версия', () => apply(fresh)); else apply(fresh);
+    } catch (e) {}
+  }
+  if (ss.get(KEY + ':done')) { ss.set(KEY + ':done', ''); note('Приложение обновлено'); }
+  setTimeout(check, 1500);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') check(); });
+  window.addEventListener('pageshow', e => { if (e.persisted) check(); });
+})();
+</script>
+</body>
+</html>
