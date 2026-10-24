@@ -214,7 +214,7 @@ html.wide .sheet .panel { max-width: 38rem; }
   <ol>
     <li><b>На экран «Домой»:</b> в Safari «Поделиться» → «На экран Домой».</li>
     <li><b>«Жизнь»</b> — десять глав: род, сёстры, Посейдон, взгляд, Персей, смерть, дети, голова, кровь, могила. Нажмите на главу, чтобы раскрыть её; где версии расходятся, переключайте источники. Внизу главы — источники и связанное толкование.</li>
-    <li><b>«Толкования»</b> — как миф объясняли античные авторы, Грейвс и Голосовкер, учёные XX века, психоанализ, феминизм и естествознание. У каждого — пометка, насколько это признано.</li>
+    <li><b>«Толкования»</b> — сначала доолимпийская линия (Голосовкер, Гаубец, Грейвс), затем античные авторы, учёные XX века, психоанализ, феминизм и естествознание. У каждого — пометка, насколько это признано.</li>
     <li><b>«След»</b> — Медуза в искусстве, архитектуре, медицине и на небе: от Гомера до флага Сицилии.</li>
     <li><b>«Тренировка»</b> — 10 вопросов за раунд. Что знаете — повторится через 1, 3, 7, 16 дней; ошибки — ещё раз в этом же раунде.</li>
   </ol>
@@ -357,8 +357,9 @@ function chapterH(c, i) {
 function renderLife() {
   const n = state.read.size;
   return `<section class="card hero">${gorgon()}
-      <p class="hl">Смертная сестра бессмертных. Её убили спящей — а её взгляд пережил три тысячи лет.</p>
-      <p class="lead small">Десять глав по античным источникам — от рода до могилы головы. Где авторы спорят, можно переключить версию.</p>
+      <p class="hl">Смертная сестра бессмертных из мира старше Олимпа. Её убили спящей — а её взгляд пережил три тысячи лет.</p>
+      <p class="lead small">Голосовкер и Гаубец видят в ней титаниду, которую победители-олимпийцы превратили в чудовище; учёные XX века — древнюю маску-оберег. Здесь есть оба взгляда.</p>
+      <p class="lead small">Десять глав по античным источникам — от рода до кургана с головой. Где авторы спорят, можно переключить версию.</p>
       <div class="steps" aria-label="Главы">${CH.map((c, i) => `<button type="button" class="step${state.read.has(c.id) ? ' read' : ''}" data-act="ch" data-id="${c.id}" aria-label="Глава ${i + 1}: ${esc(c.t)}">${ROM[i]}</button>`).join('')}</div>
       <div class="meter" aria-hidden="true"><i style="width:${(n / CH.length * 100).toFixed(1)}%"></i></div>
       <p class="lead small">Прочитано ${n} из ${CH.length}</p></section>`
@@ -378,7 +379,7 @@ function viewH(v) {
 function renderViews() {
   const g = state.vg, list = VIEWS.filter(v => !g || v.g === g);
   return `<section class="card cons"><p class="eyebrow">Сначала главное</p><p>${ty(D.CONSENSUS)}</p></section>
-    <div class="chips" role="group" aria-label="Школы">${[{ id: '', t: 'Все' }].concat(D.VG).map(x => `<button type="button" class="chip" data-act="vg" data-v="${x.id}" aria-pressed="${g === x.id}">${ty(x.t)}</button>`).join('')}</div>`
+    <div class="chips" role="group" aria-label="Школы">${[{ id: '', t: 'Все' }].concat(D.VG).map(x => `<button type="button" class="chip" data-act="vg" data-v="${x.id}" aria-pressed="${g === x.id}">${ty(x.c || x.t)}</button>`).join('')}</div>`
     + D.VG.filter(x => !g || x.id === g).map(x => {
       const vs = list.filter(v => v.g === x.id);
       return vs.length ? `<p class="eyebrow">${ty(x.t)}</p>` + vs.map(viewH).join('') : '';
