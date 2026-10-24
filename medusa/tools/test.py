@@ -67,9 +67,10 @@ def fits(pg, label):
 
 def open_all(pg):
     """Раскрыть главы по очереди и проверить вёрстку каждой (раскрыта всегда одна)."""
-    for cid in pg.evaluate("CH.map(c => c.id)"):
-        pg.evaluate(f"state.open = '{cid}'; render(true)")
-        yield cid
+    for part, lst in (("myth", "CH"), ("tale", "SK")):
+        for cid in pg.evaluate(f"{lst}.map(c => c.id)"):
+            pg.evaluate(f"state.part = '{part}'; state.open = '{cid}'; render(true)")
+            yield cid
 
 
 with sync_playwright() as p:
@@ -77,15 +78,16 @@ with sync_playwright() as p:
 
     # ——— Данные
     ctx, pg = page(b)
-    d = pg.evaluate("""() => ({ ch: CH.length, views: VIEWS.length, leg: LEG.length, q: Q.length,
-      badView: CH.filter(c => c.view && !VBY[c.view]).map(c => c.id),
-      badQ: Q.filter(q => q.o.length !== 4 || !(q.a >= 0 && q.a < 4) || new Set(q.o).size !== 4 || !['life', 'views', 'legacy'].includes(q.s)).map(q => q.id),
-      dupQ: Q.length - new Set(Q.map(q => q.id)).size, dupCh: CH.length - new Set(CH.map(c => c.id)).size,
+    d = pg.evaluate("""() => ({ ch: CH.length, sk: SK.length, views: VIEWS.length, leg: LEG.length, q: Q.length,
+      badView: CH.concat(SK).filter(c => c.view && !VBY[c.view]).map(c => c.id),
+      badQ: Q.filter(q => q.o.length !== 4 || !(q.a >= 0 && q.a < 4) || new Set(q.o).size !== 4 || !['life', 'tale', 'views', 'legacy'].includes(q.s)).map(q => q.id),
+      noGb: SK.filter(c => !c.gb || !c.gb.length).map(c => c.id),
+      dupQ: Q.length - new Set(Q.map(q => q.id)).size, dupCh: CH.length + SK.length - new Set(CH.concat(SK).map(c => c.id)).size,
       badVG: VIEWS.filter(v => !D.VG.some(g => g.id === v.g)).map(v => v.id), badLG: LEG.filter(x => !D.LG.some(g => g.id === x.g)).map(x => x.t),
-      noSrc: CH.filter(c => !c.src || !c.src.length).map(c => c.id) })""")
-    check(d["ch"] == 10 and d["views"] >= 12 and d["leg"] >= 20 and d["q"] >= 50, f"данные: {d['ch']} глав, {d['views']} толкований, {d['leg']} вех, {d['q']} вопросов")
-    check(not d["badView"] and not d["badQ"] and not d["dupQ"] and not d["dupCh"] and not d["badVG"] and not d["badLG"] and not d["noSrc"], f"ссылки и вопросы целы {d}")
-    secs = pg.evaluate("[pool('life').length, pool('views').length, pool('legacy').length]")
+      noSrc: CH.concat(SK).filter(c => !c.src || !c.src.length).map(c => c.id) })""")
+    check(d["ch"] == 10 and d["sk"] == 5 and d["views"] >= 12 and d["leg"] >= 20 and d["q"] >= 80, f"данные: {d['ch']} глав, {d['sk']} частей сказания, {d['views']} толкований, {d['leg']} вех, {d['q']} вопросов")
+    check(not d["badView"] and not d["badQ"] and not d["dupQ"] and not d["dupCh"] and not d["badVG"] and not d["badLG"] and not d["noSrc"] and not d["noGb"], f"ссылки и вопросы целы {d}")
+    secs = pg.evaluate("[pool('life').length, pool('tale').length, pool('views').length, pool('legacy').length]")
     check(all(n >= 10 for n in secs), f"в каждом разделе тренировки не меньше 10 вопросов {secs}")
 
     # ——— Жизнь: герой, главы
@@ -103,6 +105,19 @@ with sync_playwright() as p:
     pg.locator("#ch-beauty [data-act=toview]").click()
     pg.wait_for_timeout(300)
     check(pg.evaluate("state.tab") == "views" and pg.locator("#vw-cixous").count() == 1, "переход к толкованию (Сиксу)")
+    pg.locator(".tab[data-tab=life]").click()
+    pg.locator("[data-act=part][data-v=tale]").click()
+    check(pg.locator(".ch").count() == 5 and "Золотого Дождя" in pg.inner_text(".hero") and "Прочитано 0 из 5" in pg.inner_text(".hero"), "раздел «Сказание»: пять частей")
+    pg.screenshot(path=str(OUT / "tale.png"))
+    pg.locator("#ch-slander .ch-h").click()
+    check("смертна одна" in pg.inner_text("#ch-slander .ch-b") and pg.locator("#ch-slander .gb p").count() >= 3 and pg.locator("#ch-slander [data-act=toview]").count() == 1, "часть IV: сказание, блок Гаубеца и переход к толкованию")
+    pg.locator("#ch-slander [data-act=vs][data-k=a]").click()
+    check("Минервы" in pg.inner_text("#ch-slander .ch-b"), "часть IV: версия Овидия переключается")
+    pg.screenshot(path=str(OUT / "tale-chapter.png"))
+    pg.locator("#ch-slander .btn.primary").click()
+    check(pg.locator("#ch-end .ch-b").count() == 1 and pg.locator("#ch-end .btn.primary").inner_text().startswith("Проверить"), "последняя часть ведёт к тренировке")
+    pg.reload(); pg.wait_for_selector("#view > *")
+    check(pg.locator(".ch").count() == 5 and pg.locator("#ch-end .ch-b").count() == 1, "раздел и открытая часть запоминаются")
     ctx.close()
     ctx, pg = page(b, init="localStorage.setItem('medusa:read', JSON.stringify(['rod','sisters','beauty']));")
     check("Прочитано 3 из 10" in pg.inner_text(".hero") and pg.locator(".step.read").count() == 3, "прочитанное сохраняется")
@@ -114,6 +129,7 @@ with sync_playwright() as p:
     pg.locator("[data-act=vg][data-v=authors]").click()
     v = pg.inner_text("#view")
     check(pg.locator(".vw").count() == 3 and all(n in v for n in ("Голосовкер", "Гаубец", "Грейвс")), f"фильтр «Доолимпийская Медуза»: Голосовкер, Гаубец, Грейвс (всего {n_all})")
+    check(pg.locator("#vw-gaubets .pts li").count() >= 5 and "Махабхарат" in v and "Баальбек" in v, "Гаубец: выводы лекций списком")
     pg.screenshot(path=str(OUT / "views.png"))
     pg.locator(".tab[data-tab=legacy]").click()
     years = pg.evaluate("[...document.querySelectorAll('.lg li')].length")

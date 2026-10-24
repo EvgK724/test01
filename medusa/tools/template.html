@@ -103,9 +103,10 @@ main > .top { margin: 0 calc(-1 * max(16px, env(safe-area-inset-right, 0px))) 16
 .ch[aria-expanded="true"] .ch-x { transform: rotate(180deg); color: var(--neon); }
 .ch-b { display: flex; flex-direction: column; gap: 12px; padding: 0 16px 16px; }
 .vs { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 14px; border: 1px solid rgba(59,232,255,.28); background: rgba(59,232,255,.04); }
-.vs-sw { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-.vs-sw button { min-height: 44px; border-radius: 12px; border: 1px solid #1F3360; background: #0A1226; color: var(--text-2); font-weight: 700; }
-.vs-sw button[aria-pressed="true"] { color: #fff; border-color: var(--neon); background: rgba(59,232,255,.12); box-shadow: 0 0 12px -4px var(--neon); }
+.vs-sw, .seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.vs-sw button, .seg button { flex: 1 1 0; min-width: max-content; padding: 4px 10px; }
+.vs-sw button, .seg button { min-height: 44px; border-radius: 12px; border: 1px solid #1F3360; background: #0A1226; color: var(--text-2); font-weight: 700; }
+.vs-sw button[aria-pressed="true"], .seg button[aria-pressed="true"] { color: #fff; border-color: var(--neon); background: rgba(59,232,255,.12); box-shadow: 0 0 12px -4px var(--neon); }
 .srcs { display: flex; flex-wrap: wrap; gap: 6px; }
 .src { font-size: .82rem; color: var(--text-2); border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; }
 .ch-f { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -132,6 +133,11 @@ main > .top { margin: 0 calc(-1 * max(16px, env(safe-area-inset-right, 0px))) 16
 .st.s-dis { color: #B9C8E6; border-color: #2A3E6A; border-style: dashed; }
 .vw-k { font-size: .82rem; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: .06em; }
 .vw.flash { animation: flash 1.6s ease-out; }
+.pts { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 10px; }
+.pts li::marker { color: var(--neon); }
+.seg button { min-height: 48px; font-size: 1rem; }
+.gb { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border-radius: 14px; border: 1px solid rgba(61,139,255,.45); border-left: 3px solid var(--neon); background: rgba(61,139,255,.07); }
+.gb .eyebrow { color: var(--neon); }
 @keyframes flash { 0% { box-shadow: 0 0 0 2px var(--neon), 0 0 30px -4px var(--neon); } 100% { box-shadow: 0 0 0 1px rgba(59,232,255,.05), 0 0 26px -16px var(--neon); } }
 
 /* След: вертикальная лента */
@@ -213,7 +219,7 @@ html.wide .sheet .panel { max-width: 38rem; }
   <h2 id="helpTitle" style="font:700 1.25rem/1.2 var(--serif)">Как пользоваться</h2>
   <ol>
     <li><b>На экран «Домой»:</b> в Safari «Поделиться» → «На экран Домой».</li>
-    <li><b>«Жизнь»</b> — десять глав: род, сёстры, Посейдон, взгляд, Персей, смерть, дети, голова, кровь, могила. Нажмите на главу, чтобы раскрыть её; где версии расходятся, переключайте источники. Внизу главы — источники и связанное толкование.</li>
+    <li><b>«Жизнь»</b> — два раздела. «Мифы» — десять глав по античным источникам: род, сёстры, Посейдон, взгляд, Персей, смерть, дети, голова, кровь, могила. «Сказание» — пять частей сказания Голосовкера о Медузе с комментариями Максима Гаубеца. Нажмите на главу, чтобы раскрыть её; где версии расходятся, переключайте источники. Внизу главы — источники и связанное толкование.</li>
     <li><b>«Толкования»</b> — сначала доолимпийская линия (Голосовкер, Гаубец, Грейвс), затем античные авторы, учёные XX века, психоанализ, феминизм и естествознание. У каждого — пометка, насколько это признано.</li>
     <li><b>«След»</b> — Медуза в искусстве, архитектуре, медицине и на небе: от Гомера до флага Сицилии.</li>
     <li><b>«Тренировка»</b> — 10 вопросов за раунд. Что знаете — повторится через 1, 3, 7, 16 дней; ошибки — ещё раз в этом же раунде.</li>
@@ -255,7 +261,7 @@ function applyTextSize() {
 applyTextSize();
 
 // ---------- Данные и утилиты ----------
-const D = window.MEDUSA, CH = D.CH, VIEWS = D.VIEWS, LEG = D.LEGACY.slice().sort((a, b) => a.s - b.s), Q = D.Q;
+const D = window.MEDUSA, CH = D.CH, SK = D.SK, VIEWS = D.VIEWS, LEG = D.LEGACY.slice().sort((a, b) => a.s - b.s), Q = D.Q;
 const VBY = {}; VIEWS.forEach(v => { VBY[v.id] = v; });
 const store = {
   get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
@@ -282,6 +288,7 @@ const state = {
   open: store.get('medusa:open') || '',
   vs: loadJ('medusa:vs', {}),
   read: new Set(loadJ('medusa:read', [])),
+  part: store.get('medusa:part') === 'tale' ? 'tale' : 'myth',
   vg: store.get('medusa:vg') || '', lg: store.get('medusa:lg') || '', ts: store.get('medusa:ts') || ''
 };
 if (!['life', 'views', 'legacy', 'train'].includes(state.tab)) state.tab = 'life';
@@ -332,7 +339,7 @@ function gorgon() {
 function treeH(list) {
   return '<ul>' + list.map(n => `<li class="${n.on ? 'on' : ''}"><span class="nm">${ty(n.t)}</span>${n.n ? `<span class="nt">${ty(n.n)}</span>` : ''}${n.c ? treeH(n.c) : ''}</li>`).join('') + '</ul>';
 }
-function chapterH(c, i) {
+function chapterH(c, i, list) {
   const open = state.open === c.id, read = state.read.has(c.id);
   let h = `<section class="card ch${read ? ' read' : ''}" id="ch-${c.id}" aria-expanded="${open}">
     <button type="button" class="ch-h" data-act="ch" data-id="${c.id}" aria-expanded="${open}">
@@ -340,6 +347,7 @@ function chapterH(c, i) {
       <svg class="ch-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>`;
   if (open) {
     h += '<div class="ch-b">' + c.p.map(t => `<p>${ty(t)}</p>`).join('');
+    if (c.gb) h += `<div class="gb"><p class="eyebrow">Гаубец о прочитанном</p>${c.gb.map(t => `<p>${ty(t)}</p>`).join('')}</div>`;
     if (c.family) h += `<div class="vs"><p class="eyebrow">Род Медузы</p><div class="tree">${treeH(D.FAMILY)}</div></div>`;
     if (c.vs) {
       const k = state.vs[c.id] || 'a', v = c.vs[k];
@@ -348,22 +356,29 @@ function chapterH(c, i) {
         <button type="button" data-act="vs" data-id="${c.id}" data-k="b" aria-pressed="${k === 'b'}">${ty(c.vs.b.t)}</button></div><p>${ty(v.x)}</p></div>`;
     }
     h += `<div><p class="eyebrow" style="margin-bottom:6px">Источники</p><div class="srcs">${c.src.map(s => `<span class="src">${ty(s)}</span>`).join('')}</div></div>`;
-    const nx = CH[i + 1];
+    const nx = list[i + 1];
     h += '<div class="ch-f">' + (c.view ? `<button type="button" class="btn" data-act="toview" data-id="${c.view}">Толкование: ${ty(VBY[c.view].who)}</button>` : '')
       + (nx ? `<button type="button" class="btn primary" data-act="ch" data-id="${nx.id}">Дальше: ${ty(nx.t)}</button>` : `<button type="button" class="btn primary" data-act="go" data-tab="train">Проверить себя</button>`) + '</div></div>';
   }
   return h + '</section>';
 }
 function renderLife() {
-  const n = state.read.size;
-  return `<section class="card hero">${gorgon()}
-      <p class="hl">Смертная сестра бессмертных из мира старше Олимпа. Её убили спящей — а её взгляд пережил три тысячи лет.</p>
-      <p class="lead small">Голосовкер и Гаубец видят в ней титаниду, которую победители-олимпийцы превратили в чудовище; учёные XX века — древнюю маску-оберег. Здесь есть оба взгляда.</p>
-      <p class="lead small">Десять глав по античным источникам — от рода до кургана с головой. Где авторы спорят, можно переключить версию.</p>
-      <div class="steps" aria-label="Главы">${CH.map((c, i) => `<button type="button" class="step${state.read.has(c.id) ? ' read' : ''}" data-act="ch" data-id="${c.id}" aria-label="Глава ${i + 1}: ${esc(c.t)}">${ROM[i]}</button>`).join('')}</div>
-      <div class="meter" aria-hidden="true"><i style="width:${(n / CH.length * 100).toFixed(1)}%"></i></div>
-      <p class="lead small">Прочитано ${n} из ${CH.length}</p></section>`
-    + CH.map(chapterH).join('');
+  const tale = state.part === 'tale', list = tale ? SK : CH, n = list.filter(c => state.read.has(c.id)).length;
+  const head = tale
+    ? `<p class="hl">${ty(D.SK_T)}</p>
+      <p class="lead small">Яков Голосовкер собрал его из обломков доолимпийских преданий, а Максим Гаубец читает и толкует его в своих лекциях. Здесь сказание пересказано своими словами, а мысли Гаубеца стоят отдельными блоками.</p>
+      <p class="lead small">Пять частей: от пролога о мире за Океаном до гибели Медузы и крови Асклепия.</p>`
+    : `<p class="hl">Смертная сестра бессмертных из мира старше Олимпа. Её убили спящей — а её взгляд пережил три тысячи лет.</p>
+      <p class="lead small">Голосовкер и Гаубец видят в ней титаниду, которую победители-олимпийцы превратили в чудовище; учёные XX века — древнюю маску-оберег. Здесь есть оба взгляда, а сказание Голосовкера — в разделе «Сказание».</p>
+      <p class="lead small">Десять глав по античным источникам — от рода до кургана с головой. Где авторы спорят, можно переключить версию.</p>`;
+  return `<div class="seg" role="group" aria-label="Что читать">
+      <button type="button" data-act="part" data-v="myth" aria-pressed="${!tale}">Мифы</button>
+      <button type="button" data-act="part" data-v="tale" aria-pressed="${tale}">Сказание</button></div>
+    <section class="card hero">${gorgon()}${head}
+      <div class="steps" aria-label="Главы">${list.map((c, i) => `<button type="button" class="step${state.read.has(c.id) ? ' read' : ''}" data-act="ch" data-id="${c.id}" aria-label="${tale ? 'Часть' : 'Глава'} ${i + 1}: ${esc(c.t)}">${ROM[i]}</button>`).join('')}</div>
+      <div class="meter" aria-hidden="true"><i style="width:${(n / list.length * 100).toFixed(1)}%"></i></div>
+      <p class="lead small">Прочитано ${n} из ${list.length}</p></section>`
+    + list.map((c, i) => chapterH(c, i, list)).join('');
 }
 
 // ---------- Толкования ----------
@@ -373,6 +388,7 @@ function viewH(v) {
     <div class="vw-h"><b>${ty(v.who)}</b><span>${ty(v.when)}</span><i>${ty(v.work)}</i></div>
     <span class="st ${stCls(v.st)}">${ty(v.st)}</span>
     <p class="vw-k">Главная мысль</p><p>${ty(v.idea)}</p>
+    ${v.pts ? `<p class="vw-k">Что ещё он замечает</p><ul class="pts">${v.pts.map(t => `<li>${ty(t)}</li>`).join('')}</ul>` : ''}
     <p class="vw-k">На что опирается</p><p class="lead">${ty(v.basis)}</p>
     ${v.note ? `<p class="lead small">${ty(v.note)}</p>` : ''}</section>`;
 }
@@ -394,7 +410,7 @@ function renderLegacy() {
 }
 
 // ---------- Тренировка ----------
-const SECS = [{ id: '', t: 'Все' }, { id: 'life', t: 'Жизнь' }, { id: 'views', t: 'Толкования' }, { id: 'legacy', t: 'След' }];
+const SECS = [{ id: '', t: 'Все' }, { id: 'life', t: 'Мифы' }, { id: 'tale', t: 'Сказание' }, { id: 'views', t: 'Толкования' }, { id: 'legacy', t: 'След' }];
 const INT = [1, 3, 7, 16];
 let srs = loadJ('medusa:srs', {});
 const saveSrs = () => store.set('medusa:srs', JSON.stringify(srs));
@@ -489,6 +505,7 @@ function act(b) {
     if (state.open) scrollToEl(document.getElementById('ch-' + id));
     return;
   }
+  if (a === 'part') { state.part = b.dataset.v; store.set('medusa:part', state.part); render(true); return; }
   if (a === 'vs') { state.vs[b.dataset.id] = b.dataset.k; store.set('medusa:vs', JSON.stringify(state.vs)); render(true); return; }
   if (a === 'toview') { flashView = b.dataset.id; state.vg = ''; store.set('medusa:vg', ''); go('views'); scrollToEl(document.getElementById('vw-' + flashView)); flashView = ''; return; }
   if (a === 'go') { go(b.dataset.tab); return; }
