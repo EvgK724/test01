@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#0e1113">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Где очаг">
 <meta name="application-name" content="Где очаг">
 <link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAFOklEQVR42u3d7U4TQRTG8b0DoyCIilESUInFSrRimwBKEIKGomAMRsXELxpvT796CV6GF6AXoI9p0jSlamFnZuec/SfPB4VlO5z9sTuzL7PFmbMThIxMQQkIOAg4CDgIOAg4CDgIOAg4CDgIOAgBBwEHAQcBBwEHAQcBBwEHAQcBByFWcFycnZtfvNNY7qys7nQ2umtbBzv774eiL+pbWkCLaWH9CO10i0NVU/lUx+P1HT/6ca0k6gaw0k4POFSgZmt948lhmVofj1ao1QasvpV2OsGhfezI/XDY6CP0QXVopxMcqkLwP8H//oGeovRW2ukER/pyn670VtrpBMfUzGzJTlyoqBlqjPV2+sFxc6mVQ7kHoybZbacTHBPnL2TyhzjyT1PNs9VOPzg0QqvwyD1OGsudXlP1j5zbqTImG+6mwHFl7vrj7tucK24Ih6JiqqQecKiznXmtzeHoJcEopkCGURwJfBRR+xlWqmwUhxK1/1HEk5F/P8MBDhU5no8i0qg1wTUIcPSvxUQa30bBcbe9aau+pnEoKrgNHNcWbpkrrnUcisqeOw7t32x1NdzgUNmDH1wC4zBaWQc4Bn+FHHFMzcwaLasPHErYi7dFzfuhznCE7ZkW7DY84Qi78yjobTjDEbDnEQxH5lfk64NDGyIvHEbPbbjEEfCcRxgczdY6OPKJNkdGOKwfU5zhCHVkKRin+MMRasxS0OFwiSNIt6NgEOsSR5ABbQAc2d7IX2cc2ijgAEfeOIxeo/eNQxslCxwOSukPhwIOcIADHOAAhzccdEjpkDKUZSgLDnBw+pzT51x448Ibl+zBkecle2724WYfbhPkNkFuMOYGYx5N4NEEHmrioSYehwRHzo9D8iA1D1IzBQNTMDB5S717G0z75AqHgWmfmDDO+rkNppr0hsPMVJNMUps4xiapZXrrlF0NY9NbMzF+spicGJ9XaiSI4Vdq8DIe0zJ4jZdJHH5e45XDCwDbj/aCp8Ir8q5eAFj5Kznd4PD56tBqX+brA4fnlw5X+Bpw6zjq8rrywVFMsl6IXRwqUYJRSXY4UhKxiKNaFlng6BOJei3GFg6VonIWGeHoD3ebrfXgO5LN3TcxcGi1wXcV+vWTDVON4RhU0ljulOy06se1khuNe/fXnsbAodVq5aHamZWJrHEMQdE+VuVbWd1RHUceffRFfUsLaDEt3C/0YvNBDBaD0UeUb2e2yR3HqZNAxpAPfynqI+PT9t6XZ93vL3d/vfoT/UP/1RfxUSMccwtLQxvvaGvv20G3Z+J49C0tUNKHPhQcuWdy+tJQD1Qb/ufh7t9k9KIFSvrQh+qjwWHpgDKOjFA+/B1cCme7jaEN9o+jycjjS8mDi7OdR+G4t6HO5vgyeinZP3XW80iEY7s9nyDvXmx/ONrv5+vH5yfFofFLGRy3Ww/BceL8+Py6kpwUh8a3Jbul4HCLQynZ7QAHOMDBYYXDCh1SOqQMZRnKchKMk2Dg4PQ5OLjwBg4u2YODm33AwW2C4Ki9D8cynONQLl9diPdoglbuu3rOcSjnJqdj4NBq3ZfOPw4lBo461A0c4AAHOMABDnCAAxzgAAc4wAEOcIADHOAABzjAAQ5wgAMc4AAHOMABDnCAAxzgAAc4wAEOcIADHOAABzjAAQ5wgAMc4AAHOMABDnCAAxzgAAc4wAEOcIADHOAABzjAAQ5wgAMc4AAHOMABDnCAAxzgAAc4SI0DDgIOAg4CDgIOAg4CDgIOAg4CDgIOQsBBwEHAQcBBwEHAQcBBwEHAQcBBSD+/AYYlhZJwI2feAAAAAElFTkSuQmCC">
@@ -214,17 +214,59 @@ html.wide .wrap { max-width: none; }
 html.wide .rows { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 html.wide .diagram { max-width: calc(560px * var(--k)); margin-inline: auto; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
-/* Экран «Домой» iPhone/iPad: строка состояния сплошная (black, как в «want you to»): с прозрачной (black-translucent) iOS отдаёт
-   странице высоту на строку состояния меньше, и внизу остаётся промежуток. Страница закреплена по краям экрана,
-   отступ сверху — под строку состояния, если она прозрачная. Нижнее меню — «плавающая» пилюля над краем: под ней фон страницы, без сплошной полосы */
+/* Экран «Домой» iPhone/iPad: строка состояния прозрачная (black-translucent). Шапка — стеклянная полоса вместе со строкой
+   состояния, нижнее меню — плавающая стеклянная пилюля (в духе Liquid Glass iOS 26, как в «Медузе» и «Современниках»):
+   текст прокручивается под ними до краёв экрана. iOS 26–27 укорачивает окно приложения на высоту прозрачной строки
+   (WebKit 301108) — поэтому в режиме приложения страница не ниже экрана (проверено в «Английском B2» на iPhone 18 Pro Max,
+   iOS 27). Строку состояния iOS запоминает при установке: после этой смены плитку на экран «Домой» ставят заново */
 html { height: 100%; padding-top: 0; }
+@media (display-mode: standalone) { html { min-height: min(100lvh, calc(100% + env(safe-area-inset-top, 0px))); } }
 html, body { overscroll-behavior: none; }   /* страницу нельзя оттянуть пальцем — меню не «прыгает» */
-body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: auto; height: auto; padding-top: env(safe-area-inset-top, 0px); }
-.tabs-wrap { flex: none; padding: 3px max(12px, env(safe-area-inset-right, 0px)) clamp(6px, calc(env(safe-area-inset-bottom, 0px) - 8px), 26px) max(12px, env(safe-area-inset-left, 0px)); }   /* не выше 26 px над краем, даже если iOS сообщит завышенный вырез */
-nav.tabs { max-width: 40rem; margin: 0 auto; gap: 4px; padding: 4px; border: 1px solid rgb(43, 51, 55); border-radius: 24px; box-shadow: 0 18px 40px -18px rgba(0,0,0,.9); }
+body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: auto; height: auto; padding-top: 0; }
+.tabs-wrap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 10; padding: 3px max(12px, env(safe-area-inset-right, 0px)) clamp(6px, calc(env(safe-area-inset-bottom, 0px) - 8px), 26px) max(12px, env(safe-area-inset-left, 0px)); }   /* не выше 26 px над краем, даже если iOS сообщит завышенный вырез */
+nav.tabs { max-width: 40rem; margin: 0 auto; gap: 4px; padding: 4px; border-top: 0; }
 nav.tabs .tab { border-radius: 19px; min-height: 50px; padding-block: 2px; }
 html.wide nav.tabs .tab { min-height: 3rem; }
 html.wide nav.tabs .tab svg { padding-block: .1rem; }   /* меню не выше прежней полосы: на iPad в альбоме вопрос и «Дальше» — без прокрутки */
+
+/* ——— Liquid Glass: стекло только у того, что плавает поверх текста (меню, полоса под часами, листы, подсказка, «?»).
+   Преломлять фон Safari не умеет (SVG-фильтр в backdrop-filter), поэтому стекло — размытие и насыщенность того, что под ним,
+   светлая кромка с бликом сверху-слева и капля в меню, которая перетекает к выбранному разделу (как в «Медузе»). */
+.glass { position: relative; isolation: isolate; border: 1px solid rgba(190,235,255,.16);
+  background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.02) 46%, rgba(255,255,255,.05)), rgba(10,18,40,.52);
+  -webkit-backdrop-filter: blur(20px) saturate(190%) brightness(1.04); backdrop-filter: blur(20px) saturate(190%) brightness(1.04);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.26), inset 0 -1px 0 rgba(255,255,255,.05), inset 0 0 22px rgba(120,200,255,.07),
+    0 14px 34px -14px rgba(0,0,0,.85), 0 0 22px -9px rgba(59,232,255,.5); }
+.glass::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,255,255,.7), rgba(255,255,255,0) 28%, rgba(255,255,255,0) 68%, rgba(150,225,255,.4));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+nav.tabs.glass { border-radius: 26px; }
+nav.tabs .tab { position: relative; z-index: 1; text-shadow: 0 1px 3px rgba(0,0,0,.7); }
+nav.tabs .tab[aria-current="page"] svg { background: none; box-shadow: none; filter: drop-shadow(0 0 6px rgba(59,232,255,.8)); }
+/* Капля под выбранным пунктом меню: переезжает с лёгким «переливом» (растягивается и сжимается) */
+.lens { position: absolute; z-index: 0; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px - (var(--n, 4) - 1) * 4px) / var(--n, 4)); border-radius: 21px; pointer-events: none;
+  transform: translateX(calc(var(--i, 0) * (100% + 4px))); transition: transform .5s cubic-bezier(.3, 1.35, .45, 1);
+  background: radial-gradient(120% 90% at 30% 15%, rgba(255,255,255,.22), rgba(255,255,255,.05) 55%, rgba(59,232,255,.10));
+  border: 1px solid rgba(200,240,255,.28);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.4), inset 0 -2px 6px rgba(59,232,255,.18), 0 0 16px -4px rgba(59,232,255,.55); }
+@media (prefers-reduced-motion: reduce) { .lens { transition: none; } }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .glass { background: rgba(8,13,28,.94); } }
+@media (prefers-reduced-transparency: reduce) { .glass { background: rgba(8,13,28,.96); -webkit-backdrop-filter: none; backdrop-filter: none; } }
+
+/* Шапка — стеклянная полоса вместе со строкой состояния; окно настроек — стеклянный лист */
+.top { position: absolute; top: 0; left: 0; right: 0; z-index: 11; height: auto; min-height: calc(3.5rem + env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px); }
+.top.glassbar { background: linear-gradient(180deg, rgba(10,12,24,.66), rgba(10,12,24,.44));
+  -webkit-backdrop-filter: blur(20px) saturate(180%); backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(190,235,255,.16); box-shadow: inset 0 -1px 0 rgba(255,255,255,.05), 0 1px 18px -8px rgba(59,232,255,.45); }
+main { padding-top: calc(var(--top-h, 56px) + 16px); padding-bottom: calc(var(--tabs-h, 84px) + 24px); }
+.sheet { z-index: 30; padding-top: env(safe-area-inset-top, 0px); }
+.sheet-bg { background: rgba(0,0,0,.42); opacity: 1; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.sheet-panel { border-radius: 28px 28px 0 0; border: 1px solid rgba(190,235,255,.16); border-bottom: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.02) 40%), rgba(10,12,26,.82);
+  -webkit-backdrop-filter: blur(20px) saturate(180%); backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 -8px 40px -12px rgba(59,232,255,.35); }
+nav.tabs .tab[aria-current="page"] .ti { background: none; box-shadow: none; filter: drop-shadow(0 0 6px rgba(59,232,255,.8)); }
+@media (prefers-reduced-transparency: reduce) { .top.glassbar, .sheet-panel { background: rgba(10,12,24,.97); -webkit-backdrop-filter: none; backdrop-filter: none; } }
 </style>
 <script>
 /* Масштаб под экран, как в модулях «Медицины ПСО»: телефон — как есть, iPad — крупнее. Внутри «ПСО» своя шапка скрыта. */
@@ -248,12 +290,12 @@ html.wide nav.tabs .tab svg { padding-block: .1rem; }   /* меню не выш�
 </head>
 <body>
 <!--APP-BODY-->
-<header class="top">
+<header class="top glassbar">
   <h1><span class="dotlogo" aria-hidden="true"></span>Где очаг</h1>
   <span class="sub">ишемический инсульт</span>
 </header>
 <main id="main"></main>
-<div class="tabs-wrap"><nav class="tabs" aria-label="Разделы">
+<div class="tabs-wrap"><nav class="tabs glass" aria-label="Разделы"><span class="lens" aria-hidden="true"></span>
   <button class="tab" type="button" data-act="tab" data-tab="basics"><span class="ti">🧭</span>Основы</button>
   <button class="tab" type="button" data-act="tab" data-tab="stem"><span class="ti">🧠</span>Ствол</button>
   <button class="tab" type="button" data-act="tab" data-tab="hemi"><span class="ti">🗺️</span>Полушария</button>
@@ -1101,8 +1143,27 @@ function renderResult() {
 
 /* ===================== НАВИГАЦИЯ ===================== */
 function markSeen(id) { if (id && !state.seen.includes(id)) { state.seen.push(id); saveStore(); } }
+// Шапка и меню — стекло поверх экрана: сверху и снизу у экрана отступ на их высоту
+const topBar = document.querySelector('.top'), tabsWrap = document.querySelector('.tabs-wrap');
+const setBars = () => { const d = document.documentElement.style; d.setProperty('--top-h', topBar.offsetHeight + 'px'); d.setProperty('--tabs-h', tabsWrap.offsetHeight + 'px'); };
+setBars();
+if (window.ResizeObserver) { const ro = new ResizeObserver(setBars); ro.observe(topBar); ro.observe(tabsWrap); } else addEventListener('resize', setBars);
+// Капля меню переезжает к выбранному разделу и на ходу чуть растягивается — как жидкое стекло
+const navTabs = document.querySelector('nav.tabs'), lens = navTabs.querySelector('.lens');
+let lensAt = -1;
+navTabs.style.setProperty('--n', navTabs.querySelectorAll('.tab').length);
+function moveLens() {
+  const i = [...navTabs.querySelectorAll('.tab')].findIndex(b => b.getAttribute('aria-current') === 'page');
+  if (i < 0 || i === lensAt) return;
+  navTabs.style.setProperty('--i', i);
+  if (lensAt >= 0 && lens.animate && !matchMedia('(prefers-reduced-motion: reduce)').matches)
+    lens.animate([{ scale: '1 1' }, { scale: '1.22 0.9', offset: 0.35 }, { scale: '0.96 1.04', offset: 0.7 }, { scale: '1 1' }], { duration: 520, easing: 'ease-out' });
+  lensAt = i;
+}
+
 function render(resetScroll) {
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-current', b.dataset.tab === state.tab ? 'page' : 'false'));
+  moveLens();
   const top = main.scrollTop;
   if (state.tab === 'basics') renderBasics();
   else if (state.tab === 'stem') { if (view.stem) { markSeen(view.stem); renderStem(); } else renderStemList(); }
