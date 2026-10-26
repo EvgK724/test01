@@ -11,7 +11,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 # Цвета врачей — только синие и голубые оттенки
 COLORS = ["#3BE8FF", "#4D9BFF", "#8FD3FF", "#62B6FF", "#8A9BFF", "#5CC8FF", "#B8E6FF", "#5B7DFF", "#6FF0FF", "#A0B4FF"]
 # Версия оформления Excel: поменяли make_xlsx.py — увеличьте, чтобы файлы пересобрались
-XLSX_FORMAT = 3
+XLSX_FORMAT = 4
 # Напоминания: накануне в 19:00 и за час до начала
 EVE_HOUR = 19
 

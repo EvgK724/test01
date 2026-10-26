@@ -50,7 +50,8 @@ C = Alignment(horizontal="center", vertical="center")
 CW = Alignment(horizontal="center", vertical="center", wrap_text=True)
 V = Alignment(vertical="center")
 VW = Alignment(vertical="center", wrap_text=True)
-BOX = Border(left=thin, right=thin, top=thin, bottom=thin)
+# Таблица графика: тонкие чёрные границы у каждой ячейки — видны на печати (просьба организатора 26 октября 2026)
+GRID = Border(left=thin_d, right=thin_d, top=thin_d, bottom=thin_d)
 
 
 def hm(s):
@@ -108,20 +109,21 @@ def build(mk, data, full=False, phones=None, wishes=None, notes=()):
     ws.merge_cells("A3:A4")
     ws["A3"] = "Врач, телефон" if full and phones else "Врач"
     ws["A3"].font, ws["A3"].alignment, ws["A3"].fill = font(11, True, INK), C, fill(HEAD)
-    ws["A3"].border = Border(right=thin_d, bottom=thin_d)
-    ws["A4"].border = Border(right=thin_d, bottom=thin_d)
+    ws["A3"].border = Border(left=thin_d, right=thin_d, top=thin_d, bottom=thin_d)
+    ws["A4"].border = Border(left=thin_d, right=thin_d, bottom=thin_d)
     for i, d in enumerate(days):
         col = i + 2
         isoff = d.isoformat() in off
         c = ws.cell(3, col, dt.datetime(d.year, d.month, d.day))
         c.number_format, c.font, c.alignment, c.fill = "d", font(11, True, INK), C, fill(OFF if isoff else HEAD)
-        c.border = Border(left=thin, right=thin, bottom=thin)
+        c.border = GRID
         c = formula(ws, 4, col, f'=CHOOSE(WEEKDAY({L(col)}3,2),"Пн","Вт","Ср","Чт","Пт","Сб","Вс")', WD_RU[d.weekday()])
-        c.font, c.alignment, c.fill, c.border = font(9, True, INK), C, fill(OFF if isoff else HEAD), BOX
+        c.font, c.alignment, c.fill, c.border = font(9, True, INK), C, fill(OFF if isoff else HEAD), GRID
         ws.column_dimensions[L(col)].width = 3.7
     ws.merge_cells(start_row=3, start_column=lastc, end_row=4, end_column=lastc)
     c = ws.cell(3, lastc, "Всего")
-    c.font, c.alignment, c.fill, c.border = font(11, True, INK), C, fill(HEAD), Border(left=thin, bottom=thin)
+    c.font, c.alignment, c.fill, c.border = font(11, True, INK), C, fill(HEAD), GRID
+    ws.cell(4, lastc).border = GRID
     ws.column_dimensions["A"].width = 32
     ws.column_dimensions[L(lastc)].width = 6.4
 
@@ -135,11 +137,11 @@ def build(mk, data, full=False, phones=None, wishes=None, notes=()):
         base = ZEBRA if (r - first) % 2 else WHITE
         a = ws.cell(r, 1, names[did] + (f" {phones[did]}" if full and phones.get(did) else ""))
         a.font, a.alignment, a.fill = font(10.5), V, fill(base)
-        a.border = Border(top=thin_d, right=thin_d, bottom=thin_d)
+        a.border = GRID
         for i, d in enumerate(days):
             col = i + 2
             c = ws.cell(r, col, "+" if did in M["duty"].get(d.isoformat(), []) else None)
-            c.font, c.alignment, c.border = font(17, True, TEAL), C, BOX
+            c.font, c.alignment, c.border = font(17, True, TEAL), C, GRID
             c.fill = fill(OFF if d.isoformat() in off else base)
         for x in marks.get(did, []):
             a_, b_ = dt.date.fromisoformat(x["from"]), dt.date.fromisoformat(x["to"])
@@ -150,21 +152,21 @@ def build(mk, data, full=False, phones=None, wishes=None, notes=()):
             c = ws.cell(r, c1, text)
             c.font, c.alignment, c.fill = font(15 if c2 - c1 >= 6 else 9, True, BROWN), CW, fill(VAC)
             for cc in range(c1, c2 + 1):
-                ws.cell(r, cc).border = BOX
+                ws.cell(r, cc).border = GRID
                 ws.cell(r, cc).fill = fill(VAC)
         t = formula(ws, r, lastc, f'=COUNTIF(B{r}:{L(lastc - 1)}{r},"+")', sum(did in M["duty"].get(d.isoformat(), []) for d in days))
         t.font, t.alignment, t.fill = font(12, True, INK), C, fill(TOTAL)
-        t.border = Border(left=thin, top=thin, bottom=thin)
+        t.border = GRID
     tr = last + 1
     ws.row_dimensions[tr].height = 23
     c = ws.cell(tr, 1, "Дежурных за день")
-    c.font, c.alignment, c.fill, c.border = font(10, True, INK), V, fill(HEAD), Border(top=thin_d, right=thin_d, bottom=thin_d)
+    c.font, c.alignment, c.fill, c.border = font(10, True, INK), V, fill(HEAD), GRID
     per_day = [sum(x in order for x in M["duty"].get(d.isoformat(), [])) for d in days]
     for col in range(2, lastc):
         c = formula(ws, tr, col, f'=COUNTIF({L(col)}{first}:{L(col)}{last},"+")', per_day[col - 2])
-        c.font, c.alignment, c.fill, c.border = font(10, True, INK), C, fill(HEAD), BOX
+        c.font, c.alignment, c.fill, c.border = font(10, True, INK), C, fill(HEAD), GRID
     c = formula(ws, tr, lastc, f"=SUM(B{tr}:{L(lastc - 1)}{tr})", sum(per_day))
-    c.font, c.alignment, c.fill, c.border = font(10, True, INK), C, fill(HEAD), Border(left=thin, top=thin, bottom=thin)
+    c.font, c.alignment, c.fill, c.border = font(10, True, INK), C, fill(HEAD), GRID
     red = dict(font=Font(color="FFA52C2C"), fill=PatternFill(bgColor="FFFCE2DF"))
     ws.conditional_formatting.add(f"B{tr}:{L(lastc - 1)}{tr}", CellIsRule(operator="notEqual", formula=["1"], **red))
     ws.row_dimensions[tr + 1].height = 7
