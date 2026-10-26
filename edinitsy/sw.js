@@ -1,5 +1,5 @@
 // Сначала сеть, без связи — последняя сохранённая версия
-const CACHE = 'edinitsy-v1';
+const CACHE = 'edinitsy-v2';
 self.addEventListener('install', e => {
   self.skipWaiting();
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(['./', 'icon-180.png'])).catch(() => {}));
