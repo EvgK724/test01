@@ -23,7 +23,8 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 GEN = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
 MON = ["ЯНВАРЬ", "ФЕВРАЛЬ", "МАРТ", "АПРЕЛЬ", "МАЙ", "ИЮНЬ", "ИЮЛЬ", "АВГУСТ", "СЕНТЯБРЬ", "ОКТЯБРЬ", "НОЯБРЬ", "ДЕКАБРЬ"]
 INK, INK2, MUTED, TEAL, BROWN = "FF213C56", "FF203449", "FF637386", "FF126E69", "FF6F511F"
-HEAD, OFF, WHITE, ZEBRA, TOTAL, VAC, NOTE = "FFD5E0EA", "FFCFD9E2", "FFFFFFFF", "FFF8FAFC", "FFE8EFF5", "FFEAD4A3", "FFFBF0D9"
+# выходные (OFF) и отпуск (VAC) — чуть темнее прежних CFD9E2 и EAD4A3: заметнее на печати
+HEAD, OFF, WHITE, ZEBRA, TOTAL, VAC, NOTE = "FFD5E0EA", "FFBCC8D4", "FFFFFFFF", "FFF8FAFC", "FFE8EFF5", "FFDFC385", "FFFBF0D9"
 thin = Side(style="thin", color="FFFFFFFF")
 thin_d = Side(style="thin")
 _cfg = ROOT / "data" / "config.json"
@@ -105,7 +106,7 @@ def build(mk, data, full=False, phones=None, wishes=None, notes=()):
     ws["A1"] = f"ГРАФИК ДЕЖУРСТВ ПСО — {MON[m - 1]} {y}" + (" (ПРЕДВАРИТЕЛЬНЫЙ)" if M.get("status") == "preliminary" else "")
     ws["A1"].font, ws["A1"].alignment = font(16, True, INK), C
     ws.row_dimensions[1].height, ws.row_dimensions[2].height = 30, 7
-    ws.row_dimensions[3].height, ws.row_dimensions[4].height = 19, 16
+    ws.row_dimensions[3].height, ws.row_dimensions[4].height = 20, 16
     ws.merge_cells("A3:A4")
     ws["A3"] = "Врач, телефон" if full and phones else "Врач"
     ws["A3"].font, ws["A3"].alignment, ws["A3"].fill = font(11, True, INK), C, fill(HEAD)
@@ -115,16 +116,18 @@ def build(mk, data, full=False, phones=None, wishes=None, notes=()):
         col = i + 2
         isoff = d.isoformat() in off
         c = ws.cell(3, col, dt.datetime(d.year, d.month, d.day))
-        c.number_format, c.font, c.alignment, c.fill = "d", font(11, True, INK), C, fill(OFF if isoff else HEAD)
+        c.number_format, c.font, c.alignment, c.fill = "d", font(12, True, INK), C, fill(OFF if isoff else HEAD)
         c.border = GRID
         c = formula(ws, 4, col, f'=CHOOSE(WEEKDAY({L(col)}3,2),"Пн","Вт","Ср","Чт","Пт","Сб","Вс")', WD_RU[d.weekday()])
         c.font, c.alignment, c.fill, c.border = font(9, True, INK), C, fill(OFF if isoff else HEAD), GRID
-        ws.column_dimensions[L(col)].width = 3.7
+        ws.column_dimensions[L(col)].width = 3.6
     ws.merge_cells(start_row=3, start_column=lastc, end_row=4, end_column=lastc)
     c = ws.cell(3, lastc, "Всего")
     c.font, c.alignment, c.fill, c.border = font(11, True, INK), C, fill(HEAD), GRID
     ws.cell(4, lastc).border = GRID
-    ws.column_dimensions["A"].width = 32
+    # Колонка фамилий — по самой длинной фамилии шрифтом 13 (≈ 1,7 символа ширины Excel на букву); телефон в версии
+    # «Для печати» дописывается в ту же ячейку и переносится второй строкой
+    ws.column_dimensions["A"].width = max(18, round(max(len(x) for x in names.values()) * 1.7) + 3)
     ws.column_dimensions[L(lastc)].width = 6.4
 
     # Врачи
@@ -133,15 +136,15 @@ def build(mk, data, full=False, phones=None, wishes=None, notes=()):
         marks.setdefault(mk_["who"], []).append(mk_)
     first, last = 5, 5 + len(order) - 1
     for r, did in enumerate(order, start=first):
-        ws.row_dimensions[r].height = 30
+        ws.row_dimensions[r].height = 36
         base = ZEBRA if (r - first) % 2 else WHITE
         a = ws.cell(r, 1, names[did] + (f" {phones[did]}" if full and phones.get(did) else ""))
-        a.font, a.alignment, a.fill = font(10.5), V, fill(base)
+        a.font, a.alignment, a.fill = font(13), VW, fill(base)
         a.border = GRID
         for i, d in enumerate(days):
             col = i + 2
             c = ws.cell(r, col, "+" if did in M["duty"].get(d.isoformat(), []) else None)
-            c.font, c.alignment, c.border = font(17, True, TEAL), C, GRID
+            c.font, c.alignment, c.border = font(22, True, TEAL), C, GRID
             c.fill = fill(OFF if d.isoformat() in off else base)
         for x in marks.get(did, []):
             a_, b_ = dt.date.fromisoformat(x["from"]), dt.date.fromisoformat(x["to"])
@@ -190,10 +193,12 @@ def build(mk, data, full=False, phones=None, wishes=None, notes=()):
         ws.row_dimensions[r].height = 18
     ws.freeze_panes = "B5"
     ws.page_setup.orientation, ws.page_setup.paperSize = "landscape", 9
-    ws.page_setup.fitToWidth, ws.page_setup.fitToHeight = 1, 0
+    ws.page_setup.fitToWidth, ws.page_setup.fitToHeight = 1, 1   # одна страница A4 альбомом
+    ws.print_options.horizontalCentered = True
     ws.sheet_properties.pageSetUpPr = PageSetupProperties(fitToPage=True)
     for side in ("left", "right", "top", "bottom"):
-        setattr(ws.page_margins, side, 0.315)
+        setattr(ws.page_margins, side, 0.25)
+    ws.page_margins.header = ws.page_margins.footer = 0.1
 
     if full:
         sheet2(wb, ws, title, mk, data, M, order, names, days, off, hol, short, cal, first, tr, lastc, w_min, wishes or {}, notes)
