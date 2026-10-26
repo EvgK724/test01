@@ -414,7 +414,7 @@ nav.tabs .tab[aria-current="page"] svg { background: none; box-shadow: none; fil
    при печати сразу он теряет строку заголовка, а из «Файлов» — как Safari — не печатает заливку; веб-страницу iOS печатает
    только книжным листом. PDF печатается как есть: A4 альбомом, с заливкой, iOS сам поворачивает лист под бумагу. */
 .pv { box-sizing: border-box; width: 297mm; height: 210mm; padding: 6mm; overflow: hidden; background: #fff; color: #000; font-family: Arial, Helvetica, sans-serif; }
-.pv .slot { display: block; font-size: 12pt; visibility: hidden; }
+.pv .slot { display: block; font-size: 11pt; visibility: hidden; }
 .pv .slot i { display: inline-block; width: 0; height: 0; }   /* низ пустого inline-block — на базовой линии: по нему make_pdf.py берёт место для номера */
 .pv h1 { margin: 0 0 3mm; font: 700 16pt/1.2 Arial, Helvetica, sans-serif; text-align: center; color: #213C56; }
 .pv table { width: 100%; border-collapse: collapse; table-layout: fixed; }
@@ -423,12 +423,12 @@ nav.tabs .tab[aria-current="page"] svg { background: none; box-shadow: none; fil
 .pv .dn { font: 700 12pt/1.1 Arial, Helvetica, sans-serif; height: 7mm; }
 .pv .wd { font: 700 9pt/1.1 Arial, Helvetica, sans-serif; height: 5.5mm; }
 .pv .cap { font: 700 11pt/1.2 Arial, Helvetica, sans-serif; }
-.pv .nm { text-align: left; padding: 0 1.6mm; font: 400 14pt/1.15 Arial, Helvetica, sans-serif; color: #000; }
+.pv .nm { text-align: left; padding: 0 1.6mm; font: 400 13pt/1.1 Arial, Helvetica, sans-serif; color: #000; }
 .pv .x { font: 700 24pt/1 Arial, Helvetica, sans-serif; color: #0E5F5A; }
 .pv .vac { background: #DFC385; color: #6F511F; font: 700 15pt/1.1 Arial, Helvetica, sans-serif; }
 .pv .vac.sm { font-size: 9pt; }
 .pv .sum { font: 700 12pt/1 Arial, Helvetica, sans-serif; }
-.pv .ft td { font: 700 10pt/1 Arial, Helvetica, sans-serif; height: 7mm; }
+.pv .ft td { font: 700 10pt/1 Arial, Helvetica, sans-serif; height: 6mm; }
 .pv .ft .nm { font-weight: 700; font-size: 10pt; }
 </style>
 </head>
@@ -1051,7 +1051,7 @@ function printSheet(mk, slots) {
   const off = new Set(M.off || []), order = M.order;
   const iso = d => mk + '-' + String(d).padStart(2, '0');
   const days = Array.from({ length: n }, (_, i) => i + 1);
-  const rowH = Math.min(22, Math.max(9, 168 / order.length));          // строки врачей заполняют лист, но не выше 22 мм
+  const rowH = Math.min(10, Math.max(9.5, 70 / order.length));        // график — на верхней половине листа (до 105 мм)
   let h = `<div class="pv"><h1>ГРАФИК ДЕЖУРСТВ ПСО — ${esc(monthTitle(mk).toUpperCase())}${M.status === 'preliminary' ? ' (ПРЕДВАРИТЕЛЬНЫЙ)' : ''}</h1>
     <table><colgroup><col style="width:44mm">${days.map(() => '<col>').join('')}<col style="width:15mm"></colgroup>
     <tr><td class="hd cap" rowspan="2">${slots ? 'Врач, телефон' : 'Врач'}</td>${days.map(d => `<td class="dn ${off.has(iso(d)) ? 'off' : 'hd'}">${d}</td>`).join('')}<td class="hd cap" rowspan="2">Всего</td></tr>
@@ -1105,7 +1105,7 @@ async function printPdf(mk, ph) {
   for (const [id, [x, y, w]] of Object.entries(D.pdf[mk].slots)) {
     const tx = String(ph[id] || '').replace(/[^0-9+()\- ]/g, '').replace(/\s+/g, ' ').trim();
     if (!/\d/.test(tx)) continue;
-    let size = 12;
+    let size = 11;   // как .pv .slot
     while (size > 7 && font.widthOfTextAtSize(tx, size) > w) size -= .5;
     page.drawText(tx, { x, y: page.getHeight() - y, size, font, color: rgb(0, 0, 0) });
     n++;
