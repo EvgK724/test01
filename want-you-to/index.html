@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0b0d12">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Want you to">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -549,6 +549,50 @@ html.wide .lede, html.wide .rule-text, html.wide .mnemo p { max-width: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* ——— Liquid Glass: стекло только у того, что плавает поверх текста (меню, полоса под часами, листы, подсказка, «?»).
+   Преломлять фон Safari не умеет (SVG-фильтр в backdrop-filter), поэтому стекло — размытие и насыщенность того, что под ним,
+   светлая кромка с бликом сверху-слева и капля в меню, которая перетекает к выбранному разделу (как в «Медузе»). */
+.glass { position: relative; isolation: isolate; border: 1px solid rgba(190,235,255,.16);
+  background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.02) 46%, rgba(255,255,255,.05)), rgba(10,18,40,.52);
+  -webkit-backdrop-filter: blur(20px) saturate(190%) brightness(1.04); backdrop-filter: blur(20px) saturate(190%) brightness(1.04);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.26), inset 0 -1px 0 rgba(255,255,255,.05), inset 0 0 22px rgba(120,200,255,.07),
+    0 14px 34px -14px rgba(0,0,0,.85), 0 0 22px -9px rgba(59,232,255,.5); }
+.glass::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,255,255,.7), rgba(255,255,255,0) 28%, rgba(255,255,255,0) 68%, rgba(150,225,255,.4));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+/* Капля под выбранным пунктом меню: переезжает с лёгким «переливом» (растягивается и сжимается) */
+.lens { position: absolute; z-index: 0; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 20px) / 4); border-radius: 21px; pointer-events: none;
+  transform: translateX(calc(var(--i, 0) * (100% + 4px))); transition: transform .5s cubic-bezier(.3, 1.35, .45, 1);
+  background: radial-gradient(120% 90% at 30% 15%, rgba(255,255,255,.22), rgba(255,255,255,.05) 55%, rgba(59,232,255,.10));
+  border: 1px solid rgba(200,240,255,.28);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.4), inset 0 -2px 6px rgba(59,232,255,.18), 0 0 16px -4px rgba(59,232,255,.55); }
+@media (prefers-reduced-motion: reduce) { .lens { transition: none; } }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .glass { background: rgba(8,13,28,.94); } }
+@media (prefers-reduced-transparency: reduce) { .glass { background: rgba(8,13,28,.96); -webkit-backdrop-filter: none; backdrop-filter: none; } }
+
+/* Экран «Домой» iPhone/iPad: строка состояния прозрачная (black-translucent). Шапка — стеклянная полоса вместе со строкой
+   состояния, нижнее меню — плавающая стеклянная пилюля (в духе Liquid Glass iOS 26, как в «Медузе» и «Современниках»):
+   текст прокручивается под ними до краёв экрана. iOS 26–27 укорачивает окно приложения на высоту прозрачной строки
+   (WebKit 301108) — поэтому в режиме приложения страница не ниже экрана. Строку состояния iOS запоминает при установке:
+   после этой смены плитку на экран «Домой» ставят заново */
+@media (display-mode: standalone) { html { min-height: min(100lvh, calc(100% + env(safe-area-inset-top, 0px))); } }
+body { padding-top: 0; }
+.top { position: absolute; top: 0; left: 0; right: 0; z-index: 11; padding-top: calc(env(safe-area-inset-top, 0px) + 10px*var(--k)); }
+.top.glassbar { background: linear-gradient(180deg, rgba(11,13,22,.66), rgba(11,13,22,.44));
+  -webkit-backdrop-filter: blur(20px) saturate(180%); backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(190,235,255,.14); box-shadow: inset 0 -1px 0 rgba(255,255,255,.05), 0 8px 24px -18px rgba(0,0,0,.8); }
+main { padding-top: var(--top-h, 64px); padding-bottom: var(--tabs-h, 84px); scroll-padding-top: calc(var(--top-h, 64px) + 8px); scroll-padding-bottom: calc(var(--tabs-h, 84px) + 8px); }
+.tabs-wrap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 10; }
+/* Кнопки «Проверить» и управление карточками закреплены над меню, а не под ним */
+.controls, .check-row { bottom: 0px; }
+.tabs.glass { position: relative; }
+.tab { position: relative; z-index: 1; text-shadow: 0 1px 3px rgba(0,0,0,.7); }
+.tab[aria-selected="true"] { background: none; }
+/* Капля: поля и промежутки меню умножены на --k */
+.tabs .lens { top: calc(5px*var(--k)); bottom: calc(5px*var(--k)); left: calc(5px*var(--k)); border-radius: calc(19px*var(--k));
+  width: calc((100% - 10px*var(--k) - 3 * 4px*var(--k)) / 4); transform: translateX(calc(var(--i, 0) * (100% + 4px*var(--k)))); }
+@media (prefers-reduced-transparency: reduce) { .top.glassbar { background: rgba(11,13,22,.97); -webkit-backdrop-filter: none; backdrop-filter: none; } }
 </style>
 <script>
 /* Масштаб под экран — та же формула, что в «Английском B2»: телефон — как есть, iPad — крупнее
@@ -572,7 +616,7 @@ html.wide .lede, html.wide .rule-text, html.wide .mnemo p { max-width: none; }
 </head>
 <body>
 <!--APP-BODY-->
-<header class="top">
+<header class="top glassbar">
   <h1 class="brand"><span class="w">want</span> <span class="y">you</span> <span class="t">to</span></h1>
   <button type="button" class="due-chip" id="dueChip">…</button>
 </header>
@@ -673,7 +717,7 @@ html.wide .lede, html.wide .rule-text, html.wide .mnemo p { max-width: none; }
 </main>
 
 <div class="tabs-wrap">
-<nav class="tabs" role="tablist" aria-label="Разделы">
+<nav class="tabs glass" role="tablist" aria-label="Разделы"><span class="lens" aria-hidden="true"></span>
   <button type="button" class="tab" role="tab" data-tab="rule" aria-selected="true">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 5.5A1.5 1.5 0 0 1 5 4h6v16H5a1.5 1.5 0 0 1-1.5-1.5z"/><path d="M20.5 5.5A1.5 1.5 0 0 0 19 4h-6v16h6a1.5 1.5 0 0 0 1.5-1.5z"/></svg>
     Правило
@@ -692,6 +736,24 @@ html.wide .lede, html.wide .rule-text, html.wide .mnemo p { max-width: none; }
   </button>
 </nav>
 </div>
+<script>
+/* Шапка и меню — стекло поверх экрана: сверху и снизу у экрана отступ на их высоту; капля меню перетекает к выбранному разделу */
+const topBar = document.querySelector('.top'), tabsWrap = document.querySelector('.tabs-wrap');
+const setBars = () => { const d = document.documentElement.style; d.setProperty('--top-h', topBar.offsetHeight + 'px'); d.setProperty('--tabs-h', tabsWrap.offsetHeight + 'px'); };
+setBars();
+if (window.ResizeObserver) { const ro = new ResizeObserver(setBars); ro.observe(topBar); ro.observe(tabsWrap); } else addEventListener('resize', setBars);
+const navTabs = document.querySelector('nav.tabs'), lens = navTabs.querySelector('.lens');
+let lensAt = -1;
+function moveLens() {
+  const i = [...navTabs.querySelectorAll('.tab')].findIndex(b => b.getAttribute('aria-selected') === 'true');
+  if (i < 0 || i === lensAt) return;
+  navTabs.style.setProperty('--i', i);
+  if (lensAt >= 0 && lens.animate && !matchMedia('(prefers-reduced-motion: reduce)').matches)
+    lens.animate([{ scale: '1 1' }, { scale: '1.22 0.9', offset: 0.35 }, { scale: '0.96 1.04', offset: 0.7 }, { scale: '1 1' }], { duration: 520, easing: 'ease-out' });
+  lensAt = i;
+}
+moveLens();
+</script>
 
 <script>
 (function () {
@@ -1700,6 +1762,7 @@ html.wide .lede, html.wide .rule-text, html.wide .mnemo p { max-width: none; }
 
   function showTab(name) {
     $$('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
+    moveLens();
     $$('.view').forEach(v => { v.hidden = v.id !== 'v-' + name; });
     $('#main').scrollTop = 0;
     try { localStorage.setItem(TAB_KEY, name); } catch (e) { /* не важно */ }

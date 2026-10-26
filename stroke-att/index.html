@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0e1113">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="АТТ после ИИ">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -277,6 +277,29 @@ html.wide .view, html.wide .tabs { max-width: calc(860px*var(--k)); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* Экран «Домой» iPhone/iPad: строка состояния прозрачная (black-translucent). Шапка с вкладками — стеклянный блок вместе
+   со строкой состояния (в духе Liquid Glass iOS 26): текст прокручивается под ним, капля под выбранной вкладкой перетекает
+   при переключении. Преломлять фон Safari не умеет — стекло: размытие, насыщенность и светлая кромка. iOS 26–27 укорачивает
+   окно приложения на высоту прозрачной строки (WebKit 301108) — поэтому в режиме приложения страница не ниже экрана.
+   Строку состояния iOS запоминает при установке: после этой смены плитку на экран «Домой» ставят заново */
+@media (display-mode: standalone) { html { min-height: min(100lvh, calc(100% + env(safe-area-inset-top, 0px))); } }
+body { padding-top: 0; }
+.top { position: absolute; top: 0; left: 0; right: 0; z-index: 11; padding-top: calc(env(safe-area-inset-top, 0px) + 10px*var(--k)); }
+.tabs-wrap { position: absolute; left: 0; right: 0; top: var(--top-h, 60px); z-index: 11; }
+.glassbar { background: linear-gradient(180deg, rgba(20,24,27,.68), rgba(20,24,27,.5));
+  -webkit-backdrop-filter: blur(20px) saturate(170%); backdrop-filter: blur(20px) saturate(170%); }
+.tabs-wrap.glassbar { border-bottom: 1px solid rgba(255,255,255,.08); box-shadow: inset 0 -1px 0 rgba(255,255,255,.04), 0 10px 26px -20px rgba(0,0,0,.9); }
+main { padding-top: calc(var(--top-h, 60px) + var(--tabs-h, 60px)); scroll-padding-top: calc(var(--top-h, 60px) + var(--tabs-h, 60px) + 8px); }
+.tabs { position: relative; background: rgba(255,255,255,.04); box-shadow: inset 0 1px 0 rgba(255,255,255,.06); }
+.tab { position: relative; z-index: 1; }
+.tab[aria-selected="true"] { background: none; }
+.tabs .lens { position: absolute; z-index: 0; top: calc(4px*var(--k)); bottom: calc(4px*var(--k)); left: calc(4px*var(--k)); border-radius: calc(10px*var(--k)); pointer-events: none;
+  width: calc((100% - 8px*var(--k) - 3 * 4px*var(--k)) / 4); transform: translateX(calc(var(--i, 0) * (100% + 4px*var(--k)))); transition: transform .5s cubic-bezier(.3, 1.35, .45, 1);
+  background: radial-gradient(120% 90% at 30% 15%, rgba(255,255,255,.2), rgba(255,255,255,.06) 55%, rgba(var(--accent-rgb), .12));
+  border: 1px solid rgba(255,255,255,.18); box-shadow: inset 0 1px 0 rgba(255,255,255,.32), inset 0 -2px 6px rgba(var(--accent-rgb), .14), 0 0 14px -6px rgba(var(--accent-rgb), .6); }
+@media (prefers-reduced-motion: reduce) { .tabs .lens { transition: none; } }
+@media (prefers-reduced-transparency: reduce) { .glassbar { background: rgba(20,24,27,.97); -webkit-backdrop-filter: none; backdrop-filter: none; } }
 </style>
 <script>
 /* Масштаб под экран — как в «want you to»: телефон — как есть, iPad — крупнее. Все размеры умножены на --k. */
@@ -300,7 +323,7 @@ html.wide .view, html.wide .tabs { max-width: calc(860px*var(--k)); }
 </head>
 <body>
 <!--APP-BODY-->
-<header class="top">
+<header class="top glassbar">
   <h1 class="brand">АТТ после ИИ</h1>
   <button type="button" class="due-chip" id="dueChip">…</button>
 </header>
@@ -352,8 +375,8 @@ html.wide .view, html.wide .tabs { max-width: calc(860px*var(--k)); }
   </section>
 </main>
 
-<div class="tabs-wrap">
-<nav class="tabs" role="tablist" aria-label="Разделы">
+<div class="tabs-wrap glassbar">
+<nav class="tabs" role="tablist" aria-label="Разделы"><span class="lens" aria-hidden="true"></span>
   <button type="button" class="tab" role="tab" data-tab="review" aria-selected="true">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 5.5A1.5 1.5 0 0 1 5 4h6v16H5a1.5 1.5 0 0 1-1.5-1.5z"/><path d="M20.5 5.5A1.5 1.5 0 0 0 19 4h-6v16h6a1.5 1.5 0 0 0 1.5-1.5z"/></svg>
     Разбор
@@ -372,6 +395,24 @@ html.wide .view, html.wide .tabs { max-width: calc(860px*var(--k)); }
   </button>
 </nav>
 </div>
+<script>
+/* Шапка и вкладки — стекло поверх экрана: сверху у экрана отступ на их высоту; капля перетекает к выбранной вкладке */
+const topBar = document.querySelector('.top'), tabsWrap = document.querySelector('.tabs-wrap');
+const setBars = () => { const d = document.documentElement.style; d.setProperty('--top-h', topBar.offsetHeight + 'px'); d.setProperty('--tabs-h', tabsWrap.offsetHeight + 'px'); };
+setBars();
+if (window.ResizeObserver) { const ro = new ResizeObserver(setBars); ro.observe(topBar); ro.observe(tabsWrap); } else addEventListener('resize', setBars);
+const navTabs = document.querySelector('nav.tabs'), lens = navTabs.querySelector('.lens');
+let lensAt = -1;
+function moveLens() {
+  const i = [...navTabs.querySelectorAll('.tab')].findIndex(b => b.getAttribute('aria-selected') === 'true');
+  if (i < 0 || i === lensAt) return;
+  navTabs.style.setProperty('--i', i);
+  if (lensAt >= 0 && lens.animate && !matchMedia('(prefers-reduced-motion: reduce)').matches)
+    lens.animate([{ scale: '1 1' }, { scale: '1.18 0.9', offset: 0.35 }, { scale: '0.97 1.04', offset: 0.7 }, { scale: '1 1' }], { duration: 520, easing: 'ease-out' });
+  lensAt = i;
+}
+moveLens();
+</script>
 
 <script>
 (function () {
@@ -1209,6 +1250,7 @@ html.wide .view, html.wide .tabs { max-width: calc(860px*var(--k)); }
   /* ================= НАВИГАЦИЯ ================= */
   function showTab(name) {
     $$('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
+    moveLens();
     $$('.view').forEach(v => { v.hidden = v.id !== 'v-' + name; });
     $('#main').scrollTop = 0;
     try { localStorage.setItem(TAB_KEY, name); } catch (e) { /* не важно */ }
