@@ -409,6 +409,27 @@ nav.tabs .tab[aria-current="page"] svg { background: none; box-shadow: none; fil
 @media (prefers-reduced-motion: reduce) { .lens { transition: none; } }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .glass { background: rgba(8,13,28,.94); } }
 @media (prefers-reduced-transparency: reduce) { .glass { background: rgba(8,13,28,.96); -webkit-backdrop-filter: none; backdrop-filter: none; } }
+
+/* ——— Лист PDF для печати (tools/make_pdf.py рисует его в Chromium при сборке). xlsx на iPhone печатает просмотрщик iOS:
+   при печати сразу он теряет строку заголовка, а из «Файлов» — как Safari — не печатает заливку; веб-страницу iOS печатает
+   только книжным листом. PDF печатается как есть: A4 альбомом, с заливкой, iOS сам поворачивает лист под бумагу. */
+.pv { box-sizing: border-box; width: 297mm; height: 210mm; padding: 6mm; overflow: hidden; background: #fff; color: #000; font-family: Arial, Helvetica, sans-serif; }
+.pv .slot { display: block; font-size: 12pt; visibility: hidden; }
+.pv .slot i { display: inline-block; width: 0; height: 0; }   /* низ пустого inline-block — на базовой линии: по нему make_pdf.py берёт место для номера */
+.pv h1 { margin: 0 0 3mm; font: 700 16pt/1.2 Arial, Helvetica, sans-serif; text-align: center; color: #213C56; }
+.pv table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.pv td { border: .3mm solid #000; padding: 0; text-align: center; vertical-align: middle; color: #213C56; overflow: hidden; }
+.pv .hd { background: #D5E0EA; } .pv .off { background: #BCC8D4; } .pv .zb { background: #F8FAFC; } .pv .tt { background: #E8EFF5; }
+.pv .dn { font: 700 12pt/1.1 Arial, Helvetica, sans-serif; height: 7mm; }
+.pv .wd { font: 700 9pt/1.1 Arial, Helvetica, sans-serif; height: 5.5mm; }
+.pv .cap { font: 700 11pt/1.2 Arial, Helvetica, sans-serif; }
+.pv .nm { text-align: left; padding: 0 1.6mm; font: 400 14pt/1.15 Arial, Helvetica, sans-serif; color: #000; }
+.pv .x { font: 700 24pt/1 Arial, Helvetica, sans-serif; color: #0E5F5A; }
+.pv .vac { background: #DFC385; color: #6F511F; font: 700 15pt/1.1 Arial, Helvetica, sans-serif; }
+.pv .vac.sm { font-size: 9pt; }
+.pv .sum { font: 700 12pt/1 Arial, Helvetica, sans-serif; }
+.pv .ft td { font: 700 10pt/1 Arial, Helvetica, sans-serif; height: 7mm; }
+.pv .ft .nm { font-weight: 700; font-size: 10pt; }
 </style>
 </head>
 <body>
@@ -432,7 +453,7 @@ nav.tabs .tab[aria-current="page"] svg { background: none; box-shadow: none; fil
     <li><b>«Пожелания»</b> — до 15 числа на следующий месяц: дни и интервалы «Не ставить», «Отпуск», «Хочу», дни недели, сколько дежурств, комментарий. Учитывается последняя отправка.</li>
     <li><b>Новый график:</b> 16-го составляется черновик. Когда ЕЮ его одобрит, придёт уведомление «Предварительный график» — в «Мои» нажмите «Согласен» или «Не согласен» с причиной. После правок придёт новая версия — ответьте снова. Согласны все — график окончательный.</li>
     <li><b>«График»</b> — календарь (две буквы фамилии; нажмите на день — подробности), список и нагрузка (норма часов, доля ставки).</li>
-    <li><b>«Excel»</b> — файл графика; «Для печати» — с телефонами для оперативного отдела (телефоны хранятся только на этом телефоне).</li>
+    <li><b>«Excel»</b> — график файлом: PDF для печати (A4 альбомом) и Excel; «Для печати» — с телефонами для оперативного отдела (телефоны хранятся только на этом телефоне).</li>
   </ol>
   <p class="lead small">Если календарь не напоминает: Настройки → Календарь → Учётные записи → Подписные календари → «Дежурства ПСО» → выключите «Удалить предупреждения».</p>
   <button class="btn primary" type="button" id="helpClose">Понятно</button>
@@ -445,7 +466,7 @@ nav.tabs .tab[aria-current="page"] svg { background: none; box-shadow: none; fil
   <button class="link" type="button" id="ackLater">Позже</button>
 </div></div>
 <div class="toast glass" id="toast" role="status" hidden></div>
-<script id="data" type="application/json">{"tz":"Asia/Yekaterinburg","doctors":{"klepikov":{"name":"Клепиков"},"kardashina":{"name":"Кардашина"},"lekerova":{"name":"Лекерова","code":"Лк"},"khamatnurova":{"name":"Хаматнурова"},"leonard":{"name":"Леонард","code":"Ло"},"alekeshova":{"name":"Алекешова"},"omutov":{"name":"Омутов"}},"months":{"2026-11":{"title":"Ноябрь 2026","order":["klepikov","kardashina","lekerova","khamatnurova","leonard","alekeshova","omutov"],"shift":{"work":["16:18","08:00"],"off":["08:00","08:00"]},"off":["2026-11-01","2026-11-04","2026-11-07","2026-11-08","2026-11-14","2026-11-15","2026-11-21","2026-11-22","2026-11-28","2026-11-29"],"duty":{"2026-11-01":["lekerova"],"2026-11-02":["khamatnurova"],"2026-11-03":["kardashina"],"2026-11-04":["alekeshova"],"2026-11-05":["klepikov"],"2026-11-06":["leonard"],"2026-11-07":["klepikov"],"2026-11-08":["omutov"],"2026-11-09":["kardashina"],"2026-11-10":["omutov"],"2026-11-11":["kardashina"],"2026-11-12":["klepikov"],"2026-11-13":["leonard"],"2026-11-14":["klepikov"],"2026-11-15":["alekeshova"],"2026-11-16":["kardashina"],"2026-11-17":["lekerova"],"2026-11-18":["omutov"],"2026-11-19":["klepikov"],"2026-11-20":["leonard"],"2026-11-21":["klepikov"],"2026-11-22":["alekeshova"],"2026-11-23":["omutov"],"2026-11-24":["kardashina"],"2026-11-25":["lekerova"],"2026-11-26":["klepikov"],"2026-11-27":["leonard"],"2026-11-28":["omutov"],"2026-11-29":["alekeshova"],"2026-11-30":["kardashina"]},"marks":[{"who":"lekerova","from":"2026-11-04","to":"2026-11-16","label":"Отпуск"}]}},"updated":"2026-10-12T18:39:22Z","colors":["#3BE8FF","#4D9BFF","#8FD3FF","#62B6FF","#8A9BFF","#5CC8FF","#B8E6FF","#5B7DFF","#6FF0FF","#A0B4FF"],"cal":{"2026-10":{"off":["2026-10-03","2026-10-04","2026-10-10","2026-10-11","2026-10-17","2026-10-18","2026-10-24","2026-10-25","2026-10-31"],"hol":[],"work":[],"short":[],"verified":true},"2026-11":{"off":["2026-11-01","2026-11-04","2026-11-07","2026-11-08","2026-11-14","2026-11-15","2026-11-21","2026-11-22","2026-11-28","2026-11-29"],"hol":["2026-11-04"],"work":[],"short":["2026-11-03"],"verified":true},"2026-12":{"off":["2026-12-05","2026-12-06","2026-12-12","2026-12-13","2026-12-19","2026-12-20","2026-12-26","2026-12-27","2026-12-31"],"hol":["2026-12-31"],"work":[],"short":[],"verified":true},"2027-01":{"off":["2027-01-01","2027-01-02","2027-01-03","2027-01-04","2027-01-05","2027-01-06","2027-01-07","2027-01-08","2027-01-09","2027-01-10","2027-01-16","2027-01-17","2027-01-23","2027-01-24","2027-01-30","2027-01-31"],"hol":["2027-01-01","2027-01-04","2027-01-05","2027-01-06","2027-01-07","2027-01-08"],"work":[],"short":[],"verified":false},"2027-02":{"off":["2027-02-06","2027-02-07","2027-02-13","2027-02-14","2027-02-21","2027-02-22","2027-02-23","2027-02-27","2027-02-28"],"hol":["2027-02-22","2027-02-23"],"work":["2027-02-20"],"short":[],"verified":false},"2027-03":{"off":["2027-03-06","2027-03-07","2027-03-08","2027-03-13","2027-03-14","2027-03-20","2027-03-21","2027-03-27","2027-03-28"],"hol":["2027-03-08"],"work":[],"short":[],"verified":false},"2027-04":{"off":["2027-04-03","2027-04-04","2027-04-10","2027-04-11","2027-04-17","2027-04-18","2027-04-24","2027-04-25"],"hol":[],"work":[],"short":["2027-04-30"],"verified":false},"2027-05":{"off":["2027-05-01","2027-05-02","2027-05-03","2027-05-08","2027-05-09","2027-05-10","2027-05-15","2027-05-16","2027-05-22","2027-05-23","2027-05-29","2027-05-30"],"hol":["2027-05-03","2027-05-10"],"work":[],"short":[],"verified":false},"2027-06":{"off":["2027-06-05","2027-06-06","2027-06-12","2027-06-13","2027-06-14","2027-06-19","2027-06-20","2027-06-26","2027-06-27"],"hol":["2027-06-14"],"work":[],"short":["2027-06-11"],"verified":false},"2027-07":{"off":["2027-07-03","2027-07-04","2027-07-10","2027-07-11","2027-07-17","2027-07-18","2027-07-24","2027-07-25","2027-07-31"],"hol":[],"work":[],"short":[],"verified":false},"2027-08":{"off":["2027-08-01","2027-08-07","2027-08-08","2027-08-14","2027-08-15","2027-08-21","2027-08-22","2027-08-28","2027-08-29"],"hol":[],"work":[],"short":[],"verified":false},"2027-09":{"off":["2027-09-04","2027-09-05","2027-09-11","2027-09-12","2027-09-18","2027-09-19","2027-09-25","2027-09-26"],"hol":[],"work":[],"short":[],"verified":false},"2027-10":{"off":["2027-10-02","2027-10-03","2027-10-09","2027-10-10","2027-10-16","2027-10-17","2027-10-23","2027-10-24","2027-10-30","2027-10-31"],"hol":[],"work":[],"short":[],"verified":false},"2027-11":{"off":["2027-11-04","2027-11-05","2027-11-06","2027-11-07","2027-11-13","2027-11-14","2027-11-20","2027-11-21","2027-11-27","2027-11-28"],"hol":["2027-11-04","2027-11-05"],"work":[],"short":["2027-11-03"],"verified":false},"2027-12":{"off":["2027-12-04","2027-12-05","2027-12-11","2027-12-12","2027-12-18","2027-12-19","2027-12-25","2027-12-26","2027-12-31"],"hol":["2027-12-31"],"work":[],"short":[],"verified":false},"2028-01":{"off":["2028-01-01","2028-01-02","2028-01-03","2028-01-04","2028-01-05","2028-01-06","2028-01-07","2028-01-08","2028-01-09","2028-01-15","2028-01-16","2028-01-22","2028-01-23","2028-01-29","2028-01-30"],"hol":["2028-01-03","2028-01-04","2028-01-05","2028-01-06","2028-01-07"],"work":[],"short":[],"verified":false},"2028-02":{"off":["2028-02-05","2028-02-06","2028-02-12","2028-02-13","2028-02-19","2028-02-20","2028-02-23","2028-02-26","2028-02-27"],"hol":["2028-02-23"],"work":[],"short":["2028-02-22"],"verified":false},"2028-03":{"off":["2028-03-04","2028-03-05","2028-03-08","2028-03-11","2028-03-12","2028-03-18","2028-03-19","2028-03-25","2028-03-26"],"hol":["2028-03-08"],"work":[],"short":["2028-03-07"],"verified":false},"2028-04":{"off":["2028-04-01","2028-04-02","2028-04-08","2028-04-09","2028-04-15","2028-04-16","2028-04-22","2028-04-23","2028-04-29","2028-04-30"],"hol":[],"work":[],"short":[],"verified":false},"2028-05":{"off":["2028-05-01","2028-05-06","2028-05-07","2028-05-09","2028-05-13","2028-05-14","2028-05-20","2028-05-21","2028-05-27","2028-05-28"],"hol":["2028-05-01","2028-05-09"],"work":[],"short":["2028-05-08"],"verified":false},"2028-06":{"off":["2028-06-03","2028-06-04","2028-06-10","2028-06-11","2028-06-12","2028-06-17","2028-06-18","2028-06-24","2028-06-25"],"hol":["2028-06-12"],"work":[],"short":[],"verified":false},"2028-07":{"off":["2028-07-01","2028-07-02","2028-07-08","2028-07-09","2028-07-15","2028-07-16","2028-07-22","2028-07-23","2028-07-29","2028-07-30"],"hol":[],"work":[],"short":[],"verified":false},"2028-08":{"off":["2028-08-05","2028-08-06","2028-08-12","2028-08-13","2028-08-19","2028-08-20","2028-08-26","2028-08-27"],"hol":[],"work":[],"short":[],"verified":false},"2028-09":{"off":["2028-09-02","2028-09-03","2028-09-09","2028-09-10","2028-09-16","2028-09-17","2028-09-23","2028-09-24","2028-09-30"],"hol":[],"work":[],"short":[],"verified":false},"2028-10":{"off":["2028-10-01","2028-10-07","2028-10-08","2028-10-14","2028-10-15","2028-10-21","2028-10-22","2028-10-28","2028-10-29"],"hol":[],"work":[],"short":[],"verified":false},"2028-11":{"off":["2028-11-04","2028-11-05","2028-11-06","2028-11-11","2028-11-12","2028-11-18","2028-11-19","2028-11-25","2028-11-26"],"hol":["2028-11-06"],"work":[],"short":["2028-11-03"],"verified":false},"2028-12":{"off":["2028-12-02","2028-12-03","2028-12-09","2028-12-10","2028-12-16","2028-12-17","2028-12-23","2028-12-24","2028-12-30","2028-12-31"],"hol":[],"work":[],"short":[],"verified":false}},"files":{"2026-11":"files/2026-11.xlsx?v=9c6560a65378"},"config":{"form":{"action":"https://docs.google.com/forms/d/e/1FAIpQLSckx3uIATXOmUh2wJz7j__M4bGN3njeDHmYOOHhZ89C1V-dMQ/formResponse","entry":"entry.107621685"},"deadline":15,"weekHours":39}}</script>
+<script id="data" type="application/json">{"tz":"Asia/Yekaterinburg","doctors":{"klepikov":{"name":"Клепиков"},"kardashina":{"name":"Кардашина"},"lekerova":{"name":"Лекерова","code":"Лк"},"khamatnurova":{"name":"Хаматнурова"},"leonard":{"name":"Леонард","code":"Ло"},"alekeshova":{"name":"Алекешова"},"omutov":{"name":"Омутов"}},"months":{"2026-11":{"title":"Ноябрь 2026","order":["klepikov","kardashina","lekerova","khamatnurova","leonard","alekeshova","omutov"],"shift":{"work":["16:18","08:00"],"off":["08:00","08:00"]},"off":["2026-11-01","2026-11-04","2026-11-07","2026-11-08","2026-11-14","2026-11-15","2026-11-21","2026-11-22","2026-11-28","2026-11-29"],"duty":{"2026-11-01":["lekerova"],"2026-11-02":["khamatnurova"],"2026-11-03":["kardashina"],"2026-11-04":["alekeshova"],"2026-11-05":["klepikov"],"2026-11-06":["leonard"],"2026-11-07":["klepikov"],"2026-11-08":["omutov"],"2026-11-09":["kardashina"],"2026-11-10":["omutov"],"2026-11-11":["kardashina"],"2026-11-12":["klepikov"],"2026-11-13":["leonard"],"2026-11-14":["klepikov"],"2026-11-15":["alekeshova"],"2026-11-16":["kardashina"],"2026-11-17":["lekerova"],"2026-11-18":["omutov"],"2026-11-19":["klepikov"],"2026-11-20":["leonard"],"2026-11-21":["klepikov"],"2026-11-22":["alekeshova"],"2026-11-23":["omutov"],"2026-11-24":["kardashina"],"2026-11-25":["lekerova"],"2026-11-26":["klepikov"],"2026-11-27":["leonard"],"2026-11-28":["omutov"],"2026-11-29":["alekeshova"],"2026-11-30":["kardashina"]},"marks":[{"who":"lekerova","from":"2026-11-04","to":"2026-11-16","label":"Отпуск"}]}},"updated":"2026-10-12T18:39:22Z","colors":["#3BE8FF","#4D9BFF","#8FD3FF","#62B6FF","#8A9BFF","#5CC8FF","#B8E6FF","#5B7DFF","#6FF0FF","#A0B4FF"],"cal":{"2026-10":{"off":["2026-10-03","2026-10-04","2026-10-10","2026-10-11","2026-10-17","2026-10-18","2026-10-24","2026-10-25","2026-10-31"],"hol":[],"work":[],"short":[],"verified":true},"2026-11":{"off":["2026-11-01","2026-11-04","2026-11-07","2026-11-08","2026-11-14","2026-11-15","2026-11-21","2026-11-22","2026-11-28","2026-11-29"],"hol":["2026-11-04"],"work":[],"short":["2026-11-03"],"verified":true},"2026-12":{"off":["2026-12-05","2026-12-06","2026-12-12","2026-12-13","2026-12-19","2026-12-20","2026-12-26","2026-12-27","2026-12-31"],"hol":["2026-12-31"],"work":[],"short":[],"verified":true},"2027-01":{"off":["2027-01-01","2027-01-02","2027-01-03","2027-01-04","2027-01-05","2027-01-06","2027-01-07","2027-01-08","2027-01-09","2027-01-10","2027-01-16","2027-01-17","2027-01-23","2027-01-24","2027-01-30","2027-01-31"],"hol":["2027-01-01","2027-01-04","2027-01-05","2027-01-06","2027-01-07","2027-01-08"],"work":[],"short":[],"verified":false},"2027-02":{"off":["2027-02-06","2027-02-07","2027-02-13","2027-02-14","2027-02-21","2027-02-22","2027-02-23","2027-02-27","2027-02-28"],"hol":["2027-02-22","2027-02-23"],"work":["2027-02-20"],"short":[],"verified":false},"2027-03":{"off":["2027-03-06","2027-03-07","2027-03-08","2027-03-13","2027-03-14","2027-03-20","2027-03-21","2027-03-27","2027-03-28"],"hol":["2027-03-08"],"work":[],"short":[],"verified":false},"2027-04":{"off":["2027-04-03","2027-04-04","2027-04-10","2027-04-11","2027-04-17","2027-04-18","2027-04-24","2027-04-25"],"hol":[],"work":[],"short":["2027-04-30"],"verified":false},"2027-05":{"off":["2027-05-01","2027-05-02","2027-05-03","2027-05-08","2027-05-09","2027-05-10","2027-05-15","2027-05-16","2027-05-22","2027-05-23","2027-05-29","2027-05-30"],"hol":["2027-05-03","2027-05-10"],"work":[],"short":[],"verified":false},"2027-06":{"off":["2027-06-05","2027-06-06","2027-06-12","2027-06-13","2027-06-14","2027-06-19","2027-06-20","2027-06-26","2027-06-27"],"hol":["2027-06-14"],"work":[],"short":["2027-06-11"],"verified":false},"2027-07":{"off":["2027-07-03","2027-07-04","2027-07-10","2027-07-11","2027-07-17","2027-07-18","2027-07-24","2027-07-25","2027-07-31"],"hol":[],"work":[],"short":[],"verified":false},"2027-08":{"off":["2027-08-01","2027-08-07","2027-08-08","2027-08-14","2027-08-15","2027-08-21","2027-08-22","2027-08-28","2027-08-29"],"hol":[],"work":[],"short":[],"verified":false},"2027-09":{"off":["2027-09-04","2027-09-05","2027-09-11","2027-09-12","2027-09-18","2027-09-19","2027-09-25","2027-09-26"],"hol":[],"work":[],"short":[],"verified":false},"2027-10":{"off":["2027-10-02","2027-10-03","2027-10-09","2027-10-10","2027-10-16","2027-10-17","2027-10-23","2027-10-24","2027-10-30","2027-10-31"],"hol":[],"work":[],"short":[],"verified":false},"2027-11":{"off":["2027-11-04","2027-11-05","2027-11-06","2027-11-07","2027-11-13","2027-11-14","2027-11-20","2027-11-21","2027-11-27","2027-11-28"],"hol":["2027-11-04","2027-11-05"],"work":[],"short":["2027-11-03"],"verified":false},"2027-12":{"off":["2027-12-04","2027-12-05","2027-12-11","2027-12-12","2027-12-18","2027-12-19","2027-12-25","2027-12-26","2027-12-31"],"hol":["2027-12-31"],"work":[],"short":[],"verified":false},"2028-01":{"off":["2028-01-01","2028-01-02","2028-01-03","2028-01-04","2028-01-05","2028-01-06","2028-01-07","2028-01-08","2028-01-09","2028-01-15","2028-01-16","2028-01-22","2028-01-23","2028-01-29","2028-01-30"],"hol":["2028-01-03","2028-01-04","2028-01-05","2028-01-06","2028-01-07"],"work":[],"short":[],"verified":false},"2028-02":{"off":["2028-02-05","2028-02-06","2028-02-12","2028-02-13","2028-02-19","2028-02-20","2028-02-23","2028-02-26","2028-02-27"],"hol":["2028-02-23"],"work":[],"short":["2028-02-22"],"verified":false},"2028-03":{"off":["2028-03-04","2028-03-05","2028-03-08","2028-03-11","2028-03-12","2028-03-18","2028-03-19","2028-03-25","2028-03-26"],"hol":["2028-03-08"],"work":[],"short":["2028-03-07"],"verified":false},"2028-04":{"off":["2028-04-01","2028-04-02","2028-04-08","2028-04-09","2028-04-15","2028-04-16","2028-04-22","2028-04-23","2028-04-29","2028-04-30"],"hol":[],"work":[],"short":[],"verified":false},"2028-05":{"off":["2028-05-01","2028-05-06","2028-05-07","2028-05-09","2028-05-13","2028-05-14","2028-05-20","2028-05-21","2028-05-27","2028-05-28"],"hol":["2028-05-01","2028-05-09"],"work":[],"short":["2028-05-08"],"verified":false},"2028-06":{"off":["2028-06-03","2028-06-04","2028-06-10","2028-06-11","2028-06-12","2028-06-17","2028-06-18","2028-06-24","2028-06-25"],"hol":["2028-06-12"],"work":[],"short":[],"verified":false},"2028-07":{"off":["2028-07-01","2028-07-02","2028-07-08","2028-07-09","2028-07-15","2028-07-16","2028-07-22","2028-07-23","2028-07-29","2028-07-30"],"hol":[],"work":[],"short":[],"verified":false},"2028-08":{"off":["2028-08-05","2028-08-06","2028-08-12","2028-08-13","2028-08-19","2028-08-20","2028-08-26","2028-08-27"],"hol":[],"work":[],"short":[],"verified":false},"2028-09":{"off":["2028-09-02","2028-09-03","2028-09-09","2028-09-10","2028-09-16","2028-09-17","2028-09-23","2028-09-24","2028-09-30"],"hol":[],"work":[],"short":[],"verified":false},"2028-10":{"off":["2028-10-01","2028-10-07","2028-10-08","2028-10-14","2028-10-15","2028-10-21","2028-10-22","2028-10-28","2028-10-29"],"hol":[],"work":[],"short":[],"verified":false},"2028-11":{"off":["2028-11-04","2028-11-05","2028-11-06","2028-11-11","2028-11-12","2028-11-18","2028-11-19","2028-11-25","2028-11-26"],"hol":["2028-11-06"],"work":[],"short":["2028-11-03"],"verified":false},"2028-12":{"off":["2028-12-02","2028-12-03","2028-12-09","2028-12-10","2028-12-16","2028-12-17","2028-12-23","2028-12-24","2028-12-30","2028-12-31"],"hol":[],"work":[],"short":[],"verified":false}},"files":{"2026-11":"files/2026-11.xlsx?v=9c6560a65378"},"pdf":{"2026-11":{"slots":{"alekeshova":[22.3,436.6,114.9],"kardashina":[22.3,187.2,114.9],"khamatnurova":[22.3,311.9,114.9],"klepikov":[22.3,124.8,114.9],"lekerova":[22.3,249.5,114.9],"leonard":[22.3,374.2,114.9],"omutov":[22.3,499.0,114.9]},"v":"cb6e90f36612"}},"config":{"form":{"action":"https://docs.google.com/forms/d/e/1FAIpQLSckx3uIATXOmUh2wJz7j__M4bGN3njeDHmYOOHhZ89C1V-dMQ/formResponse","entry":"entry.107621685"},"deadline":15,"weekHours":39}}</script>
 <script>
 'use strict';
 // Размер текста телефона. iPhone: «Экран и яркость → Размер текста» и «Универсальный доступ → Увеличенный текст»
@@ -990,7 +1011,7 @@ function renderWish() {
 // Версия для печати (в оперативный отдел): телефоны хранятся только на этом устройстве, файл собирается здесь же
 const PH_KEY = 'dezh:phones';
 function phones() { try { return JSON.parse(store.get(PH_KEY) || '{}') || {}; } catch (e) { return {}; } }
-let printReady = null; // {mk, file, url}
+let printReady = null; // {mk, n, out: [{kind: 'PDF'|'Excel', file, url}]}
 let orgOpen = false;
 function renderFiles() {
   const now = new Date(), t = wishTarget(now);
@@ -999,44 +1020,100 @@ function renderFiles() {
   let status = '';
   if (!D.months[pend] && pend > mkOf(now)) status = `<section class="card"><p class="eyebrow">${esc(monthTitle(pend))}</p><p>Пожелания собраны, график составляется. Появится здесь после утверждения ЕЮ.</p></section>`;
   const months = MK.slice().reverse().filter(mk => files[mk]);
-  const list = months.map(mk => `<section class="card file"><span class="ic">XLSX</span>
+  const pdf = mk => D.pdf && D.pdf[mk] && D.pdf[mk].slots;
+  const list = months.map(mk => `<section class="card file"><span class="ic">${pdf(mk) ? 'PDF' : 'XLSX'}</span>
     <div><h3>${esc(monthTitle(mk))}</h3><p class="lead small">График дежурств ПСО · без телефонов</p>${statusPills(mk) ? `<div class="status" style="justify-content:flex-start;margin-top:4px">${statusPills(mk)}</div>` : ''}</div>
-    <a class="btn primary" href="${esc(files[mk])}" download>Скачать</a></section>`).join('');
+    ${pdf(mk) ? `<a class="btn primary" href="files/${mk}.pdf?v=${D.pdf[mk].v}" download="${esc(fileName(mk, false, 'pdf'))}">PDF — печать</a>` : ''}<a class="btn${pdf(mk) ? '' : ' primary'}" href="${esc(files[mk])}" download>Excel</a></section>`).join('');
   const ph = phones();
   const ids = [...new Set(months.flatMap(mk => D.months[mk].order))];
   const have = ids.filter(id => ph[id]).length;
-  const ready = printReady ? `<div class="prow"><button type="button" class="btn primary" data-act="pshare">Отправить</button>
-      <a class="btn" href="${printReady.url}" download="${esc(printReady.file.name)}">Скачать</a></div>
-      <p class="sent small">✓ Готов: ${esc(printReady.file.name)}</p>` : '';
+  const ready = printReady ? `<div class="prow">${printReady.out.map((o, i) => `<button type="button" class="btn${i ? '' : ' primary'}" data-act="pshare" data-k="${i}">${o.kind === 'PDF' ? 'PDF — печать' : 'Excel'}</button>`).join('')}</div>
+      <p class="sent small">✓ Готово: ${esc(monthTitle(printReady.mk).toLowerCase())}, телефонов: ${printReady.n}. PDF печатается как есть — «Поделиться» → «Напечатать»</p>` : '';
   const org = `<details class="card org" ${orgOpen ? 'open' : ''}><summary>Для печати — с телефонами</summary><div class="orgbody">
     <p class="lead small">Для оперативного отдела: тот же график, у фамилий — телефоны для экстренной связи с дежурным. Телефоны хранятся только на этом телефоне и никуда не отправляются; файл собирается здесь же.</p>
     <p class="small">Телефоны: <b>${have} из ${ids.length}</b></p>
     <div class="prow"><button type="button" class="btn" data-act="phimport">Взять из файла графика</button></div>
     <input type="file" id="phfile" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
     <div class="phones">${ids.map(id => `<label><span>${esc(nameOf(id))}</span><input type="tel" inputmode="tel" autocomplete="off" data-ph="${id}" value="${esc(ph[id] || '')}" placeholder="телефон"></label>`).join('')}</div>
+    <p class="lead small">Соберите файлы с этими телефонами: PDF — печатать (лист A4 альбомом), Excel — если нужно переслать.</p>
     <div class="prow">${months.map(mk => `<button type="button" class="btn pink" data-act="pprep" data-mk="${mk}">Для печати: ${esc(monthTitle(mk).toLowerCase())}</button>`).join('')}</div>
     ${ready}</div></details>`;
   return `${status}<section class="card"><p class="eyebrow">Пожелания</p><p>${esc(monthTitle(t.mk))}: приём ${t.open ? 'до ' + t.deadline.getDate() + NB + GEN[t.deadline.getMonth()] : 'закрыт'}.</p></section>
     ${list || '<section class="card"><p class="lead">Файлов пока нет.</p></section>'}
     ${months.length ? org : ''}
-    <p class="lead small">Файл в формате общего графика: дни, отметки «+», отпуска, выходные и праздники по календарю РФ, итоги. Версия с листом пожеланий и нагрузкой — у ЕЮ.</p>`;
+    <p class="lead small">Печатайте PDF: лист A4 альбомом печатается как есть, с заголовком и заливкой выходных и отпусков (Excel iPhone печатает без них). В файлах — дни, отметки «+», отпуска, выходные и праздники по календарю РФ, итоги. Версия с листом пожеланий и нагрузкой — у ЕЮ.</p>`;
 }
-let zipLib = null;
-function loadZip() {
-  if (window.JSZip) return Promise.resolve(window.JSZip);
-  if (!zipLib) zipLib = new Promise((res, rej) => {
+// ——— Лист PDF (A4 альбом): дни, «+», отпуска, выходные и праздники по календарю РФ, итоги. Рисует его make_pdf.py при сборке;
+//     slots — заготовка «для печати»: «Врач, телефон» и пустое место под номер в строке каждого врача (номер впишет pdf-lib)
+const PWD = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+function printSheet(mk, slots) {
+  const M = D.months[mk], [y, m] = mk.split('-').map(Number), n = new Date(y, m, 0).getDate();
+  const off = new Set(M.off || []), order = M.order;
+  const iso = d => mk + '-' + String(d).padStart(2, '0');
+  const days = Array.from({ length: n }, (_, i) => i + 1);
+  const rowH = Math.min(22, Math.max(9, 168 / order.length));          // строки врачей заполняют лист, но не выше 22 мм
+  let h = `<div class="pv"><h1>ГРАФИК ДЕЖУРСТВ ПСО — ${esc(monthTitle(mk).toUpperCase())}${M.status === 'preliminary' ? ' (ПРЕДВАРИТЕЛЬНЫЙ)' : ''}</h1>
+    <table><colgroup><col style="width:44mm">${days.map(() => '<col>').join('')}<col style="width:15mm"></colgroup>
+    <tr><td class="hd cap" rowspan="2">${slots ? 'Врач, телефон' : 'Врач'}</td>${days.map(d => `<td class="dn ${off.has(iso(d)) ? 'off' : 'hd'}">${d}</td>`).join('')}<td class="hd cap" rowspan="2">Всего</td></tr>
+    <tr>${days.map(d => `<td class="wd ${off.has(iso(d)) ? 'off' : 'hd'}">${PWD[new Date(y, m - 1, d).getDay()]}</td>`).join('')}</tr>`;
+  order.forEach((id, i) => {
+    const base = i % 2 ? 'zb' : '', marks = (M.marks || []).filter(x => x.who === id);
+    let cells = '', total = 0;
+    for (let d = 1; d <= n; d++) {
+      const mark = marks.find(x => (x.from < iso(1) ? iso(1) : x.from) === iso(d));     // отметка может начаться в прошлом месяце
+      if (mark) {
+        const last = mark.to > iso(n) ? n : Number(mark.to.slice(8)), span = last - d + 1;
+        const lbl = mark.label.toUpperCase() + ' ' + String(d).padStart(2, '0') + (span > 1 ? '–' + String(last).padStart(2, '0') : '') + '.' + String(m).padStart(2, '0');
+        cells += `<td class="vac${span < 6 ? ' sm' : ''}" colspan="${span}">${esc(lbl)}</td>`; d += span - 1; continue;
+      }
+      const on = (M.duty[iso(d)] || []).includes(id); if (on) total++;
+      cells += `<td class="${off.has(iso(d)) ? 'off' : base}">${on ? '<span class="x">+</span>' : ''}</td>`;
+    }
+    h += `<tr style="height:${rowH.toFixed(1)}mm"><td class="nm ${base}">${esc(nameOf(id).toUpperCase())}${slots ? `<span class="slot" data-id="${id}">89000000000<i></i></span>` : ''}</td>${cells}<td class="tt sum">${total}</td></tr>`;
+  });
+  const per = days.map(d => (M.duty[iso(d)] || []).filter(x => order.includes(x)).length);
+  h += `<tr class="ft"><td class="hd nm">Дежурных за день</td>${per.map(c => `<td class="hd">${c}</td>`).join('')}<td class="hd">${per.reduce((a, b) => a + b, 0)}</td></tr></table></div>`;
+  return h;
+}
+const libs = {};
+function loadLib(name, src) {
+  if (window[name]) return Promise.resolve(window[name]);
+  if (!libs[name]) libs[name] = new Promise((res, rej) => {
     const sc = document.createElement('script');
-    sc.src = 'vendor/jszip.min.js'; // JSZip 3.10.1 (MIT), npm
-    sc.onload = () => res(window.JSZip);
-    sc.onerror = () => { zipLib = null; rej(new Error('jszip')); };
+    sc.src = src;
+    sc.onload = () => res(window[name]);
+    sc.onerror = () => { delete libs[name]; rej(new Error(name)); };
     document.head.append(sc);
   });
-  return zipLib;
+  return libs[name];
 }
+const loadZip = () => loadLib('JSZip', 'vendor/jszip.min.js');     // JSZip 3.10.1 (MIT), npm
+const loadPdf = () => loadLib('PDFLib', 'vendor/pdf-lib.min.js');  // pdf-lib 1.17.1 (MIT), npm
+const fileName = (mk, forPrint, ext) => 'График дежурств ПСО — ' + monthTitle(mk).toLowerCase() + (forPrint ? ' (для печати)' : '') + '.' + ext;
 const xmlEsc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const xmlUnesc = t => t.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&amp;/g, '&');
-async function preparePrint(mk) {
-  const ph = phones();
+// PDF «для печати»: в заготовку files/<месяц>-print.pdf вписываем номера в места, которые make_pdf.py оставил у фамилий
+// (x и базовая линия y — от левого верхнего угла, в пунктах).
+// Шрифт — встроенный в PDF Helvetica: в нём есть цифры и + ( ) -, прочие знаки убираем; длинный номер — мельче
+async function printPdf(mk, ph) {
+  const { PDFDocument, StandardFonts, rgb } = await loadPdf();
+  const r = await fetch(`files/${mk}-print.pdf?v=${D.pdf[mk].v}`, { cache: 'no-cache' });
+  if (!r.ok) throw new Error('файл');
+  const doc = await PDFDocument.load(await r.arrayBuffer());
+  const font = await doc.embedFont(StandardFonts.Helvetica), page = doc.getPages()[0];
+  let n = 0;
+  for (const [id, [x, y, w]] of Object.entries(D.pdf[mk].slots)) {
+    const tx = String(ph[id] || '').replace(/[^0-9+()\- ]/g, '').replace(/\s+/g, ' ').trim();
+    if (!/\d/.test(tx)) continue;
+    let size = 12;
+    while (size > 7 && font.widthOfTextAtSize(tx, size) > w) size -= .5;
+    page.drawText(tx, { x, y: page.getHeight() - y, size, font, color: rgb(0, 0, 0) });
+    n++;
+  }
+  doc.setTitle(fileName(mk, true, 'pdf').replace(/\.pdf$/, ''));
+  return { n, blob: new Blob([await doc.save()], { type: 'application/pdf' }) };
+}
+async function printXlsx(mk, ph) {
   const JSZip = await loadZip();
   const r = await fetch(D.files[mk], { cache: 'no-cache' });
   if (!r.ok) throw new Error('файл');
@@ -1054,11 +1131,20 @@ async function preparePrint(mk) {
     return m;
   });
   zip.file(path, xml);
-  const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  const name = 'График дежурств ПСО — ' + monthTitle(mk).toLowerCase() + ' (для печати).xlsx';
-  if (printReady) URL.revokeObjectURL(printReady.url);
-  printReady = { mk, file: new File([blob], name, { type: blob.type }), url: URL.createObjectURL(blob) };
-  return n;
+  return { n, blob: await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }) };
+}
+async function preparePrint(mk) {
+  const ph = phones();
+  const [pdf, xlsx] = await Promise.all([D.pdf && D.pdf[mk] && D.pdf[mk].slots ? printPdf(mk, ph) : null, printXlsx(mk, ph)]);
+  if (printReady) printReady.out.forEach(o => URL.revokeObjectURL(o.url));
+  const out = [];
+  for (const [kind, ext, res] of [['PDF', 'pdf', pdf], ['Excel', 'xlsx', xlsx]]) {
+    if (!res) continue;
+    const file = new File([res.blob], fileName(mk, true, ext), { type: res.blob.type });
+    out.push({ kind, file, url: URL.createObjectURL(file) });
+  }
+  printReady = { mk, n: (pdf || xlsx).n, out };
+  return printReady.n;
 }
 // Телефоны из любого Excel с графиком: читаем таблицу по строкам; в строке ищем фамилию врача и номер — в той же ячейке
 // или в соседней, в любом виде (8…, +7 (…) …-…-…, без восьмёрки, числом), текст ячейки может быть разбит Excel на части
@@ -1186,14 +1272,15 @@ view.addEventListener('click', e => {
   if (a === 'phimport') { const f = document.getElementById('phfile'); if (f) f.click(); return; }
   if (a === 'pprep') {
     b.disabled = true; b.textContent = 'Собираю файл…';
-    preparePrint(b.dataset.mk).then(n => { orgOpen = true; render(true); toast(n ? 'Файл для печати готов, телефонов: ' + n : 'Файл готов, но телефоны не заданы'); })
+    preparePrint(b.dataset.mk).then(n => { orgOpen = true; render(true); toast(n ? 'Файлы для печати готовы, телефонов: ' + n : 'Файлы готовы, но телефоны не заданы'); })
       .catch(() => { toast('Не получилось — нужна связь с интернетом'); render(true); });
     return;
   }
   if (a === 'pshare') {
-    const f = printReady && printReady.file;
-    if (f && navigator.canShare && navigator.canShare({ files: [f] })) navigator.share({ files: [f], title: f.name }).catch(() => {});
-    else if (printReady) { const l = document.createElement('a'); l.href = printReady.url; l.download = f.name; document.body.append(l); l.click(); l.remove(); }
+    const o = printReady && printReady.out[+b.dataset.k];
+    if (!o) return;
+    if (navigator.canShare && navigator.canShare({ files: [o.file] })) navigator.share({ files: [o.file], title: o.file.name }).catch(() => {});
+    else { const l = document.createElement('a'); l.href = o.url; l.download = o.file.name; document.body.append(l); l.click(); l.remove(); }
     return;
   }
 });

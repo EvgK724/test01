@@ -47,6 +47,15 @@ def page_at(b, when, width=390, height=844, me=None, tab=None):
     return ctx, pg
 
 
+def pdf_read(body):
+    """pdfinfo и текст PDF (poppler)."""
+    import subprocess, tempfile
+    with tempfile.NamedTemporaryFile(suffix=".pdf") as f:
+        f.write(body); f.flush()
+        return (subprocess.run(["pdfinfo", f.name], capture_output=True, text=True).stdout,
+                subprocess.run(["pdftotext", "-layout", f.name, "-"], capture_output=True, text=True).stdout)
+
+
 def hscroll(pg):
     return pg.evaluate("""() => { const m = document.querySelector('main'); const bad = [];
       for (const el of document.querySelectorAll('#view *')) { if (el.closest('.chips')) continue; const r = el.getBoundingClientRect();
@@ -164,10 +173,15 @@ with sync_playwright() as p:
     ctx.close()
     # 4. Excel
     ctx, pg = page_at(b, "2026-10-12T21:00:00+05:00", me="omutov", tab="files")
-    href = pg.locator('.file a').first.get_attribute("href")
-    check(href.startswith("files/2026-11.xlsx"), "ссылка на Excel ноября")
-    r = pg.request.get(URL.replace("index.html", href))
+    hrefs = pg.eval_on_selector_all(".file a", "els => els.map(e => e.getAttribute('href'))")
+    check(len(hrefs) == 2 and hrefs[0].startswith("files/2026-11.pdf?v=") and hrefs[1].startswith("files/2026-11.xlsx"), f"ссылки на PDF и Excel ноября: {hrefs}")
+    r = pg.request.get(URL.replace("index.html", hrefs[1]))
     check(r.ok and len(r.body()) > 3000, "файл Excel скачивается")
+    r = pg.request.get(URL.replace("index.html", hrefs[0]))
+    check(r.ok and r.body()[:5] == b"%PDF-", "PDF скачивается")
+    info, txt = pdf_read(r.body())
+    check("Pages:           1" in info and "841.92 x 594.96" in info, "PDF — один лист A4 альбомом")
+    check("ГРАФИК ДЕЖУРСТВ ПСО — НОЯБРЬ 2026" in txt and "КЛЕПИКОВ" in txt and "телефон" not in txt, "в PDF заголовок, фамилии, без телефонов")
     pg.screenshot(path=str(OUT / "06-files.png"), full_page=False)
     ctx.close()
     # Врачи, исключённые в config.json, нигде не показываются
@@ -201,6 +215,7 @@ with sync_playwright() as p:
     (tmp / "ph.json").write_text(json.dumps(fake))
     subprocess.run([sys.executable, str(ROOT / "tools" / "make_xlsx.py"), "2026-11", "--full", str(tmp / "src.xlsx"),
                     "--phones", str(tmp / "ph.json")], check=True, capture_output=True)
+    M11o = data["months"]["2026-11"]["order"]
     ctx, pg = page_at(b, "2026-10-12T21:00:00+05:00", me="klepikov", tab="files")
     pg.locator("details.org > summary").click()
     pg.set_input_files("#phfile", str(tmp / "src.xlsx"))
@@ -233,8 +248,18 @@ with sync_playwright() as p:
     pg.fill('[data-ph="omutov"]', "8 900 111-22-33")
     pg.locator('button[data-act="pprep"]').first.click()
     pg.wait_for_selector('button[data-act="pshare"]')
-    b64 = pg.evaluate("""async () => { const buf = new Uint8Array(await printReady.file.arrayBuffer()); let s = '';
-      for (let i = 0; i < buf.length; i++) s += String.fromCharCode(buf[i]); return btoa(s); }""")
+    check(pg.eval_on_selector_all('button[data-act="pshare"]', "els => els.map(e => e.textContent)") == ["PDF — печать", "Excel"],
+          "готовы PDF и Excel для печати")
+    got = pg.evaluate("""async () => Promise.all(printReady.out.map(async o => { const buf = new Uint8Array(await o.file.arrayBuffer()); let s = '';
+      for (let i = 0; i < buf.length; i++) s += String.fromCharCode(buf[i]); return [o.kind, o.file.name, btoa(s)]; }))""")
+    pdf_b = base64.b64decode(got[0][2])
+    b64 = got[1][2]
+    check(got[0][:2] == ["PDF", "График дежурств ПСО — ноябрь 2026 (для печати).pdf"] and got[1][1].endswith("(для печати).xlsx"), "имена файлов для печати")
+    info, txt = pdf_read(pdf_b)
+    check("Pages:           1" in info and "Врач, телефон" in txt and fake["klepikov"] in txt and "8 900 111-22-33" in txt
+          and all(fake[d] in txt for d in M11o if d != "omutov"), "PDF для печати: один лист, телефоны у всех фамилий")
+    (tmp / "print.pdf").write_bytes(pdf_b)
+    subprocess.run(["pdftoppm", "-r", "50", "-png", "-singlefile", str(tmp / "print.pdf"), str(OUT / "07-print-pdf")], check=True)
     z = zipfile.ZipFile(io.BytesIO(base64.b64decode(b64)))
     import openpyxl
     ws = openpyxl.load_workbook(io.BytesIO(base64.b64decode(b64))).worksheets[0]

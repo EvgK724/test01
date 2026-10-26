@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Сборка: data/schedule.json + data/config.json + tools/template.html → index.html,
-календари cal/<врач>.ics и cal/all.ics, файлы files/<месяц>.xlsx (без телефонов).
+календари cal/<врач>.ics и cal/all.ics, файлы files/<месяц>.xlsx и files/<месяц>.pdf (без телефонов).
 Запуск из корня репозитория: python3 dezhurstva/tools/build.py (import_xlsx.py вызывает её сам)."""
 import datetime as dt, hashlib, json, pathlib, sys
 
@@ -12,6 +12,8 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 COLORS = ["#3BE8FF", "#4D9BFF", "#8FD3FF", "#62B6FF", "#8A9BFF", "#5CC8FF", "#B8E6FF", "#5B7DFF", "#6FF0FF", "#A0B4FF"]
 # Версия оформления Excel: поменяли make_xlsx.py — увеличьте, чтобы файлы пересобрались
 XLSX_FORMAT = 5
+# То же для PDF: поменяли лист печати в template.html (.pv в стилях, printSheet) или make_pdf.py — увеличьте PDF_FORMAT
+PDF_FORMAT = 3
 # Напоминания: накануне в 19:00 и за час до начала
 EVE_HOUR = 19
 
@@ -150,12 +152,39 @@ def main():
     cfg_path = ROOT / "data" / "config.json"
     config = json.loads(cfg_path.read_text()) if cfg_path.exists() else {}
     tpl = (ROOT / "tools" / "template.html").read_text()
-    payload = json.dumps({**data, "colors": COLORS, "cal": cal, "files": files,
-                          "config": {"form": config.get("form", {}), "deadline": config.get("deadline", 15),
-                                     "weekHours": config.get("week_hours", 39)}},
-                         ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-    (ROOT / "index.html").write_text(tpl.replace("__DATA__", payload))
-    print(f"→ dezhurstva/index.html, cal/: {len(ids)} врачей + all.ics, смен {len(all_items)}, Excel: {', '.join(files)}")
+
+    def page(pdf):
+        payload = json.dumps({**data, "colors": COLORS, "cal": cal, "files": files, "pdf": pdf,
+                              "config": {"form": config.get("form", {}), "deadline": config.get("deadline", 15),
+                                         "weekHours": config.get("week_hours", 39)}},
+                             ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+        (ROOT / "index.html").write_text(tpl.replace("__DATA__", payload))
+
+    # PDF для печати: лист рисует printSheet() из самой страницы, поэтому — после её записи. files/pdf.json — версия
+    # и места под телефоны {месяц: {v, slots: {id: [x, y, ширина]}}} (без номеров — их вписывает телефон организатора)
+    pp = ROOT / "files" / "pdf.json"
+    pdf = json.loads(pp.read_text()) if pp.exists() else {}
+    pdf = {mk: v for mk, v in pdf.items() if mk in data["months"]}
+    need = {}
+    for mk, m in data["months"].items():
+        h = hashlib.sha1(json.dumps([PDF_FORMAT, m, {i: data["doctors"][i]["name"] for i in m["order"]}], ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:12]
+        if pdf.get(mk, {}).get("v") != h or not all((ROOT / "files" / f"{mk}{s}.pdf").exists() for s in ("", "-print")):
+            need[mk] = h
+            pdf.pop(mk, None)
+    page(pdf)
+    if need:
+        try:
+            import make_pdf
+            for mk, slots in make_pdf.render(list(need)).items():
+                pdf[mk] = {"v": need[mk], "slots": slots}
+        except Exception as e:  # нет Playwright или Chromium — страница работает и без PDF, кнопки «PDF» не будет
+            print(f"!! PDF не собран ({', '.join(need)}): {e}", file=sys.stderr)
+            for mk in need:
+                for s in ("", "-print"):
+                    (ROOT / "files" / f"{mk}{s}.pdf").unlink(missing_ok=True)
+        page(pdf)
+    pp.write_text(json.dumps(pdf, indent=1, sort_keys=True) + "\n")
+    print(f"→ dezhurstva/index.html, cal/: {len(ids)} врачей + all.ics, смен {len(all_items)}, Excel: {', '.join(files)}, PDF: {', '.join(pdf) or '—'}")
 
 
 if __name__ == "__main__":
