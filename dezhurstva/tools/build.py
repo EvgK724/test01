@@ -167,7 +167,7 @@ def main():
     pdf = {mk: v for mk, v in pdf.items() if mk in data["months"]}
     need = {}
     for mk, m in data["months"].items():
-        h = hashlib.sha1(json.dumps([PDF_FORMAT, m, {i: data["doctors"][i]["name"] for i in m["order"]}], ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:12]
+        h = hashlib.sha1(json.dumps(["pdf", PDF_FORMAT, m, {i: data["doctors"][i]["name"] for i in m["order"]}], ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:12]
         if pdf.get(mk, {}).get("v") != h or not all((ROOT / "files" / f"{mk}{s}.pdf").exists() for s in ("", "-print")):
             need[mk] = h
             pdf.pop(mk, None)

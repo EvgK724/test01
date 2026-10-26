@@ -1011,7 +1011,29 @@ function renderWish() {
 // Версия для печати (в оперативный отдел): телефоны хранятся только на этом устройстве, файл собирается здесь же
 const PH_KEY = 'dezh:phones';
 function phones() { try { return JSON.parse(store.get(PH_KEY) || '{}') || {}; } catch (e) { return {}; } }
-let printReady = null; // {mk, n, out: [{kind: 'PDF'|'Excel', file, url}]}
+let printReady = null; // {mk, n, out: [{kind: 'PDF'|'Excel', file}]}
+// Файлы отдаём только через меню «Поделиться» (там «Напечатать», «Сохранить в Файлы», мессенджеры). Ссылка на файл
+// в приложении с экрана «Домой» открывает его во весь экран — без панели Safari и без пути назад. Меню iOS открывает
+// лишь сразу после нажатия: если сначала ждать загрузку, Safari откажет, — поэтому файлы вкладки качаем заранее.
+const got = {}, getting = {};   // адрес → File (скачан) / Promise
+function fetchFile(href, name, type) {
+  if (!getting[href]) getting[href] = fetch(href).then(r => { if (!r.ok) throw new Error('файл'); return r.blob(); })
+    .then(bl => (got[href] = new File([bl], name, { type })))
+    .catch(e => { delete getting[href]; throw e; });
+  return getting[href];
+}
+const XLSX_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+function pubFile(mk, kind) {
+  return kind === 'pdf' ? [`files/${mk}.pdf?v=${D.pdf[mk].v}`, fileName(mk, false, 'pdf'), 'application/pdf'] : [D.files[mk], fileName(mk, false, 'xlsx'), XLSX_TYPE];
+}
+function shareFile(f) {
+  if (navigator.canShare && navigator.canShare({ files: [f] })) {
+    return navigator.share({ files: [f] }).catch(e => { if (e.name === 'NotAllowedError') toast('Файл готов — нажмите кнопку ещё раз'); });
+  }
+  const u = URL.createObjectURL(f), l = document.createElement('a');   // без меню «Поделиться» (компьютер) — просто скачать
+  l.href = u; l.download = f.name; document.body.append(l); l.click(); l.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 60000);
+}
 let orgOpen = false;
 function renderFiles() {
   const now = new Date(), t = wishTarget(now);
@@ -1021,14 +1043,15 @@ function renderFiles() {
   if (!D.months[pend] && pend > mkOf(now)) status = `<section class="card"><p class="eyebrow">${esc(monthTitle(pend))}</p><p>Пожелания собраны, график составляется. Появится здесь после утверждения ЕЮ.</p></section>`;
   const months = MK.slice().reverse().filter(mk => files[mk]);
   const pdf = mk => D.pdf && D.pdf[mk] && D.pdf[mk].slots;
+  for (const mk of months) for (const k of pdf(mk) ? ['pdf', 'xlsx'] : ['xlsx']) fetchFile(...pubFile(mk, k)).catch(() => {});
   const list = months.map(mk => `<section class="card file"><span class="ic">${pdf(mk) ? 'PDF' : 'XLSX'}</span>
     <div><h3>${esc(monthTitle(mk))}</h3><p class="lead small">График дежурств ПСО · без телефонов</p>${statusPills(mk) ? `<div class="status" style="justify-content:flex-start;margin-top:4px">${statusPills(mk)}</div>` : ''}</div>
-    ${pdf(mk) ? `<a class="btn primary" href="files/${mk}.pdf?v=${D.pdf[mk].v}" download="${esc(fileName(mk, false, 'pdf'))}">PDF — печать</a>` : ''}<a class="btn${pdf(mk) ? '' : ' primary'}" href="${esc(files[mk])}" download>Excel</a></section>`).join('');
+    ${pdf(mk) ? `<button type="button" class="btn primary" data-act="fshare" data-kind="pdf" data-mk="${mk}">PDF — печать</button>` : ''}<button type="button" class="btn${pdf(mk) ? '' : ' primary'}" data-act="fshare" data-kind="xlsx" data-mk="${mk}">Excel</button></section>`).join('');
   const ph = phones();
   const ids = [...new Set(months.flatMap(mk => D.months[mk].order))];
   const have = ids.filter(id => ph[id]).length;
   const ready = printReady ? `<div class="prow">${printReady.out.map((o, i) => `<button type="button" class="btn${i ? '' : ' primary'}" data-act="pshare" data-k="${i}">${o.kind === 'PDF' ? 'PDF — печать' : 'Excel'}</button>`).join('')}</div>
-      <p class="sent small">✓ Готово: ${esc(monthTitle(printReady.mk).toLowerCase())}, телефонов: ${printReady.n}. PDF печатается как есть — «Поделиться» → «Напечатать»</p>` : '';
+      <p class="sent small">✓ Готово: ${esc(monthTitle(printReady.mk).toLowerCase())}, телефонов: ${printReady.n}. «PDF — печать» → в меню «Напечатать»</p>` : '';
   const org = `<details class="card org" ${orgOpen ? 'open' : ''}><summary>Для печати — с телефонами</summary><div class="orgbody">
     <p class="lead small">Для оперативного отдела: тот же график, у фамилий — телефоны для экстренной связи с дежурным. Телефоны хранятся только на этом телефоне и никуда не отправляются; файл собирается здесь же.</p>
     <p class="small">Телефоны: <b>${have} из ${ids.length}</b></p>
@@ -1041,7 +1064,7 @@ function renderFiles() {
   return `${status}<section class="card"><p class="eyebrow">Пожелания</p><p>${esc(monthTitle(t.mk))}: приём ${t.open ? 'до ' + t.deadline.getDate() + NB + GEN[t.deadline.getMonth()] : 'закрыт'}.</p></section>
     ${list || '<section class="card"><p class="lead">Файлов пока нет.</p></section>'}
     ${months.length ? org : ''}
-    <p class="lead small">Печатайте PDF: лист A4 альбомом печатается как есть, с заголовком и заливкой выходных и отпусков (Excel iPhone печатает без них). В файлах — дни, отметки «+», отпуска, выходные и праздники по календарю РФ, итоги. Версия с листом пожеланий и нагрузкой — у ЕЮ.</p>`;
+    <p class="lead small">«PDF — печать» открывает меню «Поделиться»: пролистайте вниз до «Напечатать». PDF печатается как есть — A4 альбомом, с заголовком и заливкой выходных и отпусков (Excel iPhone печатает без них). В файлах — дни, отметки «+», отпуска, выходные и праздники по календарю РФ, итоги. Версия с листом пожеланий и нагрузкой — у ЕЮ.</p>`;
 }
 // ——— Лист PDF (A4 альбом): дни, «+», отпуска, выходные и праздники по календарю РФ, итоги. Рисует его make_pdf.py при сборке;
 //     slots — заготовка «для печати»: «Врач, телефон» и пустое место под номер в строке каждого врача (номер впишет pdf-lib)
@@ -1136,12 +1159,9 @@ async function printXlsx(mk, ph) {
 async function preparePrint(mk) {
   const ph = phones();
   const [pdf, xlsx] = await Promise.all([D.pdf && D.pdf[mk] && D.pdf[mk].slots ? printPdf(mk, ph) : null, printXlsx(mk, ph)]);
-  if (printReady) printReady.out.forEach(o => URL.revokeObjectURL(o.url));
   const out = [];
   for (const [kind, ext, res] of [['PDF', 'pdf', pdf], ['Excel', 'xlsx', xlsx]]) {
-    if (!res) continue;
-    const file = new File([res.blob], fileName(mk, true, ext), { type: res.blob.type });
-    out.push({ kind, file, url: URL.createObjectURL(file) });
+    if (res) out.push({ kind, file: new File([res.blob], fileName(mk, true, ext), { type: res.blob.type }) });
   }
   printReady = { mk, n: (pdf || xlsx).n, out };
   return printReady.n;
@@ -1278,9 +1298,14 @@ view.addEventListener('click', e => {
   }
   if (a === 'pshare') {
     const o = printReady && printReady.out[+b.dataset.k];
-    if (!o) return;
-    if (navigator.canShare && navigator.canShare({ files: [o.file] })) navigator.share({ files: [o.file], title: o.file.name }).catch(() => {});
-    else { const l = document.createElement('a'); l.href = o.url; l.download = o.file.name; document.body.append(l); l.click(); l.remove(); }
+    if (o) shareFile(o.file);
+    return;
+  }
+  if (a === 'fshare') {
+    const [href, ...rest] = pubFile(b.dataset.mk, b.dataset.kind);
+    if (got[href]) { shareFile(got[href]); return; }
+    b.disabled = true;
+    fetchFile(href, ...rest).then(shareFile).catch(() => toast('Не получилось скачать — нужна связь с интернетом')).finally(() => { b.disabled = false; });
     return;
   }
 });

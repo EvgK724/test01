@@ -29,13 +29,18 @@ def check(cond, msg):
         fails.append(msg)
 
 
-def page_at(b, when, width=390, height=844, me=None, tab=None):
+# Меню «Поделиться» вместо настоящего: запоминаем, какие файлы в него ушли
+SHARE_STUB = """window.__shared = []; navigator.canShare = d => !!(d && d.files);
+navigator.share = async d => { for (const f of d.files) { const u = new Uint8Array(await f.arrayBuffer());
+  window.__shared.push([f.name, f.type, String.fromCharCode(...u.slice(0, 5)), u.length]); } };"""
+
+
+def page_at(b, when, width=390, height=844, me=None, tab=None, init=""):
     ctx = b.new_context(viewport={"width": width, "height": height}, timezone_id="Asia/Yekaterinburg", locale="ru-RU", device_scale_factor=2)
     pg = ctx.new_page()
     pg.on("pageerror", lambda e: errors.append(str(e)))
     pg.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
     pg.clock.install(time=when)
-    init = ""
     if me:
         init += f"localStorage.setItem('dezh:me', {json.dumps(me)});"
     if tab:
@@ -172,9 +177,12 @@ with sync_playwright() as p:
     pg.screenshot(path=str(OUT / "05-wish.png"), full_page=True)
     ctx.close()
     # 4. Excel
-    ctx, pg = page_at(b, "2026-10-12T21:00:00+05:00", me="omutov", tab="files")
-    hrefs = pg.eval_on_selector_all(".file a", "els => els.map(e => e.getAttribute('href'))")
-    check(len(hrefs) == 2 and hrefs[0].startswith("files/2026-11.pdf?v=") and hrefs[1].startswith("files/2026-11.xlsx"), f"ссылки на PDF и Excel ноября: {hrefs}")
+    ctx, pg = page_at(b, "2026-10-12T21:00:00+05:00", me="omutov", tab="files", init=SHARE_STUB)
+    btns = pg.eval_on_selector_all('.file button[data-act="fshare"]', "els => els.map(e => [e.dataset.kind, e.textContent])")
+    check(btns == [["pdf", "PDF — печать"], ["xlsx", "Excel"]] and pg.locator(".file a").count() == 0,
+          f"у месяца кнопки PDF и Excel, не ссылки (ссылка в приложении с экрана «Домой» открывала файл без пути назад): {btns}")
+    hrefs = [pg.evaluate(f"pubFile('2026-11', '{k}')[0]") for k in ("pdf", "xlsx")]
+    check(hrefs[0].startswith("files/2026-11.pdf?v=") and hrefs[1].startswith("files/2026-11.xlsx"), f"адреса PDF и Excel ноября: {hrefs}")
     r = pg.request.get(URL.replace("index.html", hrefs[1]))
     check(r.ok and len(r.body()) > 3000, "файл Excel скачивается")
     r = pg.request.get(URL.replace("index.html", hrefs[0]))
@@ -182,6 +190,15 @@ with sync_playwright() as p:
     info, txt = pdf_read(r.body())
     check("Pages:           1" in info and "841.92 x 594.96" in info, "PDF — один лист A4 альбомом")
     check("ГРАФИК ДЕЖУРСТВ ПСО — НОЯБРЬ 2026" in txt and "КЛЕПИКОВ" in txt and "телефон" not in txt, "в PDF заголовок, фамилии, без телефонов")
+    pg.wait_for_function("Object.keys(got).length === 2")
+    url0 = pg.url
+    pg.click('.file button[data-kind="pdf"]')
+    pg.wait_for_function("__shared.length === 1")
+    pg.click('.file button[data-kind="xlsx"]')
+    pg.wait_for_function("__shared.length === 2")
+    sh = pg.evaluate("__shared")
+    check(sh[0][:3] == ["График дежурств ПСО — ноябрь 2026.pdf", "application/pdf", "%PDF-"] and sh[1][0] == "График дежурств ПСО — ноябрь 2026.xlsx"
+          and sh[1][2][:2] == "PK" and pg.url == url0, f"файлы скачаны заранее и уходят в меню «Поделиться», страница остаётся: {[s[:2] for s in sh]}")
     pg.screenshot(path=str(OUT / "06-files.png"), full_page=False)
     ctx.close()
     # Врачи, исключённые в config.json, нигде не показываются
@@ -216,7 +233,7 @@ with sync_playwright() as p:
     subprocess.run([sys.executable, str(ROOT / "tools" / "make_xlsx.py"), "2026-11", "--full", str(tmp / "src.xlsx"),
                     "--phones", str(tmp / "ph.json")], check=True, capture_output=True)
     M11o = data["months"]["2026-11"]["order"]
-    ctx, pg = page_at(b, "2026-10-12T21:00:00+05:00", me="klepikov", tab="files")
+    ctx, pg = page_at(b, "2026-10-12T21:00:00+05:00", me="klepikov", tab="files", init=SHARE_STUB)
     pg.locator("details.org > summary").click()
     pg.set_input_files("#phfile", str(tmp / "src.xlsx"))
     pg.wait_for_function("document.querySelectorAll('[data-ph]')[0].value !== ''")
@@ -252,6 +269,10 @@ with sync_playwright() as p:
           "готовы PDF и Excel для печати")
     got = pg.evaluate("""async () => Promise.all(printReady.out.map(async o => { const buf = new Uint8Array(await o.file.arrayBuffer()); let s = '';
       for (let i = 0; i < buf.length; i++) s += String.fromCharCode(buf[i]); return [o.kind, o.file.name, btoa(s)]; }))""")
+    pg.click('button[data-act="pshare"][data-k="0"]')
+    pg.wait_for_function("__shared.length === 1")
+    sh = pg.evaluate("__shared")[0]
+    check(sh[:3] == ["График дежурств ПСО — ноябрь 2026 (для печати).pdf", "application/pdf", "%PDF-"], f"PDF с телефонами уходит в меню «Поделиться»: {sh[:2]}")
     pdf_b = base64.b64decode(got[0][2])
     b64 = got[1][2]
     check(got[0][:2] == ["PDF", "График дежурств ПСО — ноябрь 2026 (для печати).pdf"] and got[1][1].endswith("(для печати).xlsx"), "имена файлов для печати")
