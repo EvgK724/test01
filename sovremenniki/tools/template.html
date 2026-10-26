@@ -277,25 +277,55 @@ html.wide main > .top { margin: 0 calc(-1 * max(24px, env(safe-area-inset-right,
 .sfade { position: fixed; top: 0; left: 0; right: 0; z-index: 20; height: env(safe-area-inset-top, 0px); pointer-events: none; background: linear-gradient(var(--bg), transparent); opacity: .85; }
 .sheet { padding-top: env(safe-area-inset-top, 0px); }
 .tabs-wrap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 10; padding: 3px max(12px, env(safe-area-inset-right, 0px)) clamp(6px, calc(env(safe-area-inset-bottom, 0px) - 8px), 26px) max(12px, env(safe-area-inset-left, 0px)); }   /* не выше 26 px над краем, даже если iOS сообщит завышенный вырез */
-nav.tabs { max-width: 40rem; margin: 0 auto; gap: 4px; padding: 4px; border: 1px solid rgba(59, 232, 255, 0.25); border-radius: 24px; box-shadow: 0 0 18px -6px rgba(59, 232, 255, 0.5), 0 18px 40px -18px rgba(0,0,0,.9); }
+nav.tabs { max-width: 40rem; margin: 0 auto; gap: 4px; padding: 4px; border-top: 0; }
 nav.tabs .tab { border-radius: 19px; min-height: 50px; padding-block: 2px; }
 html.wide nav.tabs .tab { min-height: 3rem; }
 html.wide nav.tabs .tab svg { padding-block: .1rem; }   /* меню не выше прежней полосы: на iPad в альбоме вопрос и «Дальше» — без прокрутки */
+
+/* ——— Liquid Glass: стекло только у того, что плавает поверх текста (меню, полоса под часами, листы, подсказка, «?»).
+   Преломлять фон Safari не умеет (SVG-фильтр в backdrop-filter), поэтому стекло — размытие и насыщенность того, что под ним,
+   светлая кромка с бликом сверху-слева и капля в меню, которая перетекает к выбранному разделу (как в «Медузе»). */
+.glass { position: relative; isolation: isolate; border: 1px solid rgba(190,235,255,.16);
+  background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.02) 46%, rgba(255,255,255,.05)), rgba(10,18,40,.52);
+  -webkit-backdrop-filter: blur(20px) saturate(190%) brightness(1.04); backdrop-filter: blur(20px) saturate(190%) brightness(1.04);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.26), inset 0 -1px 0 rgba(255,255,255,.05), inset 0 0 22px rgba(120,200,255,.07),
+    0 14px 34px -14px rgba(0,0,0,.85), 0 0 22px -9px rgba(59,232,255,.5); }
+.glass::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,255,255,.7), rgba(255,255,255,0) 28%, rgba(255,255,255,0) 68%, rgba(150,225,255,.4));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+nav.tabs.glass { border-radius: 26px; }
+nav.tabs .tab { position: relative; z-index: 1; text-shadow: 0 1px 3px rgba(0,0,0,.7); }
+nav.tabs .tab[aria-current="page"] svg { background: none; box-shadow: none; filter: drop-shadow(0 0 6px rgba(59,232,255,.8)); }
+/* Капля под выбранным пунктом меню: переезжает с лёгким «переливом» (растягивается и сжимается) */
+.lens { position: absolute; z-index: 0; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 20px) / 4); border-radius: 21px; pointer-events: none;
+  transform: translateX(calc(var(--i, 0) * (100% + 4px))); transition: transform .5s cubic-bezier(.3, 1.35, .45, 1);
+  background: radial-gradient(120% 90% at 30% 15%, rgba(255,255,255,.22), rgba(255,255,255,.05) 55%, rgba(59,232,255,.10));
+  border: 1px solid rgba(200,240,255,.28);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.4), inset 0 -2px 6px rgba(59,232,255,.18), 0 0 16px -4px rgba(59,232,255,.55); }
+.sheet { background: rgba(2,4,10,.5); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.sheet .panel.glass { border-radius: 28px 28px 0 0; background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.02) 40%), rgba(8,14,32,.8); }
+.sheet .panel.glass::before { display: none; }   /* лист прокручивается — кромка-«кольцо» уехала бы вместе с текстом */
+.toast.glass { border-radius: 18px; }
+.sfade { height: calc(env(safe-area-inset-top, 0px) * 1.25); opacity: 1; background: linear-gradient(rgba(4,6,13,.7), rgba(4,6,13,0));
+  -webkit-backdrop-filter: blur(8px) saturate(160%); backdrop-filter: blur(8px) saturate(160%); -webkit-mask-image: linear-gradient(#000 55%, transparent); mask-image: linear-gradient(#000 55%, transparent); }
+@media (prefers-reduced-motion: reduce) { .lens { transition: none; } }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .glass { background: rgba(8,13,28,.94); } }
+@media (prefers-reduced-transparency: reduce) { .glass { background: rgba(8,13,28,.96); -webkit-backdrop-filter: none; backdrop-filter: none; } }
 </style>
 </head>
 <body>
 <div class="sfade" aria-hidden="true"></div>
 <main id="main"><header class="top"><div class="wrap">
   <h1>Совре<b>менники</b></h1>
-  <button class="icon-btn" id="helpBtn" type="button" aria-label="Как пользоваться">?</button>
+  <button class="icon-btn glass" id="helpBtn" type="button" aria-label="Как пользоваться">?</button>
 </div></header><div class="wrap stack" id="view"></div></main>
-<div class="tabs-wrap"><nav class="tabs" aria-label="Разделы">
+<div class="tabs-wrap"><nav class="tabs glass" aria-label="Разделы"><span class="lens" aria-hidden="true"></span>
   <button class="tab" type="button" data-tab="feed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h9M8 12h13M5 18h10"/></svg>Лента</button>
   <button class="tab" type="button" data-tab="year"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h8M9 12h12M5 17h8"/><path d="M14.5 3v18" stroke-width="2.2"/></svg>Год</button>
   <button class="tab" type="button" data-tab="pair"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg>Пара</button>
   <button class="tab" type="button" data-tab="train"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>Тренировка</button>
 </nav></div>
-<div class="sheet" id="help" hidden><div class="panel" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+<div class="sheet" id="help" hidden><div class="panel glass" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
   <h2 id="helpTitle" style="font:700 1.25rem/1.2 var(--serif)">Как пользоваться</h2>
   <p class="lead">Для каждого человека — <b>год рождения – год смерти</b> и <b>◆ известное событие</b>, случившееся при его жизни.</p>
   <ol>
@@ -308,8 +338,8 @@ html.wide nav.tabs .tab svg { padding-block: .1rem; }   /* меню не выш�
   </ol>
   <button class="btn primary" type="button" id="helpClose">Понятно</button>
 </div></div>
-<div class="sheet" id="pers" hidden><div class="panel" role="dialog" aria-modal="true" aria-labelledby="pTitle" id="persPanel"></div></div>
-<div class="toast" id="toast" role="status" hidden></div>
+<div class="sheet" id="pers" hidden><div class="panel glass" role="dialog" aria-modal="true" aria-labelledby="pTitle" id="persPanel"></div></div>
+<div class="toast glass" id="toast" role="status" hidden></div>
 <script>
 /*__DATA__*/
 </script>
@@ -830,6 +860,7 @@ function renderTrain() {
 function render(keep) {
   const y = main.scrollTop;
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-current', b.dataset.tab === state.tab ? 'page' : 'false'));
+  moveLens();
   view.innerHTML = state.tab === 'feed' ? renderFeed() : state.tab === 'year' ? renderYear() : state.tab === 'pair' ? renderPair() : renderTrain();
   fitOpts();
   main.scrollTop = keep ? y : 0;
@@ -845,6 +876,17 @@ function fitOpts() {
 }
 let toastTimer = 0;
 function toast(t) { const el = document.getElementById('toast'); el.textContent = t; el.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.hidden = true; }, 2400); }
+// Капля меню переезжает к выбранному разделу и на ходу чуть растягивается — как жидкое стекло
+const navTabs = document.querySelector('nav.tabs'), lens = navTabs.querySelector('.lens');
+let lensAt = -1;
+function moveLens() {
+  const i = [...navTabs.querySelectorAll('.tab')].findIndex(b => b.getAttribute('aria-current') === 'page');
+  if (i < 0 || i === lensAt) return;
+  navTabs.style.setProperty('--i', i);
+  if (lensAt >= 0 && lens.animate && !matchMedia('(prefers-reduced-motion: reduce)').matches)
+    lens.animate([{ scale: '1 1' }, { scale: '1.22 0.9', offset: 0.35 }, { scale: '0.96 1.04', offset: 0.7 }, { scale: '1 1' }], { duration: 520, easing: 'ease-out' });
+  lensAt = i;
+}
 function go(tab) { state.tab = tab; store.set('sovr:tab', tab); render(); }
 function act(b) {
   const a = b.dataset.act;
