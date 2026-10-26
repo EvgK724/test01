@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#05070F">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Дежурства">
 <meta name="application-name" content="Дежурства">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -358,32 +358,72 @@ h1, h2, h3, p, b, .name, .summary { overflow-wrap: break-word; word-break: norma
   position: fixed; z-index: 60; left: 12px; right: 12px; bottom: calc(env(safe-area-inset-bottom, 0px) + 76px); max-width: 520px; margin: 0 auto;
   padding: 12px 16px; border-radius: 14px; background: #0A1A2E; border: 1px solid var(--neon); color: #DFFBFF; box-shadow: 0 0 22px -6px var(--neon); text-align: center;
 }
-/* Экран «Домой» iPhone/iPad: строка состояния сплошная (black, как в «want you to»): с прозрачной (black-translucent) iOS отдаёт
-   странице высоту на строку состояния меньше, и внизу остаётся промежуток. Страница закреплена по краям экрана,
-   отступ сверху — под строку состояния, если она прозрачная. Нижнее меню — «плавающая» пилюля над краем: под ней фон страницы, без сплошной полосы */
+/* Экран «Домой» iPhone/iPad: строка состояния прозрачная (black-translucent, как в «Футах и фунтах» и «Современниках»): текст
+   при прокрутке уходит под часы и под нижнее меню до краёв экрана, под часами — размытая полоса. Шапка прокручивается вместе
+   с экраном, меню — «плавающая» стеклянная пилюля поверх него. iOS 26–27 укорачивает окно приложения на высоту прозрачной строки
+   (WebKit 301108), и внизу остаётся чёрная полоса, — поэтому в режиме приложения страница не ниже экрана (проверено
+   в «Английском B2» на iPhone 18 Pro Max, iOS 27). Эти meta-теги iOS запоминает при установке: после их смены плитку ставят заново */
 html { height: 100%; padding-top: 0; }
+@media (display-mode: standalone) { html { min-height: min(100lvh, calc(100% + env(safe-area-inset-top, 0px))); } }
 html, body { overscroll-behavior: none; }   /* страницу нельзя оттянуть пальцем — меню не «прыгает» */
-body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: auto; height: auto; padding-top: env(safe-area-inset-top, 0px); }
-.tabs-wrap { flex: none; padding: 3px max(12px, env(safe-area-inset-right, 0px)) clamp(6px, calc(env(safe-area-inset-bottom, 0px) - 8px), 26px) max(12px, env(safe-area-inset-left, 0px)); }   /* не выше 26 px над краем, даже если iOS сообщит завышенный вырез */
-nav.tabs { max-width: 40rem; margin: 0 auto; gap: 4px; padding: 4px; border: 1px solid rgba(59, 232, 255, 0.25); border-radius: 24px; box-shadow: 0 0 18px -6px rgba(59, 232, 255, 0.5), 0 18px 40px -18px rgba(0,0,0,.9); }
+body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: auto; height: auto; padding-top: 0; }
+main { padding-top: env(safe-area-inset-top, 0px); padding-bottom: calc(var(--tabs-h, 84px) + 24px); }
+html.wide main { padding-top: env(safe-area-inset-top, 0px); padding-bottom: calc(var(--tabs-h, 84px) + 32px); }
+main > .top { margin: 0 calc(-1 * max(16px, env(safe-area-inset-right, 0px))) 16px calc(-1 * max(16px, env(safe-area-inset-left, 0px))); }
+html.wide main > .top { margin: 0 calc(-1 * max(24px, env(safe-area-inset-right, 0px))) 20px calc(-1 * max(24px, env(safe-area-inset-left, 0px))); }
+.sfade { position: fixed; top: 0; left: 0; right: 0; z-index: 20; pointer-events: none; }
+.sheet { padding-top: env(safe-area-inset-top, 0px); }
+.toast { bottom: calc(var(--tabs-h, 84px) + 12px); }
+.tabs-wrap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 10; padding: 3px max(12px, env(safe-area-inset-right, 0px)) clamp(6px, calc(env(safe-area-inset-bottom, 0px) - 8px), 26px) max(12px, env(safe-area-inset-left, 0px)); }   /* не выше 26 px над краем, даже если iOS сообщит завышенный вырез */
+nav.tabs { max-width: 40rem; margin: 0 auto; gap: 4px; padding: 4px; border-top: 0; }
 nav.tabs .tab { border-radius: 19px; min-height: 50px; padding-block: 2px; }
 html.wide nav.tabs .tab { min-height: 3rem; }
 html.wide nav.tabs .tab svg { padding-block: .1rem; }   /* меню не выше прежней полосы: на iPad в альбоме вопрос и «Дальше» — без прокрутки */
+
+/* ——— Liquid Glass: стекло только у того, что плавает поверх текста (меню, полоса под часами, листы, подсказка, «?»).
+   Преломлять фон Safari не умеет (SVG-фильтр в backdrop-filter), поэтому стекло — размытие и насыщенность того, что под ним,
+   светлая кромка с бликом сверху-слева и капля в меню, которая перетекает к выбранному разделу (как в «Медузе»). */
+.glass { position: relative; isolation: isolate; border: 1px solid rgba(190,235,255,.16);
+  background: linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.02) 46%, rgba(255,255,255,.05)), rgba(10,18,40,.52);
+  -webkit-backdrop-filter: blur(20px) saturate(190%) brightness(1.04); backdrop-filter: blur(20px) saturate(190%) brightness(1.04);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.26), inset 0 -1px 0 rgba(255,255,255,.05), inset 0 0 22px rgba(120,200,255,.07),
+    0 14px 34px -14px rgba(0,0,0,.85), 0 0 22px -9px rgba(59,232,255,.5); }
+.glass::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,255,255,.7), rgba(255,255,255,0) 28%, rgba(255,255,255,0) 68%, rgba(150,225,255,.4));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+nav.tabs.glass { border-radius: 26px; }
+nav.tabs .tab { position: relative; z-index: 1; text-shadow: 0 1px 3px rgba(0,0,0,.7); }
+nav.tabs .tab[aria-current="page"] svg { background: none; box-shadow: none; filter: drop-shadow(0 0 6px rgba(59,232,255,.8)); }
+/* Капля под выбранным пунктом меню: переезжает с лёгким «переливом» (растягивается и сжимается) */
+.lens { position: absolute; z-index: 0; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px - (var(--n, 4) - 1) * 4px) / var(--n, 4)); border-radius: 21px; pointer-events: none;
+  transform: translateX(calc(var(--i, 0) * (100% + 4px))); transition: transform .5s cubic-bezier(.3, 1.35, .45, 1);
+  background: radial-gradient(120% 90% at 30% 15%, rgba(255,255,255,.22), rgba(255,255,255,.05) 55%, rgba(59,232,255,.10));
+  border: 1px solid rgba(200,240,255,.28);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.4), inset 0 -2px 6px rgba(59,232,255,.18), 0 0 16px -4px rgba(59,232,255,.55); }
+.sheet { background: rgba(2,4,10,.5); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.sheet .panel.glass { border-radius: 28px 28px 0 0; background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.02) 40%), rgba(8,14,32,.8); }
+.sheet .panel.glass::before { display: none; }   /* лист прокручивается — кромка-«кольцо» уехала бы вместе с текстом */
+.toast.glass { border-radius: 18px; }
+.sfade { height: calc(env(safe-area-inset-top, 0px) * 1.25); opacity: 1; background: linear-gradient(rgba(4,6,13,.7), rgba(4,6,13,0));
+  -webkit-backdrop-filter: blur(8px) saturate(160%); backdrop-filter: blur(8px) saturate(160%); -webkit-mask-image: linear-gradient(#000 55%, transparent); mask-image: linear-gradient(#000 55%, transparent); }
+@media (prefers-reduced-motion: reduce) { .lens { transition: none; } }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .glass { background: rgba(8,13,28,.94); } }
+@media (prefers-reduced-transparency: reduce) { .glass { background: rgba(8,13,28,.96); -webkit-backdrop-filter: none; backdrop-filter: none; } }
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap">
+<div class="sfade" aria-hidden="true"></div>
+<main id="main"><header class="top"><div class="wrap">
   <h1>Дежурства <b>ПСО</b></h1>
-  <button class="icon-btn" id="helpBtn" type="button" aria-label="Как пользоваться">?</button>
-</div></header>
-<main id="main"><div class="wrap stack" id="view"></div></main>
-<div class="tabs-wrap"><nav class="tabs" aria-label="Разделы">
+  <button class="icon-btn glass" id="helpBtn" type="button" aria-label="Как пользоваться">?</button>
+</div></header><div class="wrap stack" id="view"></div></main>
+<div class="tabs-wrap"><nav class="tabs glass" aria-label="Разделы"><span class="lens" aria-hidden="true"></span>
   <button class="tab" type="button" data-tab="me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Мои</button>
   <button class="tab" type="button" data-tab="all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4M7.5 14h2M11 14h2M14.5 14h2M7.5 17.5h2M11 17.5h2"/></svg>График</button>
   <button class="tab" type="button" data-tab="wish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>Пожелания</button>
   <button class="tab" type="button" data-tab="files"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13l2 2 4-4"/></svg>Excel</button>
 </nav></div>
-<div class="sheet" id="help" hidden><div class="panel" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+<div class="sheet" id="help" hidden><div class="panel glass" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
   <h2 id="helpTitle" style="font:700 1.25rem/1.2 var(--serif)">Как пользоваться</h2>
   <ol>
     <li><b>На экран «Домой»:</b> в Safari «Поделиться» → «На экран Домой».</li>
@@ -397,14 +437,14 @@ html.wide nav.tabs .tab svg { padding-block: .1rem; }   /* меню не выш�
   <p class="lead small">Если календарь не напоминает: Настройки → Календарь → Учётные записи → Подписные календари → «Дежурства ПСО» → выключите «Удалить предупреждения».</p>
   <button class="btn primary" type="button" id="helpClose">Понятно</button>
 </div></div>
-<div class="sheet" id="ackSheet" hidden><div class="panel" role="dialog" aria-modal="true" aria-labelledby="ackTitle">
+<div class="sheet" id="ackSheet" hidden><div class="panel glass" role="dialog" aria-modal="true" aria-labelledby="ackTitle">
   <p class="eyebrow">Новый график</p>
   <h2 id="ackTitle" style="font:700 1.25rem/1.25 var(--serif)"></h2>
   <p class="lead" id="ackText"></p>
   <button class="btn primary" type="button" id="ackOpen">Ознакомиться и ответить</button>
   <button class="link" type="button" id="ackLater">Позже</button>
 </div></div>
-<div class="toast" id="toast" role="status" hidden></div>
+<div class="toast glass" id="toast" role="status" hidden></div>
 <script id="data" type="application/json">{"tz":"Asia/Yekaterinburg","doctors":{"klepikov":{"name":"Клепиков"},"kardashina":{"name":"Кардашина"},"lekerova":{"name":"Лекерова","code":"Лк"},"khamatnurova":{"name":"Хаматнурова"},"leonard":{"name":"Леонард","code":"Ло"},"alekeshova":{"name":"Алекешова"},"omutov":{"name":"Омутов"}},"months":{"2026-11":{"title":"Ноябрь 2026","order":["klepikov","kardashina","lekerova","khamatnurova","leonard","alekeshova","omutov"],"shift":{"work":["16:18","08:00"],"off":["08:00","08:00"]},"off":["2026-11-01","2026-11-04","2026-11-07","2026-11-08","2026-11-14","2026-11-15","2026-11-21","2026-11-22","2026-11-28","2026-11-29"],"duty":{"2026-11-01":["lekerova"],"2026-11-02":["khamatnurova"],"2026-11-03":["kardashina"],"2026-11-04":["alekeshova"],"2026-11-05":["klepikov"],"2026-11-06":["leonard"],"2026-11-07":["klepikov"],"2026-11-08":["omutov"],"2026-11-09":["kardashina"],"2026-11-10":["omutov"],"2026-11-11":["kardashina"],"2026-11-12":["klepikov"],"2026-11-13":["leonard"],"2026-11-14":["klepikov"],"2026-11-15":["alekeshova"],"2026-11-16":["kardashina"],"2026-11-17":["lekerova"],"2026-11-18":["omutov"],"2026-11-19":["klepikov"],"2026-11-20":["leonard"],"2026-11-21":["klepikov"],"2026-11-22":["alekeshova"],"2026-11-23":["omutov"],"2026-11-24":["kardashina"],"2026-11-25":["lekerova"],"2026-11-26":["klepikov"],"2026-11-27":["leonard"],"2026-11-28":["omutov"],"2026-11-29":["alekeshova"],"2026-11-30":["kardashina"]},"marks":[{"who":"lekerova","from":"2026-11-04","to":"2026-11-16","label":"Отпуск"}]}},"updated":"2026-10-12T18:39:22Z","colors":["#3BE8FF","#4D9BFF","#8FD3FF","#62B6FF","#8A9BFF","#5CC8FF","#B8E6FF","#5B7DFF","#6FF0FF","#A0B4FF"],"cal":{"2026-10":{"off":["2026-10-03","2026-10-04","2026-10-10","2026-10-11","2026-10-17","2026-10-18","2026-10-24","2026-10-25","2026-10-31"],"hol":[],"work":[],"short":[],"verified":true},"2026-11":{"off":["2026-11-01","2026-11-04","2026-11-07","2026-11-08","2026-11-14","2026-11-15","2026-11-21","2026-11-22","2026-11-28","2026-11-29"],"hol":["2026-11-04"],"work":[],"short":["2026-11-03"],"verified":true},"2026-12":{"off":["2026-12-05","2026-12-06","2026-12-12","2026-12-13","2026-12-19","2026-12-20","2026-12-26","2026-12-27","2026-12-31"],"hol":["2026-12-31"],"work":[],"short":[],"verified":true},"2027-01":{"off":["2027-01-01","2027-01-02","2027-01-03","2027-01-04","2027-01-05","2027-01-06","2027-01-07","2027-01-08","2027-01-09","2027-01-10","2027-01-16","2027-01-17","2027-01-23","2027-01-24","2027-01-30","2027-01-31"],"hol":["2027-01-01","2027-01-04","2027-01-05","2027-01-06","2027-01-07","2027-01-08"],"work":[],"short":[],"verified":false},"2027-02":{"off":["2027-02-06","2027-02-07","2027-02-13","2027-02-14","2027-02-21","2027-02-22","2027-02-23","2027-02-27","2027-02-28"],"hol":["2027-02-22","2027-02-23"],"work":["2027-02-20"],"short":[],"verified":false},"2027-03":{"off":["2027-03-06","2027-03-07","2027-03-08","2027-03-13","2027-03-14","2027-03-20","2027-03-21","2027-03-27","2027-03-28"],"hol":["2027-03-08"],"work":[],"short":[],"verified":false},"2027-04":{"off":["2027-04-03","2027-04-04","2027-04-10","2027-04-11","2027-04-17","2027-04-18","2027-04-24","2027-04-25"],"hol":[],"work":[],"short":["2027-04-30"],"verified":false},"2027-05":{"off":["2027-05-01","2027-05-02","2027-05-03","2027-05-08","2027-05-09","2027-05-10","2027-05-15","2027-05-16","2027-05-22","2027-05-23","2027-05-29","2027-05-30"],"hol":["2027-05-03","2027-05-10"],"work":[],"short":[],"verified":false},"2027-06":{"off":["2027-06-05","2027-06-06","2027-06-12","2027-06-13","2027-06-14","2027-06-19","2027-06-20","2027-06-26","2027-06-27"],"hol":["2027-06-14"],"work":[],"short":["2027-06-11"],"verified":false},"2027-07":{"off":["2027-07-03","2027-07-04","2027-07-10","2027-07-11","2027-07-17","2027-07-18","2027-07-24","2027-07-25","2027-07-31"],"hol":[],"work":[],"short":[],"verified":false},"2027-08":{"off":["2027-08-01","2027-08-07","2027-08-08","2027-08-14","2027-08-15","2027-08-21","2027-08-22","2027-08-28","2027-08-29"],"hol":[],"work":[],"short":[],"verified":false},"2027-09":{"off":["2027-09-04","2027-09-05","2027-09-11","2027-09-12","2027-09-18","2027-09-19","2027-09-25","2027-09-26"],"hol":[],"work":[],"short":[],"verified":false},"2027-10":{"off":["2027-10-02","2027-10-03","2027-10-09","2027-10-10","2027-10-16","2027-10-17","2027-10-23","2027-10-24","2027-10-30","2027-10-31"],"hol":[],"work":[],"short":[],"verified":false},"2027-11":{"off":["2027-11-04","2027-11-05","2027-11-06","2027-11-07","2027-11-13","2027-11-14","2027-11-20","2027-11-21","2027-11-27","2027-11-28"],"hol":["2027-11-04","2027-11-05"],"work":[],"short":["2027-11-03"],"verified":false},"2027-12":{"off":["2027-12-04","2027-12-05","2027-12-11","2027-12-12","2027-12-18","2027-12-19","2027-12-25","2027-12-26","2027-12-31"],"hol":["2027-12-31"],"work":[],"short":[],"verified":false},"2028-01":{"off":["2028-01-01","2028-01-02","2028-01-03","2028-01-04","2028-01-05","2028-01-06","2028-01-07","2028-01-08","2028-01-09","2028-01-15","2028-01-16","2028-01-22","2028-01-23","2028-01-29","2028-01-30"],"hol":["2028-01-03","2028-01-04","2028-01-05","2028-01-06","2028-01-07"],"work":[],"short":[],"verified":false},"2028-02":{"off":["2028-02-05","2028-02-06","2028-02-12","2028-02-13","2028-02-19","2028-02-20","2028-02-23","2028-02-26","2028-02-27"],"hol":["2028-02-23"],"work":[],"short":["2028-02-22"],"verified":false},"2028-03":{"off":["2028-03-04","2028-03-05","2028-03-08","2028-03-11","2028-03-12","2028-03-18","2028-03-19","2028-03-25","2028-03-26"],"hol":["2028-03-08"],"work":[],"short":["2028-03-07"],"verified":false},"2028-04":{"off":["2028-04-01","2028-04-02","2028-04-08","2028-04-09","2028-04-15","2028-04-16","2028-04-22","2028-04-23","2028-04-29","2028-04-30"],"hol":[],"work":[],"short":[],"verified":false},"2028-05":{"off":["2028-05-01","2028-05-06","2028-05-07","2028-05-09","2028-05-13","2028-05-14","2028-05-20","2028-05-21","2028-05-27","2028-05-28"],"hol":["2028-05-01","2028-05-09"],"work":[],"short":["2028-05-08"],"verified":false},"2028-06":{"off":["2028-06-03","2028-06-04","2028-06-10","2028-06-11","2028-06-12","2028-06-17","2028-06-18","2028-06-24","2028-06-25"],"hol":["2028-06-12"],"work":[],"short":[],"verified":false},"2028-07":{"off":["2028-07-01","2028-07-02","2028-07-08","2028-07-09","2028-07-15","2028-07-16","2028-07-22","2028-07-23","2028-07-29","2028-07-30"],"hol":[],"work":[],"short":[],"verified":false},"2028-08":{"off":["2028-08-05","2028-08-06","2028-08-12","2028-08-13","2028-08-19","2028-08-20","2028-08-26","2028-08-27"],"hol":[],"work":[],"short":[],"verified":false},"2028-09":{"off":["2028-09-02","2028-09-03","2028-09-09","2028-09-10","2028-09-16","2028-09-17","2028-09-23","2028-09-24","2028-09-30"],"hol":[],"work":[],"short":[],"verified":false},"2028-10":{"off":["2028-10-01","2028-10-07","2028-10-08","2028-10-14","2028-10-15","2028-10-21","2028-10-22","2028-10-28","2028-10-29"],"hol":[],"work":[],"short":[],"verified":false},"2028-11":{"off":["2028-11-04","2028-11-05","2028-11-06","2028-11-11","2028-11-12","2028-11-18","2028-11-19","2028-11-25","2028-11-26"],"hol":["2028-11-06"],"work":[],"short":["2028-11-03"],"verified":false},"2028-12":{"off":["2028-12-02","2028-12-03","2028-12-09","2028-12-10","2028-12-16","2028-12-17","2028-12-23","2028-12-24","2028-12-30","2028-12-31"],"hol":[],"work":[],"short":[],"verified":false}},"files":{"2026-11":"files/2026-11.xlsx?v=cb6e90f36612"},"config":{"form":{"action":"https://docs.google.com/forms/d/e/1FAIpQLSckx3uIATXOmUh2wJz7j__M4bGN3njeDHmYOOHhZ89C1V-dMQ/formResponse","entry":"entry.107621685"},"deadline":15,"weekHours":39}}</script>
 <script>
 'use strict';
@@ -565,6 +605,24 @@ if (!['me', 'all', 'wish', 'files'].includes(state.tab)) state.tab = 'me';
 
 const view = document.getElementById('view');
 const main = document.getElementById('main');
+// Нижнее меню плавает поверх экрана: снизу у экрана отступ на его высоту, чтобы последний блок поднимался выше пилюли
+const tabsWrap = document.querySelector('.tabs-wrap');
+const setTabsH = () => document.documentElement.style.setProperty('--tabs-h', tabsWrap.offsetHeight + 'px');
+setTabsH();
+if (window.ResizeObserver) new ResizeObserver(setTabsH).observe(tabsWrap); else addEventListener('resize', setTabsH);
+// Капля меню переезжает к выбранному разделу и на ходу чуть растягивается — как жидкое стекло
+const navTabs = document.querySelector('nav.tabs'), lens = navTabs.querySelector('.lens');
+let lensAt = -1;
+navTabs.style.setProperty('--n', navTabs.querySelectorAll('.tab').length);
+function moveLens() {
+  const i = [...navTabs.querySelectorAll('.tab')].findIndex(b => b.getAttribute('aria-current') === 'page');
+  if (i < 0 || i === lensAt) return;
+  navTabs.style.setProperty('--i', i);
+  if (lensAt >= 0 && lens.animate && !matchMedia('(prefers-reduced-motion: reduce)').matches)
+    lens.animate([{ scale: '1 1' }, { scale: '1.22 0.9', offset: 0.35 }, { scale: '0.96 1.04', offset: 0.7 }, { scale: '1 1' }], { duration: 520, easing: 'ease-out' });
+  lensAt = i;
+}
+
 
 function monthBar() {
   const i = MK.indexOf(state.month), st = D.months[state.month] ? statusPills(state.month) : '';
@@ -1049,6 +1107,7 @@ async function importPhones(file) {
 function render(keepScroll) {
   const y = main.scrollTop;
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-current', b.dataset.tab === state.tab ? 'page' : 'false'));
+  moveLens();
   view.innerHTML = state.tab === 'me' ? renderMe() : state.tab === 'all' ? renderAll() : state.tab === 'wish' ? renderWish() : renderFiles();
   main.scrollTop = keepScroll ? y : 0;
   const note = document.getElementById('note');
@@ -1091,7 +1150,7 @@ view.addEventListener('click', e => {
   if (a === 'prev' || a === 'next') { const i = MK.indexOf(state.month) + (a === 'prev' ? -1 : 1); if (MK[i]) { state.month = MK[i]; render(true); } return; }
   if (a === 'focus') { state.focus = b.dataset.id || null; render(true); return; }
   if (a === 'view') { state.view = b.dataset.v; store.set('dezh:view', state.view); render(true); return; }
-  if (a === 'day') { state.sel = b.dataset.k; render(true); const dc = view.querySelector('.daycard'); if (dc && dc.getBoundingClientRect().bottom > main.getBoundingClientRect().bottom) dc.scrollIntoView({ behavior: 'smooth', block: 'end' }); return; }
+  if (a === 'day') { state.sel = b.dataset.k; render(true); const dc = view.querySelector('.daycard'), lim = navTabs.getBoundingClientRect().top - 12; if (dc && dc.getBoundingClientRect().bottom > lim) main.scrollBy({ top: dc.getBoundingClientRect().bottom - lim, behavior: 'smooth' }); return; }   // карточка дня — над меню
   if (a === 'copy') { copy(icsUrl(state.me), 'Ссылка на календарь скопирована'); return; }
   if (a === 'copyall') { copy(icsUrl('all'), 'Ссылка на календарь скопирована'); return; }
   // Пожелания

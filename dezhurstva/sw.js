@@ -1,5 +1,5 @@
 // Сначала сеть, без связи — последняя сохранённая версия. Календари .ics и файлы Excel не кэшируем.
-const CACHE = 'dezhurstva-v1';
+const CACHE = 'dezhurstva-v2';
 self.addEventListener('install', e => {
   self.skipWaiting();
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(['./', 'icon-180.png'])).catch(() => {}));
