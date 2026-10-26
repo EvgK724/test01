@@ -1,5 +1,5 @@
 // Сначала сеть, без связи — последняя сохранённая версия
-const CACHE = 'medusa-v2';
+const CACHE = 'medusa-v3';
 self.addEventListener('install', e => {
   self.skipWaiting();
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(['./', 'icon-180.png'])).catch(() => {}));
