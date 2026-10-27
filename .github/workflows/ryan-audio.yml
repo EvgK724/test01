@@ -1,5 +1,5 @@
 # Делает записи голосом Microsoft Ryan для каждого приложения, в котором есть tools/make_audio.py
-# (want-you-to, noun-prepositions, …), и коммитит их в ту же ветку.
+# (want-you-to, noun-prepositions, …), кроме отдельной очереди kollokatsii.
 # Запускается при изменении фраз или вручную.
 name: Ryan voice audio
 
@@ -8,7 +8,7 @@ on:
     paths:
       - '*/index.html'
       - '*/tools/**'
-      - '.github/workflows/ryan-audio.yml'
+      - '!kollokatsii/**'
   workflow_dispatch:
 
 permissions:
@@ -35,6 +35,7 @@ jobs:
         run: |
           for script in */tools/make_audio.py; do
             dir="${script%/tools/make_audio.py}"
+            if [ "$dir" = "kollokatsii" ]; then continue; fi
             echo "::group::$dir"
             node "$dir/tools/extract_phrases.mjs"
             python "$script"

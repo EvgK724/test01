@@ -1,0 +1,112 @@
+# Independent queue: only complete, decoded kollokatsii audio can reach Git/Pages.
+name: Kollokatsii Ryan audio
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'kollokatsii/index.html'
+      - 'kollokatsii/phrases.json'
+      - 'kollokatsii/tools/**'
+      - '.github/workflows/kollokatsii-ryan.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: kollokatsii-ryan-main
+  cancel-in-progress: false
+
+jobs:
+  audio:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Remember source revision
+        id: source
+        run: echo "revision=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install the standard speech client and decoder
+        run: |
+          python -m pip install edge-tts==7.3.1
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Extract current kollokatsii phrases
+        run: node kollokatsii/tools/extract_phrases.mjs
+
+      - name: Test audio generation without network requests
+        run: python -m unittest discover -s kollokatsii/tools -p 'test_make_audio.py'
+
+      - name: Test phrase coverage and playback contracts
+        run: node --test kollokatsii/tools/test_audio.mjs
+
+      # Failed runs keep validated files here, never in a published partial commit.
+      - name: Restore completed recordings
+        uses: actions/cache/restore@v4
+        with:
+          path: kollokatsii/audio/*.mp3
+          key: kollokatsii-ryan-v1-${{ runner.os }}-${{ hashFiles('kollokatsii/phrases.json') }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            kollokatsii-ryan-v1-${{ runner.os }}-
+
+      - name: Generate only missing or invalid kollokatsii audio
+        id: generate
+        run: python kollokatsii/tools/make_audio.py
+
+      - name: Keep completed recordings for a later retry
+        if: ${{ !cancelled() && always() && steps.generate.outcome != 'skipped' }}
+        uses: actions/cache/save@v4
+        with:
+          path: kollokatsii/audio/*.mp3
+          key: kollokatsii-ryan-v1-${{ runner.os }}-${{ hashFiles('kollokatsii/phrases.json') }}-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Require complete decoded audio and index
+        run: python kollokatsii/tools/make_audio.py --check
+
+      - name: Commit the complete kollokatsii batch
+        id: commit
+        env:
+          SOURCE_REVISION: ${{ steps.source.outputs.revision }}
+        run: |
+          git fetch origin main
+          if ! git diff --quiet "$SOURCE_REVISION" origin/main -- kollokatsii/index.html kollokatsii/phrases.json kollokatsii/tools .github/workflows/kollokatsii-ryan.yml; then
+            echo 'Kollokatsii source changed during generation; retry against current main.' >&2
+            exit 1
+          fi
+          git add kollokatsii/audio kollokatsii/phrases.json
+          if git diff --cached --quiet; then
+            echo 'Audio is complete and up to date'
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898333+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Complete Microsoft Ryan audio for kollokatsii'
+          git rebase origin/main
+          git push origin HEAD:main
+          echo 'changed=true' >> "$GITHUB_OUTPUT"
+
+      # GITHUB_TOKEN commits do not automatically start a legacy Pages build.
+      # Request the existing main/root build; do not change site settings.
+      - name: Request the existing Pages build
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds"

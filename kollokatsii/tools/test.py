@@ -29,8 +29,29 @@ def check(cond, msg):
         fails.append(msg)
 
 
-# Голос: вместо настоящей озвучки запоминаем, что прозвучало
-SPEECH = """window.__said = []; window.speechSynthesis && (speechSynthesis.speak = u => __said.push(u.text), speechSynthesis.cancel = () => {});"""
+# MockAudio проверяет маршрутизацию кликов, не декодирование MP3 и не реальный голос.
+# Полный mock-манифест позволяет проверять UI до окончания генерации записей.
+def audio_hash(text):
+    value = 0x811C9DC5
+    for byte in text.encode("utf-8"):
+        value = ((value ^ byte) * 0x01000193) & 0xFFFFFFFF
+    return f"{value:08x}"
+
+
+MOCK_MANIFEST = {"voice": "en-GB-RyanNeural", "files": [audio_hash(text) for text in json.loads((ROOT / "phrases.json").read_text())["phrases"]]}
+AUDIO_MOCK = """window.__audioPlays = []; window.__mockAudios = []; window.__deviceSpeech = [];
+window.Audio = class MockAudio {
+  constructor() { this.paused = true; window.__mockAudios.push(this); }
+  play() { this.paused = false; window.__audioPlays.push({src: this.src, rate: this.playbackRate});
+    queueMicrotask(() => this.onplaying?.()); return Promise.resolve(); }
+  pause() { this.paused = true; }
+  removeAttribute(name) { if (name === 'src') this.src = ''; }
+  load() {}
+};
+if (window.speechSynthesis) {
+  speechSynthesis.speak = u => window.__deviceSpeech.push(u.text);
+  speechSynthesis.cancel = () => {};
+}"""
 
 
 def page(b, tab="units", width=390, height=844, scale=None, init=""):
@@ -38,7 +59,8 @@ def page(b, tab="units", width=390, height=844, scale=None, init=""):
     pg = ctx.new_page()
     pg.on("pageerror", lambda e: errors.append(str(e)))
     pg.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
-    pg.add_init_script(SPEECH + f"localStorage.setItem('kol:tab', '{tab}');" + init)
+    pg.route("**/audio/index.json", lambda route: route.fulfill(status=200, content_type="application/json", body=json.dumps(MOCK_MANIFEST)))
+    pg.add_init_script(AUDIO_MOCK + f"localStorage.setItem('kol:tab', '{tab}');" + init)
     pg.goto(URL)
     pg.wait_for_selector("#view > *")
     if scale:  # крупный текст телефона: как applyTextSize(), с множителем iPad
@@ -93,13 +115,19 @@ with sync_playwright() as p:
     check(pg.locator(".ru.cover").count() == cols, "«Скрыть перевод» прячет все переводы")
     pg.locator(".ru.cover").first.click()
     check(pg.locator(".ru.cover").count() == cols - 1, "нажатие открывает один перевод")
+    progress_before_audio = pg.evaluate("localStorage.getItem('kol:srs')")
     pg.locator(".col .say").first.click()
     pg.locator(".col .ex").first.click()
-    said = pg.evaluate("__said")
-    check(said[:2] == [pg.evaluate("UNIT[13].items[0].cp"), pg.evaluate("UNIT[13].items[0].exp")], f"озвучка коллокации и примера: {said[:2]}")
+    played = pg.evaluate("__audioPlays")
+    expected_texts = pg.evaluate("[UNIT[13].items[0].cp, UNIT[13].items[0].exp]")
+    check([entry["src"] for entry in played[:2]] == [f"audio/{audio_hash(text)}.mp3" for text in expected_texts], f"MockAudio: клики коллокации и примера выбирают Ryan MP3: {played[:2]}")
+    check(pg.evaluate("__mockAudios[0].paused && __mockAudios[0].src === ''"), "MockAudio: новый пример останавливает прежнюю запись")
+    check(not pg.evaluate("__deviceSpeech"), "MockAudio: нет подмены голосом устройства")
+    check(pg.evaluate("localStorage.getItem('kol:srs')") == progress_before_audio, "прослушивание не меняет интервальный прогресс")
     pg.screenshot(path=str(OUT / "k2-unit.png"))
     pg.locator('.unav .btn').last.click()
     check("Travel" in pg.inner_text(".uhead"), "кнопка следующего урока ведёт к уроку 14")
+    check(pg.evaluate("__mockAudios.every(a => a.paused)"), "MockAudio: переход к другому уроку останавливает звук")
     ctx.close()
     # Карточки урока: переворот, «Не знаю» возвращается, «Знаю» — интервал 1 день, смахивание
     ctx, pg = page(b, "units")
@@ -107,8 +135,12 @@ with sync_playwright() as p:
     pg.click('[data-act="ucards"]')
     check(pg.locator("#fc").count() == 1 and pg.evaluate("session.deck.length") == 20, "карточки урока 7: заход из 20")
     first = pg.evaluate("session.deck[0].id")
+    first_term, first_example = pg.evaluate("[session.deck[0].cp, session.deck[0].exp]")
+    check(pg.evaluate("__audioPlays.at(-1).src") == f"audio/{audio_hash(first_term)}.mp3", "MockAudio: первая карточка озвучивает коллокацию")
     pg.click("#fc")
     check(pg.locator(".grades .btn").count() == 3, "после переворота — «Не знаю», «Почти», «Знаю»")
+    check(pg.evaluate("__audioPlays.at(-1).src") == f"audio/{audio_hash(first_example)}.mp3", "MockAudio: переворот карточки озвучивает её пример")
+    check(pg.evaluate("__mockAudios.slice(0, -1).every(a => a.paused)"), "MockAudio: переворот останавливает коллокацию перед примером")
     pg.screenshot(path=str(OUT / "k3-card.png"))
     pg.click('[data-act="grade"][data-q="0"]')
     deck = pg.evaluate("session.deck.map(c => c.id)")
@@ -139,9 +171,13 @@ with sync_playwright() as p:
             k = (k + 1) % 4
         pg.locator(".opt").nth(k).click()
         if asked == 0:
+            example = pg.evaluate("round.qs[round.i].it.exp")
+            check(pg.evaluate("__audioPlays.at(-1).src") == f"audio/{audio_hash(example)}.mp3", "MockAudio: ответ в тренировке озвучивает полный пример")
             pg.screenshot(path=str(OUT / "k4-train.png"))
         wrong_first = False
         pg.click('[data-act="next"]')
+        if asked == 0:
+            check(pg.evaluate("__mockAudios.every(a => a.paused)"), "MockAudio: следующий вопрос останавливает прежний пример")
         asked += 1
     end = pg.inner_text("#view").replace("\xa0", " ")
     check(asked == 11 and "9 из 10 с первого раза" in end and "Запомните" in end, f"раунд: 11 вопросов (ошибка повторена), итог 9 из 10 — {asked}")

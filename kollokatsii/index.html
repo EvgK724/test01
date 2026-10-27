@@ -191,6 +191,7 @@ s { color: #FF8A95; text-decoration-thickness: 2px; }
 /* Тренировка */
 .qcard .qt { font: 500 1.2rem/1.5 var(--serif); color: #EEF4FF; }
 .qcard .qru { font: 700 clamp(1.3rem, 6vw, 1.7rem)/1.3 var(--sans); color: #DFF6FF; }
+.qcard .lead > .nobr { white-space: normal; }
 .gap { display: inline-block; width: 4.5em; height: 1.05em; vertical-align: -0.2em; border-bottom: 2px solid var(--gold); border-radius: 2px; }
 .opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .opts.one { grid-template-columns: minmax(0, 1fr); }
@@ -267,6 +268,9 @@ html.wide main > .top { margin: 0 calc(-1 * max(24px, env(safe-area-inset-right,
 .tabs-wrap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 10; padding: 3px max(12px, env(safe-area-inset-right, 0px)) clamp(6px, calc(env(safe-area-inset-bottom, 0px) - 8px), 26px) max(12px, env(safe-area-inset-left, 0px)); }
 nav.tabs { max-width: 40rem; margin: 0 auto; gap: 4px; padding: 4px; }
 nav.tabs .tab { border-radius: 19px; min-height: 50px; padding-block: 2px; }
+@media (max-width: 340px) {
+  .tabs-wrap { padding-left: max(6px, env(safe-area-inset-left, 0px)); padding-right: max(6px, env(safe-area-inset-right, 0px)); }
+}
 html.wide nav.tabs .tab { min-height: 3rem; }
 html.wide nav.tabs .tab svg { padding-block: .1rem; }
 
@@ -2852,7 +2856,7 @@ function grade(it, q) {
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 const poolOf = scope => scope === 'all' || scope === 'due' || !UNIT[scope] ? ITEMS : UNIT[scope].items;
 
-// ---------- Озвучка: 1) записи Microsoft Ryan (audio/<хэш>.mp3, список в audio/index.json); 2) иначе голос устройства ----------
+// ---------- Озвучка: записи Microsoft Ryan, без подмены голосом устройства ----------
 function fnv(s) {
   const bytes = new TextEncoder().encode(s);
   let h = 0x811c9dc5;
@@ -2860,55 +2864,71 @@ function fnv(s) {
   return ('0000000' + h.toString(16)).slice(-8);
 }
 const set = { auto: store.get('kol:auto') !== '0', slow: store.get('kol:slow') === '1' };
-const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
-let voices = [];
-function loadVoices() { try { voices = synth ? synth.getVoices().filter(v => /^en([-_]|$)/i.test(v.lang || '')) : []; } catch (e) { voices = []; } }
+const speechTexts = new Set(allPhrases());
 const voice = {
-  files: null, audio: null,
+  files: null, audio: null, sequence: 0, loading: null, failed: new Set(),
   async init() {
-    try {
-      const r = await fetch('audio/index.json', { cache: 'no-cache' });
-      if (r.ok) { const j = await r.json(); if (j && Array.isArray(j.files)) this.files = new Set(j.files); }
-    } catch (e) { /* записей нет — голос устройства */ }
-  },
-  deviceVoice() {
-    const gb = voices.filter(v => /en[-_]gb/i.test(v.lang));
-    return voices.find(v => /ryan/i.test(v.name)) || gb.find(v => /natural|online|neural/i.test(v.name)) ||
-      gb.find(v => /enhanced|premium|улучш/i.test(v.name)) || gb.find(v => /daniel|arthur/i.test(v.name)) ||
-      gb[0] || voices.find(v => /en[-_]us/i.test(v.lang)) || voices[0] || null;
+    if (this.loading) return this.loading;
+    this.loading = (async () => {
+      const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 10000);
+      try {
+        const r = await fetch('audio/index.json', { cache: 'no-cache', signal: controller.signal });
+        if (!r.ok) return;
+        const j = await r.json();
+        if (j?.voice === 'en-GB-RyanNeural' && Array.isArray(j.files) && j.files.every(h => /^[0-9a-f]{8}$/.test(h))) {
+          this.files = new Set(j.files);
+          syncSettings();
+        } else {
+          this.files = new Set(); // явно другой профиль нельзя выдавать за Ryan
+        }
+      } catch (e) { /* сохранённые записи остаются доступны без сети */ }
+      finally { clearTimeout(timer); this.loading = null; }
+    })();
+    return this.loading;
   },
   speak(text) {
     this.stop();
-    if (this.files && this.files.has(fnv(text))) {
-      try {
-        if (!this.audio) this.audio = new Audio();
-        const a = this.audio;
-        a.src = 'audio/' + fnv(text) + '.mp3';
-        a.playbackRate = set.slow ? 0.82 : 1;
-        const p = a.play();
-        if (p && p.catch) p.catch(err => { if (!err || err.name !== 'AbortError') this.tts(text); });
-        return;
-      } catch (e) { /* голос устройства */ }
+    if (!speechTexts.has(text)) return;
+    const hash = fnv(text), seq = this.sequence;
+    if (this.files && !this.files.has(hash)) {
+      toast('Запись Ryan ещё загружается. Повторите нажатие через несколько секунд.');
+      this.init();
+      return;
     }
-    this.tts(text);
-  },
-  tts(text) {
-    if (!synth) return;
+    // play() вызывается сразу внутри нажатия: Safari сохраняет разрешение пользователя,
+    // даже если audio/index.json ещё загружается. Публикация проверяет все фразы заранее.
+    const fail = err => {
+      if (seq !== this.sequence || err?.name === 'AbortError') return;
+      this.failed.add(hash);
+      toast('Не удалось загрузить Ryan. Проверьте интернет и нажмите ещё раз.');
+    };
     try {
-      const u = new SpeechSynthesisUtterance(text), v = this.deviceVoice();
-      if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'en-GB';
-      u.rate = set.slow ? 0.75 : 0.92;
-      synth.speak(u);
-    } catch (e) {}
+      const a = new Audio();
+      this.audio = a;
+      a.src = 'audio/' + hash + '.mp3' + (this.failed.has(hash) ? '?retry=' + Date.now() : '');
+      a.playbackRate = set.slow ? 0.82 : 1;
+      a.onplaying = () => { if (seq === this.sequence) this.failed.delete(hash); };
+      a.onerror = fail;
+      const p = a.play();
+      if (p?.catch) p.catch(fail);
+    } catch (e) { fail(e); }
   },
   stop() {
-    try { if (this.audio) this.audio.pause(); } catch (e) {}
-    try { if (synth) synth.cancel(); } catch (e) {}
+    this.sequence++;
+    if (this.audio) {
+      this.audio.onerror = this.audio.onplaying = null;
+      try { this.audio.pause(); this.audio.removeAttribute('src'); this.audio.load(); } catch (e) {}
+      this.audio = null;
+    }
   }
 };
 const speak = t => voice.speak(t);
-if (synth) { loadVoices(); try { synth.addEventListener('voiceschanged', loadVoices); } catch (e) {} }
 voice.init();
+addEventListener('online', () => voice.init());
+addEventListener('pagehide', () => voice.stop());
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') voice.stop(); else voice.init();
+});
 
 // ---------- Состояние ----------
 const TABS = ['units', 'cards', 'train', 'search'];
@@ -2997,6 +3017,7 @@ function buildDeck(scope) {
   return deck;
 }
 function startSession(scope) {
+  voice.stop();
   const deck = buildDeck(scope);
   if (!deck.length) { toast('На сегодня повторять нечего — выберите урок'); return false; }
   session = { scope, deck, i: 0, flip: false, n: [0, 0, 0], total: deck.length };
@@ -3038,6 +3059,7 @@ function renderCards() {
 }
 function gradeCard(q) {
   const s = session; if (!s || !s.flip) return;
+  voice.stop();
   const it = s.deck[s.i];
   grade(it, q); s.n[q]++;
   if (q === 0) s.deck.splice(Math.min(s.i + 4, s.deck.length), 0, it);   // «Не знаю» — ещё раз через пару карточек
@@ -3047,6 +3069,7 @@ function gradeCard(q) {
 }
 function flipCard() {
   const s = session; if (!s || s.flip) return;
+  voice.stop();
   s.flip = true; render(true);
   if (set.auto) speak(state.cDir === 'ru' ? s.deck[s.i].cp : s.deck[s.i].exp);
 }
@@ -3064,6 +3087,7 @@ function makeQ(it, kind) {
   return { it, kind: 'gap', a: it.key, opts: shuffle([it.key, ...it.w.slice(0, 3)]) };
 }
 function startRound(scope) {
+  voice.stop();
   const pool = poolOf(scope), t = today();
   const due = shuffle(pool.filter(isDue)).sort((a, b) => srs[a.id].d - srs[b.id].d);
   const fresh = shuffle(pool.filter(it => !seen(it)));
@@ -3160,8 +3184,8 @@ function render(keep) {
 }
 let toastTimer = 0;
 function toast(t) { const el = document.getElementById('toast'); el.textContent = t; el.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.hidden = true; }, 2600); }
-function setTab(t) { state.tab = t; store.set('kol:tab', t); }
-function openUnit(n) { state.unit = n; state.open = {}; store.set('kol:unit', n); store.set('kol:last', n); }
+function setTab(t) { voice.stop(); state.tab = t; store.set('kol:tab', t); }
+function openUnit(n) { voice.stop(); state.unit = n; state.open = {}; store.set('kol:unit', n); store.set('kol:last', n); }
 document.querySelector('.tabs').addEventListener('click', e => {
   const b = e.target.closest('.tab'); if (!b) return;
   if (b.dataset.tab === state.tab && state.tab === 'units' && state.unit) { state.unit = 0; store.set('kol:unit', 0); }
@@ -3174,7 +3198,7 @@ view.addEventListener('click', e => {
   const b = e.target.closest('[data-act]'); if (!b) return;
   const a = b.dataset.act;
   if (a === 'unit') { openUnit(+b.dataset.n); setTab('units'); render(); return; }
-  if (a === 'units') { state.unit = 0; store.set('kol:unit', 0); render(); return; }
+  if (a === 'units') { voice.stop(); state.unit = 0; store.set('kol:unit', 0); render(); return; }
   if (a === 'cover') { state.cover = !state.cover; state.open = {}; render(true); return; }
   if (a === 'reveal') { state.open[b.dataset.id] = true; render(true); return; }
   if (a === 'godue') { state.cScope = 'due'; setTab('cards'); if (startSession('due')) speakFront(); render(); return; }
@@ -3182,13 +3206,13 @@ view.addEventListener('click', e => {
   if (a === 'utrain') { state.tScope = b.dataset.n; store.set('kol:tscope', state.tScope); setTab('train'); startRound(state.tScope); render(); return; }
   if (a === 'cdir') { state.cDir = state.cDir === 'ru' ? 'en' : 'ru'; store.set('kol:cdir', state.cDir); render(true); return; }
   if (a === 'cstart' || a === 'cmore') { if (startSession(state.cScope)) speakFront(); render(); return; }
-  if (a === 'cstop') { session = null; render(); return; }
+  if (a === 'cstop') { voice.stop(); session = null; render(); return; }
   if (a === 'flip') { if (b.id === 'fc' && e.target.closest('.ex')) { speak(session.deck[session.i].exp); return; } flipCard(); return; }
   if (a === 'grade') { gradeCard(+b.dataset.q); return; }
   if (a === 'tstart') { startRound(state.tScope); render(); return; }
-  if (a === 'tstop') { round = null; render(); return; }
+  if (a === 'tstop') { voice.stop(); round = null; render(); return; }
   if (a === 'opt') { answer(+b.dataset.k); render(true); return; }
-  if (a === 'next') { round.i++; round.pick = null; render(); return; }
+  if (a === 'next') { voice.stop(); round.i++; round.pick = null; render(); return; }
   if (a === 'goto') {
     const it = BY[b.dataset.id]; openUnit(it.u); setTab('units'); render();
     const el = document.getElementById('c-' + it.id);
@@ -3237,7 +3261,7 @@ function syncSettings() {
   document.getElementById('setAuto').setAttribute('aria-checked', set.auto);
   document.getElementById('setSlow').setAttribute('aria-checked', set.slow);
   const n = voice.files ? voice.files.size : 0;
-  document.getElementById('voiceInfo').textContent = n ? `Записей Microsoft Ryan: ${n}. Без записи фразу читает голос телефона.` : 'Читает голос телефона — британский, если он установлен (iPhone: Настройки → Универсальный доступ → Устн. контент → Голоса → English).';
+  document.getElementById('voiceInfo').textContent = `Microsoft Ryan · британский английский. ${n ? 'Готово записей: ' + n + '. ' : ''}Нажмите 🔊 возле коллокации или на английский пример. Прослушанные записи доступны без интернета.`;
 }
 document.getElementById('helpBtn').addEventListener('click', () => { syncSettings(); help.hidden = false; document.getElementById('helpClose').focus(); });
 document.getElementById('helpClose').addEventListener('click', () => { help.hidden = true; });
