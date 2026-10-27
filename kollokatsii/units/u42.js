@@ -1,0 +1,42 @@
+U({ n: 42, t: 'Distance and size', ru: 'Расстояние и размер',
+  idea: 'Цены, зарплаты, уровни — *low*, а не ~small~; количества и прирост — *small* и *large*, а не ~little~. Люди и деревья — *tall*, горы и цены — *high*. С неисчисляемым — *a great deal of*, а не ~a big deal of~. *Little* часто ласково: *poor little Joe*, *my little brother*.',
+  s: [
+    { t: 'Расстояние', d: 'Далеко, близко, в пределах досягаемости.', i: [
+      'a {considerable} distance | значительное расстояние | The hotel is a [{considerable} distance] from the beach. | considerate, considered, consider',
+      'within {commuting} distance | так, чтобы ездить на работу | We have to live [within {commuting} distance] of the office. | community, communicating, computing',
+      'within {walking} distance | в пешей доступности | The shops are [within {walking} distance]. | going, foot, stepping',
+      '{cover} a distance | преодолеть расстояние | We managed to [{cover} 40 kilometres] a day. | pass, wrap, hide',
+      'far-{flung} places | далёкие края | He is always travelling to [far-{flung} places]. | thrown, gone, cast',
+      'at close {range} | вблизи | I\'ve never seen a royal [at such close {range}]. | rank, row, ring',
+      '{neighbouring} towns | соседние города | Many workers live in [{neighbouring} towns]. | neighbourly, neighbour, nearly',
+    ]},
+    { t: 'Little, small, large', d: '*Low* — о ценах и уровнях; *small* и *large* — о количествах; *little* — ласково или «младший».', i: [
+      '{low} prices | низкие цены | The supermarket has [{low} prices]. | small, little, short | Не ~small prices~.',
+      '{low} wages | низкая зарплата | Many nurses complain about [{low} wages]. | small, little, short',
+      '{small} quantities | небольшие количества | The drug is safe in [{small} quantities]. | little, short, narrow | Не ~little quantities~.',
+      'a {small} increase | небольшой рост | There was a [{small} increase] in sales. | little, low, short',
+      '{large} numbers | большое количество | [{Large} numbers] of people came to the concert. | Tall, High, Wide',
+      'on a large {scale} | в больших масштабах | They produce cheese [on a large {scale}]. | size, scope, scheme',
+      'a large-{scale} map | крупномасштабная карта | You need [a large-{scale} map] in the mountains. | size, sized, measure',
+      'poor {little} Joe | бедняжка Джо | [Poor {little} Joe] has broken his leg. | small, tiny, short',
+      'your {little} brother | младший брат | This is my [{little} brother], Sam. | small, short, low | Не ~small brother~; наоборот — *big brother*.',
+      'make {small} talk | вести светскую беседу | I\'m not good at [making {small} talk]. | little, short, low',
+      'look {small} | выглядеть ничтожно | Don\'t try to make me [look {small}]. | little, low, minor',
+    ]},
+    { t: 'Другие слова размера', d: '*Fat* и *slim* — о книгах и людях; *plump* и *skinny* — только о людях.', i: [
+      'a {fat} book | толстая книга | She was reading a [{fat} book] about the war. | plump, chubby, skinny',
+      '{painfully} thin | болезненно худой | After the illness he was [{painfully} thin]. | painful, aching, sorely',
+      'a great {deal} of | очень много | She has [a great {deal}] of experience. | lot, part, piece | С неисчисляемым; не ~a big deal of~.',
+      'a {major} difference | серьёзное различие | There is a [{major} difference] between the two drugs. | mayor, majority, majesty',
+      'a {minor} change | небольшое изменение | We made a [{minor} change] to the plan. | miner, minus, mine',
+      '{tall} trees | высокие деревья | The garden is surrounded by [{tall} trees]. | long, wide, deep | Люди, деревья и дома — *tall*.',
+      '{high} mountains | высокие горы | The village lies among [{high} mountains]. | tall, long, upper | Горы, цены, каблуки, прилив — *high*.',
+      '{high} heels | высокие каблуки | She can\'t walk in [{high} heels]. | tall, long, upper',
+      '{high} tide | прилив | At [{high} tide] the beach disappears. | tall, upper, top',
+    ]},
+  ],
+  m: [
+    '*Low prices*, а не ~small prices~; *small quantities*, а не ~little quantities~.',
+    '*Tall people*, *tall buildings*, но *high mountains*, *high prices*.',
+  ]
+});

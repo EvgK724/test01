@@ -1,0 +1,43 @@
+U({ n: 12, t: 'Metaphor', ru: 'Метафоры: свет, вода, огонь',
+  idea: 'Свет в английском — радость (*her face lit up*), темнота — мрачные мысли и злость (*his face darkened*), вода — плавное движение (*ideas flow*, *people pour out*), огонь — гнев (*a heated debate*, *tempers flared*). Метафоры чаще в письменной речи и звучат образно.',
+  s: [
+    { t: 'Свет и тьма', d: 'Свет — счастье и восторг, темнота — тревога, мрачность, злость.', i: [
+      'a {sunny} smile | лучезарная улыбка | The nurse greeted us with a [{sunny} smile]. | flowing, heated, fiery',
+      'a face {shines} | лицо сияет | Her [face {shone}] with pleasure when she opened the gift. | flowed, poured, flared',
+      'eyes {shine} | глаза сияют | His [eyes {shone}] with excitement. | poured, flared, trickled',
+      'a face {lights up} | лицо светлеет, озаряется | The child\'s [face {lit up}] when she saw the puppy. | flowed, poured out, flared up',
+      'eyes {light up} | глаза загораются | Her [eyes {lit up}] at the mention of Paris. | poured, trickled, flared up',
+      'the mood {lightens} | настроение улучшается | [The mood {lightened}] when the good news arrived. | poured, trickled, flared',
+      'the atmosphere {lightens} | обстановка разряжается | After his joke [the atmosphere {lightened}]. | flowed, poured, burned',
+      '{dark} thoughts | мрачные мысли | Lying awake, he was full of [{dark} thoughts]. | sunny, heated, fiery',
+      '{dark} days | тяжёлые, мрачные дни | Those were [{dark} days] for the whole country. | sunny, heated, light',
+      '{dark} times | тёмные времена | We are living through [{dark} times]. | sunny, heated, fiery',
+      'a face {darkens} | лицо мрачнеет | His [face {darkened}] when he read the letter. | flowed, poured, trickled',
+      'an expression {darkens} | выражение лица мрачнеет | Her [expression {darkened}] as she listened. | flowed, poured, streamed',
+    ]},
+    { t: 'Вода', d: 'Вода — плавное движение: мысли и разговор «текут», люди «вытекают» из зала, слёзы «льются потоком».', i: [
+      'ideas {flow} | идеи так и льются | It was a great meeting — [the ideas {flowed}]. | shone, flared, darkened',
+      'conversation {flows} | разговор течёт легко | Over dinner [the conversation {flowed}] easily. | shone, flared, darkened',
+      'in {floods} of tears | вся в слезах | She was [in {floods} of tears] after the phone call. | blazes, streams, heats',
+      'tears {stream} down your face | слёзы текут по лицу | [Tears were {streaming} down her face]. | shining, flaring, lighting',
+      'people {pour} out | люди валят толпой | Fans [{poured} out] of the stadium. | shone, flared, lit',
+      'people {trickle} in | люди подтягиваются по одному | Students [{trickled} into] the lecture hall. | shone, flared, blazed | *Trickle* — понемногу и медленно.',
+      'a {stream} of visitors | поток посетителей | There was a steady [{stream} of visitors] all day. | blaze, flare, shine',
+      'a {stream} of traffic | непрерывный поток машин | A [{stream} of traffic] passed under our window all night. | blaze, flare, shine',
+    ]},
+    { t: 'Огонь и жар', d: 'Огонь и жар — гнев и споры; но *burn with embarrassment* — сгорать от стыда, а *a blaze of glory* — громкая слава.', i: [
+      'a {heated} debate | жаркие дебаты | There was a [{heated} debate] about the new law. | sunny, burning, flowing | *Heated* — о споре, *fiery* — о характере.',
+      'a {heated} discussion | бурное обсуждение | The plan led to a [{heated} discussion] at the meeting. | flowing, sunny, burning',
+      'a {fiery} temper | вспыльчивый характер | My grandfather had a [{fiery} temper]. | heated, sunny, flowing',
+      'tempers {flare} | страсти накаляются | [Tempers {flared}] as the queue grew longer. | flowed, shone, trickled',
+      'violence {flares up} | вспыхивает насилие | [Violence {flared up}] again in the north. | flowed, lit up, poured',
+      'troubles {flare up} | проблемы обостряются | Her old back [troubles {flared up}] in winter. | flowed, lit up, poured',
+      'cheeks {burn} with embarrassment | щёки горят от стыда | My [cheeks {burned}] with embarrassment. | flared, flowed, poured',
+      'a {blaze} of glory | ослепительная слава | He retired in a [{blaze} of glory]. | stream, flood, flare',
+      'a {blaze} of publicity | шумиха в прессе | The film opened in a [{blaze} of publicity]. | stream, shine, trickle',
+    ]},
+  ],
+  m: [
+    'Метафоры звучат книжно: в разговоре чаще просто *she was very happy*, в рассказе — *her face lit up*.',
+  ]
+});

@@ -1,0 +1,51 @@
+U({ n: 8, t: 'Everyday verbs 2', ru: 'Go, turn, become, grow, fall вместо get',
+  idea: '*Get* в разговоре годится почти для любой перемены, но звучит просто. Для внешности и здоровья берут *go* (*go grey*, *go blind*), для цвета — *turn* (*turn red*), в письменной речи — *become*, для постепенного — *grow*, для внезапного — *fall* (*fall ill*, *fall silent*).',
+  s: [
+    { t: 'Go — внешность, тело, внезапные перемены', d: '*Go* — про перемены в человеке (поседеть, ослепнуть, сойти с ума) и про резкие, чаще неприятные перемены: лицо покраснело, небо потемнело.', i: [
+      '{go} mad | сойти с ума | If I hear that song once more, I\'ll [{go} mad]. | fall, turn, make',
+      '{go} bald | облысеть | My father [{went} bald] in his early thirties. | fell, made, came',
+      '{go} grey | поседеть | She [{went} grey] very young, but she never dyed her hair. | fell, made, came',
+      '{go} blind | ослепнуть | Without treatment, the patient could [{go} blind]. | fall, make, come',
+      '{go} deaf | оглохнуть | Years of loud music made him [{go} deaf] in one ear. | fall, make, come',
+      '{go} red | покраснеть (о лице) | She [{went} red] when everyone looked at her. | fell, made, came | Можно и *turn red*.',
+      '{go} dark | потемнеть, погаснуть | Suddenly the screen [{went} dark]. | fell, made, came',
+      '{go} yellow | пожелтеть (со временем) | The old photos have [{gone} yellow] with age. | fallen, made, come',
+      '{go} crazy | сходить с ума | I was [{going} crazy] waiting for the results. | getting, falling, making | Не ~get crazy~: ~I was getting crazy~ — ошибка.',
+    ]},
+    { t: 'Turn — цвет', d: '*Turn* часто стоит с цветами: листья желтеют, небо золотится, волосы белеют.', i: [
+      '{turn} gold | стать золотым | In October the trees [{turn} gold]. | fall, make, come',
+      '{turn} red | покраснеть | The traffic light [{turned} red] and we stopped. | fell, made, came',
+      '{turn} white | побелеть | His hair [{turned} white] after the accident. | fell, made, came',
+    ]},
+    { t: 'Become — книжный вариант get', d: '*Become* стоит там же, где *get*, но звучит официальнее — для эссе и статей. Со словами *extinct*, *famous*, *homeless*, *(un)popular* — только *become*.', i: [
+      '{become} pregnant | забеременеть | She [{became} pregnant] with her second child last year. | went, turned, made | В британской разговорной речи говорят и *fall pregnant*.',
+      '{become} involved in | включиться в, участвовать | More parents should [{become} involved] in school life. | fall, go, turn',
+      '{become} depressed | впасть в депрессию | Many patients [{become} depressed] after a stroke. | fall, go, turn',
+      '{become} extinct | вымереть | Dozens of species [{become} extinct] every year. | fall, go, grow | Только *become*: ~get extinct~ не говорят.',
+      '{become} famous | прославиться | The village [{became} famous] for its cheese. | fell, went, turned',
+      '{become} popular | стать популярным | Cycling has [{become} popular] in our city. | fallen, gone, turned',
+      '{become} homeless | остаться без жилья | Thousands of families [{became} homeless] after the flood. | fell, went, turned',
+      '{become} impatient | начать терять терпение | The crowd [{became} impatient] as the delay grew longer. | fell, went, made',
+    ]},
+    { t: 'Fall и grow', d: '*Fall* — внезапно (заболеть, замолчать, уснуть), *grow* — постепенно (стареть, становиться громче).', i: [
+      '{fall} ill | заболеть | He [{fell} ill] on holiday and spent a week in bed. | went, turned, made',
+      '{fall} silent | замолчать | The room [{fell} silent] when the doctor came in. | went off, made, turned out',
+      '{fall} asleep | заснуть | I [{fell} asleep] in front of the TV. | went, turned, made',
+      '{grow} older | стареть, становиться старше | As we [{grow} older], we need less sleep. | fall, turn, make',
+      '{grow} louder | становиться громче | The noise outside [{grew} louder]. | fell, went off, made',
+      '{grow} dark | темнеть (постепенно) | It was [{growing} dark], so we headed home. | falling, making, doing',
+    ]},
+    { t: 'Have, suffer — не get', d: 'Где по-русски «случилось» или «появился», англичане часто берут *have*: инфаркт, ребёнок.', i: [
+      '{have} a heart attack | перенести инфаркт | A year ago my uncle [{had} a heart attack]. | got, made, took | В официальной речи — *suffer a heart attack*.',
+      '{suffer} a heart attack | перенести инфаркт (официально) | The minister [{suffered} a mild heart attack]. | got, made, took',
+      '{have} a baby | родить ребёнка | My sister [{had} a baby] in June. | got, made, took | Не ~got a baby~.',
+      '{have} children | иметь детей, завести детей | They want to [{have} children] one day. | get, make, take',
+    ]},
+  ],
+  m: [
+    '*I was going crazy*, а не ~I was getting crazy~.',
+    '*Have a baby*, *have a heart attack* — не ~get~.',
+    '*Become extinct*, *become famous*, *become homeless* — только *become*.',
+    '*Make friends*, а не ~get friends~ (см. урок 7).',
+  ]
+});

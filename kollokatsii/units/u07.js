@@ -1,8 +1,8 @@
 U({ n: 7, t: 'Everyday verbs 1', ru: 'Make и do',
-  idea: 'Make — когда что-то создаётся, появляется результат (решение, ошибка, друзья, прогресс). Do — когда выполняется действие, работа, обязанность (домашнее задание, упражнения, уборка). Правило не железное: многие пары просто надо запомнить. Полезно замечать группы: make a comment, make an excuse, make a contribution — всё это «сказать что-то».',
+  idea: '*Make* — когда что-то создаётся и появляется результат: решение, ошибка, друзья, прогресс. *Do* — когда выполняется действие или работа: домашнее задание, упражнения, стирка. Правило не железное, многие пары просто надо запомнить.',
   s: [
     { t: 'make', d: 'Make — что-то создаём или производим: выбор, решение, усилие, звонок.', i: [
-      'make {arrangements} for | договориться, организовать | Have you [{made} arrangements] for the trip? | done, taken, got',
+      '{make} arrangements for | договориться, организовать | Have you [{made} arrangements] for the trip? | done, taken, got',
       '{make} a change | внести изменение | The new manager wants to [{make} some changes]. | do, take, get',
       '{make} a choice | сделать выбор | You have to [{make} a choice] between the two jobs. | do, take, give',
       '{make} a comment | высказаться, сделать замечание | Would anyone like to [{make} a comment] on the plan? | do, say, tell',
@@ -10,10 +10,10 @@ U({ n: 7, t: 'Everyday verbs 1', ru: 'Make и do',
       '{make} a decision | принять решение | We need to [{make} a decision] by Friday. | do, get, put | В британском английском можно и take a decision.',
       '{make} an effort | постараться, приложить усилие | She is really [{making} an effort] with her English. | doing, taking, getting',
       '{make} an excuse | придумать отговорку | He always [{makes} an excuse] to leave early. | does, says, tells',
-      '{make} friends | заводить друзей | It\'s not easy to [{make} friends] in a new city. | do, get, find | Не find friends и не get friends.',
+      '{make} friends | заводить друзей | It\'s not easy to [{make} friends] in a new city. | do, take, form | О самой дружбе говорят form a friendship.',
       '{make} an improvement | улучшить | The new lighting has [{made} a big improvement]. | done, given, taken',
       '{make} a mistake | ошибиться | I [{made} a mistake] in the dosage. | did, took, had | Классическая ошибка — do a mistake.',
-      '{make} a phone call | позвонить | I need to [{make} a phone call] before dinner. | do, get, put',
+      '{make} a phone call | позвонить | I need to [{make} a phone call] before dinner. | do, put, set',
       '{make} progress | делать успехи | The patient is [{making} good progress]. | doing, getting, having',
     ]},
     { t: 'do', d: 'Do — выполняем действие или работу, ничего нового не создавая.', i: [
@@ -28,7 +28,13 @@ U({ n: 7, t: 'Everyday verbs 1', ru: 'Make и do',
       '{do} your homework | делать домашнее задание | The kids [{do} their homework] after lunch. | make, have, take | Не make homework.',
       '{do} the shopping | ходить за покупками | I usually [{do} the shopping] on Saturdays. | make, have, take',
       '{do} the washing | стирать | I\'ll [{do} the washing] if you do the ironing. | make, have, take',
+      '{do} the ironing | гладить бельё | Who [{does} the ironing] in your house? | makes, has, takes',
       '{do} some work | поработать | I have to [{do} some work] on my thesis tonight. | make, have, take',
     ]},
+  ],
+  m: [
+    'Ошибку *делают* через make: *make a mistake*, а не ~do a mistake~.',
+    'Домашнее задание — *do homework*, а не ~make homework~.',
+    'Замечайте группы: *make a comment*, *make an excuse*, *make a contribution* — всё это про «сказать что-то».',
   ]
 });

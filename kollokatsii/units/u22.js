@@ -1,0 +1,38 @@
+U({ n: 22, t: 'Eating and drinking', ru: 'Еда и напитки',
+  idea: 'Еда бывает *junk* (вредная), *organic*, *processed*, *perishable* (скоропортящаяся). Порции — *light meal* и *substantial meal*, роскошная — *slap-up meal*. Аппетит *healthy* (хороший), его можно *spoil* (перебить). Кухню страны называют *Chinese food* или *cuisine*, а не ~meal~.',
+  s: [
+    { t: 'Какая бывает еда', d: 'Слова о продуктах из магазина и о том, что полезно, а что нет.', i: [
+      '{junk} food | вредная еда, фастфуд | Kids eat far too much [{junk} food]. | rubbish, waste, scrap',
+      '{nourishing} meals | питательная, сытная еда | Patients need [{nourishing} meals] to recover. | nursing, nourished, notorious',
+      '{fresh} produce | свежие продукты (овощи, фрукты) | The market sells excellent [{fresh} produce]. | new, young, recent | *Produce* (сущ.) читается [ˈprɒdjuːs].',
+      '{organic} food | органические продукты | The shop has a big [{organic} food] section. | organised, organism, orange',
+      '{ready} meals | готовые блюда (разогреть) | I don\'t have time to cook, so I buy [{ready} meals]. | done, made, finish',
+      'food {additives} | пищевые добавки | Some [food {additives}] can cause allergies. | additions, extras, adders',
+      '{processed} foods | продукты промышленной переработки | Try to avoid [{processed} foods]. | proceeded, progressed, produced',
+      '{GM} foods | ГМ-продукты | Some countries have banned [{GM} foods]. | MG, GMT, GMP',
+      '{perishable} food | скоропортящиеся продукты | Keep [{perishable} food] in the fridge. | perished, perishing, peerless',
+      'food {poisoning} | пищевое отравление | Several guests got [food {poisoning}] at the wedding. | poison, toxic, intoxication',
+    ]},
+    { t: 'В кафе и ресторане', d: 'Что съесть, что выпить, сколько стоит.', i: [
+      'a {light} meal | лёгкий перекус, лёгкая еда | I just want a [{light} meal] tonight. | thin, weak, slim',
+      'a {substantial} meal | плотная еда | After the hike we needed a [{substantial} meal]. | substantive, substance, subsidiary',
+      'a slap-{up} meal | роскошное угощение | We celebrated with a [slap-{up} meal] at the Ritz. | down, on, out',
+      'a {gourmet} meal | изысканная еда | The chef prepared a [{gourmet} meal]. | gourmand, glutton, greedy',
+      'home-{cooked} food | домашняя еда | Nothing beats [home-{cooked} food]. | boiled, done, fired',
+      'a {quick} snack | быстрый перекус | Let\'s have a [{quick} snack] before the film. | fast, rapid, speedy',
+      'a {refreshing} drink | освежающий напиток | I could really do with a [{refreshing} drink]. | refreshed, fresher, refreshment',
+      'dying of {hunger} | умираю с голоду | I\'m [dying of {hunger}]! | hungry, starving, appetite',
+      'a {decent} meal | нормальная, приличная еда | I haven\'t had a [{decent} meal] for days. | descent, decided, discreet',
+      'a {healthy} appetite | хороший аппетит | Growing boys have a [{healthy} appetite]. | healthful, well, wealthy',
+      'a {hearty} breakfast | сытный завтрак | We had a [{hearty} breakfast] before setting off. | hearted, hard, heartless',
+      'a {soft} drink | безалкогольный напиток | Would you like a [{soft} drink]? | weak, mild, smooth',
+      '{spoil} your appetite | перебить аппетит | Don\'t eat sweets — you\'ll [{spoil} your appetite]. | break, damage, crash',
+      'a {set} menu | комплексное меню | The [{set} menu] is excellent value. | put, laid, placed',
+      '{reasonably} priced | по разумной цене | The meals are [{reasonably} priced]. | reasonable, reasoned, reasoning',
+    ]},
+  ],
+  m: [
+    '*International food* или *cuisine*, а не ~world-wide food~.',
+    '*Meal* — то, что едят в ресторане или дома; кухня страны — *Chinese food / cooking / cuisine*.',
+  ]
+});

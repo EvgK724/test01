@@ -1,6 +1,6 @@
 // Строка: коллокация (ключевое слово в {}) | перевод | пример: [вся коллокация], {слово-пропуск} | неверные варианты в форме примера | заметка
 U({ n: 6, t: 'Intensifying adverbs', ru: 'Наречия-усилители',
-  idea: 'Вместо очередного very англичане берут наречие, которое «дружит» с конкретными словами: highly unlikely, utterly devastated, bitterly disappointed. Переставить их нельзя: highly disappointed или bitterly unlikely звучат чуждо.',
+  idea: 'Вместо очередного *very* англичане берут наречие, которое «дружит» с конкретными словами: *highly unlikely*, *utterly devastated*, *bitterly disappointed*. Переставить их нельзя: ~highly disappointed~ или ~bitterly unlikely~ звучат чуждо.',
   s: [
     { t: 'highly', d: 'Highly — со словами вероятности (likely, unlikely, unusual) и с положительными качествами: успешный, эффективный, выгодный. Исключение — highly controversial. Extremely подходит ко всем этим словам, кроме recommended.', i: [
       '{highly} unlikely | крайне маловероятно | It is [{highly} unlikely] that the trial will end before spring. | deeply, bitterly, strongly',

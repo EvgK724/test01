@@ -1,0 +1,43 @@
+U({ n: 26, t: 'Health and illness', ru: 'Здоровье и болезни',
+  idea: 'В разговоре болезни *get* и *have*, но точнее и красивее: простуду *catch*, малярию *contract*, диабет *develop*, астмой *suffer from*, с раком *be diagnosed with*, травмы *sustain*. Боль бывает *excruciating* или *dull*, головная — *splitting*, простуда — *heavy* или *slight*.',
+  s: [
+    { t: 'Глагол + болезнь', d: '*Catch* — простуду, грипп; *contract* (офиц.) — инфекцию; *develop* (офиц.) — хроническую болезнь; *suffer from* — то, что мучает долго.', i: [
+      '{catch} a cold | простудиться | I got soaked and [{caught} a cold]. | took, held, kept',
+      '{catch} the flu | заболеть гриппом | Half the office has [{caught} the flu]. | taken, made, held',
+      '{contract} malaria | заразиться малярией | He [{contracted} malaria] while working in Africa. | contacted, concluded, compacted | Официально; в разговоре — *got malaria*.',
+      '{develop} diabetes | заболеть диабетом | People who are overweight are more likely to [{develop} diabetes]. | grow, build, evolve',
+      '{develop} Alzheimer\'s disease | заболеть болезнью Альцгеймера | My grandfather [{developed} Alzheimer\'s disease]. | grew, built, envelop',
+      '{suffer} from asthma | страдать астмой | She has [{suffered} from asthma] all her life. | worried, tolerated, borne',
+      'have an {attack} of hay fever | приступ сенной лихорадки | She [had an {attack} of hay fever] and couldn\'t stop sneezing. | assault, strike, hit',
+      'be {diagnosed} with | получить диагноз | He was [{diagnosed} with lung cancer]. | diagnosis, detected, found',
+      '{sustain} injuries | получить травмы (офиц.) | The driver [{sustained} serious head injuries]. | supported, maintained, kept',
+    ]},
+    { t: 'Здоровый образ жизни', d: 'Из анкеты «В хорошей ли вы форме?»', i: [
+      '{vigorous} exercise | интенсивные физические нагрузки | Do you take regular [{vigorous} exercise]? | vigilant, vicious, vivid',
+      'a {balanced} diet | сбалансированное питание | A [{balanced} diet] includes plenty of vegetables. | balancing, equal, even',
+      '{healthy} eating | здоровое питание | Schools should teach [{healthy} eating]. | health, healthful, wealthy',
+      '{follow} a fitness programme | заниматься по фитнес-программе | I [{follow} a personal fitness programme]. | chase, track, trail',
+      '{stick} to your programme | придерживаться программы | It\'s hard to [{stick} to your programme] on holiday. | glue, hold, paste',
+      '{keep} fit | поддерживать форму | Swimming is a great way to [{keep} fit]. | hold, make, do',
+    ]},
+    { t: 'Болезнь и боль', d: 'Насколько тяжело и как болит.', i: [
+      '{terminally} ill | неизлечимо болен (скоро умрёт) | Her father is [{terminally} ill]. | finally, lastly, endlessly',
+      '{excruciating} pain | мучительная боль | She suffers [{excruciating} pain] in her back. | exciting, excavating, exclusive',
+      'an {incurable} illness | неизлечимая болезнь | Diabetes is still an [{incurable} illness]. | incredible, insecure, inaccurate',
+      '{trivial} ailments | пустячные недомогания | He takes days off for the most [{trivial} ailments]. | trite, tribal, trial',
+      'a {serious} illness | тяжёлая болезнь | Pneumonia is a [{serious} illness] in the elderly. | heavy, hard, weighty | Не ~heavy illness~ — калька.',
+      'life-{threatening} | опасный для жизни | His injuries are not [life-{threatening}]. | dangerous, risking, killing',
+      '{acutely} painful | очень болезненный | For a few days it was [{acutely} painful]. | accurately, cutely, sharply',
+      'a {dull} ache | ноющая боль | Now it\'s just a [{dull} ache]. | blunt, boring, grey',
+      '{prescribe} tablets | выписать таблетки | My doctor [{prescribed} some tablets]. | described, subscribed, proscribed',
+      '{relieve} the pain | облегчить боль | The tablets [{relieved} the pain]. | released, relived, removed',
+      '{taken} ill | внезапно заболеть | Cora was [{taken} ill] at work. | caught, got, made',
+      'a {heavy} cold | сильная простуда | I had a [{heavy} cold] and couldn\'t sleep. | strong, big, hard | Наоборот — *slight cold*.',
+      'a {splitting} headache | раскалывающаяся голова | I woke up with a [{splitting} headache]. | breaking, cracking, cutting',
+    ]},
+  ],
+  m: [
+    'Вещи *damaged*, люди *injured*: *Their car was slightly damaged, but luckily no one was injured.*',
+    'Тяжёлая болезнь — *serious illness*, а не ~heavy illness~; но простуда — *heavy cold*.',
+  ]
+});

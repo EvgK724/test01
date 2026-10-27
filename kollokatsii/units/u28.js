@@ -1,0 +1,41 @@
+U({ n: 28, t: 'Study and learning', ru: 'Учёба',
+  idea: 'В письменной речи вместо *do* и *get* берут точные глаголы: экзамен *sit* или *take*, исследование *carry out*, на курс *enrol*, лекцию *give*, диплом *obtain*, квалификацию *acquire*. *Pass an exam* — сдать успешно, а *sit / take an exam* — просто сдавать. Домашнее задание *do*, а не ~make~.',
+  s: [
+    { t: 'Вместо do и get', d: 'Те же действия, но звучит грамотнее и официальнее.', i: [
+      '{sit} an exam | сдавать экзамен | I have to [{sit} an exam] in biology at the end of term. | make, put, hold | *Pass* — сдать успешно, *sit / take* — просто сдавать.',
+      '{carry out} a research project | провести исследование | Our class [{carried out} a research project] on local history. | carried on, made out, set up | Также *conduct a research project*.',
+      '{enrol} on a course | записаться на курс | I decided to [{enrol} on a course] in programming. | sign, enter, list',
+      '{study} for a degree | учиться на степень | She [{studied} for a degree] in engineering. | learned, taught, made',
+      '{write} an essay | написать сочинение | All students have to [{write} an essay] at the end of term. | make, draw, put',
+      '{give} a lecture | прочитать лекцию | Professor Parkinson [{gave} a lecture] on the Civil War. | read, said, told | По-русски «читать лекцию», но не ~read a lecture~.',
+      '{obtain} a diploma | получить диплом | He [{obtained} a diploma] in town planning. | caught, held, grabbed',
+      'be {awarded} a diploma | получить диплом (вручён) | She [was {awarded} a diploma] in 2010. | rewarded, won, earned',
+      '{receive} a grade | получить оценку | Her essay [{received} an A-grade]. | accepted, took, caught',
+      '{acquire} a qualification | получить квалификацию | You need to [{acquire} a qualification] in social work. | inquire, require, acquit',
+      '{receive} an education | получить образование | Only 27% of children [{receive} a basic education]. | accept, catch, collect',
+    ]},
+    { t: 'Как сказать официальнее', d: 'Студент говорит просто, преподаватель — официально.', i: [
+      '{attend} lectures | посещать лекции | You must [{attend} all the lectures]. | visit, frequent, assist | Не ~visit lectures~ — калька.',
+      '{complete} a course | окончить курс | Students who [{complete} the course] receive a certificate. | end, close, stop',
+      'a class is {held} | занятие проходит | Next week\'s [class will be {held}] in Room 405. | kept, made, hold',
+      '{hand in} an essay | сдать сочинение | You have to [{hand in} your essays] on Friday. | hand out, give out, put out',
+      '{submit} an application | подать заявление | You have to [{submit} your application] by 1 December. | submerge, subtract, subscribe',
+      '{withdraw} from a course | отчислиться с курса | If you [{withdraw} from the course], go to the office. | withhold, withstand, retreat',
+    ]},
+    { t: 'Ещё об учёбе', d: 'Черновики, отзывы, оценивание и образование после школы.', i: [
+      '{keep} a vocabulary notebook | вести словарь | Do you [{keep} a vocabulary notebook]? | hold, lead, run',
+      'the first {draft} | первый черновик | I did [the first {draft}] of my essay last week. | sketch, scrap, model',
+      'the final {draft} | окончательный вариант | I have to hand in [the final {draft}] tomorrow. | sketch, scrap, model',
+      '{give} feedback | дать обратную связь, отзыв | The teacher [{gives} us feedback] after a week. | makes, does, says',
+      '{continuous} assessment | оценивание в течение всего курса | We have [{continuous} assessment] instead of exams. | continual, constant, lasting',
+      '{provide} training | обеспечивать обучение | The college [{provides} training] for young people. | supplies, makes, does',
+      '{higher} education | высшее образование | 30% of the population go on to [{higher} education]. | high, upper, top',
+      '{further} education | дополнительное образование для взрослых | Many adults take a [{further} education] course. | farther, extra, more',
+      '{recognise} qualifications | признавать дипломы | Does your country [{recognise} foreign qualifications]? | realise, remember, recover',
+    ]},
+  ],
+  m: [
+    'Не путайте *pass an exam* (сдать успешно) и *sit / take an exam* (сдавать).',
+    '*I did my homework*, а не ~I made my homework~.',
+  ]
+});

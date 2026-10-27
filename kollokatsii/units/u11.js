@@ -1,0 +1,53 @@
+U({ n: 11, t: 'Synonyms and confusable words 2', ru: 'Gain, win, earn, achieve; carry, wear, take; spend',
+  idea: 'Русское «получить», «добиться», «выиграть» раскладывается на разные глаголы. *Gain* — власть, доступ, известность; *win* — приз, матч, выборы; *earn* — деньги трудом; *make* — прибыль; *achieve* — успех и цели. Матч *win*, а соперника *beat* или *defeat*.',
+  s: [
+    { t: 'Gain — власть, доступ, известность', d: '*Gain* — с отвлечёнными словами: власть, контроль, доступ, а ещё то, что приносит пользу: репутация, признание, преимущество.', i: [
+      '{gain} power | прийти к власти | The party [{gained} power] after the revolution. | earned, beat, made',
+      '{gain} control of | захватить, получить контроль | Rebels have [{gained} control] of the capital. | earned, beat, made',
+      '{gain} access to | получить доступ | Hackers [{gained} access] to patient records. | beat, made, achieved',
+      '{gain} a reputation | заслужить репутацию | The clinic has [{gained} a reputation] for excellent care. | beaten, paid, achieved | Можно и *earn a reputation*.',
+      '{gain} publicity | привлечь внимание прессы | The protest [{gained} a lot of publicity]. | beat, achieved, paid',
+      '{gain} recognition | получить признание | Her research finally [{gained} international recognition]. | beat, made, paid',
+      '{gain} an advantage | получить преимущество | Early booking helps you [{gain} an advantage] over other buyers. | beat, pay, spend',
+    ]},
+    { t: 'Win — соревнования и борьба', d: '*Win* — то, за что соревнуются или воюют: приз, медаль, матч, выборы, войну.', i: [
+      '{win} an award | получить награду | The film [{won} three awards] in Venice. | beat, earned, gained',
+      '{win} a prize | выиграть приз | She [{won} first prize] in a poetry competition. | beat, earned, gained',
+      '{win} a medal | завоевать медаль | He [{won} a gold medal] at the Olympics. | beat, achieved, gained',
+      '{win} a match | выиграть матч | Our team [{won} the match] 3–1. | beat, gained, earned | Матч выигрывают (*win*), а соперника побеждают (*beat*).',
+      '{win} a battle | выиграть битву | The army [{won} the battle] but lost the war. | beat, gained, earned',
+      '{win} a war | выиграть войну | Nobody really [{wins} a war]. | beats, gains, earns',
+      '{win} an election | победить на выборах | Who do you think will [{win} the election]? | beat, gain, earn',
+    ]},
+    { t: 'Earn, make, achieve, beat', d: '*Earn* — деньги, заработанные трудом; *make money* — и трудом, и вложениями; *achieve* — успех, цели; *beat* и *defeat* — соперника, команду (*defeat* официальнее).', i: [
+      '{earn} a salary | получать зарплату | Nurses should [{earn} a better salary]. | win, gain, achieve',
+      '{earn} money | зарабатывать деньги (трудом) | Many students [{earn} money] by working in cafés. | win, achieve, beat',
+      '{make} a profit | получить прибыль | The company [{made} a profit] for the first time last year. | did, won, achieved',
+      '{make} money | зарабатывать, делать деньги | He [{made} his money] by investing in property. | did, won, achieved',
+      '{achieve} success | добиться успеха | It takes years to [{achieve} success] in music. | beat, make, pay',
+      '{achieve} your goals | достичь целей | A good plan helps you [{achieve} your goals]. | win, beat, earn',
+      '{achieve} your aims | достичь своих целей | The campaign [{achieved} all its aims]. | won, beat, earned',
+      '{beat} a team | обыграть команду | We [{beat} the best team] in the league! | won, gained, earned | Не ~win a team~.',
+      '{defeat} an opponent | победить соперника (офиц.) | She [{defeated} her opponent] in straight sets. | won, gained, earned',
+    ]},
+    { t: 'Carry, wear, take, use', d: '*Take* — взять с собой, *carry* — нести в руках или носить при себе, *wear* — носить на себе (одежду, шляпу, украшения), *use* — пользоваться.', i: [
+      '{take} warm clothes | взять тёплую одежду | Pack your bag and [{take} warm clothes] with you. | carry, hold, use',
+      '{carry} a mobile phone | носить с собой телефон | I always [{carry} my mobile phone] when I go out. | wear, hold, put',
+      '{wear} a hat | носить шляпу, быть в шляпе | She was [{wearing} a straw hat]. | carrying, dressing, using',
+      '{carry} a bag | нести сумку | Let me [{carry} your bag] for you. | wear, dress, use',
+      '{wear} a dress | быть в платье | She [{wore} a red dress] to the party. | used, carried, dressed',
+      '{use} a laptop | работать на ноутбуке | He [{uses} a laptop] to write his reports. | wears, plays, dresses',
+    ]},
+    { t: 'Spend — время и деньги', d: 'Время и деньги «тратят»: *spend*. Не ~pass~, не ~stay~ и не ~use~.', i: [
+      '{spend} days | провести дни | We [{spent} three days] in the mountains. | passed, used, made',
+      '{spend} money on | тратить деньги на | You\'ll [{spend} more money] on petrol with a big car. | use, pass, give',
+      '{spend} hours | провести часы | Last night I [{spent} two hours] watching TV. | stayed, passed, used',
+      '{spend} an hour | потратить час | I [{spent} an hour] looking for my keys. | passed, used, stayed',
+    ]},
+  ],
+  m: [
+    '*Win a match*, но *beat a team*: ~We won the other team~ — ошибка.',
+    'Время *spend*: *We spent a week in Rome*, а не ~passed a week~.',
+    'Одежду *wear*, телефон *carry*: ~I always wear my phone~ — ошибка.',
+  ]
+});

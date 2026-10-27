@@ -1,0 +1,41 @@
+U({ n: 58, t: 'Claiming and denying', ru: 'Утверждения и отрицания',
+  idea: 'Обвинения *face*; намёки бывают *heavy* и *broad*, их *drop*; утверждения — *serious allegations*, а заявление *issue*. Теорию *put forward*, довод *back up*, точку зрения *make the point*, утверждение *substantiate*. Отрицают *strongly*: *deny the charges*, *deny a rumour*; ответственность *disclaim*, идею *reject*. Приглашение *refuse*, а не ~deny~.',
+  s: [
+    { t: 'Обвинения', d: 'Из новостей о скандале с министром.', i: [
+      '{face} accusations | столкнуться с обвинениями | A minister is today [{facing} accusations] of taking bribes. | meeting, seeing, looking',
+      '{heavy} hints | недвусмысленные намёки | There have been [{heavy} hints] about this for some time. | fat, thick, wide',
+      '{clearly} implied | явно намекал | The article [{clearly} implied] that a politician was involved. | clear, cleanly, purely',
+      '{drop} broad hints | делать прозрачные намёки | It [{dropped} a number of broad hints]. | fell, threw, let',
+      'a {leaked} document | документ, попавший в прессу | A [{leaked} document] was published today. | leaky, dripped, leaking',
+      'serious {allegations} | серьёзные обвинения | The paper makes a number of [serious {allegations}]. | allegories, alliances, allocations',
+      '{openly} accuse | открыто обвинять | The documents [{openly} accuse] the minister of corruption. | open, opened, openness',
+      '{issue} a statement | выступить с заявлением | The minister has [{issued} a statement]. | gave, sent, told',
+      'the claims are {unfounded} | обвинения беспочвенны | He says [the claims are {unfounded}]. | unfolded, founded, unformed',
+      '{wrongly} accused | несправедливо обвинён | He claims he has been [{wrongly} accused]. | wrong, wrongful, badly',
+      'a long-{running} battle | давняя вражда | It\'s because of a [long-{running} battle] with the government. | going, walking, lasting',
+    ]},
+    { t: 'Выдвигаем точку зрения', d: 'Из научного отзыва.', i: [
+      '{put forward} a theory | выдвинуть теорию | Jones [{puts forward} an interesting theory]. | puts off, puts out, puts on',
+      '{back up} an argument | подкрепить довод | He [{backs up} his argument] with thorough data. | backs off, backs down, backs out',
+      '{fully} accept | полностью принимать | [{Fully} accepting] that learners are different, he makes his point. | Full, Fulfil, Fuller',
+      'make the {point} | высказать мысль | Jones [makes the {point}] that motivation is the key factor. | dot, spot, mark',
+      '{widely} acknowledged | широко признан | This has been [{widely} acknowledged] for some time. | wide, widened, width',
+      'state {clearly} | ясно заявить | He [states {clearly}] that motivation matters most. | clear, cleanly, clarity',
+      '{substantiate} a claim | обосновать утверждение | He [{substantiates} this claim] with impressive data. | substitute, subsidise, subordinate',
+    ]},
+    { t: 'Отрицаем', d: 'Отрицать, отвергать, снимать ответственность.', i: [
+      '{strongly} deny | категорически отрицать | The PM [{strongly} denied] claims of corruption. | heavily, hardly, firmly',
+      '{deny} the charges | отрицать обвинения | Despite the evidence, he [{denied} the charges]. | refused, declined, ignored',
+      '{deny} a rumour | опровергнуть слух | The pop star has [{denied} all the rumours]. | refused, declined, rejected',
+      '{disclaim} responsibility | снимать с себя ответственность | The hotel [{disclaims} all responsibility] for guests\' vehicles. | exclaims, proclaims, reclaims',
+      '{reject} a suggestion | отвергнуть предложение | Ann [{rejected} all Joe\'s suggestions]. | denied, ejected, injected',
+      'run {contrary} to | противоречить | The findings [run {contrary} to] popular belief. | opposite, against, contrast',
+      '{contradictory} evidence | противоречивые доказательства | [{Contradictory} evidence] made it hard to reach a verdict. | Contrary, Contradicted, Contradicting',
+      '{refuse} an invitation | отклонить приглашение | She [{refused} the invitation] politely. | denied, rejected, ignored | Приглашение *refuse*, не ~deny~.',
+    ]},
+  ],
+  m: [
+    '*Deny* или *reject* утверждение; *deny* слух или обвинение; *reject* идею; *refuse* приглашение.',
+    '*Deny that something is true*, *deny doing something* (в прошлом), *refuse to do something* (в будущем).',
+  ]
+});

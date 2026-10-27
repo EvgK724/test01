@@ -1,0 +1,35 @@
+U({ n: 20, t: 'Relationships', ru: 'Дружба и любовь',
+  idea: 'Друзей *make* (не ~find~), дружбу *strike up* (завязать), *form* (сложить), *cement* (скрепить) или *spoil* (испортить). С людьми *have a good relationship*, а не ~relations~. В любовь *fall*, а предложение руки *accept*.',
+  s: [
+    { t: 'Дружба', d: 'Как дружба начинается, крепнет и сходит на нет.', i: [
+      '{make} friends | заводить друзей | At university you\'ll [{make} a lot of new friends]. | find, get, do | Частая ошибка — ~find friends~.',
+      '{strike up} a friendship | завязать дружбу | He [{struck up} a friendship] with a girl he met on holiday. | hit on, knocked up, beat up',
+      '{form} a friendship | сложилась дружба | She [{formed} a lasting friendship] with her roommate. | made, did, sold | Не ~make a friendship~.',
+      '{cement} a friendship | скрепить дружбу | A week of camping [{cemented} their friendship]. | glued, nailed, plastered',
+      '{spoil} a friendship | испортить дружбу | Don\'t let money [{spoil} your friendship]. | rot, rust, stain',
+      'a friendship {grows} | дружба крепнет | Our [friendship {grew}] after we left school. | rose, raised, tallied',
+      '{close} friends | близкие друзья | We\'ve been [{close} friends] since childhood. | near, narrow, short',
+      '{mutual} friends | общие друзья | We met through [{mutual} friends]. | mutant, mutable, common-sense',
+      'a {casual} acquaintance | шапочный знакомый | I don\'t know him well — he\'s just a [{casual} acquaintance]. | casually, accidental, careless',
+      'have a good {relationship} with | хорошо ладить с | She [has a very good {relationship}] with her sister. | relation, relations, relative | Не ~have good relations with~ о близких людях.',
+      'keep in {contact} | поддерживать связь | Let\'s [keep in {contact}] after the course. | connection, contacts, relation | Также *keep in touch*; наоборот — *lose contact / lose touch*.',
+      'lose {touch} | потерять связь | We [lost {touch}] after she moved abroad. | contacts, feeling, hold',
+    ]},
+    { t: 'Любовь', d: 'История любви от первого взгляда до свадьбы.', i: [
+      'fall madly in {love} | безумно влюбиться | I [fell madly in {love}] with him the moment we met. | liking, heart, passion',
+      'love at first {sight} | любовь с первого взгляда | For my parents it was [love at first {sight}]. | look, view, glance',
+      'the love of your {life} | любовь всей жизни | She knew he was [the love of her {life}]. | heart, days, soul',
+      'your love is {returned} | любовь взаимна | I wasn\'t sure if [my love was {returned}]. | answered, repaid, replied',
+      'desperately in {love} | без памяти влюблён | He was [desperately in {love}] with her. | heart, loving, lover',
+      '{make} a commitment | взять на себя обязательства, связать себя | They decided to [{make} a commitment] to each other. | do, take, give',
+      '{accept} a proposal | принять предложение руки и сердца | She immediately [{accepted} his proposal]. | agreed, admitted, allowed',
+      'love {unconditionally} | любить безоговорочно | Parents [love their children {unconditionally}]. | conditionally, unhappily, unwillingly',
+      'have an {affair} | завести роман на стороне | He was [having an {affair}] with a colleague. | event, business, matter',
+      'the object of your {love} | предмет любви | She wrote poems to [the object of her {love}]. | liking, heart, hunger',
+    ]},
+  ],
+  m: [
+    '*Make friends*, а не ~find friends~; *form a friendship*, а не ~make a friendship~.',
+    '*Have a good relationship with someone*, а не ~have good relations~ (это о странах и организациях).',
+  ]
+});
