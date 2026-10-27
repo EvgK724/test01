@@ -322,7 +322,7 @@ nav.tabs .tab[aria-current="page"] svg { filter: drop-shadow(0 0 6px rgba(59,232
     <li><b>«Поиск»</b> — по-английски или по-русски: <i>decision</i>, <i>решение</i>.</li>
   </ol>
   <button type="button" class="toggle" role="switch" id="setAuto"><span><b>Озвучивать сразу</b><br><span class="lead small">карточку и ответ в тренировке</span></span><span class="sw"></span></button>
-  <button type="button" class="toggle" role="switch" id="setSlow"><span><b>Медленнее</b><br><span class="lead small">голос Microsoft Ryan, британский английский</span></span><span class="sw"></span></button>
+  <button type="button" class="toggle" role="switch" id="setSlow"><span><b>Медленнее</b><br><span class="lead small">британский английский</span></span><span class="sw"></span></button>
   <p class="lead small" id="voiceInfo"></p>
   <button class="btn primary" type="button" id="helpClose">Понятно</button>
   <button class="link" type="button" id="resetAll">Сбросить весь прогресс</button>
@@ -823,7 +823,7 @@ function syncSettings() {
   document.getElementById('setAuto').setAttribute('aria-checked', set.auto);
   document.getElementById('setSlow').setAttribute('aria-checked', set.slow);
   const n = voice.files ? voice.files.size : 0;
-  document.getElementById('voiceInfo').textContent = n ? `Записей Microsoft Ryan: ${n}. Без записи фразу читает голос телефона.` : 'Записи Microsoft Ryan ещё готовятся — пока читает голос телефона.';
+  document.getElementById('voiceInfo').textContent = n ? `Записей Microsoft Ryan: ${n}. Без записи фразу читает голос телефона.` : 'Читает голос телефона — британский, если он установлен (iPhone: Настройки → Универсальный доступ → Устн. контент → Голоса → English).';
 }
 document.getElementById('helpBtn').addEventListener('click', () => { syncSettings(); help.hidden = false; document.getElementById('helpClose').focus(); });
 document.getElementById('helpClose').addEventListener('click', () => { help.hidden = true; });
