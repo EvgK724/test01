@@ -821,7 +821,7 @@ function renderMe() {
     hero = `<section class="card hero" style="--c:${c}"><p class="eyebrow">Ближайшее дежурство</p>
       <p class="date">Впереди дежурств нет</p><p class="meta">В приложении график по ${esc(monthTitle(MK[MK.length - 1]).toLowerCase())}. Новый месяц появится после утверждения.</p></section>`;
   }
-  const t = wishTarget(now);
+  const t = selectedWishTarget(now);
   const sent = store.get('dezh:sent:' + id + ':' + t.mk);
   const wishCard = t.open ? `<section class="card"><div class="who-row" style="--c:var(--neon-2)"><span class="dotc"></span><h3 style="flex:1">Пожелания на ${esc(monthTitle(t.mk).toLowerCase())}</h3>
       ${sent ? '<span class="pill ok">отправлены</span>' : '<span class="pill warn">не отправлены</span>'}</div>
@@ -972,6 +972,7 @@ function dayCard() {
 const W_EMPTY = () => ({ no: [], vac: [], yes: [], noWd: [], yesWd: [], only: false, total: { mode: 'any', n: 4 }, full: { mode: 'any', n: 1 }, freeWe: 0, note: '' });
 let W = null, wKey = null, brush = 'no', rangeMode = false, anchor = null;
 function loadWish(mk) {
+  if(mk>='2027-01')wishSignals.selectedMonth=mk;
   const k = 'dezh:wish:' + state.me + ':' + mk;
   if (wKey === k && W) return;
   wKey = k;
@@ -1024,10 +1025,95 @@ function qty(label, f, hint) {
     ${v.mode === 'any' ? '' : `<div class="stepper"><button type="button" data-act="qn" data-f="${f}" data-d="-1" aria-label="Меньше">−</button><output>${v.n}</output><button type="button" data-act="qn" data-f="${f}" data-d="1" aria-label="Больше">+</button></div>`}
     ${hint ? `<span class="hint">${hint}</span>` : ''}</div>`;
 }
+// Disabled until the separate aggregate endpoint passes review and end-to-end checks.
+const WISH_SIGNALS_URL = 'https://script.google.com/macros/s/AKfycbx5XKpYnS0eviGnXbm4_Q5KF6T16k_RnRJfcMwYiFnSfOtqEOcV8EMRVqPjdJ_OKUa2/exec';
+let wishSignals = {status:'unavailable',periods:[],requested:0,lastSuccess:0,selectedMonth:null};
+function selectedWishTarget(now) {
+  const parts=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Yekaterinburg',year:'numeric',month:'2-digit',day:'2-digit'}).format(now);
+  let target=shiftMonth(parts.slice(0,7),Number(parts.slice(-2))<=15?1:2);while(D.months[target])target=shiftMonth(target,1);
+  const base=wishTarget(now),mk=wishSignals.selectedMonth||target;
+  if(!WISH_SIGNALS_URL||mk<'2027-01')return base;
+  const p=wishSignals.periods.find(x=>x.month===mk);
+  const prior=shiftMonth(mk,-1).split('-').map(Number);
+  return {mk,deadline:new Date(shiftMonth(mk,-1)+'-15T23:59:59.999+05:00'),discussion:true,
+    open:!D.months[mk]&&now<=new Date(shiftMonth(mk,-1)+'-15T23:59:59.999+05:00')&&!!p&&wishSignals.status==='snapshot'&&Date.now()-wishSignals.lastSuccess<=600000};
+}
+function renderPeriodChooser() {
+  if(!WISH_SIGNALS_URL)return '';
+  const current=selectedWishTarget(new Date()).mk;
+  const choices=new Set([current,...wishSignals.periods.map(x=>x.month)]);
+  return '<section class="card"><label for="wishPeriod"><b>Месяц пожеланий</b></label><select id="wishPeriod" style="width:100%;min-height:44px;background:#102137;color:#E8F2FF;border:1px solid #75B9F1;border-radius:9px;padding:8px">'+[...choices].sort().map(m=>'<option value="'+esc(m)+'"'+(m===current?' selected':'')+'>'+esc(monthTitle(m))+'</option>').join('')+'</select><p class="lead small">Пожелания принимаются до конца 15-го числа предыдущего месяца (Екатеринбург) или до появления предварительного графика, если он опубликован раньше. Перед отправкой проверьте месяц.</p></section>';
+}
+document.addEventListener('change',e=>{
+  if(e.target.id!=='wishPeriod')return;
+  const mk=e.target.value;
+  if(!wishSignals.periods.some(p=>p.month===mk))return;
+  if(W)saveWish();wishSignals.selectedMonth=mk;render(true);
+});
+function validWishSnapshot(s,mk) {
+  if(!s || s.schema!==1 || s.month!==mk || mk<'2027-01' ||
+     s.kind!=='WISHES_NOT_SCHEDULE' || !['PARTIAL','COMPLETE'].includes(s.quality) ||
+     !Number.isFinite(Date.parse(s.asOf)) || !Array.isArray(s.days) || s.days.length!==daysIn(mk)) return false;
+  return s.days.every((d,i)=>d.date===mk+'-'+pad(i+1)&&['0','1','2+'].includes(d.bucket));
+}
+async function refreshWishSignals() {
+  if(!WISH_SIGNALS_URL||document.hidden||Date.now()-wishSignals.requested<60000)return;
+  wishSignals.requested=Date.now();
+  const ctl=new AbortController();const timeout=setTimeout(()=>ctl.abort(),10000);
+  try {
+    const r=await fetch(WISH_SIGNALS_URL,{cache:'no-store',credentials:'omit',signal:ctl.signal});
+    if(!r.ok)throw Error('network');
+    const packet=await r.json();
+    if(packet.schema!==2||packet.kind!=='WISHES_PERIODS'||!Array.isArray(packet.periods))throw Error('unavailable');
+    const seen=new Set();
+    for(const p of packet.periods) {
+      if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(p.month)||p.month<'2027-01'||p.phase!=='PREPARATION'||seen.has(p.month)||
+        (p.snapshot!==null&&!validWishSnapshot(p.snapshot,p.month)))throw Error('invalid');
+      seen.add(p.month);
+    }
+    wishSignals.periods=packet.periods;wishSignals.status='snapshot';wishSignals.lastSuccess=Date.now();
+  } catch(e) {wishSignals.status='unavailable';}
+  finally {
+    clearTimeout(timeout);
+    if(state.tab==='wish') {
+      const box=document.getElementById('wishSignals'),chooser=document.getElementById('wishPeriodChooser');
+      syncWishControls();
+      if(box)box.innerHTML=renderWishSignals(selectedWishTarget(new Date()).mk);
+      // Preserve current selection and inputs. Only chooser and read-only signals are refreshed.
+      if(chooser&&document.activeElement?.id!=='wishPeriod')chooser.innerHTML=renderPeriodChooser();
+    }
+  }
+}
+function renderWishSignals(mk) {
+  if(mk<'2027-01')return '';
+  const title='<h3>Пожелания по датам</h3>';
+  if(D.months[mk]||new Date()>new Date(shiftMonth(mk,-1)+'-15T23:59:59.999+05:00'))return '<section class="card">'+title+'<p>Подготовка завершена. Сводка пожеланий скрыта.</p></section>';
+  if(!WISH_SIGNALS_URL)return '<section class="card">'+title+'<p>Обновление ещё не подключено.</p></section>';
+  const s=wishSignals.periods.find(p=>p.month===mk)?.snapshot;
+  if(!s||s.month!==mk)return '<section class="card">'+title+'<p>Пока нет проверенной сводки. Это не означает, что все даты свободны.</p></section>';
+  const age=Date.now()-Date.parse(s.asOf);
+  const delayed=wishSignals.status!=='snapshot'||age>600000||age<0;
+  const time=esc(new Date(s.asOf).toLocaleString('ru-RU',{timeZone:'Asia/Yekaterinburg',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'}));
+  const list=b=>s.days.filter(d=>d.bucket===b).map(d=>'<span style="display:inline-block;margin:3px;padding:4px 9px;border-radius:8px;background:'+(b==='0'?'#17324D':'#493017')+';color:'+(b==='0'?'#BBDFFF':'#FFD39B')+'">'+Number(d.date.slice(-2))+'</span>').join('')||'Нет';
+  return '<section class="card">'+title+'<p class="lead small">По состоянию на '+time+' (Екатеринбург). '+(delayed?'Обновление задерживается. Показана прежняя сводка.':'Автоматическая проверка примерно раз в 5 минут; показ может отставать.')+'</p>'+
+    '<p class="lead small">'+(s.quality==='PARTIAL'?'Данные неполные: часть заявок отсутствует или не распознана. Нулевая отметка НЕ доказывает отсутствие желающих. ':'')+'По поступившим заявкам. Это пожелания, не назначения; выбор имени не подтверждает личность.</p>'+
+    '<p><b>○ '+(s.quality==='PARTIAL'?'В доступных заявках не отмечены (данные неполные):':'Нет желающих по полученным заявкам:')+'</b> '+list('0')+'</p>'+
+    '<p><b>↔ Несколько желающих:</b> '+list('2+')+'</p>'+
+    '<p class="lead small">Остальные даты: один желающий. «Нет желающих» не означает незакрытую смену. После отправки подождите обновления; сводка не подтверждает приём вашей заявки.</p></section>';
+}
+setInterval(()=>{if(!document.hidden&&state.tab==='wish')void refreshWishSignals()},60000);
+
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&state.tab==='wish')void refreshWishSignals()});
+
+function wishEditingMatches(mk){return !!W&&wKey==='dezh:wish:'+state.me+':'+mk;}
+function renderWishActions(t){const ready=!!(C.form&&C.form.action&&C.form.entry);return '<button type="button" class="btn primary" data-act="send" '+(t.open&&ready&&wishEditingMatches(t.mk)?'':'disabled')+'>Отправить пожелания</button><button type="button" class="btn" data-act="copywish" '+(t.open&&wishEditingMatches(t.mk)?'':'disabled')+'>Скопировать текст</button><p class="lead small">'+(t.open?'Приём открыт. Сохранение требует проверки.':'Приём закрыт или статус пока не подтверждён.')+'</p>';}
+function syncWishControls(){const t=selectedWishTarget(new Date()),a=document.getElementById('wishActions'),status=document.getElementById('wishOpenStatus');if(a)a.innerHTML=renderWishActions(t);if(status)status.textContent=t.open?'Период открыт.':'Период закрыт или статус недоступен.';}
+
 function renderWish() {
   if (!state.me || state.picking) return picker('Пожелания — сначала выберите себя');
-  const now = new Date(), t = wishTarget(now), mk = t.mk;
+  const now = new Date(), t = selectedWishTarget(now), mk = t.mk;
   loadWish(mk);
+  void refreshWishSignals(mk);
   const sentAt = store.get('dezh:sent:' + state.me + ':' + mk);
   const left = Math.ceil((t.deadline - now) / 864e5);
   const cal = calOf(mk), off = new Set(cal.off), hol = new Set(cal.hol);
@@ -1043,10 +1129,10 @@ function renderWish() {
   const B = [['no', 'Не ставить', 'var(--no)'], ['vac', 'Отпуск', 'var(--vac)'], ['yes', 'Хочу', 'var(--ok)'], ['clear', 'Стереть', 'var(--text-2)']];
   const formReady = !!(C.form && C.form.action && C.form.entry);
   const head = `<section class="card"><p class="eyebrow">${esc(nameOf(state.me))}</p><h2>Пожелания на ${esc(monthTitle(mk).toLowerCase())}</h2>
-    ${t.open ? `<p class="lead small">Приём до ${t.deadline.getDate()}${NB}${GEN[t.deadline.getMonth()]} включительно · осталось ${left}${NB}${plural(left, 'день', 'дня', 'дней')}. Учитывается последняя отправка.</p>` : ''}
-    ${sentAt ? `<p class="sent small">✓ Отправлено ${esc(new Date(sentAt).toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }))}. Можно изменить и отправить снова.</p>` : ''}
+    ${t.discussion ? `<p id="wishOpenStatus" class="lead small">Обсуждение периода: ${t.open ? 'открыто' : 'статус недоступен; отправка остановлена'}.</p>` : t.open ? `<p class="lead small">Приём до ${t.deadline.getDate()}${NB}${GEN[t.deadline.getMonth()]} включительно · осталось ${left}${NB}${plural(left, 'день', 'дня', 'дней')}. Учитывается последняя отправка.</p>` : ''}
+    ${sentAt ? `<p class="sent small">Запрос отправлен ${esc(new Date(sentAt).toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }))}. Сохранение сервером не подтверждено. Можно изменить и отправить снова.</p>` : ''}
     ${!cal.verified ? '<p class="lead small">Переносы праздников на этот год ещё сверяются с постановлением Правительства.</p>' : ''}</section>`;
-  return `${head}
+  return `${head}<div id="wishPeriodChooser">${renderPeriodChooser()}</div><div id="wishSignals">${renderWishSignals(mk)}</div>
     <section class="card"><h3>Дни и интервалы</h3>
       <div class="brush" role="group" aria-label="Что отмечать">${B.map(([k, t, c]) => `<button type="button" data-act="brush" data-v="${k}" style="--b:${c}" aria-pressed="${brush === k}">${t}</button>`).join('')}</div>
       <button type="button" class="toggle" role="switch" data-act="range" aria-checked="${rangeMode}"><span><b>Интервалом</b><br><span class="lead small">${rangeMode ? (anchor ? 'Теперь нажмите последний день' : 'Нажмите первый день, потом последний') : 'Выключено — нажатие отмечает один день'}</span></span><span class="sw"></span></button>
@@ -1065,9 +1151,7 @@ function renderWish() {
       <textarea id="note" maxlength="500" placeholder="Например: все четверги и 3 субботы; одни сутки; не ставить подряд с выходными">${esc(W.note)}</textarea>
       <span class="lead small">Пишите как удобно — прочитаю и учту при составлении.</span></section>
     <section class="card"><h3>Итог</h3><div class="summary" id="summary">${esc(wishText(mk))}</div>
-      ${t.open ? `<button type="button" class="btn primary" data-act="send" ${formReady ? '' : 'disabled'}>Отправить пожелания</button>
-      ${formReady ? '' : '<p class="lead small">Отправка ещё настраивается. Пока можно скопировать текст и переслать ЕЮ.</p>'}
-      <button type="button" class="btn" data-act="copywish">Скопировать текст</button>` : `<p class="lead">Приём на этот месяц закрыт.</p>`}
+      <div id="wishActions">${renderWishActions(t)}</div>
       <button type="button" class="link" data-act="resetwish">Очистить всё</button></section>`;
 }
 
@@ -1100,7 +1184,7 @@ function shareFile(f) {
 }
 let orgOpen = false;
 function renderFiles() {
-  const now = new Date(), t = wishTarget(now);
+  const now = new Date(), t = selectedWishTarget(now);
   const files = D.files || {};
   const pend = shiftMonth(t.mk, -1);
   let status = '';
@@ -1281,7 +1365,7 @@ function render(keepScroll) {
   view.innerHTML = state.tab === 'me' ? renderMe() : state.tab === 'all' ? renderAll() : state.tab === 'wish' ? renderWish() : renderFiles();
   main.scrollTop = keepScroll ? y : 0;
   const note = document.getElementById('note');
-  if (note) note.addEventListener('input', () => { W.note = note.value; saveWish(); const s = document.getElementById('summary'); if (s) s.textContent = wishText(wishTarget(new Date()).mk); });
+  if (note) note.addEventListener('input', () => { W.note = note.value; saveWish(); const s = document.getElementById('summary'); if (s) s.textContent = wishText(selectedWishTarget(new Date()).mk); });
 }
 let toastTimer = 0;
 function toast(t) {
@@ -1294,13 +1378,16 @@ async function copy(text, done) {
   catch (e) { window.prompt('Скопируйте:', text); }
 }
 async function send() {
-  const t = wishTarget(new Date());
+  const t = selectedWishTarget(new Date());
+  if(!wishEditingMatches(t.mk)){toast('Выбран другой месяц. Откройте пожелания заново.');return;}
+  if(!t.open){toast('Приём для выбранного периода недоступен. Обновите сводку.');return;}
+  if(!window.confirm('Отправить полный набор пожеланий на '+monthTitle(t.mk)+'? Он заменит прежние пожелания этого врача за этот месяц. Данные с другого устройства не подгружаются. Проверьте весь набор, а не только изменения.'))return;
   const body = new URLSearchParams();
   body.set(C.form.entry, wishPayload(t.mk));
   try {
     await fetch(C.form.action, { method: 'POST', mode: 'no-cors', body });
     store.set('dezh:sent:' + state.me + ':' + t.mk, new Date().toISOString());
-    toast('Пожелания отправлены');
+    toast('Запрос отправлен. Сохранение пока не подтверждено.');
     render(true);
   } catch (e) {
     toast('Нет связи — попробуйте ещё раз');
@@ -1343,7 +1430,7 @@ view.addEventListener('click', e => {
   if (a === 'qmode') { W[b.dataset.f].mode = b.dataset.v; saveWish(); render(true); return; }
   if (a === 'qn') { const q = W[b.dataset.f]; q.n = Math.max(0, Math.min(20, q.n + +b.dataset.d)); saveWish(); render(true); return; }
   if (a === 'fw') { W.freeWe = Math.max(0, Math.min(5, (W.freeWe || 0) + +b.dataset.d)); saveWish(); render(true); return; }
-  if (a === 'copywish') { copy(wishPayload(wishTarget(new Date()).mk), 'Текст пожеланий скопирован'); return; }
+  if (a === 'copywish') { const t=selectedWishTarget(new Date());if(!t.open||!wishEditingMatches(t.mk)){toast('Период закрыт или выбран другой месяц.');return;}copy(wishPayload(selectedWishTarget(new Date()).mk), 'Текст пожеланий скопирован'); return; }
   if (a === 'resetwish') { if (confirm('Очистить все отметки и комментарий?')) { W = W_EMPTY(); saveWish(); anchor = null; render(true); } return; }
   if (a === 'send') { send(); return; }
   // Согласование
