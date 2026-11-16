@@ -19,7 +19,7 @@ END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
 UID:2026-11-04-alekeshova@dezhurstva.evgk724.github.io
-DTSTAMP:20261116T083119Z
+DTSTAMP:20261116T181844.219732Z
 DTSTART;TZID=Asia/Yekaterinburg:20261104T080000
 DTEND;TZID=Asia/Yekaterinburg:20261105T080000
 SUMMARY:Дежурство ПСО
@@ -38,7 +38,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-11-15-alekeshova@dezhurstva.evgk724.github.io
-DTSTAMP:20261116T083119Z
+DTSTAMP:20261116T181844.219732Z
 DTSTART;TZID=Asia/Yekaterinburg:20261115T080000
 DTEND;TZID=Asia/Yekaterinburg:20261116T080000
 SUMMARY:Дежурство ПСО
@@ -57,7 +57,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-11-22-alekeshova@dezhurstva.evgk724.github.io
-DTSTAMP:20261116T083119Z
+DTSTAMP:20261116T181844.219732Z
 DTSTART;TZID=Asia/Yekaterinburg:20261122T080000
 DTEND;TZID=Asia/Yekaterinburg:20261123T080000
 SUMMARY:Дежурство ПСО
@@ -76,7 +76,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-11-29-alekeshova@dezhurstva.evgk724.github.io
-DTSTAMP:20261116T083119Z
+DTSTAMP:20261116T181844.219732Z
 DTSTART;TZID=Asia/Yekaterinburg:20261129T080000
 DTEND;TZID=Asia/Yekaterinburg:20261130T080000
 SUMMARY:Дежурство ПСО
@@ -95,7 +95,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-12-06-alekeshova@dezhurstva.evgk724.github.io
-DTSTAMP:20261116T083119Z
+DTSTAMP:20261116T181844.219732Z
 DTSTART;TZID=Asia/Yekaterinburg:20261206T080000
 DTEND;TZID=Asia/Yekaterinburg:20261207T080000
 SUMMARY:Дежурство ПСО (предварительно)
@@ -114,7 +114,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-12-12-alekeshova@dezhurstva.evgk724.github.io
-DTSTAMP:20261116T083119Z
+DTSTAMP:20261116T181844.219732Z
 DTSTART;TZID=Asia/Yekaterinburg:20261212T080000
 DTEND;TZID=Asia/Yekaterinburg:20261213T080000
 SUMMARY:Дежурство ПСО (предварительно)
@@ -133,7 +133,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-12-17-alekeshova@dezhurstva.evgk724.github.io
-DTSTAMP:20261116T083119Z
+DTSTAMP:20261116T181844.219732Z
 DTSTART;TZID=Asia/Yekaterinburg:20261217T161800
 DTEND;TZID=Asia/Yekaterinburg:20261218T080000
 SUMMARY:Дежурство ПСО (предварительно)
@@ -152,7 +152,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-12-20-alekeshova@dezhurstva.evgk724.github.io
-DTSTAMP:20261116T083119Z
+DTSTAMP:20261116T181844.219732Z
 DTSTART;TZID=Asia/Yekaterinburg:20261220T080000
 DTEND;TZID=Asia/Yekaterinburg:20261221T080000
 SUMMARY:Дежурство ПСО (предварительно)
@@ -171,7 +171,7 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-12-27-alekeshova@dezhurstva.evgk724.github.io
-DTSTAMP:20261116T083119Z
+DTSTAMP:20261116T181844.219732Z
 DTSTART;TZID=Asia/Yekaterinburg:20261227T080000
 DTEND;TZID=Asia/Yekaterinburg:20261228T080000
 SUMMARY:Дежурство ПСО (предварительно)
@@ -190,20 +190,21 @@ END:VALARM
 END:VEVENT
 BEGIN:VEVENT
 UID:ack-2026-12-v1-alekeshova@dezhurstva.evgk724.github.io
-DTSTAMP:20261116T083119Z
+DTSTAMP:20261116T181844.219732Z
 DTSTART;TZID=Asia/Yekaterinburg:20261117T100000
 DTEND;TZID=Asia/Yekaterinburg:20261117T101500
-SUMMARY:Дежурства ПСО: подтвердите график на
-  декабрь 2026
-DESCRIPTION:Предварительный график опубликов
- ан. Откройте приложение «Дежурства» → «
- Мои» и нажмите «Согласен» или напишите\, 
- что не так.
+SUMMARY:Дежурства ПСО: согласование графика
+  на декабрь 2026
+DESCRIPTION:График остаётся предварительным.
+  Если вы ещё не отвечали\, откройте прило
+ жение «Дежурства» → «Мои» и ответьте. Ес
+ ли ответ уже отправлен\, повторять его из
+ -за этого общего напоминания не нужно.
 TRANSP:TRANSPARENT
 BEGIN:VALARM
 ACTION:DISPLAY
-DESCRIPTION:Подтвердите график дежурств на де
- кабрь 2026
+DESCRIPTION:Дежурства ПСО: согласование графи
+ ка на декабрь 2026
 TRIGGER:PT0M
 END:VALARM
 END:VEVENT
