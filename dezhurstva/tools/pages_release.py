@@ -31,16 +31,17 @@ def main():
  if site.get('build_type') not in ('legacy',None) or site.get('source')!={'branch':'main','path':'/'}:raise ValueError('unexpected Pages source')
  main=request('/commits/main')['sha']
  if main!=a.commit:raise ValueError('main moved; retry from fresh checkout')
- build=request('/pages/builds',method='POST')
- build_id=build.get('url','').removeprefix(API+'/pages/builds/')
- if not (build_id.isdecimal() or build_id=='latest'):raise ValueError('unexpected build URL')
+ request('/pages/builds',method='POST')
+ # API response URLs can vary. Poll only our fixed repository endpoint;
+ # never follow a URL supplied in the response, and require exact commit.
+ build_id='latest'
  deadline=time.monotonic()+a.wait
  while True:
   status=request('/pages/builds/'+build_id)
+  if request('/commits/main')['sha']!=a.commit:raise ValueError('main moved during build; retry revalidation')
   if status.get('commit')==a.commit:
    if status.get('status')=='built':break
    if status.get('status')=='errored':raise ValueError('Pages build failed')
-  elif request('/commits/main')['sha']!=a.commit:raise ValueError('main moved during build; retry revalidation')
   if time.monotonic()>=deadline:raise TimeoutError('Pages pending; retry publication only')
   time.sleep(15)
  if status.get('commit')!=a.commit:raise ValueError('Pages built different SHA; revalidate')
