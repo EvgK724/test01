@@ -323,7 +323,7 @@ def with_values(xml, cells):
             t, val = ' t="str"', escape(v)
         else:
             t, val = "", repr(round(float(v), 10)) if isinstance(v, float) else str(int(v))
-        xml, n = re.subn(r'(<c r="%s")([^>]*)(><f>.*?</f>)<v\s*/>' % ref, lambda m: f"{m.group(1)}{m.group(2)}{t}{m.group(3)}<v>{val}</v>", xml, count=1)
+        xml, n = re.subn(r'(<c r="%s")([^>]*)(><f>.*?</f>)(?:<v\s*/>|<v>\s*</v>)' % ref, lambda m: f"{m.group(1)}{m.group(2)}{t}{m.group(3)}<v>{val}</v>", xml, count=1)
         if not n:
             raise RuntimeError(f"нет формулы в ячейке {ref}")
     return xml

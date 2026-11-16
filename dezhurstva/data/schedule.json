@@ -159,7 +159,162 @@
      "label": "Отпуск"
     }
    ]
+  },
+  "2026-12": {
+   "title": "Декабрь 2026",
+   "order": [
+    "klepikov",
+    "kardashina",
+    "lekerova",
+    "khamatnurova",
+    "leonard",
+    "alekeshova",
+    "omutov"
+   ],
+   "shift": {
+    "work": [
+     "16:18",
+     "08:00"
+    ],
+    "off": [
+     "08:00",
+     "08:00"
+    ]
+   },
+   "off": [
+    "2026-12-05",
+    "2026-12-06",
+    "2026-12-12",
+    "2026-12-13",
+    "2026-12-19",
+    "2026-12-20",
+    "2026-12-26",
+    "2026-12-27",
+    "2026-12-31"
+   ],
+   "duty": {
+    "2026-12-01": [
+     "klepikov"
+    ],
+    "2026-12-02": [
+     "omutov"
+    ],
+    "2026-12-03": [
+     "klepikov"
+    ],
+    "2026-12-04": [
+     "leonard"
+    ],
+    "2026-12-05": [
+     "klepikov"
+    ],
+    "2026-12-06": [
+     "alekeshova"
+    ],
+    "2026-12-07": [
+     "kardashina"
+    ],
+    "2026-12-08": [
+     "lekerova"
+    ],
+    "2026-12-09": [
+     "khamatnurova"
+    ],
+    "2026-12-10": [
+     "omutov"
+    ],
+    "2026-12-11": [
+     "kardashina"
+    ],
+    "2026-12-12": [
+     "alekeshova"
+    ],
+    "2026-12-13": [
+     "omutov"
+    ],
+    "2026-12-14": [
+     "lekerova"
+    ],
+    "2026-12-15": [
+     "kardashina"
+    ],
+    "2026-12-16": [
+     "omutov"
+    ],
+    "2026-12-17": [
+     "alekeshova"
+    ],
+    "2026-12-18": [
+     "leonard"
+    ],
+    "2026-12-19": [
+     "kardashina"
+    ],
+    "2026-12-20": [
+     "alekeshova"
+    ],
+    "2026-12-21": [
+     "omutov"
+    ],
+    "2026-12-22": [
+     "lekerova"
+    ],
+    "2026-12-23": [
+     "kardashina"
+    ],
+    "2026-12-24": [
+     "klepikov"
+    ],
+    "2026-12-25": [
+     "leonard"
+    ],
+    "2026-12-26": [
+     "klepikov"
+    ],
+    "2026-12-27": [
+     "alekeshova"
+    ],
+    "2026-12-28": [
+     "omutov"
+    ],
+    "2026-12-29": [
+     "klepikov"
+    ],
+    "2026-12-30": [
+     "kardashina"
+    ],
+    "2026-12-31": [
+     "lekerova"
+    ]
+   },
+   "marks": [
+    {
+     "who": "klepikov",
+     "from": "2026-12-07",
+     "to": "2026-12-20",
+     "label": "Отпуск"
+    }
+   ],
+   "status": "preliminary",
+   "version": 1,
+   "confirm": {
+    "version": 1,
+    "published": "2026-11-16T08:31:19Z",
+    "need": [
+     "klepikov",
+     "kardashina",
+     "lekerova",
+     "khamatnurova",
+     "leonard",
+     "alekeshova",
+     "omutov"
+    ],
+    "confirmed": [
+     "klepikov"
+    ],
+    "disagreed": 0
+   }
   }
  },
- "updated": "2026-10-12T18:39:22Z"
+ "updated": "2026-11-16T08:31:19Z"
 }

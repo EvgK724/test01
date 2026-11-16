@@ -19,7 +19,7 @@ END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
 UID:2026-11-02-khamatnurova@dezhurstva.evgk724.github.io
-DTSTAMP:20261012T183922Z
+DTSTAMP:20261116T083119Z
 DTSTART;TZID=Asia/Yekaterinburg:20261102T161800
 DTEND;TZID=Asia/Yekaterinburg:20261103T080000
 SUMMARY:Дежурство ПСО
@@ -34,6 +34,44 @@ BEGIN:VALARM
 ACTION:DISPLAY
 DESCRIPTION:Через час дежурство ПСО\, 16:18
 TRIGGER:-PT1H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-12-09-khamatnurova@dezhurstva.evgk724.github.io
+DTSTAMP:20261116T083119Z
+DTSTART;TZID=Asia/Yekaterinburg:20261209T161800
+DTEND;TZID=Asia/Yekaterinburg:20261210T080000
+SUMMARY:Дежурство ПСО (предварительно)
+DESCRIPTION:Будний день\, 16:18–08:00 (15 ч 42 мин).
+TRANSP:OPAQUE
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Завтра дежурство ПСО\, 16:18
+TRIGGER:-PT21H18M
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Через час дежурство ПСО\, 16:18
+TRIGGER:-PT1H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:ack-2026-12-v1-khamatnurova@dezhurstva.evgk724.github.io
+DTSTAMP:20261116T083119Z
+DTSTART;TZID=Asia/Yekaterinburg:20261117T100000
+DTEND;TZID=Asia/Yekaterinburg:20261117T101500
+SUMMARY:Дежурства ПСО: подтвердите график на
+  декабрь 2026
+DESCRIPTION:Предварительный график опубликов
+ ан. Откройте приложение «Дежурства» → «
+ Мои» и нажмите «Согласен» или напишите\, 
+ что не так.
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Подтвердите график дежурств на де
+ кабрь 2026
+TRIGGER:PT0M
 END:VALARM
 END:VEVENT
 END:VCALENDAR
