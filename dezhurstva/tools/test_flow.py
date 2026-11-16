@@ -8,6 +8,12 @@ SRC = pathlib.Path(__file__).resolve().parent.parent
 tmp = pathlib.Path(tempfile.mkdtemp()) / "dezhurstva"
 shutil.copytree(SRC, tmp, ignore=shutil.ignore_patterns("private", "shots", "__pycache__"))
 T = tmp / "tools"
+# This scenario starts from a new draft. Isolate it from any real published December;
+# production publish.py must keep its monotonic version rather than reuse v1.
+fixture_path = tmp / "data" / "schedule.json"
+fixture = json.loads(fixture_path.read_text())
+fixture["months"].pop("2026-12", None)
+fixture_path.write_text(json.dumps(fixture, ensure_ascii=False))
 fails = []
 
 

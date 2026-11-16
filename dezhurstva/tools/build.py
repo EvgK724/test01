@@ -5,7 +5,7 @@
 import datetime as dt, hashlib, json, pathlib, sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-import make_xlsx, ru_calendar
+import make_xlsx, ru_calendar, approval_revision
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 # Цвета врачей — только синие и голубые оттенки
@@ -62,21 +62,26 @@ def shifts(data):
 
 
 def ack_events(data, who, tz, stamp):
-    """Предварительный график, а врач ещё не согласился: событие-напоминание «подтвердите» на следующий день в 10:00."""
+    """Согласование: без поимённых статусов публикуем только общее условное напоминание."""
     out = []
     for mk, m in data["months"].items():
         c = m.get("confirm") or {}
-        if m.get("status") != "preliminary" or who not in c.get("need", []) or who in c.get("confirmed", []):
+        count_only = type(c.get('agreedCount')) is int
+        if m.get("status") != "preliminary" or who not in c.get("need", []) or (not count_only and who in c.get("confirmed", [])):
             continue
         pub = dt.datetime.fromisoformat(c["published"].replace("Z", "+00:00")).astimezone(dt.timezone(dt.timedelta(hours=5)))
         at = dt.datetime.combine(pub.date() + dt.timedelta(days=1), dt.time(10))
         title = m["title"].split()[0].lower() + " " + m["title"].split()[1]
+        summary = f'Дежурства ПСО: согласование графика на {title}' if count_only else f'Дежурства ПСО: подтвердите график на {title}'
+        description = ('График остаётся предварительным. Если вы ещё не отвечали, откройте приложение «Дежурства» → «Мои» и ответьте. '
+                       'Если ответ уже отправлен, повторять его из-за этого общего напоминания не нужно.' if count_only else
+                       'Предварительный график опубликован. Откройте приложение «Дежурства» → «Мои» и нажмите «Согласен» или напишите, что не так.')
         out += ["BEGIN:VEVENT", f"UID:ack-{mk}-v{c['version']}-{who}@dezhurstva.evgk724.github.io", f"DTSTAMP:{stamp}",
                 f"DTSTART;TZID={tz}:{at:%Y%m%dT%H%M%S}", f"DTEND;TZID={tz}:{at + dt.timedelta(minutes=15):%Y%m%dT%H%M%S}",
-                f"SUMMARY:{esc(f'Дежурства ПСО: подтвердите график на {title}')}",
-                f"DESCRIPTION:{esc('Предварительный график опубликован. Откройте приложение «Дежурства» → «Мои» и нажмите «Согласен» или напишите, что не так.')}",
+                f"SUMMARY:{esc(summary)}",
+                f"DESCRIPTION:{esc(description)}",
                 "TRANSP:TRANSPARENT", "BEGIN:VALARM", "ACTION:DISPLAY",
-                f"DESCRIPTION:{esc(f'Подтвердите график дежурств на {title}')}", "TRIGGER:PT0M", "END:VALARM", "END:VEVENT"]
+                f"DESCRIPTION:{esc(summary)}", "TRIGGER:PT0M", "END:VALARM", "END:VEVENT"]
     return out
 
 
@@ -114,6 +119,15 @@ def ics(data, name, items, alarms, color, who=None):
 
 def main():
     data = json.loads((ROOT / "data" / "schedule.json").read_text())
+    # Bind every displayed response to this exact schedule, never only its label.
+    # This is rendering metadata; changing counts/status does not alter the hash.
+    for month in data['months'].values():
+        if month.get('confirm'):
+            expected_digest = approval_revision.revision(month, data)
+            stored_digest = month['confirm'].get('digest')
+            if stored_digest and stored_digest != expected_digest:
+                raise ValueError('График изменён без новой версии согласования: сначала publish.py --again')
+            month['confirm']['digest'] = expected_digest
     ids = list(data["doctors"])
     all_items = list(shifts(data))
     cal = ROOT / "cal"

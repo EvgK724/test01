@@ -657,58 +657,121 @@ function monthBar() {
 const PRE = MK.filter(mk => D.months[mk].status === 'preliminary' && D.months[mk].confirm);
 const ackNote = {};
 let ackNo = {};
-function ackKey(mk) { return 'dezh:ack:' + state.me + ':' + mk + ':' + D.months[mk].version; }
+const ackEditing = {}, ackBusy = new Set();
+function ackKey(mk, who = state.me) {
+  const M = D.months[mk];
+  return 'dezh:ack:' + who + ':' + mk + ':' + M.version + ':' + (M.confirm.digest || 'legacy');
+}
+function localAck(mk, who = state.me) {
+  try {
+    const p = JSON.parse(store.get(ackKey(mk, who)) || 'null');
+    const M = D.months[mk];
+    if (p && p.who === who && p.m === mk && p.ver === M.version && p.digest === M.confirm.digest && typeof p.ok === 'boolean') return p;
+  } catch (e) {}
+  return null;
+}
 function ackState(mk) {
-  const c = D.months[mk].confirm;
-  if (c.confirmed.includes(state.me)) return { done: true, ok: true, server: true };
-  try { const v = JSON.parse(store.get(ackKey(mk)) || 'null'); if (v) return Object.assign({ done: true }, v); } catch (e) {}
+  const c = D.months[mk].confirm, local = localAck(mk);
+  // An opaque POST response proves neither delivery nor agreement. Only a
+  // matching anonymous server receipt proves receipt of this particular reply.
+  if (local) {
+    const received = typeof local.receiptId === 'string' && (c.receiptIds || []).includes(local.receiptId);
+    return { ...local, done: received, pending: !received, server: received };
+  }
+  // Legacy pages had an explicit confirmed list. Count-only snapshots must not
+  // turn choosing a surname into a claim about that person's own response.
+  if (!Number.isInteger(c.agreedCount) && (c.confirmed || []).includes(state.me)) return { done: true, ok: true, server: true };
   return { done: false };
+}
+function agreedCount(c) {
+  return Number.isInteger(c.agreedCount) && c.agreedCount >= 0 && c.agreedCount <= c.need.length
+    ? c.agreedCount : (c.confirmed || []).length;
 }
 function pendingAcks() { return state.me ? PRE.filter(mk => D.months[mk].confirm.need.includes(state.me) && !ackState(mk).done) : []; }
 function statusPills(mk) {
   const M = D.months[mk];
   if (M.status === 'preliminary' && M.confirm) {
     const c = M.confirm;
-    return `<span class="pill pre">предварительный${M.version > 1 ? ' · версия ' + M.version : ''}</span><span class="pill">согласны ${c.confirmed.length} из ${c.need.length}</span>`;
+    return `<span class="pill pre">предварительный${M.version > 1 ? ' · версия ' + M.version : ''}</span><span class="pill">согласий ${agreedCount(c)} из ${c.need.length}</span>`;
   }
-  return M.status === 'final' ? '<span class="pill fin">окончательный</span>' : '';
+  return M.status === 'final' ? '<span class="pill fin">окончательный</span>' + (M.confirm && M.confirm.reviewRequired ? '<span class="pill pre" role="status">Есть новое замечание — требуется проверка ЕЮ</span>' : '') : '';
 }
 function monthGen(mk) { const [y, m] = mk.split('-').map(Number); return MON[m - 1].toLowerCase() + ' ' + y; }
 function ackCards() {
   return PRE.filter(mk => D.months[mk].confirm.need.includes(state.me)).map(mk => {
-    const M = D.months[mk], a = ackState(mk), keys = myKeys(state.me, mk);
+    const M = D.months[mk], a = ackState(mk), keys = myKeys(state.me, mk), key = ackKey(mk), busy = ackBusy.has(key);
     const mine = keys.length ? keys.map(k => `<span class="${DAY[k].off ? 'off' : ''}">${DAY[k].d}${NB}${WD[DAY[k].wd]}${DAY[k].off ? ' · сутки' : ''}</span>`).join('') : '<span>дежурств нет</span>';
     let tail;
-    if (a.done && a.ok) tail = `<p class="done">✓ ${a.server ? 'Ваше согласие учтено.' : 'Вы согласились — отправлено.'} Когда согласятся все, график станет окончательным.</p>`;
-    else if (a.done) tail = `<p class="done no">Вы не согласны: «${esc(a.note || '')}». ЕЮ увидит; после правок придёт новая версия.</p>
-      <button type="button" class="link" data-act="ackchange" data-mk="${mk}">Изменить ответ</button>`;
-    else if (ackNo[mk]) tail = `<label class="field"><span class="lbl">Что не так?</span>
-        <textarea data-acknote="${mk}" maxlength="500" placeholder="Например: не могу 24-го — конференция; прошу поменять 17-е на 18-е">${esc(ackNote[mk] || '')}</textarea></label>
+    if (busy) tail = '<p class="lead small" role="status">Отправляю ответ… Можно остаться на этой странице.</p>';
+    else if (ackNo[key]) tail = `<label class="field"><span class="lbl">Что не так?</span>
+        <textarea data-acknote="${mk}" maxlength="500" placeholder="Например: не могу 24-го — конференция; прошу поменять 17-е на 18-е">${esc(ackNote[key] || '')}</textarea></label>
       <div class="row2"><button type="button" class="btn no" data-act="acksend" data-mk="${mk}" data-ok="0">Отправить</button><button type="button" class="btn" data-act="ackcancel" data-mk="${mk}">Отмена</button></div>`;
-    else tail = `<div class="row2"><button type="button" class="btn primary" data-act="acksend" data-mk="${mk}" data-ok="1">Согласен</button><button type="button" class="btn no" data-act="ackno" data-mk="${mk}">Не согласен</button></div>`;
+    else if (ackEditing[key] || (!a.done && !a.pending)) tail = `<div class="row2"><button type="button" class="btn primary" data-act="acksend" data-mk="${mk}" data-ok="1">Согласен</button><button type="button" class="btn no" data-act="ackno" data-mk="${mk}">Не согласен</button></div>${ackEditing[key] ? `<button type="button" class="link" data-act="ackcancel" data-mk="${mk}">Отмена</button>` : ''}`;
+    else if (a.pending) tail = `<p class="pending ${a.ok ? '' : 'no'}">${a.ok ? 'Вы отправили «Согласен».' : 'Вы отправили «Не согласен»' + (a.note ? ': «' + esc(a.note) + '».' : '.')} Получение пока не подтверждено.</p>
+      <p class="lead small">${a.transport === 'uncertain' ? 'Не удалось проверить отправку. Можно повторить тот же ответ.' : 'Форма не подтверждает доставку сразу. Ответ будет учтён после проверки и обновления приложения.'}</p>
+      <button type="button" class="link" data-act="ackretry" data-mk="${mk}">Повторить отправку</button>
+      <button type="button" class="link" data-act="ackchange" data-mk="${mk}">Изменить ответ</button>`;
+    else tail = `<p class="done ${a.ok ? '' : 'no'}">${a.ok ? '✓ Ваше согласие учтено.' : 'Ваше несогласие получено.' + (a.note ? ' «' + esc(a.note) + '».' : '')}</p>
+      <p class="lead small">Можно изменить ответ, пока график предварительный. Окончательный график меняется через ЕЮ.</p>
+      <button type="button" class="link" data-act="ackchange" data-mk="${mk}">Изменить ответ</button>`;
     return `<section class="card ack"><p class="eyebrow">Предварительный график${M.version > 1 ? ' · версия ' + M.version : ''}</p>
       <h2>${esc(M.title)}: ознакомьтесь и подтвердите</h2>
-      <p class="lead small">ЕЮ одобрил черновик. Когда согласятся все, график станет окончательным. Согласны ${M.confirm.confirmed.length} из ${M.confirm.need.length}.</p>
+      <p class="lead small">ЕЮ одобрил черновик. Когда поступят согласия всех, график станет окончательным. Получено согласий: ${agreedCount(M.confirm)} из ${M.confirm.need.length}. Фамилию выбирает сам отправитель.</p>
       <div class="field"><span class="lbl">Ваши дежурства</span><div class="mine">${mine}</div></div>
       <button type="button" class="link" data-act="ackview" data-mk="${mk}">Посмотреть весь график →</button>
       ${tail}</section>`;
   }).join('');
 }
-async function sendAck(mk, ok) {
-  const M = D.months[mk], note = ok ? '' : (ackNote[mk] || '').trim();
+function finalAckNotices() {
+  // A last-moment objection can race a finalization snapshot. Never silently
+  // hide this device's negative response or invent a receipt after IDs expire.
+  return MK.filter(mk => D.months[mk].status === 'final' && D.months[mk].confirm && D.months[mk].confirm.need.includes(state.me))
+    .filter(mk => localAck(mk)?.ok === false)
+    .map(mk => `<section class="card ack-final-notice" role="status"><h3>${esc(D.months[mk].title)}: график окончательный</h3>
+      <p class="lead small">На этом устройстве сохранён ответ «Не согласен». Он не отменяет опубликованный график. Уточните у ЕЮ, рассмотрено ли ваше замечание.</p></section>`).join('');
+}
+function newReceiptId() {
+  const b = new Uint8Array(16);
+  crypto.getRandomValues(b);
+  b[6] = (b[6] & 15) | 64; b[8] = (b[8] & 63) | 128;
+  const h = Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
+  return h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);
+}
+async function sendAck(mk, ok, retry = false) {
+  const M = D.months[mk], who = state.me;
+  if (!M || M.status !== 'preliminary' || !M.confirm || !M.confirm.need.includes(who) || typeof ok !== 'boolean') return;
+  const key = ackKey(mk, who);
+  if (ackBusy.has(key)) return;
+  if (!/^[0-9a-f]{64}$/.test(M.confirm.digest || '')) { toast('Обновите приложение, чтобы ответить на эту версию графика'); return; }
+  const old = retry && localAck(mk, who);
+  if (retry && (!old || (M.confirm.receiptIds || []).includes(old.receiptId))) return;
+  const note = old ? old.note : ok ? '' : (ackNote[key] || '').trim().slice(0, 500);
   if (!ok && !note) { toast('Напишите, что не так'); return; }
-  const p = { v: 1, kind: 'ack', m: mk, ver: M.version, who: state.me, name: nameOf(state.me), ok, note, ts: new Date().toISOString() };
-  const text = nameOf(state.me) + ' — ' + M.title.toLowerCase() + ', версия ' + M.version + ': ' + (ok ? 'СОГЛАСЕН' : 'НЕ СОГЛАСЕН — ' + note) + '\n#DEZH ' + JSON.stringify(p);
+  let p;
+  try {
+    p = old ? { v: 1, kind: 'ack', m: mk, ver: M.version, who, name: nameOf(who), ok: old.ok, note, ts: old.ts, digest: old.digest, receiptId: old.receiptId }
+      : { v: 1, kind: 'ack', m: mk, ver: M.version, who, name: nameOf(who), ok, note, ts: new Date().toISOString(), digest: M.confirm.digest, receiptId: newReceiptId() };
+  } catch (e) { toast('Не удалось подготовить ответ. Обновите приложение и попробуйте ещё раз'); return; }
+  const text = nameOf(who) + ' — ' + M.title.toLowerCase() + ', версия ' + M.version + ': ' + (p.ok ? 'СОГЛАСЕН' : 'НЕ СОГЛАСЕН — ' + note) + '\n#DEZH ' + JSON.stringify(p);
   if (!(C.form && C.form.action && C.form.entry)) { copy(text, 'Ответ скопирован — перешлите ЕЮ'); return; }
   const body = new URLSearchParams();
   body.set(C.form.entry, text);
+  // Save the exact immutable submission BEFORE awaiting; switching doctors or
+  // reloading cannot attribute this local pending marker to a different person.
+  store.set(key, JSON.stringify({ ...p, transport: 'pending' }));
+  ackBusy.add(key); delete ackNo[key]; delete ackEditing[key];
+  render(true); badge();
+  const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 15000);
   try {
-    await fetch(C.form.action, { method: 'POST', mode: 'no-cors', body });
-    store.set(ackKey(mk), JSON.stringify({ ok, note, at: p.ts }));
-    delete ackNo[mk];
-    toast(ok ? 'Спасибо, согласие отправлено' : 'Отправлено ЕЮ');
+    await fetch(C.form.action, { method: 'POST', mode: 'no-cors', body, signal: controller.signal });
+    if (state.me === who) toast('Ответ отправлен. Получение пока не подтверждено');
+  } catch (e) {
+    store.set(key, JSON.stringify({ ...p, transport: 'uncertain' }));
+    if (state.me === who) toast('Получение не подтверждено. Можно повторить отправку');
+  } finally {
+    clearTimeout(timeout); ackBusy.delete(key);
     render(true); badge();
-  } catch (e) { toast('Нет связи — попробуйте ещё раз'); }
+  }
 }
 function badge() {
   const b = document.querySelector('.tab[data-tab="me"]');
@@ -772,6 +835,7 @@ function renderMe() {
       <span class="dd">${d.d}<small>${WD[d.wd]}</small></span><div><b>${hhmm(d.start)} → ${hhmm(d.end)}</b><span class="sub">${dur(d.mins)}</span><span class="pill ${d.off ? 'off' : ''}">${kind(d)}</span></div></li>`; }).join('')
     + marks.map(x => `<li class="mark"><span class="dd" style="color:var(--vac)">✦</span><div><b>${esc(x.label)}</b><span class="sub">${esc(rangeText(x.from, x.to))}</span></div></li>`).join('');
   return `<div class="who-row" style="--c:${c}"><span class="dotc"></span><h2>${esc(nameOf(id))}</h2><button type="button" class="link" data-act="change">Сменить</button></div>
+    ${finalAckNotices()}
     ${ackCards()}
     ${hero}
     <section class="card"><h3>Напоминания</h3>
@@ -1283,10 +1347,11 @@ view.addEventListener('click', e => {
   if (a === 'resetwish') { if (confirm('Очистить все отметки и комментарий?')) { W = W_EMPTY(); saveWish(); anchor = null; render(true); } return; }
   if (a === 'send') { send(); return; }
   // Согласование
-  if (a === 'ackno') { ackNo[b.dataset.mk] = true; render(true); const t = view.querySelector(`[data-acknote="${b.dataset.mk}"]`); if (t) t.focus(); return; }
-  if (a === 'ackcancel') { delete ackNo[b.dataset.mk]; render(true); return; }
+  if (a === 'ackno') { ackNo[ackKey(b.dataset.mk)] = true; render(true); const t = view.querySelector(`[data-acknote="${b.dataset.mk}"]`); if (t) t.focus(); return; }
+  if (a === 'ackcancel') { delete ackNo[ackKey(b.dataset.mk)]; delete ackEditing[ackKey(b.dataset.mk)]; render(true); return; }
   if (a === 'acksend') { sendAck(b.dataset.mk, b.dataset.ok === '1'); return; }
-  if (a === 'ackchange') { store.del(ackKey(b.dataset.mk)); render(true); badge(); return; }
+  if (a === 'ackretry') { const p = localAck(b.dataset.mk); if (p) sendAck(b.dataset.mk, p.ok, true); return; }
+  if (a === 'ackchange') { ackEditing[ackKey(b.dataset.mk)] = true; render(true); return; }
   if (a === 'ackview') { state.tab = 'all'; state.month = b.dataset.mk; state.view = 'grid'; store.set('dezh:tab', 'all'); render(); return; }
   // Для печати
   if (a === 'phimport') { const f = document.getElementById('phfile'); if (f) f.click(); return; }
@@ -1312,7 +1377,7 @@ view.addEventListener('click', e => {
 view.addEventListener('toggle', e => { if (e.target.matches && e.target.matches('details.org')) orgOpen = e.target.open; }, true);
 view.addEventListener('input', e => {
   const n = e.target.closest('[data-acknote]');
-  if (n) { ackNote[n.dataset.acknote] = n.value; return; }
+  if (n) { ackNote[ackKey(n.dataset.acknote)] = n.value; return; }
   const el = e.target.closest('[data-ph]'); if (!el) return;
   const ph = phones(); const v = el.value.trim();
   if (v) ph[el.dataset.ph] = v; else delete ph[el.dataset.ph];
@@ -1355,7 +1420,7 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.se
   const mine = new Set(texts(document));
   let last = 0, box = null;
   // Не перезагружаем, пока человек заполняет пожелания или телефоны, — тогда только предлагаем обновиться
-  function busy() { try { return state.tab === 'wish' || state.tab === 'files'; } catch (e) { return false; } }
+  function busy() { try { return state.tab === 'wish' || state.tab === 'files' || ackBusy.size > 0 || Object.keys(ackNo).length > 0 || Object.values(ackEditing).some(Boolean); } catch (e) { return false; } }
   function toast(text, onUpdate) {
     if (box) box.remove();
     box = document.createElement('div');

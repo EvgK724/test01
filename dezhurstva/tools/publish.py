@@ -14,7 +14,7 @@
 import datetime as dt, json, pathlib, sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-import build
+import build, approval_revision
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
@@ -44,17 +44,27 @@ def main():
     unknown = {w for v in month["duty"].values() for w in v} - set(data["doctors"])
     if unknown:
         sys.exit(f"неизвестные врачи: {unknown} — добавьте их в data/schedule.json → doctors")
+    # Monotonic through every path, including direct final publication.
+    previous = [old.get('version', 0), (old.get('confirm') or {}).get('version', 0)]
+    if any(type(v) is not int or v < 0 for v in previous):
+        sys.exit('некорректная предыдущая версия графика')
+    ver = max(previous) + 1
+    month['version'] = ver
+    month.pop('finalization', None)
     if "--final" in flags:
         month["status"] = "final"
         month["final_at"] = now()
         month.pop("confirm", None)
     else:
-        ver = int(old.get("version", 0)) + 1 if old.get("status") == "preliminary" or "--again" in flags else 1
+        # A final month can be revised too. Never reuse v1 and old responses.
         org = cfg.get("organizer")
         month["status"] = "preliminary"
+        month.pop('final_at', None)
+        month.pop('finalization', None)
         month["version"] = ver
         month["confirm"] = {"version": ver, "published": now(), "need": list(month["order"]),
                             "confirmed": [org] if org in month["order"] else [], "disagreed": 0}
+        month['confirm']['digest'] = approval_revision.revision(month, data)
     data["months"][mk] = month
     data["months"] = dict(sorted(data["months"].items()))
     data["updated"] = now()
