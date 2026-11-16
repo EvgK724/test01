@@ -24,8 +24,15 @@ def fold(line):
     for ch in line:
         b = ch.encode()
         if len(cur) + len(b) > (75 if not out else 74):
-            out.append(cur)
-            cur = b""
+            # Keep meaningful whitespace on the next physical line, so git's
+            # whitespace check does not mistake an RFC 5545 fold for damage.
+            head = cur.rstrip(b" \t")
+            if not head:
+                raise ValueError("ICS whitespace run cannot be folded safely")
+            out.append(head)
+            cur = cur[len(head):]
+            if len(cur) + len(b) > 74:
+                raise ValueError("ICS whitespace run exceeds folded line limit")
         cur += b
     out.append(cur)
     return b"\r\n ".join(out).decode()

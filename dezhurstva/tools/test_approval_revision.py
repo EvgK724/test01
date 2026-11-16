@@ -19,6 +19,37 @@ class RevisionTests(unittest.TestCase):
         self.data = json.loads((BASE/'data/schedule.json').read_text())
         self.month = self.data['months']['2026-12']
 
+
+    def test_ics_folding_keeps_spaces_roundtrip_and_byte_limit(self):
+        samples = [
+            "SUMMARY:Дежурства ПСО: согласование графика на декабрь 2026",
+            "DESCRIPTION:График остаётся предварительным. Если вы ещё не отвечали, откройте приложение.",
+            "SUMMARY:" + "a" * 66 + " " + "кириллица" * 20,
+            "DESCRIPTION:" + "a" * 62 + "  " + "test" * 40,
+        ]
+        for source in samples:
+            result = build.fold(source)
+            self.assertEqual(result.replace("\r\n ", ""), source)
+            for part in result.split("\r\n"):
+                self.assertLessEqual(len(part.encode("utf-8")), 75)
+                self.assertEqual(part, part.rstrip(" \t"))
+        with self.assertRaises(ValueError):
+            build.fold("SUMMARY:" + " " * 100 + "x")
+
+    def test_all_calendars_preserve_logical_content_without_trailing_whitespace(self):
+        self.month['confirm'].update(agreedCount=3, confirmed=[])
+        items = list(build.shifts(self.data))
+        for who in [*self.data['doctors'], None]:
+            selected = [x for x in items if who is None or x[1] == who]
+            args = (self.data, 'Synthetic calendar', selected, who is not None, '#3BE8FF', who)
+            with patch.object(build, 'fold', side_effect=lambda line: line):
+                logical = build.ics(*args)
+            physical = build.ics(*args)
+            self.assertEqual(physical.replace("\r\n ", ""), logical)
+            for line in physical.split("\r\n"):
+                self.assertLessEqual(len(line.encode()), 75)
+                self.assertEqual(line, line.rstrip(" \t"))
+
     def test_mutable_state_does_not_change_digest(self):
         old = approval_revision.revision(self.month,self.data)
         self.month.update(status='final',final_at='2026-12-01T00:00:00Z',finalization={'anything':True})
