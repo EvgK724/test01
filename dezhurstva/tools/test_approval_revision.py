@@ -97,6 +97,7 @@ class RevisionTests(unittest.TestCase):
         self.assertEqual(self.publication()['version'],1)
 
     def test_count_only_calendar_reminder_is_generic_for_every_doctor(self):
+        self.month['status'] = 'preliminary'
         self.month['confirm'].update(agreedCount=1, confirmed=[])
         normalized=[]
         for who in self.month['confirm']['need']:
