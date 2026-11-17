@@ -295,7 +295,7 @@
      "label": "Отпуск"
     }
    ],
-   "status": "preliminary",
+   "status": "final",
    "version": 1,
    "confirm": {
     "version": 1,
@@ -309,15 +309,28 @@
      "alekeshova",
      "omutov"
     ],
-    "confirmed": [],
-    "disagreed": 0,
-    "agreedCount": 3,
-    "receiptIds": [
-     "dfaee65d-c20d-4dd0-b625-eaf3ba518cfe"
+    "confirmed": [
+     "klepikov",
+     "kardashina",
+     "lekerova",
+     "khamatnurova",
+     "leonard",
+     "alekeshova",
+     "omutov"
     ],
-    "checkedAt": "2026-11-17T00:50:32.641Z"
+    "disagreed": 0,
+    "agreedCount": 7,
+    "receiptIds": [],
+    "checkedAt": "2026-11-17T06:59:24.968Z"
+   },
+   "final_at": "2026-11-17T06:59:25.368915Z",
+   "finalization": {
+    "digest": "d6c6cc87b4e3050466b0cef00caae7d2d8ab2497947c2d10c430145af028000f",
+    "checkedAt": "2026-11-17T06:59:24.968Z",
+    "identity": "self-declared",
+    "semantics": "snapshot-at-receipt; later objections require organizer review"
    }
   }
  },
- "updated": "2026-11-17T00:50:33.141809Z"
+ "updated": "2026-11-17T06:59:25.369142Z"
 }
