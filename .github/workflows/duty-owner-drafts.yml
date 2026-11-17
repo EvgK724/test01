@@ -1,7 +1,9 @@
-# Local review candidate only. Not deployed or enabled.
+# Approved-only durable queue; no timing guarantee from GitHub schedule.
 name: Owner-approved duty drafts
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '7,22,37,52 * * * *'
 permissions:
   contents: read
 concurrency:
