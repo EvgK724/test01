@@ -1,0 +1,23 @@
+{
+  "delivery.py": "1ffa9df3b583d04d4d9887a11be36c2ab1b6454e201da818570714d09d62bb99",
+  "outbox.py": "a666428351caef13c8d410b4cc32250790c3a9114d0a168e123a22f4d992688c",
+  "queue_consumer.py": "00b9917283a858bab9d27bf90860f3cc96a2c64bcf17d52bc9bb666ac0624340",
+  "real_renderer.py": "d060bb224aa6e397c5349f3343a13bfba5734d889e04d64f6133bdc5444bf910",
+  "release_boundary.py": "7b137711b0e888cfe470cdf93ab643479f5033486255d91118ffc0610fd2cc6e",
+  "test_delivery.py": "8fec75fbb3cb2cbee98a4d1e5236b5946b3084da1bae2d77a5719cd5caaf1f7c",
+  "test_queue.py": "bf54b9a596c8b9b1c3506e7e46bff8550b8643c1cdac3058404272b7c76129ff",
+  "test_pdf_offline.py": "5e44c3c366472d6e6e3d7895f1e97ffbb24bb367e4a922455ecd6f05029561ef",
+  "test_confirm_build.py": "63ce3b0d3c676f49df17a23215141dfe709dd87a1427087342db16a938c1b5e3",
+  "source/dezhurstva/tools/build.py": "20ecd0fa966880e31a3d9fdb444e50534f36771fd851d6f87a8cec54abf9264e",
+  "source/dezhurstva/tools/publish.py": "d6ca1f67c986c086da2b6a2cbd681bc7083c6e8e11b6535b3002135172d181d2",
+  "source/dezhurstva/tools/make_pdf.py": "0c819425664a3aee1b0ac48acaed29a8a9b30ae70a1ed287e2df71c387c308e4",
+  "source/dezhurstva/tools/make_xlsx.py": "18aa1a571ff33db2938937799192bdf0cebbf46b3d3fd4d4d40fadf45e6fec84",
+  "source/dezhurstva/tools/ru_calendar.py": "18b8388f564557ec79246712205c678986e47218c3cd6bf5372bc168f8253bf4",
+  "source/dezhurstva/tools/approval_revision.py": "df5ce4fccfe67f9fcba213b9a8b33a7e8749e02cbc9068198ecda559bdc2fc7b",
+  "source/dezhurstva/tools/build_confirmations.py": "7c40e4c9150e3813ba0625c58e34276f1eaad497c5c142e2c8e71594742570d5",
+  "source/dezhurstva/tools/publication_guard.py": "ef87e2dc37ce1c59e0a4315882a120f010e9bf4f206f4872505b11658dffe1e8",
+  "source/dezhurstva/tools/template.html": "bf0f4d635f11d724803e93e40dd962ccf549e5eb45cbf11b9e07b9f70c3b7de6",
+  "source/dezhurstva/tools/fonts/DejaVuSans.ttf": "57f73e11f51999432bf7ab22ce55b6f945d5eca1bf824404cfa9ec2e3718c84e",
+  "source/dezhurstva/tools/fonts/DejaVuSans-Bold.ttf": "a4c5bc453ca281d90ea079e596da7ae0dfeb5777497c29ec254e76d97ff6f890",
+  "source/dezhurstva/tools/fonts/LICENSE": "63d3ba759d12804c5b31a9d5940d855c1820d1f5999e6b0872eb1c7ff045fbc9"
+}
