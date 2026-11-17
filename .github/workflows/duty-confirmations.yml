@@ -78,3 +78,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: python dezhurstva/tools/pages_release.py --commit "$(git rev-parse HEAD)" --if-needed
+      - name: Deliver owner-approved drafts through the existing queue
+        if: vars.DUTY_OWNER_RUNNER_ENABLED == 'true'
+        env:
+          DUTY_OWNER_RUNNER_ENABLED: ${{ vars.DUTY_OWNER_RUNNER_ENABLED }}
+          DUTY_OWNER_SOURCE_SHA: ${{ vars.DUTY_OWNER_SOURCE_SHA }}
+          DUTY_OWNER_READER_URL: ${{ secrets.DUTY_OWNER_READER_URL }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python -B dezhurstva/tools/owner_bridge/runner.py
