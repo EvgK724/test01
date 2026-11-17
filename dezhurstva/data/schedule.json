@@ -312,10 +312,12 @@
     "confirmed": [],
     "disagreed": 0,
     "agreedCount": 3,
-    "receiptIds": [],
-    "checkedAt": "2026-11-16T18:18:43.642Z"
+    "receiptIds": [
+     "dfaee65d-c20d-4dd0-b625-eaf3ba518cfe"
+    ],
+    "checkedAt": "2026-11-17T00:50:32.641Z"
    }
   }
  },
- "updated": "2026-11-16T18:18:44.219732Z"
+ "updated": "2026-11-17T00:50:33.141809Z"
 }
