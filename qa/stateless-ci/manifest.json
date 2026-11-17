@@ -1,0 +1,20 @@
+{
+  "archive_sha256": "a8cd789c36aab96c9056c1682e0619ba59022cb804d7401b4feef7f721a41360",
+  "files": {
+    "qa/pso-r12-stateless-5d88c8274ef4/cal/all.ics": "4600fa00e7973cba713612a721102abaff8661da5c0a86e618cd3af25f88cd21",
+    "qa/pso-r12-stateless-5d88c8274ef4/cal/synthetic_0.ics": "a53fa54505c4734cbb2075191eba905b334b9d90a3cca0148ad9aa7f18186045",
+    "qa/pso-r12-stateless-5d88c8274ef4/cal/synthetic_1.ics": "74880b6ae04fa5544273d5f9d79b53581d0580551fd83773cc8973cf07d5e622",
+    "qa/pso-r12-stateless-5d88c8274ef4/cal/synthetic_2.ics": "87cfecfbe9be78bd31352d601cf0c56452c54ea3abb594fe4fb0e69d5fe794b5",
+    "qa/pso-r12-stateless-5d88c8274ef4/cal/synthetic_3.ics": "71f9171ee420bcdfe0a707999709f27040f168ebf766f0721739bc5dd5787dba",
+    "qa/pso-r12-stateless-5d88c8274ef4/cal/synthetic_4.ics": "0cbd55334473c487d060dbb50a9e3d3ccd928f12711f3c60a3dce94619658e40",
+    "qa/pso-r12-stateless-5d88c8274ef4/cal/synthetic_5.ics": "ad1d62c08f08ae8d82fe773058b93eac1e94454f13d13a9987620954c86666bb",
+    "qa/pso-r12-stateless-5d88c8274ef4/cal/synthetic_6.ics": "28d25155eb874390803d74997f09bf435a872feb769debb3e41a1e787ba07716",
+    "qa/pso-r12-stateless-5d88c8274ef4/files/2027-01-print.pdf": "966cbedd4125b9feab8a834f22a6e0e5b286b237d2eddd481da17074dd25afba",
+    "qa/pso-r12-stateless-5d88c8274ef4/files/2027-01.pdf": "b0b08426dd2f6670d37dc1101d9e19250e4aecb52a57c7ba6baa4919316a50b6",
+    "qa/pso-r12-stateless-5d88c8274ef4/files/2027-01.xlsx": "b1e33dc07d05d945ee1022d1af3c99edf47c255884b9d217f005dc7a9c4977b4",
+    "qa/pso-r12-stateless-5d88c8274ef4/files/hashes.json": "e7adff068b8a1fe76d066384189b5c100654fc3a96d5cb7b807a3961101ab2bb",
+    "qa/pso-r12-stateless-5d88c8274ef4/files/pdf.json": "80c8c2478605fd5dcdcf3671da5005c75a6a3dbd33bac405cbc109cd272a9c76",
+    "qa/pso-r12-stateless-5d88c8274ef4/index.html": "5d88c8274ef4b1303f334b2b0082593b758f8879618d0e7bcd46b9ca5f0b527e",
+    "AUDIT.json": "2639c7407eff080f3b101d9109fef99bf408b34e250a911e964ac305decc75a9"
+  }
+}
