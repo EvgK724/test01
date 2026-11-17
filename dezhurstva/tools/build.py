@@ -13,7 +13,7 @@ COLORS = ["#3BE8FF", "#4D9BFF", "#8FD3FF", "#62B6FF", "#8A9BFF", "#5CC8FF", "#B8
 # Версия оформления Excel: поменяли make_xlsx.py — увеличьте, чтобы файлы пересобрались
 XLSX_FORMAT = 5
 # То же для PDF: поменяли лист печати в template.html (.pv в стилях, printSheet) или make_pdf.py — увеличьте PDF_FORMAT
-PDF_FORMAT = 5
+PDF_FORMAT = 6
 # Напоминания: накануне в 19:00 и за час до начала
 EVE_HOUR = 19
 
@@ -124,7 +124,7 @@ def ics(data, name, items, alarms, color, who=None):
     return "\r\n".join(fold(l) for l in lines) + "\r\n"
 
 
-def main():
+def main(artifact_months=None):
     data = json.loads((ROOT / "data" / "schedule.json").read_text())
     # Bind every displayed response to this exact schedule, never only its label.
     # This is rendering metadata; changing counts/status does not alter the hash.
@@ -135,6 +135,10 @@ def main():
             if stored_digest and stored_digest != expected_digest:
                 raise ValueError('График изменён без новой версии согласования: сначала publish.py --again')
             month['confirm']['digest'] = expected_digest
+    if artifact_months is not None:
+        artifact_months = set(artifact_months)
+        if not artifact_months <= set(data["months"]):
+            raise ValueError("UNKNOWN_ARTIFACT_MONTH")
     ids = list(data["doctors"])
     all_items = list(shifts(data))
     cal = ROOT / "cal"
@@ -154,6 +158,12 @@ def main():
     for mk, m in data["months"].items():
         h = hashlib.sha1(json.dumps([XLSX_FORMAT, m, {i: data["doctors"][i]["name"] for i in m["order"]}], ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:12]
         path = ROOT / "files" / f"{mk}.xlsx"
+        if artifact_months is not None and mk not in artifact_months:
+            # Historical artifacts belong to their previously approved release.
+            if mk not in hashes or not path.is_file():
+                raise ValueError("HISTORICAL_XLSX_MISSING: " + mk)
+            files[mk] = f"files/{mk}.xlsx?v={hashes[mk]}"
+            continue
         if hashes.get(mk) != h or not path.exists():
             make_xlsx.public(mk, data)
             hashes[mk] = h
@@ -188,6 +198,10 @@ def main():
     pdf = {mk: v for mk, v in pdf.items() if mk in data["months"]}
     need = {}
     for mk, m in data["months"].items():
+        if artifact_months is not None and mk not in artifact_months:
+            if mk not in pdf or not all((ROOT / "files" / f"{mk}{suffix}.pdf").is_file() for suffix in ("", "-print")):
+                raise ValueError("HISTORICAL_PDF_MISSING: " + mk)
+            continue
         h = hashlib.sha1(json.dumps(["pdf", PDF_FORMAT, m, {i: data["doctors"][i]["name"] for i in m["order"]}], ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:12]
         if pdf.get(mk, {}).get("v") != h or not all((ROOT / "files" / f"{mk}{s}.pdf").exists() for s in ("", "-print")):
             need[mk] = h

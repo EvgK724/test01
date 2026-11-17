@@ -71,7 +71,9 @@ def main():
     path.write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n")
     st = "окончательный" if month["status"] == "final" else f"предварительный, версия {month['version']}"
     print(f"→ {month['title']} в data/schedule.json ({st})")
-    build.main()
+    # A publication authorizes regeneration of this month only, not a format
+    # migration of every previously published month.
+    build.main(artifact_months={mk})
 
 
 if __name__ == "__main__":

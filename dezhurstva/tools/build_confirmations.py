@@ -9,10 +9,8 @@ def main():
  new=json.loads(pathlib.Path('dezhurstva/data/schedule.json').read_text())
  changed={k for k,v in new['months'].items() if old['months'].get(k)!=v}
  if not changed:return
- original=make_pdf.render
- def selected(months,*args,**kwargs):return original([m for m in months if m in changed],*args,**kwargs) if any(m in changed for m in months) else {}
- make_pdf.render=selected
- build.main()
+ # Scope all artifact indexes and bytes, not just PDF rendering.
+ build.main(artifact_months=changed)
  # Existing build catches PDF exceptions; never treat that as publish success.
  pdf=json.loads(pathlib.Path('dezhurstva/files/pdf.json').read_text())
  for mk in changed:
