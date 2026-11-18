@@ -443,6 +443,11 @@ nav.tabs .tab[aria-current="page"] svg { background: none; box-shadow: none; fil
 .period-field { display:flex; flex-wrap:wrap; align-items:center; gap:6px 14px; }
 .period-field label { color:var(--text-2); }
 .period-field select { flex:1 1 10em; min-height:44px; min-width:0; max-width:100%; padding:6px 8px; border:1px solid var(--border); border-radius:10px; background:var(--surface-2); }
+.wish-watch { background:none; border:0; padding:2px 0; font-size:.9rem; cursor:pointer; }
+.wish-watch input { appearance:auto; -webkit-appearance:checkbox; width:22px; height:22px; flex:none; accent-color:var(--neon); }
+#wishNotice { margin-block-end:12px; display:flex; flex-wrap:wrap; align-items:center; gap:4px 12px; padding:8px 12px; border:1px solid var(--border); border-radius:14px; background:var(--surface); }
+#wishNoticeLabel { flex:1 1 12em; font-size:.9rem; }
+#wishNoticeDismiss { width:44px; text-align:center; }
 .signal-day { display:inline-block; margin:3px 3px 0 0; padding:2px 7px; border-radius:6px; font-variant-numeric:tabular-nums; }
 .signal-day.empty { background:#17324D; color:#C6E3FF; }
 .signal-day.overlap { background:#493017; color:#FFD39B; }
@@ -481,7 +486,13 @@ nav.tabs .tab[aria-current="page"] svg { background: none; box-shadow: none; fil
 <main id="main"><header class="top"><div class="wrap">
   <h1>Дежурства <b>ПСО</b></h1>
   <button class="icon-btn" id="helpBtn" type="button" aria-label="Справка по разделу" aria-haspopup="dialog" aria-controls="wishInfo">ⓘ</button>
-</div></header><div class="wrap stack" id="view"></div></main>
+</div></header>
+<div class="wrap" id="wishNotice" hidden>
+  <span id="wishNoticeLabel" role="status"></span>
+  <button id="wishNoticeOpen" class="link" type="button">Посмотреть даты</button>
+  <button id="wishNoticeDismiss" class="link" type="button" aria-label="Скрыть уведомление">×</button>
+</div>
+<div class="wrap stack" id="view"></div></main>
 <div class="tabs-wrap"><nav class="tabs glass" aria-label="Разделы"><span class="lens" aria-hidden="true"></span>
   <button class="tab" type="button" data-tab="me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Мои</button>
   <button class="tab" type="button" data-tab="all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4M7.5 14h2M11 14h2M14.5 14h2M7.5 17.5h2M11 17.5h2"/></svg>График</button>
@@ -516,6 +527,7 @@ nav.tabs .tab[aria-current="page"] svg { background: none; box-shadow: none; fil
     </section>
     <section data-info="wish">
       <h3>Как читается сводка</h3><p>В списке без отметок «Хочу» показаны даты, на которые в полученных заявках нет подходящего пожелания. В списке пересечений на дату претендуют два врача или больше. Совпадения разрешены. Назначения появятся в графике.</p>
+      <p>Уведомления можно включить отдельно для каждого месяца на этом устройстве. Когда списки дат изменятся, на других вкладках приложения появится ссылка на сводку. Подписка завершается вместе с приёмом пожеланий.</p>
       <p>При неполных данных некоторые пожелания могли не попасть в подсчёт. Открытый экран запрашивает обновление примерно раз в минуту. Время снимка указано по Екатеринбургу.</p>
     </section>
     <section data-info="wish">
@@ -1239,6 +1251,7 @@ async function refreshWishSignals(force=false) {
   if(!WISH_SIGNALS_URL||document.hidden||wishSignals.loading||(!force&&Date.now()-wishSignals.requested<60000))return;
   wishSignals.requested=Date.now();wishSignals.loading=true;
   const previousTarget=selectedWishTarget(new Date()).mk;
+  const readEpoch = noticeEpoch;
   let timeout;
   let failure='network';
   try {
@@ -1262,6 +1275,7 @@ async function refreshWishSignals(force=false) {
       seen.add(p.month);
     }
     wishSignals.periods=packet.periods;wishSignals.status='snapshot';wishSignals.lastSuccess=Date.now();
+    noticeReadEpoch = readEpoch;
   } catch(e) {
     wishSignals.status=e?.message==='timeout'?'timeout':failure;
   } finally {
@@ -1270,9 +1284,11 @@ async function refreshWishSignals(force=false) {
       if(W&&state.me&&!state.picking)saveWish();
       render(true);
     }else updateWishStatus();
+    if (readEpoch !== noticeEpoch && !document.hidden && watchedMonths().length) void refreshWishSignals(true);
   }
 }
 function updateWishStatus() {
+  syncWishNotices();
   const entry=document.getElementById('wishEntry');
   if(entry)entry.innerHTML=renderWishEntry();
   if(state.tab!=='wish')return;
@@ -1323,10 +1339,152 @@ function renderWishSignals(mk) {
     '<p><b>Несколько желающих:</b> '+list('2+')+'</p>'+readError+correction+'</section>';
 }
 function refreshVisibleWishStatus() {
-  if(!document.hidden&&['wish','files','me'].includes(state.tab))void refreshWishSignals();
+  if(!document.hidden&&(['wish','files','me'].includes(state.tab)||watchedMonths().length))void refreshWishSignals();
 }
 setInterval(refreshVisibleWishStatus,60000);
-document.addEventListener('visibilitychange',refreshVisibleWishStatus);
+document.addEventListener('visibilitychange', () => {
+  ++noticeEpoch;
+  syncWishNotices();
+  if (!document.hidden && watchedMonths().length) void refreshWishSignals(true);
+  else refreshVisibleWishStatus();
+});
+
+// Background reads only compare anonymous day buckets. Only an explicit opt-in writes WATCH.
+const WATCH = 'dezh:watch:', SEEN = 'dezh:watch-seen:', OBSERVED = 'dezh:watch-latest:';
+let noticeEpoch = 0, noticeReadEpoch = -1, noticeTimer, noticeMonth = '';
+function localKeys() {
+  try { return Array.from({length:localStorage.length}, (_,i) => localStorage.key(i) || ''); }
+  catch { return []; }
+}
+function watchedMonths(keys = localKeys()) {
+  return keys.filter(k => /^dezh:watch:\d{4}-(0[1-9]|1[0-2])$/.test(k)).map(k => k.slice(WATCH.length)).sort();
+}
+function noticeState(key) {
+  try {
+    const value = JSON.parse(store.get(key));
+    if (value && Number.isFinite(value.since) && Number.isFinite(value.asOf) && /^[012]{28,31}$/.test(value.days)) return value;
+  } catch {}
+  return null;
+}
+function noticeFeedReady(allowReading = false) {
+  const age = Date.now() - wishSignals.lastSuccess;
+  return !document.hidden && noticeReadEpoch === noticeEpoch && (allowReading || !wishSignals.loading) &&
+    wishSignals.status === 'snapshot' && age >= 0 && age <= 600000;
+}
+function noticeSnapshot(mk,keys,allowReading = false) {
+  if (!noticeFeedReady(allowReading) || D.months[mk]) return null;
+  const p = wishSignals.periods.find(p => p.month === mk && p.phase === 'PREPARATION');
+  if (p?.snapshot?.quality !== 'COMPLETE' || wishSnapshotState(p.snapshot,mk) !== 'fresh') return null;
+  const asOf = Date.parse(p.snapshot.asOf);
+  // A newer send from any doctor selected on this device makes its snapshot pending.
+  if (keys.some(k => k.startsWith('dezh:sent:') && k.endsWith(':'+mk) && Date.parse(store.get(k)) > asOf)) return null;
+  return {asOf, days:p.snapshot.days.map(d => d.bucket[0]).join('')};
+}
+function forgetWatch(mk) {
+  store.del(WATCH+mk);
+  store.del(SEEN+mk);
+  store.del(OBSERVED+mk);
+}
+function acknowledgeDates(mk,watch,snapshot) {
+  // A separate acknowledgement cannot recreate consent after another tab disables it.
+  store.set(SEEN+mk,JSON.stringify({since:watch.since,...snapshot}));
+}
+function syncWishNotices(acknowledgeView = true) {
+  clearTimeout(noticeTimer);
+  const keys = localKeys();
+  const editing = state.tab === 'wish' ? selectedWishTarget(new Date()).mk : '';
+  const row = document.getElementById('wishWatchRow'), toggle = document.getElementById('wishWatch');
+  let next = '', title = '', expiry = Infinity;
+  for (const mk of watchedMonths(keys)) {
+    const watch = noticeState(WATCH+mk);
+    if (!watch) continue;
+    // An earlier in-flight read must not expire a newly enabled watch in another tab.
+    if (D.months[mk] || (noticeFeedReady() && wishSignals.requested >= watch.since &&
+        !wishSignals.periods.some(p => p.month === mk))) {
+      forgetWatch(mk);
+      continue;
+    }
+    // In the same visible session keep an existing, still-fresh notice stable
+    // while its next read is in flight. Only a finished read may introduce one.
+    const snapshot = noticeSnapshot(mk,keys,!editing && noticeMonth === mk);
+    if (!snapshot) continue;
+    // Persist the observation time even for identical buckets. Another tab or a reload
+    // may subsequently receive an older, still technically fresh snapshot.
+    const observed = noticeState(OBSERVED+mk);
+    if (observed?.since === watch.since && snapshot.asOf < observed.asOf) continue;
+    if (observed?.since !== watch.since || snapshot.asOf > observed.asOf) {
+      store.set(OBSERVED+mk, JSON.stringify({since:watch.since,...snapshot}));
+    }
+    const seen = noticeState(SEEN+mk);
+    const last = seen?.since === watch.since && seen.asOf >= watch.asOf ? seen : watch;
+    if (snapshot.asOf < last.asOf || snapshot.days === last.days) continue;
+    const empty = [...snapshot.days].filter(b => b === '0').length;
+    const overlap = [...snapshot.days].filter(b => b === '2').length;
+    if (editing === mk || (!empty && !overlap)) {
+      if (acknowledgeView) acknowledgeDates(mk,watch,snapshot);
+    }
+    else if (!editing && !next) {
+      next = mk; expiry = snapshot.asOf + 600001;
+      title = monthTitle(mk)+' · без «Хочу»: '+empty+' · несколько желающих: '+overlap;
+    }
+  }
+  if (row && toggle) {
+    const watch = noticeState(WATCH+editing);
+    const snapshot = noticeSnapshot(editing,keys,true);
+    row.hidden = !(watch || snapshot);
+    toggle.checked = !!watch;
+    if (snapshot && !watch) expiry = Math.min(expiry,snapshot.asOf+600001);
+  }
+  const banner = document.getElementById('wishNotice');
+  noticeMonth = next;
+  banner.hidden = !next;
+  if (next) {
+    const label = document.getElementById('wishNoticeLabel');
+    if (label.textContent !== title) label.textContent = title;
+  }
+  if (Number.isFinite(expiry)) {
+    noticeTimer = setTimeout(syncWishNotices,Math.max(1,expiry-Date.now()));
+    noticeTimer?.unref?.();
+  }
+}
+function actOnNotice(open) {
+  const mk = noticeMonth;
+  syncWishNotices();
+  if (!mk || mk !== noticeMonth) return;
+  const watch = noticeState(WATCH+mk), snapshot = noticeSnapshot(mk,localKeys(),true);
+  if (!watch || !snapshot) return;
+  acknowledgeDates(mk,watch,snapshot);
+  if (open) {
+    wishSignals.selectedMonth=mk; state.tab='wish'; state.picking=false;
+    store.set('dezh:tab','wish'); render();
+    document.getElementById('wishSignals')?.focus();
+  } else {
+    syncWishNotices();
+    const focus = noticeMonth ? document.getElementById('wishNoticeOpen') : navTabs.querySelector('[aria-current="page"]');
+    focus?.focus();
+  }
+}
+document.getElementById('wishNoticeOpen').addEventListener('click', () => actOnNotice(true));
+document.getElementById('wishNoticeDismiss').addEventListener('click', () => actOnNotice(false));
+view.addEventListener('change', e => {
+  if (e.target.id !== 'wishWatch') return;
+  const mk = selectedWishTarget(new Date()).mk;
+  if (e.target.dataset.month !== mk) { syncWishNotices(); return; }
+  if (e.target.checked) {
+    const snapshot = noticeSnapshot(mk,localKeys(),true);
+    if (snapshot) {
+      store.set(WATCH+mk, JSON.stringify({since:Date.now(),...snapshot}));
+      if (!noticeState(WATCH+mk)) toast('Не удалось сохранить настройку на этом устройстве');
+    }
+  } else forgetWatch(mk);
+  syncWishNotices();
+});
+addEventListener('storage', e => {
+  if (!e.key || e.key.startsWith(WATCH) || e.key.startsWith(SEEN) || e.key.startsWith(OBSERVED) || e.key.startsWith('dezh:sent:')) {
+    syncWishNotices(false);
+    if (e.key?.startsWith(WATCH) && e.newValue && !document.hidden && !noticeFeedReady()) void refreshWishSignals(true);
+  }
+});
 
 function wishEditingMatches(mk){return !!W&&wKey==='dezh:wish:'+state.me+':'+mk;}
 function renderWishActions(t){
@@ -1340,7 +1498,8 @@ function syncWishControls(){const t=selectedWishTarget(new Date()),a=document.ge
 function renderWish() {
   const now = new Date(), t = selectedWishTarget(now), mk = t.mk;
   const chooser='<div id="wishPeriodChooser">'+renderPeriodChooser()+'</div>';
-  const signals='<div id="wishSignals">'+renderWishSignals(mk)+'</div>';
+  const watchControl = '<label id="wishWatchRow" class="toggle wish-watch" hidden><span>Сообщать об изменении дат, пока приложение открыто</span><input id="wishWatch" type="checkbox" role="switch" data-month="'+esc(mk)+'"></label>';
+  const signals='<div id="wishSignals" tabindex="-1">'+renderWishSignals(mk)+'</div>'+watchControl;
   if (!state.me || state.picking) return '<section class="card"><h2>Пожелания</h2>'+chooser+'<p class="lead small" id="wishOpenStatus">'+wishPeriodText(t)+'</p></section>'+signals+picker('Выберите свою фамилию');
   loadWish(mk);
   const sentAt = store.get('dezh:sent:' + state.me + ':' + mk);
@@ -1593,6 +1752,7 @@ function render(keepScroll) {
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-current', b.dataset.tab === state.tab ? 'page' : 'false'));
   moveLens();
   view.innerHTML = state.tab === 'me' ? renderMe() : state.tab === 'all' ? renderAll() : state.tab === 'wish' ? renderWish() : renderFiles();
+  syncWishNotices();
   refreshVisibleWishStatus();
   main.scrollTop = keepScroll ? y : 0;
   const note = document.getElementById('note');
