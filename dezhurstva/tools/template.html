@@ -448,7 +448,10 @@ nav.tabs .tab[aria-current="page"] svg { background: none; box-shadow: none; fil
 #wishNotice { margin-block-end:12px; display:flex; flex-wrap:wrap; align-items:center; gap:4px 12px; padding:8px 12px; border:1px solid var(--border); border-radius:14px; background:var(--surface); }
 #wishNoticeLabel { flex:1 1 12em; font-size:.9rem; }
 #wishNoticeDismiss { width:44px; text-align:center; }
-.signal-day { display:inline-block; margin:3px 3px 0 0; padding:2px 7px; border-radius:6px; font-variant-numeric:tabular-nums; }
+.signal-group { display:grid; gap:4px; }
+.signal-group h4 { margin:0; font:inherit; font-weight:700; }
+.signal-days { display:flex; flex-wrap:wrap; gap:4px 6px; }
+.signal-day { padding:2px 7px; border-radius:6px; font-variant-numeric:tabular-nums; }
 .signal-day.empty { background:#17324D; color:#C6E3FF; }
 .signal-day.overlap { background:#493017; color:#FFD39B; }
 .file .file-info { flex:1 1 100%; display:flex; align-items:center; flex-wrap:wrap; gap:8px 12px; }
@@ -1332,11 +1335,19 @@ function renderWishSignals(mk) {
   const partial=(s.quality==='PARTIAL'?'<p role="status">Неполная сводка.</p>':'')+correction;
   if(freshness==='stale')return '<section class="card">'+title+'<p role="status">Сводка устарела. Списки дат временно скрыты.</p>'+stamp+partial+retry+'</section>';
   if(freshness==='pending')return '<section class="card">'+title+partial+'<p role="status">Запрос отправлен. Сводка ещё не обновилась после отправки.</p>'+stamp+retry+'</section>';
-  const list=b=>s.days.filter(d=>d.bucket===b).map(d=>'<span class="signal-day '+(b==='0'?'empty':'overlap')+'">'+Number(d.date.slice(-2))+'</span>').join(' ')||'Нет';
+  function dateGroup(bucket, label, id) {
+    const color = bucket === '0' ? 'empty' : 'overlap';
+    const dates = s.days.filter(day => day.bucket === bucket)
+      .map(day => '<li class="signal-day '+color+'">'+Number(day.date.slice(-2))+'</li>');
+    const row = dates.length
+      ? '<ul class="signal-days" role="list" aria-labelledby="'+id+'">'+dates.join('')+'</ul>'
+      : '<p class="signal-days">Нет</p>';
+    return '<div class="signal-group"><h4 id="'+id+'">'+label+'</h4>'+row+'</div>';
+  }
   const readError=wishSignals.status!=='snapshot'?'<p role="status">Не удалось обновить сводку. Показан последний полученный снимок.</p>'+retry:'';
   return '<section class="card">'+title+(s.quality==='PARTIAL'?'<p role="status">Неполная сводка.</p>':'')+stamp+
-    '<p><b>Нет отметок «Хочу»:</b> '+list('0')+'</p>'+
-    '<p><b>Несколько желающих:</b> '+list('2+')+'</p>'+readError+correction+'</section>';
+    dateGroup('0','Нет отметок «Хочу»','wishNoMarks')+
+    dateGroup('2+','Несколько желающих','wishOverlaps')+readError+correction+'</section>';
 }
 function refreshVisibleWishStatus() {
   if(!document.hidden&&(['wish','files','me'].includes(state.tab)||watchedMonths().length))void refreshWishSignals();
