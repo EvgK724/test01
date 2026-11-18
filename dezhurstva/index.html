@@ -431,10 +431,32 @@ nav.tabs .tab[aria-current="page"] svg { background: none; box-shadow: none; fil
 .pv .ft td { font: 700 10pt/1 Arial, Helvetica, sans-serif; height: 6mm; }
 .pv .ft .nm { font-weight: 700; font-size: 10pt; }
 
-/* Short wishes screen; details stay in an accessible native dialog. */
-.wish-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
-.wish-heading h2 { min-width:0; }
-.wish-heading .icon-btn { flex:0 0 44px; }
+/* Contextual help stays outside the view so a refresh keeps the dialog and its trigger. */
+.top { box-shadow:none; border-bottom-color:var(--border); }
+.top h1, .top h1 b { font-family:var(--sans); font-size:min(1.55rem,7.5vw); letter-spacing:0; text-shadow:none; }
+#helpBtn { flex:none; padding:0; font-size:1.5rem; line-height:1; border:0; box-shadow:none; background:var(--surface-2); color:#BBDFFF; }
+.stack { gap:12px; }
+.card { box-shadow:none; }
+.card h2, .mbar h2 { font-family:var(--sans); }
+.chip, .seg button, .wdrow button { min-height:44px; }
+#view :focus-visible { outline:2px solid #80DFFF; outline-offset:2px; }
+.period-field { display:flex; flex-wrap:wrap; align-items:center; gap:6px 14px; }
+.period-field label { color:var(--text-2); }
+.period-field select { flex:1 1 10em; min-height:44px; min-width:0; max-width:100%; padding:6px 8px; border:1px solid var(--border); border-radius:10px; background:var(--surface-2); }
+.signal-day { display:inline-block; margin:3px 3px 0 0; padding:2px 7px; border-radius:6px; font-variant-numeric:tabular-nums; }
+.signal-day.empty { background:#17324D; color:#C6E3FF; }
+.signal-day.overlap { background:#493017; color:#FFD39B; }
+.file .file-info { flex:1 1 100%; display:flex; align-items:center; flex-wrap:wrap; gap:8px 12px; }
+.file .status { margin:0; justify-content:flex-start; }
+#wishActions { display:grid; gap:8px; }
+#wishActions .wish-validation { margin:0; }
+@media (max-width:400px) {
+  .calendar-card { max-width:none; margin-inline:-12px; padding-inline:12px; }
+  .calendar-card .cal, .calendar-card .wdrow { max-width:none; margin-inline:-11px; gap:2px; }
+}
+@media (max-width:330px) {
+  .calendar-card .cal, .calendar-card .wdrow { gap:0; }
+}
 .info-dialog { width:min(92vw,34rem); max-height:calc(100vh - 32px); max-height:calc(100dvh - 32px); padding:0; border:1px solid #63839F; border-radius:20px; background:#101D30; color:#E8F2FF; overflow:auto; overscroll-behavior:contain; }
 .info-dialog::backdrop { background:rgba(2,4,10,.75); }
 .info-dialog header { position:sticky; top:0; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 18px; background:#101D30; border-bottom:1px solid #344A63; }
@@ -442,8 +464,9 @@ nav.tabs .tab[aria-current="page"] svg { background: none; box-shadow: none; fil
 .info-dialog form { margin:0; }
 .info-dialog .info-body { padding:18px; font-size:1rem; line-height:1.5; }
 .info-dialog .info-body p + p { margin-top:12px; }
-.info-dialog .info-body h3 { margin-top:18px; }
-.info-dialog .info-body h3:first-child { margin-top:0; }
+.info-dialog .info-body { display:grid; gap:16px; }
+.info-dialog .info-body h3 { margin-bottom:4px; font-size:1rem; }
+.info-dialog .info-body p { color:var(--text-2); }
 .info-dialog button { min-width:44px; min-height:44px; }
 .icon-btn:focus-visible,.info-dialog button:focus-visible { outline:3px solid #80DFFF; outline-offset:3px; }
 .day[aria-disabled="true"],.wdrow button[aria-disabled="true"] { opacity:.45; border-style:dashed; cursor:not-allowed; }
@@ -457,51 +480,56 @@ nav.tabs .tab[aria-current="page"] svg { background: none; box-shadow: none; fil
 <div class="sfade" aria-hidden="true"></div>
 <main id="main"><header class="top"><div class="wrap">
   <h1>Дежурства <b>ПСО</b></h1>
-  <button class="icon-btn glass" id="helpBtn" type="button" aria-label="Как пользоваться">?</button>
+  <button class="icon-btn" id="helpBtn" type="button" aria-label="Справка по разделу" aria-haspopup="dialog" aria-controls="wishInfo">ⓘ</button>
 </div></header><div class="wrap stack" id="view"></div></main>
 <div class="tabs-wrap"><nav class="tabs glass" aria-label="Разделы"><span class="lens" aria-hidden="true"></span>
   <button class="tab" type="button" data-tab="me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Мои</button>
   <button class="tab" type="button" data-tab="all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4M7.5 14h2M11 14h2M14.5 14h2M7.5 17.5h2M11 17.5h2"/></svg>График</button>
   <button class="tab" type="button" data-tab="wish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>Пожелания</button>
-  <button class="tab" type="button" data-tab="files"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13l2 2 4-4"/></svg>Excel</button>
+  <button class="tab" type="button" data-tab="files"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13l2 2 4-4"/></svg>Файлы</button>
 </nav></div>
-<div class="sheet" id="help" hidden><div class="panel glass" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
-  <h2 id="helpTitle" style="font:700 1.25rem/1.2 var(--serif)">Как пользоваться</h2>
-  <ol>
-    <li><b>На экран «Домой»:</b> в Safari «Поделиться» → «На экран Домой».</li>
-    <li><b>«Мои»</b> — выберите себя: ваши дежурства и сколько до ближайшего.</li>
-    <li><b>Напоминания:</b> «Мои» → «Добавить в Календарь» → «Подписаться». Напомнит накануне в 19:00 и за час до начала, изменения графика подтянутся сами.</li>
-    <li><b>«Пожелания»</b> — пока период открыт и предварительный график не опубликован: дни и интервалы «Не ставить», «Отпуск», «Хочу», дни недели, сколько дежурств, комментарий. Учитывается последняя отправка.</li>
-    <li><b>Новый график:</b> организатор готовит черновик. Когда ЕЮ его одобрит, придёт уведомление «Предварительный график» — в «Мои» нажмите «Согласен» или «Не согласен» с причиной. После правок придёт новая версия — ответьте снова. Согласны все — график окончательный.</li>
-    <li><b>«График»</b> — календарь (две буквы фамилии; нажмите на день — подробности), список и нагрузка (норма часов, доля ставки).</li>
-    <li><b>«Excel»</b> — график файлом: PDF для печати (A4 альбомом) и Excel; «Для печати» — с телефонами для оперативного отдела (телефоны хранятся только на этом телефоне).</li>
-  </ol>
-  <p class="lead small">Если календарь не напоминает: Настройки → Календарь → Учётные записи → Подписные календари → «Дежурства ПСО» → выключите «Удалить предупреждения».</p>
-  <button class="btn primary" type="button" id="helpClose">Понятно</button>
-</div></div>
 <div class="sheet" id="ackSheet" hidden><div class="panel glass" role="dialog" aria-modal="true" aria-labelledby="ackTitle">
-  <p class="eyebrow">Новый график</p>
   <h2 id="ackTitle" style="font:700 1.25rem/1.25 var(--serif)"></h2>
   <p class="lead" id="ackText"></p>
-  <button class="btn primary" type="button" id="ackOpen">Ознакомиться и ответить</button>
+  <button class="btn primary" type="button" id="ackOpen">Посмотреть и ответить</button>
   <button class="link" type="button" id="ackLater">Позже</button>
 </div></div>
 <dialog id="wishInfo" class="info-dialog" aria-labelledby="wishInfoTitle">
-  <header><h2 id="wishInfoTitle">О пожеланиях</h2><form method="dialog"><button class="icon-btn" id="wishInfoClose" aria-label="Закрыть пояснения" autofocus>×</button></form></header>
+  <header><h2 id="wishInfoTitle">Справка</h2><form method="dialog"><button class="icon-btn" id="wishInfoClose" aria-label="Закрыть справку" autofocus>×</button></form></header>
   <div class="info-body">
-    <h3>Когда и как отправлять</h3>
-    <p>Пока предварительный график не опубликован и период открыт, пожелания можно менять. После публикации предварительного графика изменения обсуждаются с организатором.</p>
-    <p>Каждая отправка заменяет весь прежний набор пожеланий выбранного врача за месяц. Данные с другого устройства сюда не подгружаются: перед отправкой проверьте весь набор.</p>
-    <p>«Запрос отправлен» ещё не означает, что сервер сохранил заявку. Сводка обновляется отдельно; она также не является подтверждением приёма вашей заявки.</p>
-    <h3>Что означают списки дат</h3>
-    <p>«Нет отметок „Хочу“» — в полученных заявках нет подходящего пожелания на эту дату. Это не свободная смена готового графика. «Несколько желающих» — пожелание подали как минимум два врача.</p>
-    <p>При неполных данных часть заявок отсутствует, не распознана или содержит противоречия. Нулевая отметка не доказывает отсутствие желающих. Устаревшие списки скрываются, пока не появится свежая сводка.</p>
-    <p>Приложение проверяет сводку примерно раз в минуту, пока открыт этот экран. Время рядом со сводкой относится к её данным. Выбор фамилии не подтверждает личность отправителя.</p>
-    <h3>Как заполнить ограничения</h3>
-    <p>Противоречия внутри ваших пожеланий блокируют отправку: причина и даты указаны рядом с кнопкой. Затемнённые даты несовместимы с выбранным режимом — нажмите для объяснения. Сначала снимите прежнюю отметку через «Стереть» или кнопки дней недели, затем выберите другую. Совпадения с пожеланиями других врачей разрешены.</p>
-    <p>Без дежурств: «Всего дежурств» → «Ровно» → 0. Только будни: «Из них суток» → «Ровно» → 0. Для диапазона дат включите «Интервалом» и выберите первый и последний день.</p>
-    <p>Если отпуска нет, оставьте раздел «Отпуск» пустым. Если производственный календарь ещё не проверен, это отдельно указано на экране.</p>
-    <form method="dialog"><button class="btn primary">Понятно</button></form>
+    <section data-info="me wish">
+      <h3>Выбор врача</h3><p>Выберите свою фамилию. Устройство запомнит выбор. Фамилия сама по себе не подтверждает личность.</p>
+    </section>
+    <section data-info="me">
+      <h3>Напоминания о сменах</h3><p>Подпишитесь на личный календарь. Он получает изменения графика и может напоминать о сменах при закрытом приложении. В Яндекс Календаре и Outlook добавьте подписку по скопированной ссылке.</p>
+      <p>Если iPhone не напоминает, в настройках Календаря откройте подписной календарь «Дежурства ПСО» и выключите «Удалить предупреждения».</p>
+    </section>
+    <section data-info="me all">
+      <h3>Согласование графика</h3><p>После одобрения ЕЮ предварительный график появляется в «Мои». Проверьте свои смены и ответьте. Ответ можно изменить. Каждая новая версия требует нового ответа. Когда согласятся все врачи, график станет окончательным. Дальнейшие изменения согласует ЕЮ.</p>
+    </section>
+    <section data-info="all">
+      <h3>Календарь и список</h3><p>Две буквы в календаре обозначают врача. Нажмите дату, чтобы увидеть фамилию и часы. Выберите фамилию над календарём, чтобы выделить дежурства этого врача. В списке останутся только его смены.</p>
+      <h3>Подписка отделения</h3><p>Общий календарь содержит все смены без напоминаний. Для напоминаний о своих сменах подпишитесь на личный календарь в «Мои».</p>
+    </section>
+    <section data-info="load">
+      <h3>Расчёт нагрузки</h3><p id="loadFormula"></p><p>Доля ставки равна часам дежурств, делённым на месячную норму. Смена целиком относится к дате начала. Дневная работа в эти часы не входит.</p>
+    </section>
+    <section data-info="wish">
+      <h3>Как читается сводка</h3><p>В списке без отметок «Хочу» показаны даты, на которые в полученных заявках нет подходящего пожелания. В списке пересечений на дату претендуют два врача или больше. Совпадения разрешены. Назначения появятся в графике.</p>
+      <p>При неполных данных некоторые пожелания могли не попасть в подсчёт. Открытый экран запрашивает обновление примерно раз в минуту. Время снимка указано по Екатеринбургу.</p>
+    </section>
+    <section data-info="wish">
+      <h3>Как изменить пожелания</h3><p>Пока приём открыт, можно отправить полный набор заново. Он заменит предыдущую заявку за месяц. Выбор хранится на этом устройстве. На другом устройстве заново укажите все пожелания. Сводка не подтверждает доставку отдельной заявки.</p>
+      <p>Для диапазона включите «Интервалом» и отметьте его начало и конец. Нажмите затемнённую дату, чтобы узнать причину. Через «Стереть» снимите прежнюю отметку или отмените правило для дня недели.</p>
+      <p>Если отпуска нет, оставьте его пустым. Для месяца без дежурств выберите «Всего дежурств» → «Ровно» → 0. Чтобы исключить суточные смены, укажите «Из них суток» → «Ровно» → 0.</p>
+    </section>
+    <section data-info="files">
+      <h3>Печать и сохранение</h3><p>На iPhone выберите «PDF — печать», затем «Напечатать» в меню «Поделиться». На компьютере откройте скачанный PDF. Формат листа — A4, альбомный. PDF сохраняет заголовок и цветовые отметки.</p>
+      <p>Опубликованные PDF и Excel не содержат телефонов. В разделе «Печать с телефонами» можно добавить номера из файла Excel или вручную и собрать отдельный файл для оперативного отдела.</p>
+    </section>
+    <section data-info="me all wish files">
+      <h3>На экран «Домой»</h3><p>В Safari выберите «Поделиться» → «На экран Домой».</p>
+    </section>
   </div>
 </dialog>
 <div class="toast glass" id="toast" role="status" hidden></div>
@@ -741,23 +769,22 @@ function ackCards() {
     const M = D.months[mk], a = ackState(mk), keys = myKeys(state.me, mk), key = ackKey(mk), busy = ackBusy.has(key);
     const mine = keys.length ? keys.map(k => `<span class="${DAY[k].off ? 'off' : ''}">${DAY[k].d}${NB}${WD[DAY[k].wd]}${DAY[k].off ? ' · сутки' : ''}</span>`).join('') : '<span>дежурств нет</span>';
     let tail;
-    if (busy) tail = '<p class="lead small" role="status">Отправляю ответ… Можно остаться на этой странице.</p>';
+    if (busy) tail = '<p class="lead small" role="status">Отправляем ответ…</p>';
     else if (ackNo[key]) tail = `<label class="field"><span class="lbl">Что не так?</span>
-        <textarea data-acknote="${mk}" maxlength="500" placeholder="Например: не могу 24-го — конференция; прошу поменять 17-е на 18-е">${esc(ackNote[key] || '')}</textarea></label>
+        <textarea data-acknote="${mk}" maxlength="500" placeholder="Укажите дату и причину">${esc(ackNote[key] || '')}</textarea></label>
       <div class="row2"><button type="button" class="btn no" data-act="acksend" data-mk="${mk}" data-ok="0">Отправить</button><button type="button" class="btn" data-act="ackcancel" data-mk="${mk}">Отмена</button></div>`;
     else if (ackEditing[key] || (!a.done && !a.pending)) tail = `<div class="row2"><button type="button" class="btn primary" data-act="acksend" data-mk="${mk}" data-ok="1">Согласен</button><button type="button" class="btn no" data-act="ackno" data-mk="${mk}">Не согласен</button></div>${ackEditing[key] ? `<button type="button" class="link" data-act="ackcancel" data-mk="${mk}">Отмена</button>` : ''}`;
     else if (a.pending) tail = `<p class="pending ${a.ok ? '' : 'no'}">${a.ok ? 'Вы отправили «Согласен».' : 'Вы отправили «Не согласен»' + (a.note ? ': «' + esc(a.note) + '».' : '.')} Получение пока не подтверждено.</p>
-      <p class="lead small">${a.transport === 'uncertain' ? 'Не удалось проверить отправку. Можно повторить тот же ответ.' : 'Форма не подтверждает доставку сразу. Ответ будет учтён после проверки и обновления приложения.'}</p>
+      ${a.transport === 'uncertain' ? '<p class="lead small">Не удалось проверить отправку. Можно повторить тот же ответ.</p>' : ''}
       <button type="button" class="link" data-act="ackretry" data-mk="${mk}">Повторить отправку</button>
       <button type="button" class="link" data-act="ackchange" data-mk="${mk}">Изменить ответ</button>`;
     else tail = `<p class="done ${a.ok ? '' : 'no'}">${a.ok ? '✓ Ваше согласие учтено.' : 'Ваше несогласие получено.' + (a.note ? ' «' + esc(a.note) + '».' : '')}</p>
-      <p class="lead small">Можно изменить ответ, пока график предварительный. Окончательный график меняется через ЕЮ.</p>
       <button type="button" class="link" data-act="ackchange" data-mk="${mk}">Изменить ответ</button>`;
     return `<section class="card ack"><p class="eyebrow">Предварительный график${M.version > 1 ? ' · версия ' + M.version : ''}</p>
-      <h2>${esc(M.title)}: ознакомьтесь и подтвердите</h2>
-      <p class="lead small">ЕЮ одобрил черновик. Когда поступят согласия всех, график станет окончательным. Получено согласий: ${agreedCount(M.confirm)} из ${M.confirm.need.length}. Фамилию выбирает сам отправитель.</p>
+      <h2>${esc(M.title)}</h2>
+      <p class="lead small">Согласились ${agreedCount(M.confirm)} из ${M.confirm.need.length}.</p>
       <div class="field"><span class="lbl">Ваши дежурства</span><div class="mine">${mine}</div></div>
-      <button type="button" class="link" data-act="ackview" data-mk="${mk}">Посмотреть весь график →</button>
+      <button type="button" class="link" data-act="ackview" data-mk="${mk}">Весь график</button>
       ${tail}</section>`;
   }).join('');
 }
@@ -825,7 +852,7 @@ function ackNotice() {
   const mk = p[0], M = D.months[mk], key = 'dezh:ack-seen:' + mk + ':' + M.version;
   try { if (sessionStorage.getItem(key)) return; sessionStorage.setItem(key, '1'); } catch (e) {}
   document.getElementById('ackTitle').textContent = 'Предварительный график на ' + monthGen(mk) + (M.version > 1 ? ' (версия ' + M.version + ')' : '');
-  document.getElementById('ackText').textContent = 'ЕЮ одобрил черновик. Посмотрите свои дежурства и нажмите «Согласен» или напишите, что не так. Когда согласятся все, график станет окончательным.';
+  document.getElementById('ackText').textContent = 'Проверьте свои даты. Подтвердите график или укажите причину несогласия.';
   const sh = document.getElementById('ackSheet');
   sh.hidden = false;
   document.getElementById('ackOpen').onclick = () => { sh.hidden = true; state.tab = 'me'; state.picking = false; store.set('dezh:tab', 'me'); render(); };
@@ -833,16 +860,14 @@ function ackNotice() {
 }
 
 // ---------- «Мои» ----------
-function picker(title) {
+function picker(title = 'Выберите свою фамилию') {
   const mk = state.month;
   const cnt = {};
   if (D.months[mk]) for (const who of Object.values(D.months[mk].duty)) for (const id of who) cnt[id] = (cnt[id] || 0) + 1;
   const order = D.months[mk] ? [...D.months[mk].order, ...IDS.filter(id => !D.months[mk].order.includes(id))] : IDS;
-  return `<section class="card"><p class="eyebrow">${title || 'Кто вы?'}</p>
-    <h2>Выберите себя — покажу ваши дежурства и помогу включить напоминания</h2>
+  return `<section class="card"><h2>${esc(title)}</h2>
     <div class="names">${order.map(id => `<button type="button" class="name" data-act="me" data-id="${id}" style="--c:${color(id)}">
       <b>${esc(nameOf(id))}</b><small>${D.months[mk] ? (cnt[id] || 0) + ' ' + plural(cnt[id] || 0, 'дежурство', 'дежурства', 'дежурств') + ' в ' + PREP[+mk.slice(5) - 1] : ''}</small></button>`).join('')}</div>
-    <p class="lead small">Выбор хранится только на этом телефоне.</p>
     ${state.me ? '<button type="button" class="link" data-act="cancelpick">Отмена</button>' : ''}</section>`;
 }
 function renderMe() {
@@ -858,7 +883,7 @@ function renderMe() {
       <p class="meta"><span>${hhmm(nx.start)} → ${hhmm(nx.end)} · ${dur(nx.mins)}</span><span class="pill ${nx.off ? 'off' : ''}">${kind(nx)}</span>${D.months[nx.mk].status === 'preliminary' ? '<span class="pill pre">предварительно</span>' : ''}</p></section>`;
   } else {
     hero = `<section class="card hero" style="--c:${c}"><p class="eyebrow">Ближайшее дежурство</p>
-      <p class="date">Впереди дежурств нет</p><p class="meta">В приложении график по ${esc(monthTitle(MK[MK.length - 1]).toLowerCase())}. Новый месяц появится после утверждения.</p></section>`;
+      <p class="date">Впереди дежурств нет</p><p class="meta">Опубликован график по ${esc(monthTitle(MK[MK.length - 1]).toLowerCase())}.</p></section>`;
   }
   const mk = state.month, keys = myKeys(id, mk);
   const mins = keys.reduce((s, k) => s + DAY[k].mins, 0), full = keys.filter(k => DAY[k].off).length;
@@ -871,15 +896,15 @@ function renderMe() {
     ${finalAckNotices()}
     ${ackCards()}
     ${hero}
-    <section class="card"><h3>Напоминания</h3>
-      <p class="lead small">Через Календарь телефона: накануне в 19:00 и за час до начала. Работают и при закрытом приложении, изменения графика календарь подтянет сам.</p>
-      <a class="btn primary" href="${esc(webcal(id))}">Добавить в Календарь</a>
-      <div class="row2"><a class="btn" href="${esc(google(id))}" target="_blank" rel="noopener">Google Календарь</a><button type="button" class="btn" data-act="copy">Скопировать ссылку</button></div>
-      <p class="lead small">iPhone: после «Подписаться» проверьте, что выключено «Удалить предупреждения». Другие календари (Яндекс, Outlook) — «Добавить по ссылке» и вставьте скопированную.</p></section>
     <div id="wishEntry">${renderWishEntry()}</div>
     <section class="card">${monthBar()}
       <p class="sum">${keys.length ? keys.length + ' ' + plural(keys.length, 'дежурство', 'дежурства', 'дежурств') + ' · ' + dur(mins) : 'Дежурств нет'}${full ? ' <span>· из них сутки: ' + full + '</span>' : ''}</p>
-      ${list ? `<ul class="dlist">${list}</ul>` : ''}</section>`;
+      ${list ? `<ul class="dlist">${list}</ul>` : ''}</section>
+    <section class="card"><h3>Напоминания</h3>
+      <p class="lead small">Накануне в 19:00 и за час до смены.</p>
+      <a class="btn primary" href="${esc(webcal(id))}">Добавить в Календарь</a>
+      <div class="row2"><a class="btn" href="${esc(google(id))}" target="_blank" rel="noopener">Google Календарь</a><button type="button" class="btn" data-act="copy">Скопировать ссылку</button></div>
+</section>`;
 }
 function rangeText(a, b) {
   const [ya, ma, da] = a.split('-').map(Number), [yb, mb, db] = b.split('-').map(Number);
@@ -905,19 +930,19 @@ function renderAll() {
   const cnt = {};
   for (const who of Object.values(M.duty)) for (const id of who) cnt[id] = (cnt[id] || 0) + 1;
   const focus = state.focus && order.includes(state.focus) ? state.focus : null;
-  parts.push(`<section class="card">${monthBar()}
+  parts.push(`<section class="card calendar-card">${monthBar()}
     ${state.view === 'load' ? '' : `<div class="chips" role="group" aria-label="Подсветить врача">
       <button type="button" class="chip" data-act="focus" data-id="" aria-pressed="${!focus}">Все</button>
       ${order.map(id => `<button type="button" class="chip" data-act="focus" data-id="${id}" style="--c:${color(id)}" aria-pressed="${focus === id}"><i></i>${esc(nameOf(id))} ${cnt[id] || 0}</button>`).join('')}
     </div>`}
     <div class="seg" role="group" aria-label="Вид"><button type="button" data-act="view" data-v="grid" aria-pressed="${state.view === 'grid'}">Календарь</button><button type="button" data-act="view" data-v="list" aria-pressed="${state.view === 'list'}">Список</button><button type="button" data-act="view" data-v="load" aria-pressed="${state.view === 'load'}">Нагрузка</button></div>
     ${state.view === 'grid' ? grid(mk, focus, now) : state.view === 'list' ? agenda(mk, focus, now) : ''}
-    ${state.view === 'load' ? '' : `<div class="legend"><span><i class="off"></i>выходной, праздник — сутки ${M.shift.off.join('–')}</span><span><i></i>будни ${M.shift.work.join('–')}</span><span><i class="hol"></i>праздник по календарю РФ</span>${state.me ? '<span><i class="mine"></i>ваши</span>' : ''}</div>`}
+    ${state.view === 'load' ? '' : `<div class="legend"><span><i class="off"></i>сутки ${esc(M.shift.off.join('–'))}</span><span><i></i>будни ${esc(M.shift.work.join('–'))}</span><span><i class="hol"></i>праздник</span>${state.me ? '<span><i class="mine"></i>ваши</span>' : ''}</div>`}
     </section>`);
   if (state.view === 'grid') parts.push(dayCard());
   if (state.view === 'load') parts.push(loadCards(mk));
-  parts.push(`<section class="card"><h3>Весь график в календарь</h3>
-    <p class="lead small">Все дежурства отделения одним календарём, без напоминаний.</p>
+  parts.push(`<section class="card"><h3>Календарь отделения</h3>
+    <p class="lead small">Все смены · без напоминаний</p>
     <div class="row2"><a class="btn" href="${esc(webcal('all'))}">Подписаться</a><button type="button" class="btn" data-act="copyall">Скопировать ссылку</button></div>
     <p class="lead small">Обновлено ${esc(updatedText())}.</p></section>`);
   return parts.join('');
@@ -939,7 +964,6 @@ function loadCards(mk) {
   });
   const tot = rows.reduce((t, r) => ({ n: t.n + r.n, full: t.full + r.full, mins: t.mins + r.mins, share: t.share + r.share }), { n: 0, full: 0, mins: 0, share: 0 });
   const fmt = x => x.toFixed(2).replace('.', ',');
-  const wdMins = (Object.values(DAY).find(d => d.mk === mk && !d.off) || { mins: 0 }).mins;
   const list = rows.map(r => `<li class="${r.id === state.me ? 'me' : ''}" style="--c:${color(r.id)}">
       <div class="lh"><b class="nm">${esc(nameOf(r.id))}</b><span class="sh">${fmt(r.share)}</span></div>
       <span class="sub">${r.n}${NB}${plural(r.n, 'дежурство', 'дежурства', 'дежурств')}${r.full ? ' · сутки: ' + r.full : ''} · ${dur(r.mins)}</span>
@@ -951,11 +975,12 @@ function loadCards(mk) {
         <dt>Сокращено, ч</dt><dd>${N.short}</dd>
         <dt class="big">Норма, ч</dt><dd class="big">${num1(N.norm)}</dd>
       </dl>
-      <p class="lead small">${N.wh}${NB}/${NB}5${NB}×${NB}${N.workdays}${N.short ? NB + '−' + NB + N.short : ''} = ${num1(N.norm)}${NB}ч. Рабочие дни — по производственному календарю РФ${N.short ? '; сокращённый предпраздничный день: ' + sd : ''}.${N.verified ? '' : ' Переносы этого года ещё сверяются.'}</p></section>
+      ${sd ? `<p class="lead small">Сокращённые дни — ${esc(sd)}.</p>` : ''}
+      ${N.verified ? '' : '<p class="lead small" role="status">Переносы выходных ещё проверяются.</p>'}</section>
     <section class="card"><h3>Доля ставки</h3>
       <ul class="load">${list}</ul>
       <p class="sum">Всего: ${tot.n}${NB}${plural(tot.n, 'дежурство', 'дежурства', 'дежурств')} · ${dur(tot.mins)} <span>· ${fmt(tot.share)} ставки</span></p>
-      <p class="lead small">Доля ставки = часы дежурств / норму месяца. Смена учитывается целиком по дате начала: будни — ${dur(wdMins)}, выходные и праздники — 24${NB}ч. Дневная работа не учитывается.</p></section>`;
+</section>`;
 }
 
 function updatedText() {
@@ -993,7 +1018,7 @@ function agenda(mk, focus, now) {
 }
 function dayCard() {
   const day = state.sel && DAY[state.sel];
-  if (!day || day.mk !== state.month) return `<section class="card daycard"><p class="lead small">Нажмите на день — покажу, кто дежурит и когда.</p></section>`;
+  if (!day || day.mk !== state.month) return '';
   const vac = marksOn(day.key);
   return `<section class="card daycard"><p class="eyebrow">${esc(dateText(day))} · ${kind(day)}${day.hol ? ' (календарь РФ)' : ''}</p>
     ${day.who.length ? day.who.map(id => `<p class="big" style="--c:${color(id)}">${esc(nameOf(id))}</p>`).join('') : '<p class="big" style="--c:#888">Нет дежурного</p>'}
@@ -1194,7 +1219,8 @@ function renderPeriodChooser() {
   if(!WISH_SIGNALS_URL)return '';
   const current=selectedWishTarget(new Date()).mk;
   const choices=new Set([current,...wishSignals.periods.map(x=>x.month)]);
-  return '<section class="card"><label for="wishPeriod"><b>Месяц пожеланий</b></label><select id="wishPeriod" style="width:100%;min-height:44px;background:#102137;color:#E8F2FF;border:1px solid #75B9F1;border-radius:9px;padding:8px">'+[...choices].sort().map(m=>'<option value="'+esc(m)+'"'+(m===current?' selected':'')+'>'+esc(monthTitle(m))+'</option>').join('')+'</select></section>';
+  if(choices.size===1)return '<p class="lead">'+esc(monthTitle(current))+'</p>';
+  return '<div class="period-field"><label for="wishPeriod">Месяц</label><select id="wishPeriod">'+[...choices].sort().map(m=>'<option value="'+esc(m)+'"'+(m===current?' selected':'')+'>'+esc(monthTitle(m))+'</option>').join('')+'</select></div>';
 }
 document.addEventListener('change',e=>{
   if(e.target.id!=='wishPeriod')return;
@@ -1290,11 +1316,11 @@ function renderWishSignals(mk) {
   const partial=(s.quality==='PARTIAL'?'<p role="status">Неполная сводка.</p>':'')+correction;
   if(freshness==='stale')return '<section class="card">'+title+'<p role="status">Сводка устарела. Списки дат временно скрыты.</p>'+stamp+partial+retry+'</section>';
   if(freshness==='pending')return '<section class="card">'+title+partial+'<p role="status">Запрос отправлен. Сводка ещё не обновилась после отправки.</p>'+stamp+retry+'</section>';
-  const list=b=>s.days.filter(d=>d.bucket===b).map(d=>'<span style="display:inline-block;margin:3px;padding:4px 9px;border-radius:8px;background:'+(b==='0'?'#17324D':'#493017')+';color:'+(b==='0'?'#BBDFFF':'#FFD39B')+'">'+Number(d.date.slice(-2))+'</span>').join('')||'Нет';
+  const list=b=>s.days.filter(d=>d.bucket===b).map(d=>'<span class="signal-day '+(b==='0'?'empty':'overlap')+'">'+Number(d.date.slice(-2))+'</span>').join(' ')||'Нет';
   const readError=wishSignals.status!=='snapshot'?'<p role="status">Не удалось обновить сводку. Показан последний полученный снимок.</p>'+retry:'';
   return '<section class="card">'+title+(s.quality==='PARTIAL'?'<p role="status">Неполная сводка.</p>':'')+stamp+
-    '<p><b>○ Нет отметок «Хочу»:</b> '+list('0')+'</p>'+
-    '<p><b>↔ Несколько желающих:</b> '+list('2+')+'</p>'+readError+correction+'</section>';
+    '<p><b>Нет отметок «Хочу»:</b> '+list('0')+'</p>'+
+    '<p><b>Несколько желающих:</b> '+list('2+')+'</p>'+readError+correction+'</section>';
 }
 function refreshVisibleWishStatus() {
   if(!document.hidden&&['wish','files','me'].includes(state.tab))void refreshWishSignals();
@@ -1307,14 +1333,15 @@ function renderWishActions(t){
   const ready=!!(C.form&&C.form.action&&C.form.entry),errors=wishEditingMatches(t.mk)?wishDraftErrors(t.mk):[];
   const valid=!errors.length;
   const problem=valid?'':'<div class="wish-validation" id="wishValidation" role="alert" tabindex="-1"><b>Исправьте перед отправкой</b><ul>'+errors.map(e=>'<li>'+esc(e.message)+'</li>').join('')+'</ul></div>';
-  return problem+'<button type="button" class="btn primary" data-act="send" '+(t.open&&ready&&wishEditingMatches(t.mk)&&valid?'':'disabled')+'>Отправить пожелания</button><button type="button" class="btn" data-act="copywish" '+(t.open&&wishEditingMatches(t.mk)&&valid?'':'disabled')+'>Скопировать текст</button><p class="lead small">'+(t.open?'':wishPeriodText(t))+'</p>';
+  return problem+'<button type="button" class="btn primary" data-act="send" '+(t.open&&ready&&wishEditingMatches(t.mk)&&valid?'':'disabled')+'>Отправить пожелания</button><button type="button" class="btn" data-act="copywish" '+(t.open&&wishEditingMatches(t.mk)&&valid?'':'disabled')+'>Скопировать текст</button>'+(t.open?'':'<p class="lead small">'+wishPeriodText(t)+'</p>');
 }
 function syncWishControls(){const t=selectedWishTarget(new Date()),a=document.getElementById('wishActions'),status=document.getElementById('wishOpenStatus');if(a)a.innerHTML=renderWishActions(t);if(status)status.textContent=wishPeriodText(t);}
 
 function renderWish() {
   const now = new Date(), t = selectedWishTarget(now), mk = t.mk;
-  const signals='<div id="wishPeriodChooser">'+renderPeriodChooser()+'</div><div id="wishSignals">'+renderWishSignals(mk)+'</div>';
-  if (!state.me || state.picking) return signals+picker('Для изменения своих пожеланий выберите себя');
+  const chooser='<div id="wishPeriodChooser">'+renderPeriodChooser()+'</div>';
+  const signals='<div id="wishSignals">'+renderWishSignals(mk)+'</div>';
+  if (!state.me || state.picking) return '<section class="card"><h2>Пожелания</h2>'+chooser+'<p class="lead small" id="wishOpenStatus">'+wishPeriodText(t)+'</p></section>'+signals+picker('Выберите свою фамилию');
   loadWish(mk);
   const sentAt = store.get('dezh:sent:' + state.me + ':' + mk);
   const left = Math.ceil((t.deadline - now) / 864e5);
@@ -1330,32 +1357,32 @@ function renderWish() {
     g += `<button type="button" class="${cls}" aria-disabled="${!!blocked}" title="${esc(blocked)}" data-act="wday" data-k="${k}" aria-label="${d} ${GEN[m - 1]}${blocked?', недоступно: '+esc(blocked):''}${s ? ', ' + { no: 'не ставить', vac: 'отпуск', yes: 'хочу' }[s] : ''}"><span class="n">${d}</span>${s ? `<span class="t">${TAG[s]}</span>` : ''}</button>`;
   }
   const B = [['no', 'Не ставить', 'var(--no)'], ['vac', 'Отпуск', 'var(--vac)'], ['yes', 'Хочу', 'var(--ok)'], ['clear', 'Стереть', 'var(--text-2)']];
-  const formReady = !!(C.form && C.form.action && C.form.entry);
-  const head = `<section class="card"><p class="eyebrow">${esc(nameOf(state.me))}</p><div class="wish-heading"><h2>Пожелания на ${esc(monthTitle(mk).toLowerCase())}</h2><button class="icon-btn" type="button" data-act="wishinfo" aria-label="Пояснения к пожеланиям" aria-haspopup="dialog" aria-controls="wishInfo">i</button></div>
+  const head = `<section class="card"><h2>${esc(nameOf(state.me))}</h2>
+    ${WISH_SIGNALS_URL ? chooser : `<p>${esc(monthTitle(mk))}</p>`}
     ${t.discussion ? `<p id="wishOpenStatus" class="lead small">${wishPeriodText(t)}</p>` : t.open ? `<p class="lead small">Приём до ${t.deadline.getDate()}${NB}${GEN[t.deadline.getMonth()]} включительно · осталось ${left}${NB}${plural(left, 'день', 'дня', 'дней')}. Учитывается последняя отправка.</p>` : ''}
-    ${sentAt ? `<p class="sent small">Запрос отправлен ${esc(new Date(sentAt).toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }))}. Сохранение сервером не подтверждено. Можно изменить и отправить снова.</p>` : ''}
+    ${sentAt ? `<p class="sent small">Запрос отправлен ${esc(new Date(sentAt).toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }))}. Получение сервером пока не подтверждено.</p>` : ''}
     ${!cal.verified ? '<p class="lead small">Производственный календарь ещё не проверен.</p>' : ''}</section>`;
   return `${head}${signals}
-    <section class="card"><h3>Дни и интервалы</h3>
+    <section class="card calendar-card"><h3>Даты</h3>
       <div class="brush" role="group" aria-label="Что отмечать">${B.map(([k, t, c]) => `<button type="button" data-act="brush" data-v="${k}" style="--b:${c}" aria-pressed="${brush === k}">${t}</button>`).join('')}</div>
-      <button type="button" class="toggle" role="switch" data-act="range" aria-checked="${rangeMode}"><span><b>Интервалом</b><br><span class="lead small">${rangeMode ? (anchor ? 'Теперь нажмите последний день' : 'Нажмите первый день, потом последний') : 'Выключено — нажатие отмечает один день'}</span></span><span class="sw"></span></button>
+      <button type="button" class="toggle" role="switch" data-act="range" aria-checked="${rangeMode}"><span><b>Интервалом</b>${rangeMode ? '<br><span class="lead small">'+(anchor ? 'Выберите последний день' : 'Выберите первый день')+'</span>' : ''}</span><span class="sw"></span></button>
       <div class="cal wcal">${g}</div>
-      <div class="legend"><span><i class="off"></i>выходной или праздник по календарю РФ — сутки</span><span><i class="hol"></i>праздник или перенос</span></div></section>
-    <section class="card"><h3>Дни недели</h3>
+      <div class="legend"><span><i class="off"></i>выходной · сутки</span><span><i class="hol"></i>праздник или перенос</span></div></section>
+    <section class="card calendar-card"><h3>Дни недели</h3>
       <div class="field"><span class="lbl">Не ставить по</span><div class="wdrow no">${WD_MON.map((w, i) => `<button type="button" data-act="wd" data-f="noWd" data-i="${i}" aria-disabled="${!!wishWeekdayBlock(W,mk,'noWd',i)}" aria-pressed="${W.noWd.includes(i)}">${w}</button>`).join('')}</div></div>
       <div class="field"><span class="lbl">Хочу по</span><div class="wdrow yes">${WD_MON.map((w, i) => `<button type="button" data-act="wd" data-f="yesWd" data-i="${i}" aria-disabled="${!!wishWeekdayBlock(W,mk,'yesWd',i)}" aria-pressed="${W.yesWd.includes(i)}">${w}</button>`).join('')}</div></div>
-      <button type="button" class="toggle" role="switch" data-act="only" aria-checked="${W.only}"><span><b>Ставить только в дни «Хочу»</b><br><span class="lead small">иначе это просто пожелание</span></span><span class="sw"></span></button></section>
-    <section class="card"><h3>Сколько</h3>
+      <button type="button" class="toggle" role="switch" data-act="only" aria-checked="${W.only}"><span><b>Ставить только в дни «Хочу»</b></span><span class="sw"></span></button></section>
+    <section class="card"><h3>Количество дежурств</h3>
       ${qty('Всего дежурств', 'total', '')}
       ${qty('Из них суток (сб, вс, праздники)', 'full', '')}
-      <div class="field"><span class="lbl">Свободных выходных (сб + вс), не меньше</span>
+      <div class="field"><span class="lbl">Минимум свободных пар сб–вс</span>
         <div class="stepper"><button type="button" data-act="fw" data-d="-1" aria-label="Меньше">−</button><output>${W.freeWe || '—'}</output><button type="button" data-act="fw" data-d="1" aria-label="Больше">+</button></div></div></section>
-    <section class="card"><h3>Комментарий</h3>
-      <textarea id="note" maxlength="500" placeholder="Например: все четверги и 3 субботы; одни сутки; не ставить подряд с выходными">${esc(W.note)}</textarea>
+    <section class="card"><h3><label for="note">Комментарий</label></h3>
+      <textarea id="note" maxlength="500" rows="2" placeholder="Необязательно">${esc(W.note)}</textarea>
       </section>
     <section class="card"><h3>Итог</h3><div class="summary" id="summary">${esc(wishText(mk))}</div>
       <div id="wishActions">${renderWishActions(t)}</div>
-      <button type="button" class="link" data-act="resetwish">Очистить всё</button></section>`;
+      <button type="button" class="link" data-act="resetwish">Очистить форму</button></section>`;
 }
 
 // ---------- «Excel» ----------
@@ -1391,31 +1418,31 @@ function renderFiles() {
   const files = D.files || {};
   const pend = shiftMonth(t.mk, -1);
   let status = '';
-  if (!t.discussion && !D.months[pend] && pend > mkOf(now)) status = `<section class="card"><p class="eyebrow">${esc(monthTitle(pend))}</p><p>Пожелания собраны, график составляется. Появится здесь после утверждения ЕЮ.</p></section>`;
+  if (!t.discussion && !D.months[pend] && pend > mkOf(now)) status = `<section class="card"><p class="eyebrow">${esc(monthTitle(pend))}</p><p>Пожелания собраны. График готовится к утверждению ЕЮ.</p></section>`;
   const months = MK.slice().reverse().filter(mk => files[mk]);
   const pdf = mk => D.pdf && D.pdf[mk] && D.pdf[mk].slots;
   for (const mk of months) for (const k of pdf(mk) ? ['pdf', 'xlsx'] : ['xlsx']) fetchFile(...pubFile(mk, k)).catch(() => {});
-  const list = months.map(mk => `<section class="card file"><span class="ic">${pdf(mk) ? 'PDF' : 'XLSX'}</span>
-    <div><h3>${esc(monthTitle(mk))}</h3><p class="lead small">График дежурств ПСО · без телефонов</p>${statusPills(mk) ? `<div class="status" style="justify-content:flex-start;margin-top:4px">${statusPills(mk)}</div>` : ''}</div>
+  const list = months.map(mk => `<section class="card file">
+    <div class="file-info"><h3>${esc(monthTitle(mk))}</h3>${statusPills(mk) ? `<div class="status">${statusPills(mk)}</div>` : ''}</div>
     ${pdf(mk) ? `<button type="button" class="btn primary" data-act="fshare" data-kind="pdf" data-mk="${mk}">PDF — печать</button>` : ''}<button type="button" class="btn${pdf(mk) ? '' : ' primary'}" data-act="fshare" data-kind="xlsx" data-mk="${mk}">Excel</button></section>`).join('');
   const ph = phones();
   const ids = [...new Set(months.flatMap(mk => D.months[mk].order))];
   const have = ids.filter(id => ph[id]).length;
   const ready = printReady ? `<div class="prow">${printReady.out.map((o, i) => `<button type="button" class="btn${i ? '' : ' primary'}" data-act="pshare" data-k="${i}">${o.kind === 'PDF' ? 'PDF — печать' : 'Excel'}</button>`).join('')}</div>
-      <p class="sent small">✓ Готово: ${esc(monthTitle(printReady.mk).toLowerCase())}, телефонов: ${printReady.n}. «PDF — печать» → в меню «Напечатать»</p>` : '';
-  const org = `<details class="card org" ${orgOpen ? 'open' : ''}><summary>Для печати — с телефонами</summary><div class="orgbody">
-    <p class="lead small">Для оперативного отдела: тот же график, у фамилий — телефоны для экстренной связи с дежурным. Телефоны хранятся только на этом телефоне и никуда не отправляются; файл собирается здесь же.</p>
+      <p class="sent small">Готово · ${esc(monthTitle(printReady.mk).toLowerCase())} · номеров в файле: ${printReady.n}</p>` : '';
+  const org = `<details class="card org" ${orgOpen ? 'open' : ''}><summary>Печать с телефонами</summary><div class="orgbody">
+    <p class="lead small">Номера хранятся на этом устройстве и будут видны в файле для оперативного отдела.</p>
     <p class="small">Телефоны: <b>${have} из ${ids.length}</b></p>
-    <div class="prow"><button type="button" class="btn" data-act="phimport">Взять из файла графика</button></div>
+    <div class="prow"><button type="button" class="btn" data-act="phimport">Импорт из Excel</button></div>
     <input type="file" id="phfile" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
     <div class="phones">${ids.map(id => `<label><span>${esc(nameOf(id))}</span><input type="tel" inputmode="tel" autocomplete="off" data-ph="${id}" value="${esc(ph[id] || '')}" placeholder="телефон"></label>`).join('')}</div>
-    <p class="lead small">Соберите файлы с этими телефонами: PDF — печатать (лист A4 альбомом), Excel — если нужно переслать.</p>
-    <div class="prow">${months.map(mk => `<button type="button" class="btn pink" data-act="pprep" data-mk="${mk}">Для печати: ${esc(monthTitle(mk).toLowerCase())}</button>`).join('')}</div>
+    <p class="lead small">Выберите месяц для печати.</p>
+    <div class="prow">${months.map(mk => `<button type="button" class="btn pink" data-act="pprep" data-mk="${mk}">${esc(monthTitle(mk))}</button>`).join('')}</div>
     ${ready}</div></details>`;
-  return `${status}<div id="wishEntry">${renderWishEntry()}</div>
+  return `${status}
     ${list || '<section class="card"><p class="lead">Файлов пока нет.</p></section>'}
     ${months.length ? org : ''}
-    <p class="lead small">«PDF — печать» открывает меню «Поделиться»: пролистайте вниз до «Напечатать». PDF печатается как есть — A4 альбомом, с заголовком и заливкой выходных и отпусков (Excel iPhone печатает без них). В файлах — дни, отметки «+», отпуска, выходные и праздники по календарю РФ, итоги. Версия с листом пожеланий и нагрузкой — у ЕЮ.</p>`;
+    <div id="wishEntry">${renderWishEntry()}</div>`;
 }
 // ——— Лист PDF (A4 альбом): дни, «+», отпуска, выходные и праздники по календарю РФ, итоги. Рисует его make_pdf.py при сборке;
 //     slots — заготовка «для печати»: «Врач, телефон» и пустое место под номер в строке каждого врача (номер впишет pdf-lib)
@@ -1606,7 +1633,6 @@ document.querySelector('.tabs').addEventListener('click', e => {
 view.addEventListener('click', e => {
   const b = e.target.closest('[data-act]'); if (!b) return;
   const a = b.dataset.act;
-  if(a==='wishinfo'){openWishInfo(b);return;}
   if(a==='refreshwishes'){void refreshWishSignals(true);return;}
   if(a==='reviewwish'){if(checkWishBeforeSend(selectedWishTarget(new Date()).mk))toast('В локальном выборе противоречий нет. Серверная заявка не сверена.');return;}
   if (a === 'me') { state.me = b.dataset.id; state.picking = false; store.set('dezh:me', state.me); W = null; wKey = null; render(); badge(); ackNotice(); return; }
@@ -1698,8 +1724,23 @@ view.addEventListener('change', e => {
 const wishInfo=document.getElementById('wishInfo');
 let wishInfoTrigger=null;
 function openWishInfo(trigger) {
+  const topics = [state.tab];
+  if (state.tab === 'all' && state.view === 'load' && D.months[state.month]) {
+    topics.push('load');
+    const n = normOf(state.month);
+    const weekday = Object.values(DAY).find(d => d.mk === state.month && !d.off);
+    document.getElementById('loadFormula').textContent = 'Норма на ' + monthTitle(state.month).toLowerCase() + ' — ' +
+      n.wh + ' / 5 × ' + n.workdays + (n.short ? ' − ' + n.short : '') + ' = ' + num1(n.norm) + ' ч. Рабочие дни берутся из производственного календаря РФ.' +
+      (weekday ? ' Будничная смена — ' + dur(weekday.mins) + '.' : '');
+  }
+  const titles = {me:'Мои дежурства', all:'График отделения', wish:'О пожеланиях', files:'Файлы и печать'};
+  document.getElementById('wishInfoTitle').textContent = titles[state.tab];
+  for (const section of wishInfo.querySelectorAll('[data-info]')) {
+    section.hidden = !section.dataset.info.split(' ').some(topic => topics.includes(topic));
+  }
   wishInfoTrigger=trigger;
   if(!wishInfo.open)wishInfo.showModal();
+  wishInfo.scrollTop=0;
   document.getElementById('wishInfoClose').focus();
 }
 wishInfo.addEventListener('close',()=>{
@@ -1709,12 +1750,7 @@ wishInfo.addEventListener('click',e=>{
   const r=wishInfo.getBoundingClientRect();
   if(e.target===wishInfo&&(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom))wishInfo.close();
 });
-
-const help = document.getElementById('help');
-document.getElementById('helpBtn').addEventListener('click', () => { help.hidden = false; document.getElementById('helpClose').focus(); });
-document.getElementById('helpClose').addEventListener('click', () => { help.hidden = true; });
-help.addEventListener('click', e => { if (e.target === help) help.hidden = true; });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') help.hidden = true; });
+document.getElementById('helpBtn').addEventListener('click', e => openWishInfo(e.currentTarget));
 // Обратный отсчёт и «сейчас дежурит» обновляем раз в минуту и при возвращении в приложение
 setInterval(() => { if ((state.tab === 'me' && !Object.keys(ackNo).length) || state.tab === 'all') render(true); }, 60000);
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && (state.tab === 'me' || state.tab === 'all')) render(true); });
@@ -1737,7 +1773,7 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.se
   const mine = new Set(texts(document));
   let last = 0, box = null;
   // Не перезагружаем, пока человек заполняет пожелания или телефоны, — тогда только предлагаем обновиться
-  function busy() { try { return state.tab === 'wish' || state.tab === 'files' || ackBusy.size > 0 || Object.keys(ackNo).length > 0 || Object.values(ackEditing).some(Boolean); } catch (e) { return false; } }
+  function busy() { try { return wishInfo.open || state.tab === 'wish' || state.tab === 'files' || ackBusy.size > 0 || Object.keys(ackNo).length > 0 || Object.values(ackEditing).some(Boolean); } catch (e) { return false; } }
   function toast(text, onUpdate) {
     if (box) box.remove();
     box = document.createElement('div');
