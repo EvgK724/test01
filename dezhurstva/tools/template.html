@@ -860,12 +860,6 @@ function renderMe() {
     hero = `<section class="card hero" style="--c:${c}"><p class="eyebrow">Ближайшее дежурство</p>
       <p class="date">Впереди дежурств нет</p><p class="meta">В приложении график по ${esc(monthTitle(MK[MK.length - 1]).toLowerCase())}. Новый месяц появится после утверждения.</p></section>`;
   }
-  const t = selectedWishTarget(now);
-  const sent = store.get('dezh:sent:' + id + ':' + t.mk);
-  const wishCard = t.open ? `<section class="card"><div class="who-row" style="--c:var(--neon-2)"><span class="dotc"></span><h3 style="flex:1">Пожелания на ${esc(monthTitle(t.mk).toLowerCase())}</h3>
-      ${sent ? '<span class="pill ok">отправлены</span>' : '<span class="pill warn">не отправлены</span>'}</div>
-      <p class="lead small">Приём до ${t.deadline.getDate()}${NB}${GEN[t.deadline.getMonth()]} включительно.</p>
-      <button type="button" class="btn pink" data-act="tab" data-tab="wish">${sent ? 'Изменить пожелания' : 'Оставить пожелания'}</button></section>` : '';
   const mk = state.month, keys = myKeys(id, mk);
   const mins = keys.reduce((s, k) => s + DAY[k].mins, 0), full = keys.filter(k => DAY[k].off).length;
   const marks = D.months[mk] ? D.months[mk].marks.filter(x => x.who === id) : [];
@@ -882,7 +876,7 @@ function renderMe() {
       <a class="btn primary" href="${esc(webcal(id))}">Добавить в Календарь</a>
       <div class="row2"><a class="btn" href="${esc(google(id))}" target="_blank" rel="noopener">Google Календарь</a><button type="button" class="btn" data-act="copy">Скопировать ссылку</button></div>
       <p class="lead small">iPhone: после «Подписаться» проверьте, что выключено «Удалить предупреждения». Другие календари (Яндекс, Outlook) — «Добавить по ссылке» и вставьте скопированную.</p></section>
-    ${wishCard}
+    <div id="wishEntry">${renderWishEntry()}</div>
     <section class="card">${monthBar()}
       <p class="sum">${keys.length ? keys.length + ' ' + plural(keys.length, 'дежурство', 'дежурства', 'дежурств') + ' · ' + dur(mins) : 'Дежурств нет'}${full ? ' <span>· из них сутки: ' + full + '</span>' : ''}</p>
       ${list ? `<ul class="dlist">${list}</ul>` : ''}</section>`;
@@ -1162,9 +1156,9 @@ function qty(label, f, hint) {
     ${v.mode === 'any' ? '' : `<div class="stepper"><button type="button" data-act="qn" data-f="${f}" data-d="-1" aria-label="Меньше">−</button><output>${v.n}</output><button type="button" data-act="qn" data-f="${f}" data-d="1" aria-label="Больше">+</button></div>`}
     ${hint ? `<span class="hint">${hint}</span>` : ''}</div>`;
 }
-// Disabled until the separate aggregate endpoint passes review and end-to-end checks.
+// Public, read-only feed of periods and anonymous day counts.
 const WISH_SIGNALS_URL = 'https://script.google.com/macros/s/AKfycbx5XKpYnS0eviGnXbm4_Q5KF6T16k_RnRJfcMwYiFnSfOtqEOcV8EMRVqPjdJ_OKUa2/exec';
-let wishSignals = {status:'unavailable',periods:[],requested:0,lastSuccess:0,selectedMonth:null,loading:false};
+let wishSignals = {status:'idle',periods:[],requested:0,lastSuccess:0,selectedMonth:null,loading:false};
 function selectedWishTarget(now) {
   const base=wishTarget(now);
   if(!WISH_SIGNALS_URL)return base;
@@ -1173,8 +1167,28 @@ function selectedWishTarget(now) {
   if(mk<'2027-01')return base;
   const p=wishSignals.periods.find(x=>x.month===mk);
   const age=Date.now()-wishSignals.lastSuccess;
-  return {mk,deadline:base.deadline,discussion:true,
-    open:!D.months[mk]&&p?.phase==='PREPARATION'&&wishSignals.status==='snapshot'&&age>=0&&age<=600000};
+  const confirmed=wishSignals.status==='snapshot'&&age>=0&&age<=600000;
+  const phase=D.months[mk]?'published':confirmed?(p?'open':'inactive'):
+    (wishSignals.loading||wishSignals.status==='idle')?'loading':'unknown';
+  return {mk,deadline:base.deadline,discussion:true,phase,open:phase==='open'};
+}
+function wishPeriodText(t) {
+  if(!t.discussion)return t.open?'Приём до '+t.deadline.getDate()+NB+GEN[t.deadline.getMonth()]+' включительно.':'Приём завершён.';
+  switch(t.phase) {
+    case 'open': return 'Приём открыт до публикации предварительного графика.';
+    case 'published': return 'График опубликован. Приём пожеланий завершён.';
+    case 'inactive': return 'Сейчас этот месяц отсутствует в списке открытых периодов.';
+    case 'loading': return 'Проверяем, открыт ли приём пожеланий…';
+    default: return 'Пока не удалось проверить, открыт ли приём пожеланий.';
+  }
+}
+function renderWishEntry() {
+  const t=selectedWishTarget(new Date());
+  const sent=state.me&&store.get('dezh:sent:'+state.me+':'+t.mk);
+  return '<section class="card"><h3>Пожелания на '+esc(monthTitle(t.mk).toLowerCase())+'</h3>'+
+    '<p class="lead small" role="status">'+wishPeriodText(t)+'</p>'+
+    (sent?'<p class="sent small">С этого устройства отправлен запрос.</p>':'')+
+    '<button type="button" class="btn" data-act="tab" data-tab="wish">Даты без пожеланий и пересечения</button></section>';
 }
 function renderPeriodChooser() {
   if(!WISH_SIGNALS_URL)return '';
@@ -1199,12 +1213,22 @@ async function refreshWishSignals(force=false) {
   if(!WISH_SIGNALS_URL||document.hidden||wishSignals.loading||(!force&&Date.now()-wishSignals.requested<60000))return;
   wishSignals.requested=Date.now();wishSignals.loading=true;
   const previousTarget=selectedWishTarget(new Date()).mk;
-  const ctl=new AbortController();const timeout=setTimeout(()=>ctl.abort(),10000);
+  let timeout;
+  let failure='network';
   try {
-    const r=await fetch(WISH_SIGNALS_URL,{cache:'no-store',credentials:'omit',signal:ctl.signal});
-    if(!r.ok)throw Error('network');
-    const packet=await r.json();
-    if(packet.schema!==2||packet.kind!=='WISHES_PERIODS'||!Array.isArray(packet.periods))throw Error('unavailable');
+    updateWishStatus();
+    const ctl=typeof AbortController==='function'?new AbortController():null;
+    const expired=new Promise((_,reject)=>{
+      timeout=setTimeout(()=>{reject(Error('timeout'));if(ctl)ctl.abort();},20000);
+    });
+    const read=async()=>{
+      const r=await fetch(WISH_SIGNALS_URL,{cache:'no-store',credentials:'omit',...(ctl?{signal:ctl.signal}:{})});
+      if(!r.ok)throw Error('network');
+      failure='invalid';
+      return r.json();
+    };
+    const packet=await Promise.race([read(),expired]);
+    if(packet.schema!==2||packet.kind!=='WISHES_PERIODS'||!Array.isArray(packet.periods))throw Error('invalid');
     const seen=new Set();
     for(const p of packet.periods) {
       if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(p.month)||p.month<'2027-01'||p.phase!=='PREPARATION'||seen.has(p.month)||
@@ -1212,18 +1236,24 @@ async function refreshWishSignals(force=false) {
       seen.add(p.month);
     }
     wishSignals.periods=packet.periods;wishSignals.status='snapshot';wishSignals.lastSuccess=Date.now();
-  } catch(e) {wishSignals.status='unavailable';}
-  finally {
+  } catch(e) {
+    wishSignals.status=e?.message==='timeout'?'timeout':failure;
+  } finally {
     clearTimeout(timeout);wishSignals.loading=false;
-    if(state.tab==='wish') {
-      if(selectedWishTarget(new Date()).mk!==previousTarget){if(W)saveWish();render(true);return;}
-      const box=document.getElementById('wishSignals'),chooser=document.getElementById('wishPeriodChooser');
-      syncWishControls();
-      if(box)box.innerHTML=renderWishSignals(selectedWishTarget(new Date()).mk);
-      // Preserve current selection and inputs. Only chooser and read-only signals are refreshed.
-      if(chooser&&document.activeElement?.id!=='wishPeriod')chooser.innerHTML=renderPeriodChooser();
-    }
+    if(state.tab==='wish'&&selectedWishTarget(new Date()).mk!==previousTarget){
+      if(W&&state.me&&!state.picking)saveWish();
+      render(true);
+    }else updateWishStatus();
   }
+}
+function updateWishStatus() {
+  const entry=document.getElementById('wishEntry');
+  if(entry)entry.innerHTML=renderWishEntry();
+  if(state.tab!=='wish')return;
+  const box=document.getElementById('wishSignals'),chooser=document.getElementById('wishPeriodChooser');
+  syncWishControls();
+  if(box)box.innerHTML=renderWishSignals(selectedWishTarget(new Date()).mk);
+  if(chooser&&document.activeElement?.id!=='wishPeriod')chooser.innerHTML=renderPeriodChooser();
 }
 function wishSnapshotState(s,mk,now=Date.now(),sentAt=null) {
   if(!validWishSnapshot(s,mk))return 'unavailable';
@@ -1242,38 +1272,50 @@ function renderWishSignals(mk) {
   const s=wishSignals.periods.find(p=>p.month===mk)?.snapshot;
   const sentAt=state.me?store.get('dezh:sent:'+state.me+':'+mk):null;
   const freshness=wishSnapshotState(s,mk,Date.now(),sentAt);
-  if(freshness==='unavailable')return '<section class="card">'+title+'<p role="status">Сводка пока недоступна.</p>'+retry+'</section>';
+  if(freshness==='unavailable') {
+    let message;
+    if(wishSignals.loading||wishSignals.status==='idle')message='Загружаем даты без пожеланий и пересечения…';
+    else if(wishSignals.status==='network')message='Не удалось связаться с сервисом сводки.';
+    else if(wishSignals.status==='timeout')message='Сервис сводки не ответил за 20 секунд.';
+    else if(wishSignals.status==='invalid')message='Сервис вернул ответ, по которому нельзя проверить даты.';
+    else if(wishSignals.status==='snapshot')message=wishSignals.periods.some(p=>p.month===mk)?'Для открытого месяца сводка ещё не готова.':'Сервис не указывает этот месяц среди открытых.';
+    else message='Сводка пока недоступна.';
+    return '<section class="card">'+title+'<p role="status">'+message+'</p>'+(wishSignals.loading?'':retry)+'</section>';
+  }
   const time=esc(new Date(s.asOf).toLocaleString('ru-RU',{timeZone:'Asia/Yekaterinburg',day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'}));
   const stamp='<p class="lead small">Данные на '+time+' · Екатеринбург</p>';
   const conflict=s.warnings?.includes('CONFLICTING_WISHES');
   const ownSaved=state.me&&store.get('dezh:wish:'+state.me+':'+mk);
-  const correction=conflict?'<p role="status">В этом снимке есть заявки, где «Хочу» совпадает с запретом или отпуском. Заявки сохранены; на спорных датах учитывается запрет.</p><p class="lead small">'+(ownSaved?'Ниже показан выбор этого устройства. Серверная заявка сюда не загружается.':'На этом устройстве нет сохранённого выбора. Пустая форма не означает, что серверная заявка пуста. Для изменения нужен полный набор ваших пожеланий.')+'</p><button type="button" class="btn" data-act="reviewwish">Проверить мой выбор</button>':'';
+  const correction=conflict?'<p role="status">В этом снимке есть заявки, где «Хочу» совпадает с запретом или отпуском. Заявки сохранены; на спорных датах учитывается запрет.</p><p class="lead small">'+(ownSaved?'Ниже показан выбор этого устройства. Серверная заявка сюда не загружается.':'На этом устройстве нет сохранённого выбора. Пустая форма не означает, что серверная заявка пуста. Для изменения нужен полный набор ваших пожеланий.')+'</p>'+(state.me&&!state.picking?'<button type="button" class="btn" data-act="reviewwish">Проверить мой выбор</button>':''):'';
   const partial=(s.quality==='PARTIAL'?'<p role="status">Неполная сводка.</p>':'')+correction;
-  if(freshness==='stale'||wishSignals.status!=='snapshot')return '<section class="card">'+title+partial+'<p role="status">'+(freshness==='stale'?'Сводка устарела.':'Не удалось обновить сводку.')+' Списки дат временно скрыты.</p>'+stamp+retry+'</section>';
+  if(freshness==='stale')return '<section class="card">'+title+'<p role="status">Сводка устарела. Списки дат временно скрыты.</p>'+stamp+partial+retry+'</section>';
   if(freshness==='pending')return '<section class="card">'+title+partial+'<p role="status">Запрос отправлен. Сводка ещё не обновилась после отправки.</p>'+stamp+retry+'</section>';
   const list=b=>s.days.filter(d=>d.bucket===b).map(d=>'<span style="display:inline-block;margin:3px;padding:4px 9px;border-radius:8px;background:'+(b==='0'?'#17324D':'#493017')+';color:'+(b==='0'?'#BBDFFF':'#FFD39B')+'">'+Number(d.date.slice(-2))+'</span>').join('')||'Нет';
-  return '<section class="card">'+title+partial+stamp+
+  const readError=wishSignals.status!=='snapshot'?'<p role="status">Не удалось обновить сводку. Показан последний полученный снимок.</p>'+retry:'';
+  return '<section class="card">'+title+(s.quality==='PARTIAL'?'<p role="status">Неполная сводка.</p>':'')+stamp+
     '<p><b>○ Нет отметок «Хочу»:</b> '+list('0')+'</p>'+
-    '<p><b>↔ Несколько желающих:</b> '+list('2+')+'</p></section>';
+    '<p><b>↔ Несколько желающих:</b> '+list('2+')+'</p>'+readError+correction+'</section>';
 }
-setInterval(()=>{if(!document.hidden&&state.tab==='wish')void refreshWishSignals()},60000);
-
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&state.tab==='wish')void refreshWishSignals()});
+function refreshVisibleWishStatus() {
+  if(!document.hidden&&['wish','files','me'].includes(state.tab))void refreshWishSignals();
+}
+setInterval(refreshVisibleWishStatus,60000);
+document.addEventListener('visibilitychange',refreshVisibleWishStatus);
 
 function wishEditingMatches(mk){return !!W&&wKey==='dezh:wish:'+state.me+':'+mk;}
 function renderWishActions(t){
   const ready=!!(C.form&&C.form.action&&C.form.entry),errors=wishEditingMatches(t.mk)?wishDraftErrors(t.mk):[];
   const valid=!errors.length;
   const problem=valid?'':'<div class="wish-validation" id="wishValidation" role="alert" tabindex="-1"><b>Исправьте перед отправкой</b><ul>'+errors.map(e=>'<li>'+esc(e.message)+'</li>').join('')+'</ul></div>';
-  return problem+'<button type="button" class="btn primary" data-act="send" '+(t.open&&ready&&wishEditingMatches(t.mk)&&valid?'':'disabled')+'>Отправить пожелания</button><button type="button" class="btn" data-act="copywish" '+(t.open&&wishEditingMatches(t.mk)&&valid?'':'disabled')+'>Скопировать текст</button><p class="lead small">'+(t.open?'':'Приём закрыт или статус пока не подтверждён.')+'</p>';
+  return problem+'<button type="button" class="btn primary" data-act="send" '+(t.open&&ready&&wishEditingMatches(t.mk)&&valid?'':'disabled')+'>Отправить пожелания</button><button type="button" class="btn" data-act="copywish" '+(t.open&&wishEditingMatches(t.mk)&&valid?'':'disabled')+'>Скопировать текст</button><p class="lead small">'+(t.open?'':wishPeriodText(t))+'</p>';
 }
-function syncWishControls(){const t=selectedWishTarget(new Date()),a=document.getElementById('wishActions'),status=document.getElementById('wishOpenStatus');if(a)a.innerHTML=renderWishActions(t);if(status)status.textContent=t.open?'Период открыт.':'Период закрыт или статус недоступен.';}
+function syncWishControls(){const t=selectedWishTarget(new Date()),a=document.getElementById('wishActions'),status=document.getElementById('wishOpenStatus');if(a)a.innerHTML=renderWishActions(t);if(status)status.textContent=wishPeriodText(t);}
 
 function renderWish() {
-  if (!state.me || state.picking) return picker('Пожелания — сначала выберите себя');
   const now = new Date(), t = selectedWishTarget(now), mk = t.mk;
+  const signals='<div id="wishPeriodChooser">'+renderPeriodChooser()+'</div><div id="wishSignals">'+renderWishSignals(mk)+'</div>';
+  if (!state.me || state.picking) return signals+picker('Для изменения своих пожеланий выберите себя');
   loadWish(mk);
-  void refreshWishSignals();
   const sentAt = store.get('dezh:sent:' + state.me + ':' + mk);
   const left = Math.ceil((t.deadline - now) / 864e5);
   const cal = calOf(mk), off = new Set(cal.off), hol = new Set(cal.hol);
@@ -1290,10 +1332,10 @@ function renderWish() {
   const B = [['no', 'Не ставить', 'var(--no)'], ['vac', 'Отпуск', 'var(--vac)'], ['yes', 'Хочу', 'var(--ok)'], ['clear', 'Стереть', 'var(--text-2)']];
   const formReady = !!(C.form && C.form.action && C.form.entry);
   const head = `<section class="card"><p class="eyebrow">${esc(nameOf(state.me))}</p><div class="wish-heading"><h2>Пожелания на ${esc(monthTitle(mk).toLowerCase())}</h2><button class="icon-btn" type="button" data-act="wishinfo" aria-label="Пояснения к пожеланиям" aria-haspopup="dialog" aria-controls="wishInfo">i</button></div>
-    ${t.discussion ? `<p id="wishOpenStatus" class="lead small">${t.open ? 'Пожелания можно менять до публикации предварительного графика' : 'Приём недоступен'}.</p>` : t.open ? `<p class="lead small">Приём до ${t.deadline.getDate()}${NB}${GEN[t.deadline.getMonth()]} включительно · осталось ${left}${NB}${plural(left, 'день', 'дня', 'дней')}. Учитывается последняя отправка.</p>` : ''}
+    ${t.discussion ? `<p id="wishOpenStatus" class="lead small">${wishPeriodText(t)}</p>` : t.open ? `<p class="lead small">Приём до ${t.deadline.getDate()}${NB}${GEN[t.deadline.getMonth()]} включительно · осталось ${left}${NB}${plural(left, 'день', 'дня', 'дней')}. Учитывается последняя отправка.</p>` : ''}
     ${sentAt ? `<p class="sent small">Запрос отправлен ${esc(new Date(sentAt).toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }))}. Сохранение сервером не подтверждено. Можно изменить и отправить снова.</p>` : ''}
     ${!cal.verified ? '<p class="lead small">Производственный календарь ещё не проверен.</p>' : ''}</section>`;
-  return `${head}<div id="wishPeriodChooser">${renderPeriodChooser()}</div><div id="wishSignals">${renderWishSignals(mk)}</div>
+  return `${head}${signals}
     <section class="card"><h3>Дни и интервалы</h3>
       <div class="brush" role="group" aria-label="Что отмечать">${B.map(([k, t, c]) => `<button type="button" data-act="brush" data-v="${k}" style="--b:${c}" aria-pressed="${brush === k}">${t}</button>`).join('')}</div>
       <button type="button" class="toggle" role="switch" data-act="range" aria-checked="${rangeMode}"><span><b>Интервалом</b><br><span class="lead small">${rangeMode ? (anchor ? 'Теперь нажмите последний день' : 'Нажмите первый день, потом последний') : 'Выключено — нажатие отмечает один день'}</span></span><span class="sw"></span></button>
@@ -1349,7 +1391,7 @@ function renderFiles() {
   const files = D.files || {};
   const pend = shiftMonth(t.mk, -1);
   let status = '';
-  if (!D.months[pend] && pend > mkOf(now)) status = `<section class="card"><p class="eyebrow">${esc(monthTitle(pend))}</p><p>Пожелания собраны, график составляется. Появится здесь после утверждения ЕЮ.</p></section>`;
+  if (!t.discussion && !D.months[pend] && pend > mkOf(now)) status = `<section class="card"><p class="eyebrow">${esc(monthTitle(pend))}</p><p>Пожелания собраны, график составляется. Появится здесь после утверждения ЕЮ.</p></section>`;
   const months = MK.slice().reverse().filter(mk => files[mk]);
   const pdf = mk => D.pdf && D.pdf[mk] && D.pdf[mk].slots;
   for (const mk of months) for (const k of pdf(mk) ? ['pdf', 'xlsx'] : ['xlsx']) fetchFile(...pubFile(mk, k)).catch(() => {});
@@ -1370,7 +1412,7 @@ function renderFiles() {
     <p class="lead small">Соберите файлы с этими телефонами: PDF — печатать (лист A4 альбомом), Excel — если нужно переслать.</p>
     <div class="prow">${months.map(mk => `<button type="button" class="btn pink" data-act="pprep" data-mk="${mk}">Для печати: ${esc(monthTitle(mk).toLowerCase())}</button>`).join('')}</div>
     ${ready}</div></details>`;
-  return `${status}<section class="card"><p class="eyebrow">Пожелания</p><p>${esc(monthTitle(t.mk))}: приём ${t.open ? 'до ' + t.deadline.getDate() + NB + GEN[t.deadline.getMonth()] : 'закрыт'}.</p></section>
+  return `${status}<div id="wishEntry">${renderWishEntry()}</div>
     ${list || '<section class="card"><p class="lead">Файлов пока нет.</p></section>'}
     ${months.length ? org : ''}
     <p class="lead small">«PDF — печать» открывает меню «Поделиться»: пролистайте вниз до «Напечатать». PDF печатается как есть — A4 альбомом, с заголовком и заливкой выходных и отпусков (Excel iPhone печатает без них). В файлах — дни, отметки «+», отпуска, выходные и праздники по календарю РФ, итоги. Версия с листом пожеланий и нагрузкой — у ЕЮ.</p>`;
@@ -1524,6 +1566,7 @@ function render(keepScroll) {
   document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-current', b.dataset.tab === state.tab ? 'page' : 'false'));
   moveLens();
   view.innerHTML = state.tab === 'me' ? renderMe() : state.tab === 'all' ? renderAll() : state.tab === 'wish' ? renderWish() : renderFiles();
+  refreshVisibleWishStatus();
   main.scrollTop = keepScroll ? y : 0;
   const note = document.getElementById('note');
   if (note) note.addEventListener('input', () => { W.note = note.value; saveWish(); const s = document.getElementById('summary'); if (s) s.textContent = wishText(selectedWishTarget(new Date()).mk); });
